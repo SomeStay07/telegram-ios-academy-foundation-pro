@@ -2,6 +2,7 @@
   "name": "@telegram-ios-academy/api",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "start": "node dist/main.js",
     "start:dev": "ts-node-dev --transpile-only --respawn src/main.ts",

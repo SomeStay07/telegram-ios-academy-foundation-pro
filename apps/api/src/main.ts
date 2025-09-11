@@ -81,6 +81,17 @@ async function bootstrap() {
   httpAdapter.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() })
   })
+  
+  // Temporary debug endpoint to check Redis URL
+  httpAdapter.get('/api/debug-redis', (req, res) => {
+    const redisUrl = process.env.REDIS_URL
+    res.json({ 
+      redisUrl: redisUrl ? redisUrl.substring(0, 20) + '...' : 'NOT_SET',
+      hasRedisUrl: !!redisUrl,
+      startsWithRedis: redisUrl ? redisUrl.startsWith('redis://') : false,
+      timestamp: new Date().toISOString() 
+    })
+  })
 
   // Export OpenAPI spec
   const outputDir = join(__dirname, '../openapi')
