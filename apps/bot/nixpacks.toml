@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ['nodejs', 'pnpm']
+
+[phases.install]
+cmds = ['pnpm install --no-strict-peer-dependencies']
+
+[start]
+cmd = 'pnpm start'
