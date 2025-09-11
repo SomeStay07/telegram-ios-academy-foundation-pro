@@ -76,6 +76,12 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api/docs', app, document)
 
+  // Health check endpoint for Railway
+  const httpAdapter = app.getHttpAdapter()
+  httpAdapter.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() })
+  })
+
   // Export OpenAPI spec
   const outputDir = join(__dirname, '../openapi')
   if (!existsSync(outputDir)) mkdirSync(outputDir, { recursive: true })
