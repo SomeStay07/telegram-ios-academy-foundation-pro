@@ -5,12 +5,37 @@ console.log('REDIS_URL:', process.env.REDIS_URL);
 console.log('BOT_TOKEN:', process.env.BOT_TOKEN ? 'SET' : 'NOT_SET');
 console.log('BOT_USERNAME:', process.env.BOT_USERNAME);
 
-const redisUrl = process.env.REDIS_URL;
-if (!redisUrl || redisUrl === '' || (!redisUrl.startsWith('redis://') && !redisUrl.startsWith('rediss://'))) {
-  console.error('REDIS_URL configuration error:', redisUrl);
-  throw new Error("REDIS_URL required and must be a valid Redis URL");
-}
-const redis = new Redis(redisUrl); const reminders = new Queue("reminders", { connection: redis as any }); const bot = new Bot(token);
+const redisUrl = process.env.REDIS_URL!;
+
+const redis = new Redis(redisUrl, {
+  maxRetriesPerRequest: 3,
+  lazyConnect: true,
+  connectTimeout: 10000,
+  commandTimeout: 5000,
+  enableReadyCheck: false,
+});
+
+redis.on('error', (error) => {
+  console.warn('⚠️ Redis error in BOT:', error.message);
+});
+
+redis.on('connect', () => {
+  console.log('✅ Redis connected for BOT');
+});
+
+redis.on('ready', () => {
+  console.log('✅ Redis ready for BOT');
+});
+
+redis.on('close', () => {
+  console.log('ℹ️ Redis connection closed for BOT');
+});
+
+redis.on('reconnecting', () => {
+  console.log('🔄 Redis reconnecting for BOT');
+});
+
+const reminders = new Queue("reminders", { connection: redis as any }); const bot = new Bot(token);
 const BOT_USERNAME = process.env.BOT_USERNAME || "your_bot"; const WEBAPP_URL = process.env.WEBAPP_URL || "https://example.com";
 function startAppLink(payload: string) { return `https://t.me/${BOT_USERNAME}?startapp=${encodeURIComponent(payload)}` }
 bot.command("start", async (ctx) => { const kb = new InlineKeyboard().webApp("Открыть MiniApp", WEBAPP_URL); await ctx.reply("Добро пожаловать!", { reply_markup: kb }) })

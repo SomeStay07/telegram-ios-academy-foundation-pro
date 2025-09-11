@@ -9,10 +9,7 @@
           "200": {
             "description": ""
           }
-        },
-        "tags": [
-          "Health"
-        ]
+        }
       }
     },
     "/api/auth/verifyInitData": {
@@ -23,15 +20,13 @@
           "201": {
             "description": ""
           }
-        },
-        "tags": [
-          "Auth"
-        ]
+        }
       }
     },
     "/api/lessons/{id}": {
       "get": {
         "operationId": "LessonController_getLesson",
+        "summary": "Get lesson by ID",
         "parameters": [
           {
             "name": "id",
@@ -58,20 +53,20 @@
             "description": "Lesson not found"
           }
         },
+        "tags": [
+          "Lessons"
+        ],
         "security": [
           {
             "telegram-auth": []
           }
-        ],
-        "summary": "Get lesson by ID",
-        "tags": [
-          "Lessons"
         ]
       }
     },
     "/api/lessons/progress/{lessonId}": {
       "put": {
         "operationId": "LessonController_updateProgress",
+        "summary": "Update user progress for a lesson",
         "parameters": [
           {
             "name": "lessonId",
@@ -119,20 +114,20 @@
             "description": "Lesson not found"
           }
         },
+        "tags": [
+          "Lessons"
+        ],
         "security": [
           {
             "telegram-auth": []
           }
-        ],
-        "summary": "Update user progress for a lesson",
-        "tags": [
-          "Lessons"
         ]
       }
     },
     "/api/lessons/attempts/{lessonId}": {
       "post": {
         "operationId": "LessonController_createAttempt",
+        "summary": "Create attempt for a lesson",
         "parameters": [
           {
             "name": "lessonId",
@@ -188,6 +183,9 @@
             "description": "Lesson not found"
           }
         },
+        "tags": [
+          "Lessons"
+        ],
         "security": [
           {
             "telegram-auth": []
@@ -195,16 +193,13 @@
           {
             "idempotency": []
           }
-        ],
-        "summary": "Create attempt for a lesson",
-        "tags": [
-          "Lessons"
         ]
       }
     },
     "/api/courses/{id}": {
       "get": {
         "operationId": "CourseController_getCourse",
+        "summary": "Get course by ID",
         "parameters": [
           {
             "name": "id",
@@ -231,20 +226,20 @@
             "description": "Course not found"
           }
         },
+        "tags": [
+          "Courses"
+        ],
         "security": [
           {
             "telegram-auth": []
           }
-        ],
-        "summary": "Get course by ID",
-        "tags": [
-          "Courses"
         ]
       }
     },
     "/api/courses/{id}/progress": {
       "get": {
         "operationId": "CourseController_getCourseProgress",
+        "summary": "Get user progress for a course",
         "parameters": [
           {
             "name": "id",
@@ -282,20 +277,20 @@
             "description": "Course not found"
           }
         },
+        "tags": [
+          "Courses"
+        ],
         "security": [
           {
             "telegram-auth": []
           }
-        ],
-        "summary": "Get user progress for a course",
-        "tags": [
-          "Courses"
         ]
       }
     },
     "/api/courses/{id}/unlock": {
       "post": {
         "operationId": "CourseController_unlockCourse",
+        "summary": "Unlock course for user",
         "parameters": [
           {
             "name": "id",
@@ -343,6 +338,9 @@
             "description": "Course not found"
           }
         },
+        "tags": [
+          "Courses"
+        ],
         "security": [
           {
             "telegram-auth": []
@@ -350,10 +348,6 @@
           {
             "idempotency": []
           }
-        ],
-        "summary": "Unlock course for user",
-        "tags": [
-          "Courses"
         ]
       }
     }
