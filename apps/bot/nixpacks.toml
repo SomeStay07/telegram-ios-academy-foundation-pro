@@ -1,8 +1,12 @@
 [phases.setup]
-nixPkgs = ['nodejs_18']
+nixPkgs = ['nodejs_18', 'curl']
 
 [phases.install]
-cmds = ['corepack enable', 'corepack prepare pnpm@latest --activate', 'pnpm install --no-strict-peer-dependencies']
+cmds = [
+  'curl -fsSL https://get.pnpm.io/install.sh | sh -',
+  'export PATH="$HOME/.local/share/pnpm:$PATH"',
+  'pnpm install --no-strict-peer-dependencies'
+]
 
 [start]
-cmd = 'pnpm start'
+cmd = 'export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm start'
