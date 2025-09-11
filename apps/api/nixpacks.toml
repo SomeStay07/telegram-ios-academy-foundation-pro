@@ -8,7 +8,7 @@ cmds = [
 
 [phases.build]
 cmds = [
-  'export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm build'
+  'export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm build && pnpm prisma generate'
 ]
 
 [start]

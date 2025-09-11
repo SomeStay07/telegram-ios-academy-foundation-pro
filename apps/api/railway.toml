@@ -1,10 +1,8 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pnpm install --no-strict-peer-dependencies && pnpm build"
 watchPatterns = ["apps/api/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
 
 [deploy]
-preDeployCommand = "pnpm prisma generate && pnpm prisma migrate deploy"
 startCommand = "pnpm start"
 healthcheckPath = "/api/health"
 restartPolicyType = "always"
