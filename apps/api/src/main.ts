@@ -16,7 +16,7 @@ async function bootstrap() {
   
   // Security hardening with Helmet
   app.use(helmet({
-    contentSecurityPolicy: process.env.NODE_ENV === 'development' ? false : {
+    contentSecurityPolicy: env.NODE_ENV === 'development' ? false : {
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
@@ -28,7 +28,7 @@ async function bootstrap() {
         mediaSrc: ["'self'"],
         frameSrc: ["'none'"],
       },
-      reportOnly: process.env.NODE_ENV === 'development'
+      reportOnly: env.CSP_REPORT_ONLY === '1'
     },
     hsts: {
       maxAge: 31536000, // 1 year
