@@ -1,4 +1,8 @@
 import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis"; import express from "express";
+import { promisify } from 'util';
+import { lookup } from 'dns';
+const dnsLookup = promisify(lookup);
+
 const token = process.env.BOT_TOKEN!; if (!token) throw new Error("BOT_TOKEN required");
 console.log('Environment variables check:');
 console.log('REDIS_URL:', process.env.REDIS_URL);
@@ -6,6 +10,22 @@ console.log('BOT_TOKEN:', process.env.BOT_TOKEN ? 'SET' : 'NOT_SET');
 console.log('BOT_USERNAME:', process.env.BOT_USERNAME);
 
 const redisUrl = process.env.REDIS_URL!;
+
+// DNS diagnostic check
+async function checkRedisHost() {
+  try {
+    const url = new URL(redisUrl);
+    console.log('🔍 Checking DNS resolution for:', url.hostname);
+    const resolved = await dnsLookup(url.hostname);
+    console.log('✅ DNS resolved:', url.hostname, '->', resolved.address);
+    return true;
+  } catch (error) {
+    console.error('❌ DNS resolution failed:', error);
+    return false;
+  }
+}
+
+checkRedisHost();
 
 const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 3,
@@ -55,8 +75,36 @@ bot.start(); console.log("Bot started")
 const app = express();
 const port = process.env.PORT || 8080;
 
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString(), redis: !!redisUrl });
+app.get("/health", async (req, res) => {
+  const healthData: any = { 
+    status: "ok", 
+    timestamp: new Date().toISOString(), 
+    redis_url: !!redisUrl,
+    redis_status: redis.status
+  };
+  
+  try {
+    const url = new URL(redisUrl);
+    healthData.redis_host = url.hostname;
+    
+    // Try DNS resolution
+    try {
+      const resolved = await dnsLookup(url.hostname);
+      healthData.dns_resolved = resolved.address;
+    } catch (dnsError: any) {
+      healthData.dns_error = dnsError.message;
+    }
+    
+    // Try simple Redis ping if connected
+    if (redis.status === 'ready') {
+      await redis.ping();
+      healthData.redis_ping = 'success';
+    }
+  } catch (error: any) {
+    healthData.error = error.message;
+  }
+  
+  res.json(healthData);
 });
 
 app.get("/", (req, res) => {
