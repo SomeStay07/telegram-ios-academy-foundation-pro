@@ -1,0 +1,1 @@
+import { test, expect } from '@playwright/test'; test('lesson flow renders modules', async ({ page }) => { await page.goto('/'); await expect(page.getByRole('heading')).toBeVisible(); });

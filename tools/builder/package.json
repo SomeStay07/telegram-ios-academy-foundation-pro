@@ -1,0 +1,22 @@
+{
+  "name": "@telegram-ios-academy/builder",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "academy-builder": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "tsx": "^4.7.0",
+    "zod": "^3.23.8"
+  },
+  "dependencies": {
+    "@telegram-ios-academy/lesson-spec": "workspace:*",
+    "@telegram-ios-academy/course-spec": "workspace:*",
+    "@telegram-ios-academy/interview-spec": "workspace:*"
+  }
+}

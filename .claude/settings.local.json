@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude doctor)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm -w build)",
+      "Bash(node:*)",
+      "Read(//Users/timurceberda/Developer/**)",
+      "Bash(xargs ls:*)",
+      "Bash(pnpm:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

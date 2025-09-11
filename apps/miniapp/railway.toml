@@ -1,0 +1,5 @@
+[build]
+builder = "NIXPACKS"
+watchPatterns = ["apps/miniapp/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+[deploy]
+startCommand = "pnpm -C apps/miniapp preview --host 0.0.0.0 --port $PORT"

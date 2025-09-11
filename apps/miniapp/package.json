@@ -1,0 +1,45 @@
+{
+  "name": "@telegram-ios-academy/miniapp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5173",
+    "e2e": "playwright test",
+    "contracts": "node tests/contracts/lesson-api.pact.spec.ts"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@tanstack/react-router": "^1.49.3",
+    "@tanstack/react-query": "^5.51.3",
+    "zustand": "^4.5.2",
+    "i18next": "^23.10.1",
+    "react-i18next": "^13.5.0",
+    "@hookform/resolvers": "^3.6.0",
+    "react-hook-form": "^7.52.1",
+    "zod": "^3.23.8",
+    "prismjs": "^1.29.0",
+    "posthog-js": "^1.88.4",
+    "@opentelemetry/api": "^1.6.0",
+    "@opentelemetry/sdk-trace-web": "^2.1.0",
+    "@opentelemetry/auto-instrumentations-web": "^0.33.0",
+    "@telegram-ios-academy/ui": "workspace:*",
+    "@telegram-ios-academy/lesson-spec": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
+    "tailwindcss": "^3.4.7",
+    "postcss": "^8.4.38",
+    "autoprefixer": "^10.4.19",
+    "@playwright/test": "^1.46.1",
+    "@pact-foundation/pact": "^12.5.0",
+    "node-fetch": "^3.3.2"
+  }
+}

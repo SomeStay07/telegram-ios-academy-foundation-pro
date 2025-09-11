@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "continue": "Continue",
+    "complete": "Complete Lesson",
+    "progress": "Step {{current}} of {{total}}",
+    "quiz": {
+      "submit": "Submit Answer",
+      "correct": "Correct!",
+      "incorrect": "Incorrect. Try again.",
+      "explanation": "Explanation"
+    },
+    "checkpoint": {
+      "passed": "Checkpoint Passed!",
+      "failed": "Checkpoint Failed",
+      "retry": "Try Again"
+    }
+  },
+  "navigation": {
+    "back": "Back",
+    "home": "Home",
+    "lessons": "Lessons",
+    "profile": "Profile"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry"
+  }
+}

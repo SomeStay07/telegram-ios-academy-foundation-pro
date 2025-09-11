@@ -1,0 +1,7 @@
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+generator client { provider = "prisma-client-js" }
+model User { id String @id @default(cuid()); tgId String @unique; createdAt DateTime @default(now()) }
+model Lesson { id String @id; content Json }
+model Course { id String @id; title String }
+model Progress { id String @id @default(cuid()); userId String; lessonId String; score Float @default(0); updatedAt DateTime @updatedAt; @@index([userId, lessonId]) }
+model Attempt { id String @id @default(cuid()); userId String; lessonId String; payload Json; createdAt DateTime @default(now()); @@index([lessonId, userId, createdAt]) }

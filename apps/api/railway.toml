@@ -1,0 +1,7 @@
+[build]
+builder = "NIXPACKS"
+watchPatterns = ["apps/api/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+[deploy]
+preDeployCommand = ["pnpm -C apps/api prisma generate","pnpm -C apps/api prisma migrate deploy"]
+startCommand = "pnpm -C apps/api start"
+healthcheckPath = "/api/health"

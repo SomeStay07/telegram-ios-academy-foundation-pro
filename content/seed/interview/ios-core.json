@@ -1,0 +1,23 @@
+{
+  "id": "ios-core-001",
+  "title": "iOS Core — базовые вопросы",
+  "questions": [
+    {
+      "id": "q-swift-001",
+      "category": "swift",
+      "difficulty": "beginner",
+      "prompt": "Что такое Optional и как безопасно разворачивать?",
+      "modelAnswer": "if let, guard let, optional chaining, ??",
+      "pitfalls": [
+        "force unwrap !",
+        "try!"
+      ],
+      "codeSample": "let x:String?=nil; let y=x ?? \"default\"",
+      "tags": [
+        "swift",
+        "optionals"
+      ],
+      "references": []
+    }
+  ]
+}
