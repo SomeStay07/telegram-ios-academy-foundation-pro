@@ -1,6 +1,8 @@
 import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis";
 const token = process.env.BOT_TOKEN!; if (!token) throw new Error("BOT_TOKEN required");
-const redis = new Redis(process.env.REDIS_URL || ""); const reminders = new Queue("reminders", { connection: redis as any }); const bot = new Bot(token);
+const redisUrl = process.env.REDIS_URL;
+if (!redisUrl) throw new Error("REDIS_URL required");
+const redis = new Redis(redisUrl); const reminders = new Queue("reminders", { connection: redis as any }); const bot = new Bot(token);
 const BOT_USERNAME = process.env.BOT_USERNAME || "your_bot"; const WEBAPP_URL = process.env.WEBAPP_URL || "https://example.com";
 function startAppLink(payload: string) { return `https://t.me/${BOT_USERNAME}?startapp=${encodeURIComponent(payload)}` }
 bot.command("start", async (ctx) => { const kb = new InlineKeyboard().webApp("Открыть MiniApp", WEBAPP_URL); await ctx.reply("Добро пожаловать!", { reply_markup: kb }) })
