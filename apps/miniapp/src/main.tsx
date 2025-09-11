@@ -8,6 +8,7 @@ import '../../../packages/ui/src/styles/globals.css'
 import { analytics } from './analytics/lazy'
 import { useTranslation } from './i18n/lazy'
 import { useLightApiHealth } from './hooks/useLightApi'
+import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
 
 // Lazy load QueryClient when needed
 let queryClient: any = null
@@ -58,7 +59,7 @@ const LessonPage = () => {
     console.log('Quiz answered:', { questionId, isCorrect, selectedAnswer, timeSpent })
   }
 
-  return <>
+  return <div data-testid="lesson-content">
     <div className="mb-4 p-3 bg-blue-50 rounded-lg">
       <h1 className="text-xl font-bold text-telegram-text">{parsed.meta.title}</h1>
       <p className="text-sm text-telegram-hint">{parsed.meta.description}</p>
@@ -68,7 +69,12 @@ const LessonPage = () => {
       </div>
     </div>
     
-    {parsed.modules.map((m:any, index: number) => <div key={m.id} className="mb-4 animate-fade-in">
+    {parsed.modules.map((m:any, index: number) => <div 
+      key={m.id} 
+      className="mb-4 animate-fade-in"
+      data-module-type={m.type}
+      data-module-id={m.id}
+    >
       <ModuleRenderer 
         module={m} 
         onQuizAnswer={(id, ok, answer, time) => handleQuizAnswer(id, ok, answer || '', time || 0)} 
@@ -85,6 +91,7 @@ const LessonPage = () => {
     <div className="mt-6 p-4 bg-green-50 rounded-lg text-center">
       <button 
         className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+        data-testid="complete-lesson-button"
         onClick={() => {
           analytics.lessonCompleted({
             lesson_id: parsed.meta.id,
@@ -99,7 +106,7 @@ const LessonPage = () => {
         {t('lesson.complete')}
       </button>
     </div>
-  </>
+  </div>
 }
 
 const lessonRoute = createRoute({ getParent: () => rootRoute, path: '/', component: LessonPage })
@@ -111,6 +118,15 @@ function initTmaRouting() {
   const tg = (window as any).Telegram?.WebApp
   if (!tg) return
   tg.ready?.(); tg.expand?.()
+  
+  // Apply Telegram theme on startup
+  applyTelegramTheme()
+  
+  // Watch for theme changes
+  watchTelegramTheme((newTheme) => {
+    console.log('🎨 Theme updated:', newTheme)
+  })
+  
   const setBack = () => {
     const idx = (router.history as any).state.index ?? 0
     idx > 0 ? tg.BackButton?.show?.() : tg.BackButton?.hide?.()
