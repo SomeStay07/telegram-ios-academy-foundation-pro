@@ -4,14 +4,14 @@ nixPkgs = ['nodejs_20']
 [phases.install]
 cmds = [
   'npm install -g pnpm@9.0.0',
-  'cd apps/api && pnpm install --frozen-lockfile'
+  'pnpm install --frozen-lockfile'
 ]
 
 [phases.build]
 cmds = [
-  'cd apps/api && pnpm prisma generate',
-  'cd apps/api && pnpm build'
+  'pnpm prisma generate',
+  'pnpm build'
 ]
 
 [start]
-cmd = 'cd apps/api && pnpm start'
+cmd = 'pnpm start'
