@@ -5,7 +5,16 @@ import { Observable, of } from 'rxjs'
 
 @Injectable()
 export class IdempotencyInterceptor implements NestInterceptor {
-  private redis = new Redis(process.env.REDIS_URL || '')
+  private redis: Redis
+  
+  constructor() {
+    const redisUrl = process.env.REDIS_URL;
+    if (!redisUrl || redisUrl === '' || (!redisUrl.startsWith('redis://') && !redisUrl.startsWith('rediss://'))) {
+      console.error('REDIS_URL configuration error in IdempotencyInterceptor:', redisUrl);
+      throw new Error("REDIS_URL required and must be a valid Redis URL");
+    }
+    this.redis = new Redis(redisUrl);
+  }
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const req: any = context.switchToHttp().getRequest()
     const key = req.header('Idempotency-Key')

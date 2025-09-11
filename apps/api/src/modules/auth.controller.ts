@@ -4,7 +4,16 @@ import Redis from 'ioredis'
 
 @Controller('auth')
 export class AuthController {
-  private redis = new Redis(process.env.REDIS_URL || '')
+  private redis: Redis
+  
+  constructor() {
+    const redisUrl = process.env.REDIS_URL;
+    if (!redisUrl || redisUrl === '' || (!redisUrl.startsWith('redis://') && !redisUrl.startsWith('rediss://'))) {
+      console.error('REDIS_URL configuration error in AuthController:', redisUrl);
+      throw new Error("REDIS_URL required and must be a valid Redis URL");
+    }
+    this.redis = new Redis(redisUrl);
+  }
   @Post('verifyInitData')
   async verify(@Body() body: any) {
     const initData = body?.initData
