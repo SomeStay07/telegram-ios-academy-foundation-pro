@@ -9,10 +9,13 @@ build/
 
 # Environment files
 .env
-.env.local
-.env.production
-.env.development
-.env.*.local
+.env.*
+apps/*/.env*
+
+# Security keys and certificates
+*.pem
+*.p8
+*.key
 
 # Logs
 npm-debug.log*

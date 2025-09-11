@@ -6,8 +6,11 @@ import { ValidationPipe } from '@nestjs/common'
 import helmet from 'helmet'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join } from 'path'
+import { parseEnv } from './config/env'
 
 async function bootstrap() {
+  const env = parseEnv(process.env)
+  
   const app = await NestFactory.create(AppModule, { cors: false })
   app.setGlobalPrefix('api')
   
@@ -39,11 +42,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
 
   // Strict CORS configuration
-  const allowedOrigins = process.env.ALLOWED_ORIGINS || 'https://web-production-1e872.up.railway.app,http://localhost:5173'
-  const origins = allowedOrigins.split(',').map(s => s.trim()).filter(Boolean)
-  
   app.enableCors({
-    origin: origins,
+    origin: env.ALLOWED_ORIGINS.split(',').map(s => s.trim()).filter(Boolean),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [

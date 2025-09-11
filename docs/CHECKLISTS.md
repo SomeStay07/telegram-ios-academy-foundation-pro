@@ -136,6 +136,8 @@ This document provides step-by-step checklists for development, testing, securit
   - [ ] No secrets in code or version control
   - [ ] Production secrets rotated regularly
   - [ ] Database access properly restricted
+  - [ ] **Gitleaks CI = ✅** - Automated secrets scanning enabled
+  - [ ] **Env validation (API/MiniApp) = ✅** - Environment validation implemented
 
 - [ ] **Network Security**
   - [ ] CORS properly configured
