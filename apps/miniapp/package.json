@@ -28,8 +28,6 @@
     "@opentelemetry/api": "^1.6.0",
     "@opentelemetry/sdk-trace-web": "^2.1.0",
     "@opentelemetry/auto-instrumentations-web": "^0.33.0",
-    "@telegram-ios-academy/ui": "workspace:*",
-    "@telegram-ios-academy/lesson-spec": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
