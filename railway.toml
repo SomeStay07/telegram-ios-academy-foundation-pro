@@ -1,0 +1,44 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+numReplicas = 1
+sleepApplication = false
+restartPolicyType = "on-failure"
+
+[[services]]
+name = "api"
+source = "apps/api"
+
+[services.api.build]
+builder = "nixpacks"
+buildCommand = "pnpm install && pnpm build"
+startCommand = "pnpm start"
+
+[services.api.variables]
+NODE_ENV = "production"
+PORT = "3000"
+
+[[services]]
+name = "miniapp"  
+source = "apps/miniapp"
+
+[services.miniapp.build]
+builder = "nixpacks"
+buildCommand = "pnpm install && pnpm build"
+startCommand = "pnpm start"
+
+[services.miniapp.variables]
+NODE_ENV = "production"
+
+[[services]]
+name = "bot"
+source = "apps/bot"
+
+[services.bot.build]
+builder = "nixpacks" 
+buildCommand = "pnpm install && pnpm build"
+startCommand = "pnpm start"
+
+[services.bot.variables]
+NODE_ENV = "production"
