@@ -1,8 +1,8 @@
 [phases.setup]
-nixPkgs = ['nodejs', 'pnpm']
+nixPkgs = ['nodejs_18']
 
 [phases.install]
-cmds = ['pnpm install --no-strict-peer-dependencies']
+cmds = ['npm install -g pnpm', 'pnpm install --no-strict-peer-dependencies']
 
 [phases.build]
 cmds = ['pnpm build']
