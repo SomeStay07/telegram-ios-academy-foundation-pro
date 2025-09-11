@@ -3,7 +3,7 @@ builder = "NIXPACKS"
 watchPatterns = ["apps/api/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
 
 [deploy]
-preDeployCommand = ["pnpm prisma generate","pnpm prisma migrate deploy"]  
+preDeployCommand = "pnpm prisma generate && pnpm prisma migrate deploy"
 startCommand = "pnpm start"
 healthcheckPath = "/api/health"
 restartPolicyType = "always"
