@@ -6,5 +6,10 @@ cmds = [
   'export SHELL=/bin/bash && curl -fsSL https://get.pnpm.io/install.sh | sh - && export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm install --no-strict-peer-dependencies'
 ]
 
+[phases.build]
+cmds = [
+  'export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm build'
+]
+
 [start]
 cmd = 'export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm start'
