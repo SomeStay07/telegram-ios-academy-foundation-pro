@@ -12,7 +12,12 @@ export class IdempotencyInterceptor implements NestInterceptor {
     if (redisUrl && (redisUrl.startsWith('redis://') || redisUrl.startsWith('rediss://'))) {
       try {
         this.redis = new Redis(redisUrl);
-        console.log('✅ Redis connected for IdempotencyInterceptor');
+        this.redis.on('error', (error) => {
+          console.warn('⚠️ Redis error in IdempotencyInterceptor:', error.message);
+        });
+        this.redis.on('connect', () => {
+          console.log('✅ Redis connected for IdempotencyInterceptor');
+        });
       } catch (error) {
         console.warn('⚠️ Redis connection failed for IdempotencyInterceptor:', error);
         this.redis = null;

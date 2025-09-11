@@ -11,7 +11,12 @@ export class AuthController {
     if (redisUrl && (redisUrl.startsWith('redis://') || redisUrl.startsWith('rediss://'))) {
       try {
         this.redis = new Redis(redisUrl);
-        console.log('✅ Redis connected for AuthController');
+        this.redis.on('error', (error) => {
+          console.warn('⚠️ Redis error in AuthController:', error.message);
+        });
+        this.redis.on('connect', () => {
+          console.log('✅ Redis connected for AuthController');
+        });
       } catch (error) {
         console.warn('⚠️ Redis connection failed for AuthController:', error);
         this.redis = null;
