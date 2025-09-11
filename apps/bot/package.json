@@ -2,6 +2,7 @@
   "name": "@telegram-ios-academy/bot",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.0.0",
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
