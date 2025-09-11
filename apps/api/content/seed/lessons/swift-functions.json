@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "id": "swift-functions",
+    "title": "Swift Functions",
+    "description": "Master Swift functions and their syntax",
+    "estimatedMinutes": 45,
+    "difficulty": "beginner",
+    "tags": ["swift", "functions", "syntax"]
+  },
+  "content": {
+    "modules": [
+      {
+        "type": "text",
+        "content": "Functions are self-contained chunks of code that perform a specific task."
+      },
+      {
+        "type": "quiz",
+        "question": "How do you define a function in Swift?",
+        "options": ["func", "function", "def", "fn"],
+        "correct": 0
+      }
+    ]
+  }
+}

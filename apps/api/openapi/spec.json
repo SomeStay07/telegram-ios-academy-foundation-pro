@@ -1,0 +1,721 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "HealthController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/auth/verifyInitData": {
+      "post": {
+        "operationId": "AuthController_verify",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/lessons/{id}": {
+      "get": {
+        "operationId": "LessonController_getLesson",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Lesson ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lesson retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Lesson not found"
+          }
+        },
+        "security": [
+          {
+            "telegram-auth": []
+          }
+        ],
+        "summary": "Get lesson by ID",
+        "tags": [
+          "Lessons"
+        ]
+      }
+    },
+    "/api/lessons/progress/{lessonId}": {
+      "put": {
+        "operationId": "LessonController_updateProgress",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "description": "Lesson ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Telegram-Init-Data",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProgressDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Progress updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Lesson not found"
+          }
+        },
+        "security": [
+          {
+            "telegram-auth": []
+          }
+        ],
+        "summary": "Update user progress for a lesson",
+        "tags": [
+          "Lessons"
+        ]
+      }
+    },
+    "/api/lessons/attempts/{lessonId}": {
+      "post": {
+        "operationId": "LessonController_createAttempt",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "description": "Lesson ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Telegram-Init-Data",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAttemptDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Attempt created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Lesson not found"
+          }
+        },
+        "security": [
+          {
+            "telegram-auth": []
+          },
+          {
+            "idempotency": []
+          }
+        ],
+        "summary": "Create attempt for a lesson",
+        "tags": [
+          "Lessons"
+        ]
+      }
+    },
+    "/api/courses/{id}": {
+      "get": {
+        "operationId": "CourseController_getCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Course ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Course not found"
+          }
+        },
+        "security": [
+          {
+            "telegram-auth": []
+          }
+        ],
+        "summary": "Get course by ID",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/courses/{id}/progress": {
+      "get": {
+        "operationId": "CourseController_getCourseProgress",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Course ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Telegram-Init-Data",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course progress retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseProgressDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Course not found"
+          }
+        },
+        "security": [
+          {
+            "telegram-auth": []
+          }
+        ],
+        "summary": "Get user progress for a course",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/courses/{id}/unlock": {
+      "post": {
+        "operationId": "CourseController_unlockCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Course ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Telegram-Init-Data",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnlockCourseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course unlocked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseUnlockResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Course not found"
+          }
+        },
+        "security": [
+          {
+            "telegram-auth": []
+          },
+          {
+            "idempotency": []
+          }
+        ],
+        "summary": "Unlock course for user",
+        "tags": [
+          "Courses"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Telegram iOS Academy API",
+    "description": "API for Telegram Mini App educational platform",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "access-token": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "telegram-auth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Telegram-Init-Data"
+      },
+      "idempotency": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Idempotency-Key"
+      }
+    },
+    "schemas": {
+      "LessonDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Lesson ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "Lesson title"
+          },
+          "description": {
+            "type": "string",
+            "description": "Lesson description"
+          },
+          "content": {
+            "type": "object",
+            "description": "Lesson content (modules)",
+            "additionalProperties": true
+          },
+          "estimatedMinutes": {
+            "type": "number",
+            "description": "Estimated completion time in minutes"
+          },
+          "difficulty": {
+            "type": "string",
+            "description": "Difficulty level",
+            "enum": [
+              "beginner",
+              "intermediate",
+              "advanced"
+            ]
+          },
+          "tags": {
+            "description": "Tags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "content",
+          "estimatedMinutes",
+          "difficulty",
+          "tags"
+        ]
+      },
+      "UpdateProgressDto": {
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "number",
+            "description": "Progress score (0-1)",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "timeSpent": {
+            "type": "number",
+            "description": "Time spent in minutes",
+            "minimum": 0
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "Completion status"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata"
+          }
+        },
+        "required": [
+          "score",
+          "timeSpent",
+          "completed"
+        ]
+      },
+      "ProgressDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "lessonId": {
+            "type": "string",
+            "description": "Lesson ID"
+          },
+          "score": {
+            "type": "number",
+            "description": "Progress score (0-1)"
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "Completion status"
+          },
+          "timeSpent": {
+            "type": "number",
+            "description": "Time spent in minutes"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated timestamp"
+          }
+        },
+        "required": [
+          "userId",
+          "lessonId",
+          "score",
+          "completed",
+          "timeSpent",
+          "updatedAt"
+        ]
+      },
+      "CreateAttemptDto": {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "type": "object",
+            "description": "Attempt payload with answers and interactions"
+          },
+          "score": {
+            "type": "number",
+            "description": "Score achieved (0-1)",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "timeSpentSeconds": {
+            "type": "number",
+            "description": "Time spent in seconds",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "payload",
+          "score",
+          "timeSpentSeconds"
+        ]
+      },
+      "AttemptDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Attempt ID"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "lessonId": {
+            "type": "string",
+            "description": "Lesson ID"
+          },
+          "score": {
+            "type": "number",
+            "description": "Score achieved (0-1)"
+          },
+          "payload": {
+            "type": "object",
+            "description": "Attempt payload"
+          },
+          "timeSpentSeconds": {
+            "type": "number",
+            "description": "Time spent in seconds"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created timestamp"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "lessonId",
+          "score",
+          "payload",
+          "timeSpentSeconds",
+          "createdAt"
+        ]
+      },
+      "CourseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Course ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "Course title"
+          },
+          "description": {
+            "type": "string",
+            "description": "Course description"
+          },
+          "lessonIds": {
+            "description": "Course lessons",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "difficulty": {
+            "type": "string",
+            "description": "Course difficulty",
+            "enum": [
+              "beginner",
+              "intermediate",
+              "advanced"
+            ]
+          },
+          "estimatedHours": {
+            "type": "number",
+            "description": "Estimated completion time in hours"
+          },
+          "tags": {
+            "description": "Course tags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "lessonIds",
+          "difficulty",
+          "estimatedHours",
+          "tags"
+        ]
+      },
+      "CourseProgressDto": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "string",
+            "description": "Course ID"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "overallProgress": {
+            "type": "number",
+            "description": "Overall progress (0-1)"
+          },
+          "completedLessons": {
+            "type": "number",
+            "description": "Completed lessons count"
+          },
+          "totalLessons": {
+            "type": "number",
+            "description": "Total lessons count"
+          },
+          "lessonProgress": {
+            "type": "object",
+            "description": "Lesson progress details",
+            "additionalProperties": true
+          },
+          "enrolledAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Course enrollment date"
+          },
+          "lastActivityAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Last activity date"
+          }
+        },
+        "required": [
+          "courseId",
+          "userId",
+          "overallProgress",
+          "completedLessons",
+          "totalLessons",
+          "lessonProgress",
+          "enrolledAt",
+          "lastActivityAt"
+        ]
+      },
+      "UnlockCourseDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Unlock reason"
+          },
+          "accessLevel": {
+            "type": "string",
+            "description": "Access level",
+            "enum": [
+              "basic",
+              "premium"
+            ]
+          }
+        }
+      },
+      "CourseUnlockResponseDto": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "string",
+            "description": "Course ID"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "unlocked": {
+            "type": "boolean",
+            "description": "Unlock status"
+          },
+          "accessLevel": {
+            "type": "string",
+            "description": "Access level granted"
+          },
+          "unlockedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Unlock timestamp"
+          }
+        },
+        "required": [
+          "courseId",
+          "userId",
+          "unlocked",
+          "accessLevel",
+          "unlockedAt"
+        ]
+      }
+    }
+  }
+}

@@ -19,7 +19,15 @@
       "Bash(git checkout:*)",
       "Bash(git remote add:*)",
       "Bash(git push:*)",
-      "Bash(git switch:*)"
+      "Bash(git switch:*)",
+      "Bash(curl:*)",
+      "Bash(npx playwright test:*)",
+      "Bash(npx playwright:*)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)",
+      "Bash(MINIAPP_BASE_URL=http://localhost:5173 npx playwright test tests/e2e/lesson-flow.spec.ts --reporter=line)",
+      "Bash(awk:*)",
+      "Bash(git fetch:*)"
     ],
     "deny": [],
     "ask": []
