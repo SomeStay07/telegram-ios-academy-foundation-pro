@@ -1,15 +1,17 @@
 [phases.setup]
-nixPkgs = ['nodejs_18', 'curl']
+nixPkgs = ['nodejs_20']
 
 [phases.install]
 cmds = [
-  'export SHELL=/bin/bash && curl -fsSL https://get.pnpm.io/install.sh | sh - && export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm install --no-strict-peer-dependencies'
+  'npm install -g pnpm@9.0.0',
+  'cd apps/api && pnpm install --frozen-lockfile'
 ]
 
 [phases.build]
 cmds = [
-  'export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm prisma generate && pnpm build'
+  'cd apps/api && pnpm prisma generate',
+  'cd apps/api && pnpm build'
 ]
 
 [start]
-cmd = 'export PATH="$HOME/.local/share/pnpm:$PATH" && pnpm start'
+cmd = 'cd apps/api && pnpm start'

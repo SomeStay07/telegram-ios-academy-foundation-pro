@@ -1,13 +1,11 @@
 [build]
 builder = "NIXPACKS"
-watchPatterns = ["apps/miniapp/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
-buildCommand = "npm install -g pnpm && pnpm build"
+watchPatterns = ["apps/miniapp/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
 
 [deploy]
-startCommand = "npm install -g pnpm && pnpm start"
-healthcheckPath = "/"
+healthcheckPath = "/health"
 restartPolicyType = "always"
 
 [environments.production.variables]
 NODE_ENV = "production"
-VITE_API_BASE_URL = "https://api-production.up.railway.app"
+VITE_API_BASE_URL = "https://api-production-3e0e.up.railway.app"

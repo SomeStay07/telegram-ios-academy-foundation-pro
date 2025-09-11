@@ -1,7 +1,6 @@
 [build]
-builder = "DOCKERFILE"
-dockerfilePath = "apps/api/Dockerfile"
-watchPatterns = ["apps/api/**","apps/api/Dockerfile"]
+builder = "NIXPACKS"
+watchPatterns = ["apps/api/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
 
 [deploy]
 healthcheckPath = "/api/health"
@@ -12,7 +11,6 @@ NODE_ENV = "production"
 PORT = "3000"
 DATABASE_URL = "${{Postgres.DATABASE_URL}}"
 REDIS_URL = "${{Redis.REDIS_URL}}"
-API_PUBLIC_ORIGIN = "${{RAILWAY_PUBLIC_DOMAIN}}"
-ALLOWED_ORIGINS = "http://localhost:5173"
+API_PUBLIC_ORIGIN = "https://${{RAILWAY_PUBLIC_DOMAIN}}"
+ALLOWED_ORIGINS = "https://miniapp-production-9217.up.railway.app"
 CSP_REPORT_ONLY = "0"
-TELEGRAM_BOT_TOKEN = "PLACEHOLDER_REPLACE_IN_RAILWAY_UI"

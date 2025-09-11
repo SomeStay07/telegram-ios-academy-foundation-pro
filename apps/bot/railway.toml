@@ -1,15 +1,14 @@
 [build]
 builder = "NIXPACKS"
-watchPatterns = ["apps/bot/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
-buildCommand = "npm install -g pnpm && pnpm build"
+watchPatterns = ["apps/bot/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
 
 [deploy]
-startCommand = "npm install -g pnpm && pnpm start"
 restartPolicyType = "always"
 
 [environments.production.variables]
 NODE_ENV = "production"
 TELEGRAM_BOT_TOKEN = "PLACEHOLDER_REPLACE_IN_RAILWAY_UI"
-WEBAPP_URL = "https://miniapp-production.up.railway.app"
-BOT_PUBLIC_URL = "${{RAILWAY_PUBLIC_DOMAIN}}"
+WEBAPP_URL = "https://miniapp-production-9217.up.railway.app"
+BOT_PUBLIC_URL = "https://${{RAILWAY_PUBLIC_DOMAIN}}"
 BOT_WEBHOOK_SECRET_PATH = "/bot/webhook-secret-random-path"
+API_BASE_URL = "https://api-production-3e0e.up.railway.app"
