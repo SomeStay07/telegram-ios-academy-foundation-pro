@@ -1,7 +1,15 @@
 import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis"; import express from "express";
 const token = process.env.BOT_TOKEN!; if (!token) throw new Error("BOT_TOKEN required");
+console.log('Environment variables check:');
+console.log('REDIS_URL:', process.env.REDIS_URL);
+console.log('BOT_TOKEN:', process.env.BOT_TOKEN ? 'SET' : 'NOT_SET');
+console.log('BOT_USERNAME:', process.env.BOT_USERNAME);
+
 const redisUrl = process.env.REDIS_URL;
-if (!redisUrl) throw new Error("REDIS_URL required");
+if (!redisUrl || redisUrl.includes('railway.internal') || redisUrl === '') {
+  console.error('REDIS_URL configuration error:', redisUrl);
+  throw new Error("REDIS_URL required and must be a valid Redis URL");
+}
 const redis = new Redis(redisUrl); const reminders = new Queue("reminders", { connection: redis as any }); const bot = new Bot(token);
 const BOT_USERNAME = process.env.BOT_USERNAME || "your_bot"; const WEBAPP_URL = process.env.WEBAPP_URL || "https://example.com";
 function startAppLink(payload: string) { return `https://t.me/${BOT_USERNAME}?startapp=${encodeURIComponent(payload)}` }
