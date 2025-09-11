@@ -11,6 +11,7 @@ build/
 .env
 .env.*
 apps/*/.env*
+railway-config/*.env
 
 # Security keys and certificates
 *.pem
