@@ -1,7 +1,14 @@
 [build]
 builder = "NIXPACKS"
 watchPatterns = ["apps/bot/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+
 [deploy]
-startCommand = "pnpm -C apps/bot start:dev"
-healthcheckTimeout = 300
-restartPolicyType = "ALWAYS"
+startCommand = "pnpm start"
+restartPolicyType = "always"
+
+[environments.production.variables]
+NODE_ENV = "production"
+TELEGRAM_BOT_TOKEN = "PLACEHOLDER_REPLACE_IN_RAILWAY_UI"
+WEBAPP_URL = "https://miniapp-production.up.railway.app"
+BOT_PUBLIC_URL = "${{RAILWAY_PUBLIC_DOMAIN}}"
+BOT_WEBHOOK_SECRET_PATH = "/bot/webhook-secret-random-path"

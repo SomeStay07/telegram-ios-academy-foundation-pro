@@ -1,5 +1,12 @@
 [build]
 builder = "NIXPACKS"
 watchPatterns = ["apps/miniapp/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+
 [deploy]
-startCommand = "pnpm -C apps/miniapp serve"
+startCommand = "pnpm start"
+healthcheckPath = "/"
+restartPolicyType = "always"
+
+[environments.production.variables]
+NODE_ENV = "production"
+VITE_API_BASE_URL = "https://api-production.up.railway.app"
