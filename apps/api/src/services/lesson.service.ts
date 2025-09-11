@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../modules/prisma.service';
 import { CreateAttemptDto, UpdateProgressDto } from '../dto/lesson.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class LessonService {
@@ -37,7 +38,7 @@ export class LessonService {
       throw new BadRequestException('Score must be between 0 and 1');
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Verify lesson exists
       await tx.lesson.findUniqueOrThrow({
         where: { id: lessonId }
@@ -86,7 +87,7 @@ export class LessonService {
       if (exists) return exists;
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Verify lesson exists
       await tx.lesson.findUniqueOrThrow({
         where: { id: lessonId }
