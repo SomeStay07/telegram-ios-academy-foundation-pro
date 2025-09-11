@@ -1,13 +1,11 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
-  "version": "3",
   "build": {
     "builder": "nixpacks",
     "buildCommand": "pnpm build"
   },
   "deploy": {
-    "numReplicas": 1,
-    "sleepApplication": false,
-    "restartPolicyType": "on-failure"
+    "startCommand": "pnpm start",
+    "restartPolicyType": "always"
   }
 }

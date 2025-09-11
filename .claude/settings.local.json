@@ -29,7 +29,10 @@
       "Bash(awk:*)",
       "Bash(git fetch:*)",
       "Bash(brew install:*)",
-      "Bash(gitleaks detect:*)"
+      "Bash(gitleaks detect:*)",
+      "Bash(railway whoami:*)",
+      "Bash(railway project create:*)",
+      "Bash(railway:*)"
     ],
     "deny": [],
     "ask": []
