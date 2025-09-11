@@ -1,10 +1,10 @@
 [build]
 builder = "NIXPACKS"
 watchPatterns = ["apps/bot/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
-buildCommand = "corepack enable && corepack prepare pnpm@latest --activate && pnpm build"
+buildCommand = "npm install -g pnpm && pnpm build"
 
 [deploy]
-startCommand = "corepack enable && corepack prepare pnpm@latest --activate && pnpm start"
+startCommand = "npm install -g pnpm && pnpm start"
 restartPolicyType = "always"
 
 [environments.production.variables]
