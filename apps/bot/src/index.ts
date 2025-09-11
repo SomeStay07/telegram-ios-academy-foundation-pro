@@ -6,7 +6,7 @@ console.log('BOT_TOKEN:', process.env.BOT_TOKEN ? 'SET' : 'NOT_SET');
 console.log('BOT_USERNAME:', process.env.BOT_USERNAME);
 
 const redisUrl = process.env.REDIS_URL;
-if (!redisUrl || redisUrl.includes('railway.internal') || redisUrl === '') {
+if (!redisUrl || redisUrl === '' || (!redisUrl.startsWith('redis://') && !redisUrl.startsWith('rediss://'))) {
   console.error('REDIS_URL configuration error:', redisUrl);
   throw new Error("REDIS_URL required and must be a valid Redis URL");
 }
