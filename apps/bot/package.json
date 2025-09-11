@@ -10,14 +10,16 @@
     "queue:worker": "tsx src/worker.ts"
   },
   "dependencies": {
-    "grammy": "^1.20.0",
+    "@types/express": "^4.17.21",
     "bullmq": "^5.7.7",
+    "express": "^4.19.2",
+    "grammy": "^1.20.0",
     "ioredis": "^5.3.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
+    "@types/node": "^20.11.30",
     "tsx": "^4.7.0",
-    "@types/node": "^20.11.30"
+    "typescript": "^5.4.5"
   }
 }

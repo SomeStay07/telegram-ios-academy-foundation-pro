@@ -1,4 +1,4 @@
-import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis";
+import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis"; import express from "express";
 const token = process.env.BOT_TOKEN!; if (!token) throw new Error("BOT_TOKEN required");
 const redisUrl = process.env.REDIS_URL;
 if (!redisUrl) throw new Error("REDIS_URL required");
@@ -17,3 +17,19 @@ bot.command("review", async (ctx) => {
   await ctx.reply("План ревью создан: D1/D7/D30.")
 })
 bot.start(); console.log("Bot started")
+
+// Health check server for Railway
+const app = express();
+const port = process.env.PORT || 8080;
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString(), redis: !!redisUrl });
+});
+
+app.get("/", (req, res) => {
+  res.json({ status: "bot-running", timestamp: new Date().toISOString() });
+});
+
+app.listen(port, () => {
+  console.log(`Bot health server running on port ${port}`);
+});
