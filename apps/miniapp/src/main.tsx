@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createRootRoute, createRoute, createRouter, RouterProvider, Outlet } from '@tanstack/react-router'
-import lesson from '../../../content/seed/lessons/swift-variables.json'
+import lesson from './data/lessons/swift-variables.json'
 import { parseLessonStrict } from './lesson-spec/src'
 import { ModuleRenderer } from './ui/src'
 import './ui/src/styles/globals.css'
