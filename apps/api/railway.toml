@@ -1,10 +1,9 @@
 [build]
-builder = "NIXPACKS"
-watchPatterns = ["apps/api/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
-buildCommand = "npm install -g pnpm && pnpm prisma generate && pnpm build"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+watchPatterns = ["apps/api/**","Dockerfile"]
 
 [deploy]
-startCommand = "npm install -g pnpm && pnpm start"
 healthcheckPath = "/api/health"
 restartPolicyType = "always"
 
