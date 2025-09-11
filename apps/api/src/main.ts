@@ -93,4 +93,4 @@ async function bootstrap() {
   console.log(`API started on ${await app.getUrl()}`)
   console.log(`Swagger docs available at ${await app.getUrl()}/api/docs`)
 }
-bootstrap().catch((e) => { console.error(e); process.exit(1) })
+bootstrap().catch((e) => { console.error(e); process.exit(1) })// Railway deployment test - четверг, 11 сентября 2025 г. 20:51:26 (MSK)
