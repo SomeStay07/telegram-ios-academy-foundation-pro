@@ -6,14 +6,20 @@ WORKDIR /app
 # Install pnpm globally
 RUN npm install -g pnpm
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy root package files for workspace setup
+COPY pnpm-workspace.yaml pnpm-lock.yaml ./
+
+# Copy API package files
+COPY apps/api/package.json ./apps/api/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# Copy app source
-COPY . .
+# Copy API source
+COPY apps/api ./apps/api
+
+# Set working directory to API
+WORKDIR /app/apps/api
 
 # Generate Prisma client
 RUN pnpm prisma generate
