@@ -1,9 +1,10 @@
 [build]
 builder = "NIXPACKS"
 watchPatterns = ["apps/api/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+buildCommand = "corepack enable && corepack prepare pnpm@latest --activate && pnpm prisma generate && pnpm build"
 
 [deploy]
-startCommand = "pnpm start"
+startCommand = "corepack enable && corepack prepare pnpm@latest --activate && pnpm start"
 healthcheckPath = "/api/health"
 restartPolicyType = "always"
 
