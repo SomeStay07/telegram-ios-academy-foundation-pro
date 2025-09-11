@@ -1,0 +1,10 @@
+[
+  {
+    "id": "ios-fundamentals",
+    "title": "iOS Development Fundamentals",
+    "lessons": [
+      { "id": "swift-variables", "order": 1 },
+      { "id": "swift-functions", "order": 2 }
+    ]
+  }
+]

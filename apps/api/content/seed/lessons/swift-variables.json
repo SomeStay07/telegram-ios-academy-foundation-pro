@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "id": "swift-variables",
+    "title": "Swift Variables and Constants",
+    "description": "Learn the fundamentals of variables and constants in Swift",
+    "estimatedMinutes": 30,
+    "difficulty": "beginner",
+    "tags": ["swift", "variables", "constants", "fundamentals"]
+  },
+  "content": {
+    "modules": [
+      {
+        "type": "text",
+        "content": "Variables and constants are fundamental building blocks in Swift programming."
+      },
+      {
+        "type": "quiz",
+        "question": "Which keyword is used to declare a variable in Swift?",
+        "options": ["var", "let", "const", "variable"],
+        "correct": 0
+      }
+    ]
+  }
+}
