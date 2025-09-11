@@ -1,19 +1,8 @@
 import { Controller, Post, Body, BadRequestException } from '@nestjs/common'
 import crypto from 'node:crypto'
-import Redis from 'ioredis'
 
 @Controller('auth')
 export class AuthController {
-  private redis: Redis
-  
-  constructor() {
-    const redisUrl = process.env.REDIS_URL;
-    if (!redisUrl || redisUrl === '' || (!redisUrl.startsWith('redis://') && !redisUrl.startsWith('rediss://'))) {
-      console.error('REDIS_URL configuration error in AuthController:', redisUrl);
-      throw new Error("REDIS_URL required and must be a valid Redis URL");
-    }
-    this.redis = new Redis(redisUrl);
-  }
   @Post('verifyInitData')
   async verify(@Body() body: any) {
     const initData = body?.initData
@@ -32,9 +21,6 @@ export class AuthController {
     const hmac = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex')
     if (hmac !== hash) throw new BadRequestException('HMAC invalid')
 
-    const nonceKey = `nonce:${hash}`
-    const nx = await this.redis.set(nonceKey, '1', 'EX', 300, 'NX')
-    if (nx !== 'OK') throw new BadRequestException('replay detected')
 
     return { ok: true }
   }

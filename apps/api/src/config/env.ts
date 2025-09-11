@@ -3,7 +3,6 @@ import { z } from 'zod';
 export const EnvSchema = z.object({
   NODE_ENV: z.enum(['development','test','production']).default('production'),
   DATABASE_URL: z.string().url(),
-  REDIS_URL: z.string().url(),
   TELEGRAM_BOT_TOKEN: z.string().min(10),
   ALLOWED_ORIGINS: z.string().min(1),
   CSP_REPORT_ONLY: z.string().default('1'),
