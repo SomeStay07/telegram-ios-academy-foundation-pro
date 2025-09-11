@@ -31,10 +31,7 @@ export default defineConfig({
           'i18n': ['i18next', 'react-i18next'],
           
           // Form handling
-          'forms': ['react-hook-form', '@hookform/resolvers'],
-          
-          // UI components
-          'ui-vendor': ['@telegram-ios-academy/ui']
+          'forms': ['react-hook-form', '@hookform/resolvers']
         }
       }
     },
