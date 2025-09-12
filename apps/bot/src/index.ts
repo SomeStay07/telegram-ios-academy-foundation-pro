@@ -14,40 +14,43 @@ let reminders: Queue | null = null;
 if (redisUrl) {
   console.log('🔧 Redis URL provided, attempting to connect...');
   
-  try {
-    redis = new Redis(redisUrl, {
-      maxRetriesPerRequest: 3,
-      lazyConnect: true,
-      connectTimeout: 10000,
-      commandTimeout: 5000,
-      enableReadyCheck: false,
-    });
+  // Wait a bit for network to be ready (Railway network timing issue)
+  setTimeout(() => {
+    try {
+      redis = new Redis(redisUrl, {
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+        connectTimeout: 15000, // Increased timeout
+        commandTimeout: 8000,   // Increased timeout  
+        enableReadyCheck: false,
+      });
 
-    redis.on('error', (error) => {
-      console.warn('⚠️ Redis error in BOT:', error.message);
-    });
+      redis.on('error', (error) => {
+        console.warn('⚠️ Redis error in BOT:', error.message);
+      });
 
-    redis.on('connect', () => {
-      console.log('✅ Redis connected for BOT');
-    });
+      redis.on('connect', () => {
+        console.log('✅ Redis connected for BOT');
+      });
 
-    redis.on('ready', () => {
-      console.log('✅ Redis ready for BOT');
-    });
+      redis.on('ready', () => {
+        console.log('✅ Redis ready for BOT');
+      });
 
-    redis.on('close', () => {
-      console.log('ℹ️ Redis connection closed for BOT');
-    });
+      redis.on('close', () => {
+        console.log('ℹ️ Redis connection closed for BOT');
+      });
 
-    redis.on('reconnecting', () => {
-      console.log('🔄 Redis reconnecting for BOT');
-    });
+      redis.on('reconnecting', () => {
+        console.log('🔄 Redis reconnecting for BOT');
+      });
 
-    reminders = new Queue("reminders", { connection: redis as any });
-    console.log('✅ Redis queue initialized for reminders');
-  } catch (error) {
-    console.error('❌ Failed to initialize Redis:', error);
-  }
+      reminders = new Queue("reminders", { connection: redis as any });
+      console.log('✅ Redis queue initialized for reminders');
+    } catch (error) {
+      console.error('❌ Failed to initialize Redis:', error);
+    }
+  }, 3000); // Wait 3 seconds before connecting to Redis
 } else {
   console.log('⚠️ No Redis URL provided, running without reminder system');
 } const bot = new Bot(token);
