@@ -127,6 +127,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build MiniApp for testing
         run: pnpm -C apps/miniapp build
+        env:
+          VITE_API_BASE_URL: http://127.0.0.1:3000/api
       - name: Install Playwright with dependencies
         run: pnpm -C apps/miniapp exec playwright install --with-deps
       - name: Start preview server in background
@@ -164,8 +166,31 @@ jobs:
   schemathesis_fuzz:
     name: API Schemathesis Fuzz
     needs: [changes, build_typecheck]
-    if: false # Temporarily disabled - requires external services (PostgreSQL, Redis)
+    if: needs.changes.outputs.api == 'true'
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
@@ -184,6 +209,12 @@ jobs:
         run: cd apps/api && pnpm prisma generate
       - name: Build API
         run: pnpm -C apps/api build
+      - name: Run database migrations
+        run: |
+          cd apps/api
+          DATABASE_URL="postgresql://test:test@localhost:5432/test" pnpm prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
       - name: Start API in background
         run: |
           cd apps/api
