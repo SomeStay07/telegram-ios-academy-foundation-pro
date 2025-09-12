@@ -32,7 +32,7 @@ app.use(helmet({
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: isDevelopment 
         ? ["'self'", "http://localhost:3001", "ws://localhost:5173", "https://us.i.posthog.com", "https://o4507902681923584.ingest.sentry.io"]
-        : ["'self'", "https://api-production-1e872.up.railway.app", "https://us.i.posthog.com", "https://o4507902681923584.ingest.sentry.io", "https://api.telegram.org"],
+        : ["'self'", "https://api-production-3e0e.up.railway.app", "https://us.i.posthog.com", "https://o4507902681923584.ingest.sentry.io", "https://api.telegram.org"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
@@ -80,12 +80,23 @@ app.use(express.static(distPath, {
   }
 }));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Handle SPA routing - serve index.html for all non-API routes
 app.get('*', (req, res) => {
   const indexPath = join(distPath, 'index.html');
   
+  console.log(`Request for: ${req.path}`);
+  console.log(`Looking for index.html at: ${indexPath}`);
+  console.log(`Dist directory exists: ${existsSync(distPath)}`);
+  console.log(`Index file exists: ${existsSync(indexPath)}`);
+  
   if (!existsSync(indexPath)) {
-    res.status(404).send('Application not built. Run `pnpm build` first.');
+    console.error(`Index file not found at: ${indexPath}`);
+    res.status(404).send(`Application not built. Index file not found at: ${indexPath}`);
     return;
   }
 
@@ -109,7 +120,8 @@ app.get('*', (req, res) => {
     res.send(htmlWithNonce);
   });
   
-  stream.on('error', () => {
+  stream.on('error', (err) => {
+    console.error('Error reading index file:', err);
     res.status(500).send('Error loading application');
   });
 });

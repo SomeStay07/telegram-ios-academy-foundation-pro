@@ -1,8 +1,9 @@
 // Lightweight API hooks for initial load
 // Full API functionality is loaded lazily when needed
 import { useState, useEffect } from 'react'
+import { VITE } from '../env'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+const API_BASE_URL = VITE.API_BASE_URL
 
 // Simple health check without React Query
 export function useLightApiHealth() {

@@ -94,6 +94,94 @@ SENTRY_DSN=https://...                         # Error tracking
 - Database access: connection pooling + SSL required
 - Logs retention: 7 days maximum
 
+## Secrets & ENV (no-secrets-in-git)
+
+### Environment File Protection
+All sensitive environment files are protected by `.gitignore` patterns:
+- `.env` - Root environment files
+- `.env.*` - All environment file variants
+- `apps/*/.env*` - All app-specific environment files
+- `*.pem`, `*.p8`, `*.key` - Security certificates and keys
+
+### Environment Validation Implementation
+
+**API Service** (`apps/api/src/config/env.ts`):
+```typescript
+import { z } from 'zod';
+
+export const EnvSchema = z.object({
+  NODE_ENV: z.enum(['development','test','production']).default('production'),
+  DATABASE_URL: z.string().url(),
+  REDIS_URL: z.string().url(),
+  TELEGRAM_BOT_TOKEN: z.string().min(10),
+  ALLOWED_ORIGINS: z.string().min(1),
+  CSP_REPORT_ONLY: z.string().default('1'),
+  API_PUBLIC_ORIGIN: z.string().url().optional(),
+});
+
+export function parseEnv(raw: NodeJS.ProcessEnv): Env {
+  const res = EnvSchema.safeParse(raw);
+  if (!res.success) { 
+    console.error('❌ Invalid ENV:', res.error.flatten().fieldErrors); 
+    process.exit(1); 
+  }
+  return res.data;
+}
+```
+
+**MiniApp** (`apps/miniapp/src/env.ts`):
+```typescript
+export const VITE = (() => {
+  const api = import.meta.env.VITE_API_BASE_URL;
+  if (!api) throw new Error('Missing VITE_API_BASE_URL');
+  return { API_BASE_URL: api };
+})();
+```
+
+### Required Railway Variables
+
+**API Service Variables:**
+```
+NODE_ENV=production
+DATABASE_URL=postgres://<user>:<pass>@<host>:<port>/<db>
+REDIS_URL=redis://<user>:<pass>@<host>:<port>
+TELEGRAM_BOT_TOKEN=<bot_token>
+ALLOWED_ORIGINS=https://web-production-1e872.up.railway.app,http://localhost:5173
+CSP_REPORT_ONLY=0
+API_PUBLIC_ORIGIN=https://<api>.up.railway.app
+```
+
+**MiniApp Variables:**
+```
+NODE_ENV=production
+VITE_API_BASE_URL=https://<api>.up.railway.app
+```
+
+**Bot Variables:**
+```
+NODE_ENV=production
+TELEGRAM_BOT_TOKEN=<bot_token>
+WEBAPP_URL=https://web-production-1e872.up.railway.app
+BOT_PUBLIC_URL=https://<bot>.up.railway.app
+BOT_WEBHOOK_SECRET_PATH=/bot/<random>
+```
+
+### Gitleaks CI Integration
+Automated secrets scanning via GitHub Actions prevents accidental commits:
+```yaml
+# .github/workflows/gitleaks.yml
+name: gitleaks
+on: [push, pull_request]
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gitleaks/gitleaks-action@v2
+        with:
+          args: detect --source=. --redact
+```
+
 ## Telegram WebApp Authentication
 
 ### initData Verification Implementation

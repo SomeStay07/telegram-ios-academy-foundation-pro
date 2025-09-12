@@ -9,10 +9,14 @@ build/
 
 # Environment files
 .env
-.env.local
-.env.production
-.env.development
-.env.*.local
+.env.*
+apps/*/.env*
+railway-config/*.env
+
+# Security keys and certificates
+*.pem
+*.p8
+*.key
 
 # Logs
 npm-debug.log*
@@ -116,3 +120,6 @@ temp/
 
 # Railway
 .railway/
+
+# Claude Code settings
+.claude/settings.local.json

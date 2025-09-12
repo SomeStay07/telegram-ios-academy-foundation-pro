@@ -16,18 +16,33 @@ model User {
 }
 
 model Lesson {
-  id           String         @id
-  content      Json
-  CourseLesson CourseLesson[]
-  Progress     Progress[]
-  Attempt      Attempt[]
+  id               String         @id
+  title            String
+  description      String
+  content          Json
+  estimatedMinutes Int
+  difficulty       Difficulty     @default(beginner)
+  tags             String[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  
+  CourseLesson     CourseLesson[]
+  Progress         Progress[]
+  Attempt          Attempt[]
 }
 
 model Course {
-  id           String         @id
-  title        String
+  id             String         @id
+  title          String
+  description    String
+  difficulty     Difficulty     @default(beginner)
+  estimatedHours Float
+  tags           String[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  
   // порядок в курсе задаётся через CourseLesson.order
-  CourseLesson CourseLesson[]
+  CourseLesson   CourseLesson[]
 }
 
 model CourseLesson {
@@ -48,6 +63,10 @@ model Progress {
   lessonId  String
   // 0..1 для процента/мастерства
   score     Float    @default(0)
+  completed Boolean  @default(false)
+  timeSpent Int      @default(0) // in minutes
+  metadata  Json?
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user   User   @relation(fields: [userId], references: [id])
@@ -59,16 +78,24 @@ model Progress {
 }
 
 model Attempt {
-  id        String   @id @default(cuid())
-  userId    String
-  lessonId  String
-  payload   Json
-  createdAt DateTime @default(now())
+  id               String   @id @default(cuid())
+  userId           String
+  lessonId         String
+  score            Float
+  payload          Json
+  timeSpentSeconds Int
+  createdAt        DateTime @default(now())
   // защитим от дублирования по идемпотентному ключу (если решишь хранить в БД)
-  idempotencyKey String? @unique
+  idempotencyKey   String?  @unique
 
   user   User   @relation(fields: [userId], references: [id])
   lesson Lesson @relation(fields: [lessonId], references: [id])
 
   @@index([lessonId, userId, createdAt])
+}
+
+enum Difficulty {
+  beginner
+  intermediate
+  advanced
 }

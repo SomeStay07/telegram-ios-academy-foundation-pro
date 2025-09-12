@@ -1,7 +1,16 @@
 [build]
 builder = "NIXPACKS"
-watchPatterns = ["apps/bot/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+watchPatterns = ["apps/bot/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+
 [deploy]
-startCommand = "pnpm -C apps/bot start:dev"
-healthcheckTimeout = 300
-restartPolicyType = "ALWAYS"
+restartPolicyType = "always"
+
+[environments.production.variables]
+NODE_ENV = "production"
+BOT_TOKEN = "PLACEHOLDER_REPLACE_IN_RAILWAY_UI"
+BOT_USERNAME = "PLACEHOLDER_ADD_BOT_USERNAME"
+WEBAPP_URL = "https://miniapp-production-9217.up.railway.app"
+BOT_PUBLIC_URL = "https://${{RAILWAY_PUBLIC_DOMAIN}}"
+BOT_WEBHOOK_SECRET_PATH = "/bot/webhook-secret-random-path"
+API_BASE_URL = "https://api-production-3e0e.up.railway.app"
+REDIS_URL = "${{Redis.REDIS_URL}}"

@@ -31,24 +31,14 @@ export default defineConfig({
           'i18n': ['i18next', 'react-i18next'],
           
           // Form handling
-          'forms': ['react-hook-form', '@hookform/resolvers'],
-          
-          // UI components
-          'ui-vendor': ['@telegram-ios-academy/ui']
+          'forms': ['react-hook-form', '@hookform/resolvers']
         }
       }
     },
     // Target smaller initial bundle
     chunkSizeWarningLimit: 400, // Reduced from default 500
     
-    // Enable tree shaking
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.log in production
-        drop_debugger: true,
-        pure_funcs: ['console.info', 'console.debug', 'console.warn']
-      }
-    }
+    // Enable tree shaking - use default minifier
+    minify: true
   }
 })
