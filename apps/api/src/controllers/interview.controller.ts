@@ -1,8 +1,8 @@
 import { Controller, Get, Put, Post, Param, Body, Headers, UsePipes, ValidationPipe } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiSecurity } from '@nestjs/swagger'
-import { InterviewService, UpdateInterviewProgressDto, CreateInterviewAttemptDto } from '../services/interview.service'
+import { InterviewService, UpdateInterviewProgressDto, StartInterviewAttemptDto, FinishInterviewAttemptDto } from '../services/interview.service'
 import { MetricsService } from '../metrics/metrics.service'
-import { InterviewMode } from '@prisma/client'
+import { InterviewMode, InterviewAttemptStatus } from '@prisma/client'
 import { IsString, IsOptional, IsNumber, IsBoolean, IsEnum, IsObject } from 'class-validator'
 import { Transform } from 'class-transformer'
 
@@ -31,7 +31,7 @@ class UpdateInterviewProgressBodyDto {
   metadata?: any
 }
 
-class CreateInterviewAttemptBodyDto {
+class StartInterviewAttemptBodyDto {
   @IsString()
   interviewId!: string
 
@@ -40,6 +40,11 @@ class CreateInterviewAttemptBodyDto {
 
   @IsEnum(InterviewMode)
   mode!: InterviewMode
+}
+
+class FinishInterviewAttemptBodyDto {
+  @IsString()
+  attemptId!: string
 
   @IsOptional()
   @IsBoolean()
@@ -104,47 +109,62 @@ export class InterviewController {
     return this.interviewService.updateInterviewProgress(userId, progressData)
   }
 
-  @Post('attempts/:id')
-  @ApiOperation({ summary: 'Create interview attempt' })
-  @ApiParam({ name: 'id', description: 'Interview ID' })
-  @ApiBody({ type: CreateInterviewAttemptBodyDto })
-  @ApiResponse({ status: 201, description: 'Interview attempt created successfully' })
+  @Post('attempts/start')
+  @ApiOperation({ summary: 'Start interview attempt' })
+  @ApiBody({ type: StartInterviewAttemptBodyDto })
+  @ApiResponse({ status: 201, description: 'Interview attempt started successfully' })
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async createInterviewAttempt(
-    @Param('id') interviewId: string,
-    @Body() body: CreateInterviewAttemptBodyDto,
+  async startInterviewAttempt(
+    @Body() body: StartInterviewAttemptBodyDto,
     @Headers('idempotency-key') idempotencyKey?: string,
     @Headers('x-telegram-init-data') telegramData?: string
   ) {
     // For demo purposes, use hardcoded user ID
     const userId = 'demo-user'
     
-    const attemptData: CreateInterviewAttemptDto = {
+    const attemptData: StartInterviewAttemptDto = {
       interviewId: body.interviewId,
       questionId: body.questionId,
       mode: body.mode,
-      correct: body.correct,
-      answerJson: body.answerJson,
-      timeSpent: body.timeSpent,
       idempotencyKey
     }
 
-    // Record interview attempt metrics
+    // Record interview attempt start metrics
     this.metricsService.recordInterviewAttempt(
       body.interviewId,
       body.mode as 'drill' | 'explain' | 'mock',
-      userId,
       'started'
     )
 
-    const result = await this.interviewService.createInterviewAttempt(userId, attemptData)
+    return this.interviewService.startInterviewAttempt(userId, attemptData)
+  }
 
-    // Record attempt completion
+  @Put('attempts/finish')
+  @ApiOperation({ summary: 'Finish interview attempt' })
+  @ApiBody({ type: FinishInterviewAttemptBodyDto })
+  @ApiResponse({ status: 200, description: 'Interview attempt finished successfully' })
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async finishInterviewAttempt(
+    @Body() body: FinishInterviewAttemptBodyDto,
+    @Headers('x-telegram-init-data') telegramData?: string
+  ) {
+    // For demo purposes, use hardcoded user ID
+    const userId = 'demo-user'
+    
+    const attemptData: FinishInterviewAttemptDto = {
+      attemptId: body.attemptId,
+      correct: body.correct,
+      answerJson: body.answerJson,
+      timeSpent: body.timeSpent
+    }
+
+    const result = await this.interviewService.finishInterviewAttempt(userId, attemptData)
+
+    // Record attempt completion metrics
     this.metricsService.recordInterviewAttempt(
-      body.interviewId,
-      body.mode as 'drill' | 'explain' | 'mock',
-      userId,
-      body.correct ? 'completed' : 'abandoned'
+      result.interviewId,
+      result.mode as 'drill' | 'explain' | 'mock',
+      result.correct ? 'completed' : 'abandoned'
     )
 
     return result

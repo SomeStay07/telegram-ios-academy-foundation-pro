@@ -32,21 +32,21 @@ export class MetricsService {
     this.interviewAttempts = new Counter({
       name: 'interview_attempts_total',
       help: 'Total number of interview attempts',
-      labelNames: ['interview_id', 'mode', 'user_id', 'result']
+      labelNames: ['interview_id', 'mode', 'result']
     })
 
     // Lesson checkpoint counter
     this.lessonCheckpoints = new Counter({
       name: 'lesson_checkpoints_total',
       help: 'Total number of lesson checkpoints reached',
-      labelNames: ['lesson_id', 'checkpoint_type', 'user_id']
+      labelNames: ['lesson_id', 'checkpoint_type']
     })
 
     // Course progress histogram
     this.courseProgress = new Histogram({
       name: 'course_progress_duration_seconds',
       help: 'Time taken to complete course milestones',
-      labelNames: ['course_id', 'milestone', 'user_id'],
+      labelNames: ['course_id', 'milestone'],
       buckets: [60, 300, 900, 1800, 3600, 7200, 14400, 28800, 86400] // 1min to 1day
     })
   }
@@ -67,13 +67,11 @@ export class MetricsService {
   recordInterviewAttempt(
     interviewId: string,
     mode: 'drill' | 'explain' | 'mock',
-    userId: string,
     result: 'started' | 'completed' | 'abandoned'
   ) {
     this.interviewAttempts.inc({
       interview_id: interviewId,
       mode,
-      user_id: userId,
       result
     })
   }
@@ -81,13 +79,11 @@ export class MetricsService {
   // Record lesson checkpoint
   recordLessonCheckpoint(
     lessonId: string,
-    checkpointType: 'started' | 'quiz_answered' | 'completed' | 'video_watched',
-    userId: string
+    checkpointType: 'started' | 'quiz_answered' | 'completed' | 'video_watched'
   ) {
     this.lessonCheckpoints.inc({
       lesson_id: lessonId,
-      checkpoint_type: checkpointType,
-      user_id: userId
+      checkpoint_type: checkpointType
     })
   }
 
@@ -95,13 +91,11 @@ export class MetricsService {
   recordCourseProgress(
     courseId: string,
     milestone: 'enrolled' | 'first_lesson' | '25_percent' | '50_percent' | '75_percent' | 'completed',
-    userId: string,
     durationSeconds: number
   ) {
     this.courseProgress.observe({
       course_id: courseId,
-      milestone,
-      user_id: userId
+      milestone
     }, durationSeconds)
   }
 
@@ -112,12 +106,14 @@ export class MetricsService {
 
   // Normalize route for consistent labeling
   private normalizeRoute(route: string): string {
-    // Replace dynamic segments with placeholders
+    // Replace dynamic segments with placeholders, being more specific to avoid over-matching
     return route
-      .replace(/\/api\//, '/')
-      .replace(/\/\d+/g, '/:id')
-      .replace(/\/[a-f0-9-]{36}/g, '/:uuid')
-      .replace(/\/[a-zA-Z0-9-]+/g, '/:param')
+      .replace(/\/api\//, '/') // Remove /api/ prefix
+      .replace(/\/\d+(?=\/|$)/g, '/:id') // Replace numeric IDs (only if followed by / or end of string)
+      .replace(/\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?=\/|$)/gi, '/:uuid') // Replace UUID format
+      .replace(/\/c[a-z0-9]{24}(?=\/|$)/gi, '/:cuid') // Replace CUID format (starts with 'c' + 24 chars)
+      .replace(/\/[a-z0-9]{21}(?=\/|$)/gi, '/:nanoid') // Replace common nanoid format (21 chars)
+      .toLowerCase() // Ensure consistent casing
   }
 
   // Helper method to measure execution time

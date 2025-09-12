@@ -1,10 +1,11 @@
 import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis"; import express from "express";
 import { DeepLinkGenerator, COURSES, INTERVIEWS, CourseId, InterviewId } from "./utils/deep-links";
 
-const token = process.env.BOT_TOKEN!; if (!token) throw new Error("BOT_TOKEN required");
+const token = process.env.BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN; if (!token) throw new Error("BOT_TOKEN or TELEGRAM_BOT_TOKEN required");
 console.log('Environment variables check:');
 console.log('REDIS_URL:', process.env.REDIS_URL);
 console.log('BOT_TOKEN:', process.env.BOT_TOKEN ? 'SET' : 'NOT_SET');
+console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? 'SET' : 'NOT_SET');
 console.log('BOT_USERNAME:', process.env.BOT_USERNAME);
 
 const redisUrl = process.env.REDIS_URL;

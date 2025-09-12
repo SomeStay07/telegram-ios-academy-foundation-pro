@@ -41,7 +41,21 @@
       "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" PORT=3000 timeout 5s node dist/main.js)",
       "Bash(git cherry-pick:*)",
       "Bash(git branch:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(gzip:*)",
+      "Bash(git rm:*)",
+      "Bash(schemathesis run:*)",
+      "WebSearch",
+      "WebFetch(domain:schemathesis.readthedocs.io)",
+      "Bash(pip install:*)",
+      "Bash(python3 -m pip install:*)",
+      "Bash(python3:*)",
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run --help)",
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://httpbin.org/spec.json --url=http://httpbin.org --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1 --dry-run)",
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://nonexistent.test/spec.json --url=http://nonexistent.test --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" npx prisma migrate dev --name add-interview-attempt-status-fields)",
+      "Bash(bc:*)"
     ],
     "deny": [],
     "ask": []

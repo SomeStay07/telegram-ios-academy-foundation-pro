@@ -95,8 +95,29 @@ export const CourseView: React.FC<CourseViewProps> = ({
   const isLessonUnlocked = (lesson: CourseLesson): boolean => {
     if (lesson.order === 1) return true // First lesson always unlocked
     
-    const previousLesson = course.lessons.find(l => l.order === lesson.order - 1)
-    return previousLesson ? previousLesson.isCompleted : false
+    // Strict sequential gating: must complete all previous lessons
+    const previousLessons = course.lessons
+      .filter(l => l.order < lesson.order)
+      .sort((a, b) => a.order - b.order)
+    
+    return previousLessons.every(prevLesson => prevLesson.isCompleted)
+  }
+
+  const getLockedReason = (lesson: CourseLesson): string => {
+    if (lesson.order === 1) return ''
+    
+    const incompletePrevious = course.lessons
+      .filter(l => l.order < lesson.order && !l.isCompleted)
+      .sort((a, b) => a.order - b.order)
+    
+    if (incompletePrevious.length === 0) return ''
+    
+    const firstIncomplete = incompletePrevious[0]
+    if (incompletePrevious.length === 1) {
+      return `Complete "${firstIncomplete.title}" to unlock this lesson`
+    }
+    
+    return `Complete ${incompletePrevious.length} previous lessons to unlock`
   }
 
   const nextLesson = getNextAvailableLesson()
@@ -180,7 +201,10 @@ export const CourseView: React.FC<CourseViewProps> = ({
             return (
               <Card 
                 key={lesson.id}
-                className={`p-4 transition-all ${!isUnlocked ? 'opacity-60 bg-gray-50' : 'hover:shadow-md cursor-pointer'}`}
+                className={`p-4 transition-all relative ${!isUnlocked 
+                  ? 'opacity-60 bg-gray-50 border-2 border-dashed border-gray-300' 
+                  : 'hover:shadow-md cursor-pointer border border-gray-200'
+                }`}
                 onClick={() => {
                   if (isUnlocked) {
                     setExpandedLesson(expandedLesson === lesson.id ? null : lesson.id)
@@ -188,6 +212,18 @@ export const CourseView: React.FC<CourseViewProps> = ({
                 }}
               >
                 <div className="flex items-center justify-between">
+                  {/* Gating overlay for strict visual blocking */}
+                  {!isUnlocked && (
+                    <div className="absolute inset-0 bg-gray-50/50 backdrop-blur-[0.5px] rounded-lg flex items-center justify-center z-10">
+                      <div className="text-center">
+                        <LockIcon />
+                        <p className="text-xs text-gray-600 mt-1 max-w-[150px]">
+                          {getLockedReason(lesson)}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="flex items-center gap-4 flex-1">
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
                       {lesson.order}
@@ -212,7 +248,7 @@ export const CourseView: React.FC<CourseViewProps> = ({
                   </div>
 
                   {/* Action Button */}
-                  {isUnlocked && (
+                  {isUnlocked ? (
                     <Button
                       variant={lesson.isCompleted ? "secondary" : "primary"}
                       size="sm"
@@ -223,46 +259,63 @@ export const CourseView: React.FC<CourseViewProps> = ({
                     >
                       {lesson.isCompleted ? 'Review' : 'Start'}
                     </Button>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <LockIcon />
+                      <span className="text-xs text-gray-500 font-medium">Locked</span>
+                    </div>
                   )}
                 </div>
 
                 {/* Expanded Content */}
-                {expandedLesson === lesson.id && isUnlocked && (
+                {expandedLesson === lesson.id && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="flex gap-2">
-                      <Button
-                        variant="primary" 
-                        size="sm"
-                        onClick={() => onLessonSelect(lesson.id)}
-                      >
-                        📚 Start Lesson
-                      </Button>
-                      {onInterviewSelect && (
-                        <>
-                          <Button
-                            variant="secondary" 
-                            size="sm"
-                            onClick={() => onInterviewSelect(lesson.id, 'drill')}
-                          >
-                            ⚡ Drill
-                          </Button>
-                          <Button
-                            variant="secondary" 
-                            size="sm"
-                            onClick={() => onInterviewSelect(lesson.id, 'explain')}
-                          >
-                            🎓 Explain
-                          </Button>
-                          <Button
-                            variant="secondary" 
-                            size="sm"
-                            onClick={() => onInterviewSelect(lesson.id, 'mock')}
-                          >
-                            ⏱️ Mock
-                          </Button>
-                        </>
-                      )}
-                    </div>
+                    {isUnlocked ? (
+                      <div className="flex gap-2">
+                        <Button
+                          variant="primary" 
+                          size="sm"
+                          onClick={() => onLessonSelect(lesson.id)}
+                        >
+                          📚 Start Lesson
+                        </Button>
+                        {onInterviewSelect && (
+                          <>
+                            <Button
+                              variant="secondary" 
+                              size="sm"
+                              onClick={() => onInterviewSelect(lesson.id, 'drill')}
+                            >
+                              ⚡ Drill
+                            </Button>
+                            <Button
+                              variant="secondary" 
+                              size="sm"
+                              onClick={() => onInterviewSelect(lesson.id, 'explain')}
+                            >
+                              🎓 Explain
+                            </Button>
+                            <Button
+                              variant="secondary" 
+                              size="sm"
+                              onClick={() => onInterviewSelect(lesson.id, 'mock')}
+                            >
+                              ⏱️ Mock
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <div className="flex items-center gap-2 mb-2">
+                          <LockIcon />
+                          <span className="font-semibold text-yellow-800">Lesson Locked</span>
+                        </div>
+                        <p className="text-sm text-yellow-700">
+                          {getLockedReason(lesson)}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </Card>

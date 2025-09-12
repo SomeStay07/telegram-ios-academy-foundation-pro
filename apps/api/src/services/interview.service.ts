@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { InterviewMode, Prisma } from '@prisma/client'
+import { InterviewMode, InterviewAttemptStatus, Prisma } from '@prisma/client'
 
 export interface InterviewProgressResponse {
   id: string
@@ -22,14 +22,18 @@ export interface UpdateInterviewProgressDto {
   metadata?: any
 }
 
-export interface CreateInterviewAttemptDto {
+export interface StartInterviewAttemptDto {
   interviewId: string
   questionId: string
   mode: InterviewMode
+  idempotencyKey?: string
+}
+
+export interface FinishInterviewAttemptDto {
+  attemptId: string
   correct?: boolean
   answerJson?: any
   timeSpent: number
-  idempotencyKey?: string
 }
 
 export interface InterviewAttemptResponse {
@@ -37,9 +41,11 @@ export interface InterviewAttemptResponse {
   interviewId: string
   questionId: string
   mode: InterviewMode
+  status: InterviewAttemptStatus
   correct?: boolean | null
   timeSpent: number
   answeredAt: string
+  finishedAt?: string | null
 }
 
 @Injectable()
@@ -117,9 +123,9 @@ export class InterviewService {
     }
   }
 
-  async createInterviewAttempt(
+  async startInterviewAttempt(
     userId: string,
-    data: CreateInterviewAttemptDto
+    data: StartInterviewAttemptDto
   ): Promise<InterviewAttemptResponse> {
     // Handle idempotency - if idempotencyKey provided, check for existing attempt
     if (data.idempotencyKey) {
@@ -134,23 +140,24 @@ export class InterviewService {
           interviewId: existing.interviewId,
           questionId: existing.questionId,
           mode: existing.mode,
+          status: existing.status,
           correct: existing.correct,
           timeSpent: existing.timeSpent,
-          answeredAt: existing.answeredAt.toISOString()
+          answeredAt: existing.answeredAt.toISOString(),
+          finishedAt: existing.finishedAt?.toISOString() ?? null
         }
       }
     }
 
-    // Create new attempt
+    // Create new started attempt
     const attempt = await this.prisma.interviewAttempt.create({
       data: {
         userId,
         interviewId: data.interviewId,
         questionId: data.questionId,
         mode: data.mode,
-        correct: data.correct,
-        answerJson: data.answerJson,
-        timeSpent: data.timeSpent,
+        status: InterviewAttemptStatus.started,
+        timeSpent: 0,
         idempotencyKey: data.idempotencyKey
       }
     })
@@ -160,9 +167,58 @@ export class InterviewService {
       interviewId: attempt.interviewId,
       questionId: attempt.questionId,
       mode: attempt.mode,
+      status: attempt.status,
       correct: attempt.correct,
       timeSpent: attempt.timeSpent,
-      answeredAt: attempt.answeredAt.toISOString()
+      answeredAt: attempt.answeredAt.toISOString(),
+      finishedAt: attempt.finishedAt?.toISOString() ?? null
+    }
+  }
+
+  async finishInterviewAttempt(
+    userId: string,
+    data: FinishInterviewAttemptDto
+  ): Promise<InterviewAttemptResponse> {
+    // Find the attempt and verify ownership
+    const existingAttempt = await this.prisma.interviewAttempt.findFirst({
+      where: {
+        id: data.attemptId,
+        userId,
+        status: InterviewAttemptStatus.started
+      }
+    })
+
+    if (!existingAttempt) {
+      throw new Error('Interview attempt not found or already finished')
+    }
+
+    // Determine status based on whether answer is correct
+    const status = data.correct === undefined 
+      ? InterviewAttemptStatus.abandoned 
+      : InterviewAttemptStatus.completed
+
+    // Update the attempt with results
+    const attempt = await this.prisma.interviewAttempt.update({
+      where: { id: data.attemptId },
+      data: {
+        status,
+        correct: data.correct,
+        answerJson: data.answerJson,
+        timeSpent: data.timeSpent,
+        finishedAt: new Date()
+      }
+    })
+
+    return {
+      id: attempt.id,
+      interviewId: attempt.interviewId,
+      questionId: attempt.questionId,
+      mode: attempt.mode,
+      status: attempt.status,
+      correct: attempt.correct,
+      timeSpent: attempt.timeSpent,
+      answeredAt: attempt.answeredAt.toISOString(),
+      finishedAt: attempt.finishedAt?.toISOString() ?? null
     }
   }
 
@@ -188,9 +244,11 @@ export class InterviewService {
       interviewId: attempt.interviewId,
       questionId: attempt.questionId,
       mode: attempt.mode,
+      status: attempt.status,
       correct: attempt.correct,
       timeSpent: attempt.timeSpent,
-      answeredAt: attempt.answeredAt.toISOString()
+      answeredAt: attempt.answeredAt.toISOString(),
+      finishedAt: attempt.finishedAt?.toISOString() ?? null
     }))
   }
 }

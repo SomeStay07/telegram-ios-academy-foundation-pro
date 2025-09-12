@@ -121,10 +121,12 @@ model InterviewAttempt {
   interviewId    String
   questionId     String
   mode           InterviewMode @default(drill)
+  status         InterviewAttemptStatus @default(started)
   correct        Boolean?
   answerJson     Json?
   timeSpent      Int      @default(0) // in seconds
   answeredAt     DateTime @default(now())
+  finishedAt     DateTime?
   idempotencyKey String?  @unique
 
   user User @relation(fields: [userId], references: [id])
@@ -143,4 +145,10 @@ enum InterviewMode {
   drill
   explain
   mock
+}
+
+enum InterviewAttemptStatus {
+  started
+  completed
+  abandoned
 }
