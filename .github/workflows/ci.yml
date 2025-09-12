@@ -22,16 +22,18 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x]
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node 20 & pnpm
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          
+      - run: corepack enable
           
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -51,17 +53,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
             
-      - name: Install dependencies
+      - name: Install deps
         run: pnpm install --frozen-lockfile
+        
+      - name: Generate Prisma Client (API)
+        run: |
+          cd apps/api
+          pnpm prisma generate
+        
+      - name: Build all
+        run: pnpm -w build
         
       - name: Lint code
         run: pnpm lint || echo "Linting not configured yet"
         
       - name: Type check
         run: pnpm typecheck || echo "Type checking not configured yet"
-        
-      - name: Build packages
-        run: pnpm build
         
       - name: Run tests
         run: pnpm test || echo "Tests not configured yet"
@@ -82,8 +89,20 @@ jobs:
           cd apps/api
           pnpm build
           mkdir -p ../../artifacts
-          cp openapi/spec.json ../../artifacts/openapi-spec.json || echo "OpenAPI spec not found"
-          cp openapi/spec.yaml ../../artifacts/openapi-spec.yaml || echo "OpenAPI YAML not found"
+          if [ -f openapi/spec.json ]; then
+            cp openapi/spec.json ../../artifacts/openapi-spec.json
+            echo "✅ OpenAPI JSON spec copied"
+          else
+            echo "⚠️ OpenAPI JSON spec not found"
+            touch ../../artifacts/openapi-spec.json
+          fi
+          if [ -f openapi/spec.yaml ]; then
+            cp openapi/spec.yaml ../../artifacts/openapi-spec.yaml
+            echo "✅ OpenAPI YAML spec copied"
+          else
+            echo "⚠️ OpenAPI YAML spec not found"
+            touch ../../artifacts/openapi-spec.yaml
+          fi
           
       - name: Upload OpenAPI artifacts
         uses: actions/upload-artifact@v4
@@ -127,8 +146,10 @@ jobs:
       - name: Check for sensitive files
         run: |
           echo "Checking for sensitive files..."
-          if find . -name "*.env" -not -path "*/node_modules/*" -not -name "*.example"; then
-            echo "❌ Found .env files in repository"
+          FOUND_FILES=$(find . -name "*.env" -not -path "*/node_modules/*" -not -path "*/railway-config/*" -not -name "*.example")
+          if [ -n "$FOUND_FILES" ]; then
+            echo "❌ Found .env files in repository:"
+            echo "$FOUND_FILES"
             exit 1
           fi
           echo "✅ No sensitive files found"

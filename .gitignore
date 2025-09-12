@@ -120,3 +120,6 @@ temp/
 
 # Railway
 .railway/
+
+# Claude Code settings
+.claude/settings.local.json

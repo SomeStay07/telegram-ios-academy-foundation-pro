@@ -14,6 +14,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: false })
   app.setGlobalPrefix('api')
   
+  // Enable Prisma shutdown hooks
+  const prismaService = app.get('PrismaService')
+  await prismaService.enableShutdownHooks(app)
+  
   // Security hardening with Helmet
   app.use(helmet({
     contentSecurityPolicy: env.NODE_ENV === 'development' ? false : {
@@ -100,8 +104,9 @@ async function bootstrap() {
   writeFileSync(join(outputDir, 'spec.json'), JSON.stringify(document, null, 2))
   writeFileSync(join(outputDir, 'spec.yaml'), require('js-yaml').dump(document))
   
-  await app.listen(process.env.PORT ? Number(process.env.PORT) : 3000)
-  console.log(`API started on ${await app.getUrl()}`)
-  console.log(`Swagger docs available at ${await app.getUrl()}/api/docs`)
+  const port = process.env.PORT ? Number(process.env.PORT) : 3000
+  await app.listen(port, '0.0.0.0')
+  console.log(`API started on http://0.0.0.0:${port}`)
+  console.log(`Swagger docs available at http://0.0.0.0:${port}/api/docs`)
 }
 bootstrap().catch((e) => { console.error(e); process.exit(1) })// Railway deployment test - четверг, 11 сентября 2025 г. 20:51:26 (MSK)

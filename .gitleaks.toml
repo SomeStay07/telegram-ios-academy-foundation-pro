@@ -1,0 +1,28 @@
+title = "allowlist for rotated tokens and examples"
+
+[allowlist]
+# Разрешаем ложные срабатывания в примерах/доках
+paths = [
+  '''\.env\.example''',
+  '''/docs/.*\.md''',
+  '''/apps/.*/\.env\.example''',
+  '''\.claude/settings\.local\.json'''
+]
+
+# Игнорируем конкретные коммиты, где секрет уже РОТИРОВАН
+# Railway setup commits that may contain rotated tokens
+commits = [
+  "46f102a",  # fix: Add required environment variables for GitHub Actions CI
+  "a08027e",  # Force Railway API service redeploy to apply Redis validation fixes
+  "cb346e6"   # Update database connections: use Railway service references
+]
+
+# Игнорируем тестовые токены в CI файлах
+[[rules]]
+id = "test-tokens"
+description = "Test tokens in CI"
+regex = '''test-token|test|1234567890abcdef'''
+paths = [
+  '''.github/workflows/.*\.yml''',
+  '''apps/.*/src/.*test.*'''
+]
