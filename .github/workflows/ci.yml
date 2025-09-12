@@ -175,8 +175,8 @@ jobs:
             --url=http://127.0.0.1:4010 \
             --checks=all \
             --request-timeout=5 \
-            --headers="Authorization: Bearer test" \
-            --headers="Idempotency-Key: ci-$(date +%s)" \
+            --header="Authorization: Bearer test" \
+            --header="Idempotency-Key: ci-$(date +%s)" \
             --stateful=links \
             --validate-schema
       - name: Cleanup API process
