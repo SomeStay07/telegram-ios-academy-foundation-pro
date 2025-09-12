@@ -55,7 +55,8 @@
       "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://nonexistent.test/spec.json --url=http://nonexistent.test --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1)",
       "Bash(npx prisma migrate dev:*)",
       "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" npx prisma migrate dev --name add-interview-attempt-status-fields)",
-      "Bash(bc:*)"
+      "Bash(bc:*)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" METRICS_TOKEN=\"test-token\" PORT=3000 timeout 5s node dist/main.js)"
     ],
     "deny": [],
     "ask": []

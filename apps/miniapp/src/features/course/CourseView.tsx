@@ -181,6 +181,7 @@ export const CourseView: React.FC<CourseViewProps> = ({
               onClick={() => onLessonSelect(nextLesson.id)}
               variant="primary"
               className="px-6 py-3"
+              aria-label={`Start lesson: ${nextLesson.title}`}
             >
               Start Lesson →
             </Button>
@@ -256,11 +257,12 @@ export const CourseView: React.FC<CourseViewProps> = ({
                         e.stopPropagation()
                         onLessonSelect(lesson.id)
                       }}
+                      aria-label={`${lesson.isCompleted ? 'Review' : 'Start'} lesson: ${lesson.title}`}
                     >
                       {lesson.isCompleted ? 'Review' : 'Start'}
                     </Button>
                   ) : (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2" role="status" aria-label={getLockedReason(lesson)}>
                       <LockIcon />
                       <span className="text-xs text-gray-500 font-medium">Locked</span>
                     </div>
