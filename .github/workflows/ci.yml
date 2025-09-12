@@ -223,17 +223,28 @@ jobs:
           API_PUBLIC_ORIGIN="http://localhost:4010" \
           ALLOWED_ORIGINS="*" \
           CSP_REPORT_ONLY="1" \
-          TELEGRAM_BOT_TOKEN="test" \
+          TELEGRAM_BOT_TOKEN="test-bot-token" \
           METRICS_TOKEN="test-schemathesis-token" \
           NODE_ENV=test \
           PORT=4010 \
           node dist/main.js & echo $! > ../../api.pid
       - name: Wait for API to be ready
         run: |
+          echo "Waiting for API to start on port 4010..."
           for i in {1..30}; do 
-            curl -sSf http://127.0.0.1:4010/api/health && break
+            echo "Attempt $i: Checking API health..."
+            if curl -sSf http://127.0.0.1:4010/api/health; then
+              echo "✅ API health check passed"
+              break
+            fi
+            echo "API not ready, waiting..."
             sleep 1
           done
+          
+          echo "Verifying OpenAPI endpoint availability..."
+          curl -sSf http://127.0.0.1:4010/api/openapi.json | head -5 || echo "❌ OpenAPI endpoint not available"
+          
+          echo "API endpoints test complete"
       - name: Run Schemathesis fuzzing
         run: |
           schemathesis run http://127.0.0.1:4010/api/openapi.json \

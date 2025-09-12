@@ -98,6 +98,11 @@ async function bootstrap() {
   httpAdapter.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() })
   })
+
+  // OpenAPI JSON endpoint for Schemathesis
+  httpAdapter.get('/api/openapi.json', (req, res) => {
+    res.json(document)
+  })
   
   // Temporary debug endpoint to check Redis URL
   httpAdapter.get('/api/debug-redis', (req, res) => {
