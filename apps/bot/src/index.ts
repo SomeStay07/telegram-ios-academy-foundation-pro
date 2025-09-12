@@ -81,20 +81,18 @@ bot.command("review", async (ctx) => {
   }
 })
 
-// Ensure bot starts only once
-let botStarted = false;
-if (!botStarted) {
-  botStarted = true;
-  bot.start().catch(error => {
-    console.error('❌ Bot failed to start:', error);
-    process.exit(1);
-  });
-  console.log("Bot started");
-}
-
 // Health check server for Railway
 const app = express();
 const port = process.env.PORT || 8080;
+
+// Start bot with graceful error handling
+console.log('📡 Starting bot...');
+bot.start().catch(error => {
+  console.error('❌ Bot failed to start:', error);
+  console.log('ℹ️ Bot will continue running for health checks and Redis functionality');
+  console.log('💡 Tip: Check if another bot instance is running with the same token');
+});
+console.log("Bot initialization completed");
 
 app.get("/health", async (req, res) => {
   const healthData: any = { 
