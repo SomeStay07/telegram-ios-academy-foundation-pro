@@ -56,7 +56,22 @@
       "Bash(npx prisma migrate dev:*)",
       "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" npx prisma migrate dev --name add-interview-attempt-status-fields)",
       "Bash(bc:*)",
-      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" METRICS_TOKEN=\"test-token\" PORT=3000 timeout 5s node dist/main.js)"
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" METRICS_TOKEN=\"test-token\" PORT=3000 timeout 5s node dist/main.js)",
+      "Bash(npm run build:*)",
+      "Bash(TELEGRAM_BOT_TOKEN=\"test-token\" BOT_USERNAME=\"test_bot\" WEBAPP_URL=\"http://localhost:5173\" node dist/index.js)",
+      "Bash(openssl rand:*)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 timeout 5s node apps/api/dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 gtimeout 5s node apps/api/dist/main.js)",
+      "Bash(CI=true pnpm e2e --reporter=line)",
+      "Bash(VITE_API_BASE_URL=http://127.0.0.1:3000/api pnpm build)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 timeout 5s node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 gtimeout 5s node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 node dist/main.js)",
+      "Bash(pkill:*)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 timeout 5s node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 gtimeout 5s node dist/main.js)",
+      "Read(//Users/timurceberda/**)"
     ],
     "deny": [],
     "ask": []
