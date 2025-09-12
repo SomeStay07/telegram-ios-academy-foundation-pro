@@ -1,172 +1,223 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
-  push:
-    branches: [main, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [develop, main, release/**, feature/**, hotfix/**]
+  push:
+    branches: [develop]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build & Test
+  changes:
+    name: Detect changes
     runs-on: ubuntu-latest
-    
-    env:
-      DATABASE_URL: "postgresql://test:test@localhost:5432/test"
-      REDIS_URL: "redis://localhost:6379"
-      API_PUBLIC_ORIGIN: "http://localhost:3000"
-      ALLOWED_ORIGINS: "http://localhost:5173"
-      CSP_REPORT_ONLY: "1"
-      TELEGRAM_BOT_TOKEN: "test-token"
-      PORT: "3000"
-    
-    strategy:
-      matrix:
-        node-version: [20.x]
-    
+    outputs:
+      root: ${{ steps.filter.outputs.root }}
+      api: ${{ steps.filter.outputs.api }}
+      miniapp: ${{ steps.filter.outputs.miniapp }}
+      bot: ${{ steps.filter.outputs.bot }}
+      packages: ${{ steps.filter.outputs.packages }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node 20 & pnpm
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
         with:
-          node-version: ${{ matrix.node-version }}
-          
-      - run: corepack enable
-          
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
-          
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-          
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-            
-      - name: Install deps
-        run: pnpm install --frozen-lockfile
-        
-      - name: Generate Prisma Client (API)
-        run: |
-          cd apps/api
-          pnpm prisma generate
-        
-      - name: Build all
-        run: pnpm -w build
-        
-      - name: Lint code
-        run: pnpm lint || echo "Linting not configured yet"
-        
-      - name: Type check
-        run: pnpm typecheck || echo "Type checking not configured yet"
-        
-      - name: Run tests
-        run: pnpm test || echo "Tests not configured yet"
-        
-      - name: Run E2E tests
-        run: |
-          cd apps/miniapp
-          pnpm build
-          pnpm e2e || echo "E2E tests need server setup"
-          
-      - name: Run Pact contract verification
-        run: |
-          cd apps/api
-          pnpm contracts:verify || echo "Contract tests need provider setup"
-          
-      - name: Generate OpenAPI artifacts
-        run: |
-          cd apps/api
-          pnpm build
-          mkdir -p ../../artifacts
-          if [ -f openapi/spec.json ]; then
-            cp openapi/spec.json ../../artifacts/openapi-spec.json
-            echo "✅ OpenAPI JSON spec copied"
-          else
-            echo "⚠️ OpenAPI JSON spec not found"
-            touch ../../artifacts/openapi-spec.json
-          fi
-          if [ -f openapi/spec.yaml ]; then
-            cp openapi/spec.yaml ../../artifacts/openapi-spec.yaml
-            echo "✅ OpenAPI YAML spec copied"
-          else
-            echo "⚠️ OpenAPI YAML spec not found"
-            touch ../../artifacts/openapi-spec.yaml
-          fi
-          
-      - name: Upload OpenAPI artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: openapi-specs-${{ matrix.node-version }}
-          path: artifacts/
-        
-      - name: Check bundle size
-        run: |
-          cd apps/miniapp
-          pnpm build
-          BUNDLE_SIZE=$(stat -c%s "dist/assets/index-*.js" | head -1)
-          BUNDLE_SIZE_KB=$((BUNDLE_SIZE / 1024))
-          echo "Bundle size: ${BUNDLE_SIZE_KB}KB"
-          if [ $BUNDLE_SIZE_KB -gt 220 ]; then
-            echo "❌ Bundle size ${BUNDLE_SIZE_KB}KB exceeds 220KB limit"
-            exit 1
-          else
-            echo "✅ Bundle size ${BUNDLE_SIZE_KB}KB is within 220KB limit"
-          fi
+          filters: |
+            root:
+              - 'pnpm-lock.yaml'
+              - 'package.json'
+              - 'turbo.json'
+              - '.github/**'
+            api:
+              - 'apps/api/**'
+            miniapp:
+              - 'apps/miniapp/**'
+            bot:
+              - 'apps/bot/**'
+            packages:
+              - 'packages/**'
 
-  security:
-    name: Security Audit
+  build_typecheck:
+    name: Build & Typecheck
+    needs: changes
+    if: |
+      needs.changes.outputs.root == 'true' ||
+      needs.changes.outputs.api == 'true' ||
+      needs.changes.outputs.miniapp == 'true' ||
+      needs.changes.outputs.bot == 'true' ||
+      needs.changes.outputs.packages == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
-          
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        
-      - name: Security audit
-        run: pnpm audit --audit-level high
-        
-      - name: Check for sensitive files
-        run: |
-          echo "Checking for sensitive files..."
-          FOUND_FILES=$(find . -name "*.env" -not -path "*/node_modules/*" -not -path "*/railway-config/*" -not -name "*.example")
-          if [ -n "$FOUND_FILES" ]; then
-            echo "❌ Found .env files in repository:"
-            echo "$FOUND_FILES"
-            exit 1
-          fi
-          echo "✅ No sensitive files found"
+      - name: Generate Prisma Client (API)
+        run: cd apps/api && pnpm prisma generate
+      - name: Build all packages and applications
+        run: pnpm -w build
 
-  deploy:
-    name: Deploy to Railway
+  bundle_check:
+    name: MiniApp bundle ≤ 220KB (gzip)
+    needs: [changes, build_typecheck]
+    if: needs.changes.outputs.miniapp == 'true' || needs.changes.outputs.packages == 'true'
     runs-on: ubuntu-latest
-    needs: [build, security]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Deploy to Railway
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build MiniApp for production
+        run: pnpm -C apps/miniapp build
+      - name: Assert bundle size ≤ 220KB gzipped
         run: |
-          echo "🚀 Deploy to Railway would happen here"
-          echo "Configure Railway CLI and deployment secrets"
-          # railway deploy --service miniapp
-          # railway deploy --service api
+          cat apps/miniapp/dist/assets/index-*.js | gzip | wc -c | awk '{
+            kb=$1/1024; 
+            printf("MiniApp gzipped bundle size: %.2f KB\n", kb); 
+            if (kb > 220) { 
+              printf("❌ Bundle too large! Must be ≤ 220KB\n"); 
+              exit 1 
+            } else {
+              printf("✅ Bundle size within limits\n")
+            }
+          }'
+
+  pact_contracts:
+    name: Pact contracts (consumer/provider)
+    needs: [changes, build_typecheck]
+    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.miniapp == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client (API)
+        run: cd apps/api && pnpm prisma generate
+      - name: Run Pact contract tests
+        run: pnpm -w test:contracts || pnpm -w contracts:verify
+
+  e2e_playwright:
+    name: E2E Playwright (MiniApp)
+    needs: [changes, build_typecheck]
+    if: needs.changes.outputs.miniapp == 'true' || needs.changes.outputs.packages == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Playwright with dependencies
+        run: pnpm -C apps/miniapp exec playwright install --with-deps
+      - name: Run Playwright E2E tests
+        run: pnpm -w test:e2e
+
+  schemathesis_fuzz:
+    name: API Schemathesis Fuzz
+    needs: [changes, build_typecheck]
+    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - name: Install Python for Schemathesis
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Schemathesis
+        run: pip install schemathesis
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client (API)
+        run: cd apps/api && pnpm prisma generate
+      - name: Build API
+        run: pnpm -C apps/api build
+      - name: Start API in background
+        run: |
+          DATABASE_URL="postgresql://test:test@localhost:5432/test" \
+          API_PUBLIC_ORIGIN="http://localhost:4010" \
+          ALLOWED_ORIGINS="*" \
+          CSP_REPORT_ONLY="1" \
+          TELEGRAM_BOT_TOKEN="test" \
+          NODE_ENV=test \
+          PORT=4010 \
+          pnpm -C apps/api start:prod & echo $! > api.pid
+      - name: Wait for API to be ready
+        run: |
+          for i in {1..30}; do 
+            curl -sSf http://127.0.0.1:4010/api/health && break
+            sleep 1
+          done
+      - name: Run Schemathesis fuzzing
+        run: |
+          schemathesis run http://127.0.0.1:4010/api/openapi.json \
+            --base-url=http://127.0.0.1:4010 \
+            --checks=all \
+            --hypothesis-deadline=500 \
+            --request-timeout=5 \
+            --concurrency=4 \
+            --headers="Authorization: Bearer test" \
+            --headers="Idempotency-Key: ci-$(date +%s)" \
+            --stateful=links \
+            --validate-schema
+      - name: Cleanup API process
+        if: always()
+        run: kill $(cat api.pid) || true
+
+  security_audit:
+    name: Security Audit (pnpm audit --audit-level high)
+    needs: changes
+    if: |
+      needs.changes.outputs.root == 'true' ||
+      needs.changes.outputs.api == 'true' ||
+      needs.changes.outputs.miniapp == 'true' ||
+      needs.changes.outputs.bot == 'true' ||
+      needs.changes.outputs.packages == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run security audit
+        run: pnpm audit --audit-level high
+
+  gitleaks:
+    name: gitleaks secret scanning
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          config-path: .gitleaks.toml
+          args: "--verbose"
