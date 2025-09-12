@@ -31,8 +31,7 @@ async function getQueryClient() {
   return queryClient
 }
 
-const Root = createRootRoute({ component: () => <div style={{maxWidth:720, margin:'0 auto', padding:16}}><Outlet /></div> })
-const rootRoute = new Root()
+const rootRoute = createRootRoute({ component: () => <div style={{maxWidth:720, margin:'0 auto', padding:16}}><Outlet /></div> })
 
 const LessonPage = () => {
   const { t } = useTranslation()
