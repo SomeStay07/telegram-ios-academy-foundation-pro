@@ -169,7 +169,7 @@ jobs:
       - name: Run Schemathesis fuzzing
         run: |
           schemathesis run http://127.0.0.1:4010/api/openapi.json \
-            --base-url=http://127.0.0.1:4010 \
+            --url=http://127.0.0.1:4010 \
             --checks=all \
             --hypothesis-deadline=500 \
             --request-timeout=5 \
