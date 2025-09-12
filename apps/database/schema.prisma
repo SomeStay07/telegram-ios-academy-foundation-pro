@@ -1,0 +1,154 @@
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String              @id @default(cuid())
+  tgId              String              @unique
+  createdAt         DateTime            @default(now())
+  Progress          Progress[]
+  Attempt           Attempt[]
+  InterviewProgress InterviewProgress[]
+  InterviewAttempt  InterviewAttempt[]
+}
+
+model Lesson {
+  id               String         @id
+  title            String
+  description      String
+  content          Json
+  estimatedMinutes Int
+  difficulty       Difficulty     @default(beginner)
+  tags             String[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  
+  CourseLesson     CourseLesson[]
+  Progress         Progress[]
+  Attempt          Attempt[]
+}
+
+model Course {
+  id             String         @id
+  title          String
+  description    String
+  difficulty     Difficulty     @default(beginner)
+  estimatedHours Float
+  tags           String[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  
+  // порядок в курсе задаётся через CourseLesson.order
+  CourseLesson   CourseLesson[]
+}
+
+model CourseLesson {
+  courseId String
+  lessonId String
+  order    Int
+
+  course Course @relation(fields: [courseId], references: [id])
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+
+  @@id([courseId, lessonId])
+  @@index([courseId, order])
+}
+
+model Progress {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  // 0..1 для процента/мастерства
+  score     Float    @default(0)
+  completed Boolean  @default(false)
+  timeSpent Int      @default(0) // in minutes
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
+}
+
+model Attempt {
+  id               String   @id @default(cuid())
+  userId           String
+  lessonId         String
+  score            Float
+  payload          Json
+  timeSpentSeconds Int
+  createdAt        DateTime @default(now())
+  // защитим от дублирования по идемпотентному ключу (если решишь хранить в БД)
+  idempotencyKey   String?  @unique
+
+  user   User   @relation(fields: [userId], references: [id])
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+
+  @@index([lessonId, userId, createdAt])
+}
+
+model InterviewProgress {
+  id           String   @id @default(cuid())
+  userId       String
+  interviewId  String
+  lastIndex    Int      @default(0)
+  correct      Int      @default(0)
+  total        Int      @default(0)
+  mode         InterviewMode @default(drill)
+  metadata     Json?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, interviewId, mode])
+  @@index([userId])
+  @@index([interviewId])
+}
+
+model InterviewAttempt {
+  id             String   @id @default(cuid())
+  userId         String
+  interviewId    String
+  questionId     String
+  mode           InterviewMode @default(drill)
+  status         InterviewAttemptStatus @default(started)
+  correct        Boolean?
+  answerJson     Json?
+  timeSpent      Int      @default(0) // in seconds
+  answeredAt     DateTime @default(now())
+  finishedAt     DateTime?
+  idempotencyKey String?  @unique
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([interviewId, userId, answeredAt])
+  @@index([userId, answeredAt])
+}
+
+enum Difficulty {
+  beginner
+  intermediate
+  advanced
+}
+
+enum InterviewMode {
+  drill
+  explain
+  mock
+}
+
+enum InterviewAttemptStatus {
+  started
+  completed
+  abandoned
+}
