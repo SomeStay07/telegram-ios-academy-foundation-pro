@@ -1,5 +1,5 @@
 import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis"; import express from "express";
-import { DeepLinkGenerator, COURSES, INTERVIEWS, CourseId, InterviewId } from "./utils/deep-links";
+import { DeepLinkGenerator, COURSES, INTERVIEWS, CourseId, InterviewId } from "./utils/deep-links.js";
 
 const token = process.env.BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN; if (!token) throw new Error("BOT_TOKEN or TELEGRAM_BOT_TOKEN required");
 console.log('Environment variables check:');
