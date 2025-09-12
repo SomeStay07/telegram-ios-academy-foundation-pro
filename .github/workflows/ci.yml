@@ -129,8 +129,23 @@ jobs:
         run: pnpm -C apps/miniapp build
       - name: Install Playwright with dependencies
         run: pnpm -C apps/miniapp exec playwright install --with-deps
+      - name: Start preview server in background
+        run: |
+          cd apps/miniapp
+          pnpm preview --port 5173 & echo $! > preview.pid
+      - name: Wait for preview server
+        run: |
+          for i in {1..30}; do 
+            curl -sSf http://127.0.0.1:5173 && break
+            sleep 1
+          done
       - name: Run Playwright E2E tests
         run: pnpm e2e
+      - name: Stop preview server
+        if: always()
+        run: |
+          cd apps/miniapp
+          kill $(cat preview.pid) || true
 
   schemathesis_fuzz:
     name: API Schemathesis Fuzz
