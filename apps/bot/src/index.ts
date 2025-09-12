@@ -56,7 +56,7 @@ if (redisUrl) {
       connectTimeout: 10000,
       commandTimeout: 5000,
       enableReadyCheck: false,
-      family: 4, // Force IPv4
+      // Let ioredis choose the appropriate IP version
     });
 
     redis.on('error', (error) => {
