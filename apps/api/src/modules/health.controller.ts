@@ -9,12 +9,6 @@ export class HealthController {
   constructor(private readonly prisma: PrismaService) {}
   
   @Get()
-  async get() {
-    await this.prisma.$queryRaw`SELECT 1`
-    return { ok: true, time: new Date().toISOString() }
-  }
-
-  @Get('health')
   async health() {
     const [redis, db] = await Promise.all([
       this.redis.ping().catch(() => 'ERROR'),

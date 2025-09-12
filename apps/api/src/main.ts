@@ -93,13 +93,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api/docs', app, document)
 
-  // Health check endpoint for Railway
-  const httpAdapter = app.getHttpAdapter()
-  httpAdapter.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() })
-  })
-
   // OpenAPI JSON endpoint for Schemathesis
+  const httpAdapter = app.getHttpAdapter()
   httpAdapter.get('/api/openapi.json', (req, res) => {
     res.json(document)
   })
