@@ -41,7 +41,13 @@ jobs:
       - name: Generate OpenAPI spec
         run: |
           cd apps/api
-          pnpm start &
+          DATABASE_URL="postgresql://test:test@localhost:5432/test" \
+          REDIS_URL="redis://localhost:6379" \
+          API_PUBLIC_ORIGIN="http://localhost:3000" \
+          ALLOWED_ORIGINS="http://localhost:5173" \
+          CSP_REPORT_ONLY="1" \
+          TELEGRAM_BOT_TOKEN="test-token" \
+          PORT=3000 pnpm start &
           sleep 10
           curl -o openapi-spec.json http://localhost:3000/api/docs-json
           pkill -f "pnpm start"
@@ -50,7 +56,13 @@ jobs:
         run: |
           cd apps/api
           # Start API server in background
-          pnpm start &
+          DATABASE_URL="postgresql://test:test@localhost:5432/test" \
+          REDIS_URL="redis://localhost:6379" \
+          API_PUBLIC_ORIGIN="http://localhost:3000" \
+          ALLOWED_ORIGINS="http://localhost:5173" \
+          CSP_REPORT_ONLY="1" \
+          TELEGRAM_BOT_TOKEN="test-token" \
+          PORT=3000 pnpm start &
           API_PID=$!
           sleep 10
           
