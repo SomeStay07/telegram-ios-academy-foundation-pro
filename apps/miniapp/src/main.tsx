@@ -5,7 +5,8 @@ import lesson from './data/lessons/swift-variables.json'
 import { parseLessonStrict } from './lesson-spec/src'
 // Use local version for now
 const parseInterviewStrict = (data: any) => data
-import { ModuleRenderer, InterviewRenderer } from './ui/src'
+import { ModuleRenderer } from './ui/src'
+import { InterviewRenderer } from './features/interview/InterviewRenderer'
 import { useInterviewProgress } from './hooks/useInterviewProgress'
 import interview from './data/interviews/swift-fundamentals.json'
 import './ui/src/styles/globals.css'

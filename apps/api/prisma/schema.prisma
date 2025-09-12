@@ -8,11 +8,13 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  tgId      String   @unique
-  createdAt DateTime @default(now())
-  Progress  Progress[]
-  Attempt   Attempt[]
+  id                String              @id @default(cuid())
+  tgId              String              @unique
+  createdAt         DateTime            @default(now())
+  Progress          Progress[]
+  Attempt           Attempt[]
+  InterviewProgress InterviewProgress[]
+  InterviewAttempt  InterviewAttempt[]
 }
 
 model Lesson {
@@ -94,8 +96,51 @@ model Attempt {
   @@index([lessonId, userId, createdAt])
 }
 
+model InterviewProgress {
+  id           String   @id @default(cuid())
+  userId       String
+  interviewId  String
+  lastIndex    Int      @default(0)
+  correct      Int      @default(0)
+  total        Int      @default(0)
+  mode         InterviewMode @default(drill)
+  metadata     Json?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, interviewId, mode])
+  @@index([userId])
+  @@index([interviewId])
+}
+
+model InterviewAttempt {
+  id             String   @id @default(cuid())
+  userId         String
+  interviewId    String
+  questionId     String
+  mode           InterviewMode @default(drill)
+  correct        Boolean?
+  answerJson     Json?
+  timeSpent      Int      @default(0) // in seconds
+  answeredAt     DateTime @default(now())
+  idempotencyKey String?  @unique
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([interviewId, userId, answeredAt])
+  @@index([userId, answeredAt])
+}
+
 enum Difficulty {
   beginner
   intermediate
   advanced
+}
+
+enum InterviewMode {
+  drill
+  explain
+  mock
 }

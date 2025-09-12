@@ -8,5 +8,4 @@ export * from './components/Tabs';
 export * from './components/QuizItem';
 export * from './components/WorkedExampleStepper';
 export * from './renderer/ModuleRenderer';
-export * from './renderer/InterviewRenderer';
 export * from './styles/globals.css';

@@ -8,8 +8,10 @@ import { AuthController } from './auth.controller'
 import { IdempotencyInterceptorProvider } from './idempotency'
 import { LessonController } from '../controllers/lesson.controller'
 import { CourseController } from '../controllers/course.controller'
+import { InterviewController } from '../controllers/interview.controller'
 import { LessonService } from '../services/lesson.service'
 import { CourseService } from '../services/course.service'
+import { InterviewService } from '../services/interview.service'
 
 @Module({ 
   imports: [
@@ -19,11 +21,12 @@ import { CourseService } from '../services/course.service'
       limit: 100, // 100 requests per minute globally
     }])
   ],
-  controllers: [HealthController, MetricsController, AuthController, LessonController, CourseController], 
+  controllers: [HealthController, MetricsController, AuthController, LessonController, CourseController, InterviewController], 
   providers: [
     PrismaService, 
     LessonService, 
     CourseService, 
+    InterviewService, 
     ...IdempotencyInterceptorProvider,
     {
       provide: APP_GUARD,
