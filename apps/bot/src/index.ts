@@ -1,7 +1,4 @@
 import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis"; import express from "express";
-import { promisify } from 'util';
-import { lookup } from 'dns';
-const dnsLookup = promisify(lookup);
 
 const token = process.env.BOT_TOKEN!; if (!token) throw new Error("BOT_TOKEN required");
 console.log('Environment variables check:');
@@ -17,38 +14,6 @@ let reminders: Queue | null = null;
 if (redisUrl) {
   console.log('🔧 Redis URL provided, attempting to connect...');
   
-  // DNS diagnostic check
-  async function checkRedisHost() {
-    try {
-      if (!redisUrl) throw new Error('Redis URL not provided');
-      const url = new URL(redisUrl);
-      console.log('🔍 Checking DNS resolution for:', url.hostname);
-      
-      // Check IPv6
-      try {
-        const resolved6 = await dnsLookup(url.hostname, { family: 6 });
-        console.log('✅ IPv6 resolved:', url.hostname, '->', resolved6.address);
-      } catch (err) {
-        console.log('ℹ️ IPv6 resolution failed for:', url.hostname);
-      }
-      
-      // Check IPv4 
-      try {
-        const resolved4 = await dnsLookup(url.hostname, { family: 4 });
-        console.log('✅ IPv4 resolved:', url.hostname, '->', resolved4.address);
-      } catch (err) {
-        console.log('ℹ️ IPv4 resolution failed for:', url.hostname);
-      }
-      
-      return true;
-    } catch (error) {
-      console.error('❌ DNS resolution failed:', error);
-      return false;
-    }
-  }
-
-  checkRedisHost();
-
   try {
     redis = new Redis(redisUrl, {
       maxRetriesPerRequest: 3,
@@ -56,7 +21,6 @@ if (redisUrl) {
       connectTimeout: 10000,
       commandTimeout: 5000,
       enableReadyCheck: false,
-      // Let ioredis choose the appropriate IP version
     });
 
     redis.on('error', (error) => {
@@ -131,14 +95,6 @@ app.get("/health", async (req, res) => {
     try {
       const url = new URL(redisUrl);
       healthData.redis_host = url.hostname;
-      
-      // Try DNS resolution
-      try {
-        const resolved = await dnsLookup(url.hostname);
-        healthData.dns_resolved = resolved.address;
-      } catch (dnsError: any) {
-        healthData.dns_error = dnsError.message;
-      }
       
       // Try simple Redis ping if connected
       if (redis.status === 'ready') {
