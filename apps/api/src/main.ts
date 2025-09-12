@@ -18,9 +18,17 @@ async function bootstrap() {
   // Enable Prisma shutdown hooks (optional for graceful shutdown)
   try {
     const prismaService = app.get(PrismaService)
-    await prismaService.enableShutdownHooks(app)
+    // Note: enableShutdownHooks is deprecated in Prisma 5.0+ for library engine
+    // Process shutdown is handled automatically by Prisma
+    if (typeof prismaService.enableShutdownHooks === 'function') {
+      await prismaService.enableShutdownHooks(app)
+    }
   } catch (error) {
-    console.warn('Warning: Could not enable Prisma shutdown hooks:', error instanceof Error ? error.message : String(error))
+    // Ignore deprecated API warnings - Prisma handles shutdown automatically
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    if (!errorMessage.includes('beforeExit')) {
+      console.warn('Warning: Could not enable Prisma shutdown hooks:', errorMessage)
+    }
   }
   
   // Security hardening with Helmet
