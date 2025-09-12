@@ -80,7 +80,17 @@ bot.command("review", async (ctx) => {
     await ctx.reply("⚠️ Не удалось создать план ревью. Попробуйте позже.")
   }
 })
-bot.start(); console.log("Bot started")
+
+// Ensure bot starts only once
+let botStarted = false;
+if (!botStarted) {
+  botStarted = true;
+  bot.start().catch(error => {
+    console.error('❌ Bot failed to start:', error);
+    process.exit(1);
+  });
+  console.log("Bot started");
+}
 
 // Health check server for Railway
 const app = express();
