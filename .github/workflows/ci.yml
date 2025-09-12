@@ -175,7 +175,6 @@ jobs:
             --url=http://127.0.0.1:4010 \
             --checks=all \
             --request-timeout=5 \
-            --concurrency=4 \
             --headers="Authorization: Bearer test" \
             --headers="Idempotency-Key: ci-$(date +%s)" \
             --stateful=links \
