@@ -50,6 +50,10 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "⚠️ RAILWAY_TOKEN not set, skipping preview deployment"
+            exit 0
+          fi
           railway login
           
       - name: Get branch name
@@ -61,7 +65,9 @@ jobs:
           echo "clean_branch_name=$CLEAN_BRANCH_NAME" >> $GITHUB_OUTPUT
           
       - name: Create/Update API Preview Service
-        if: github.event.inputs.services == 'api' || github.event.inputs.services == 'all' || github.event_name == 'pull_request'
+        if: (github.event.inputs.services == 'api' || github.event.inputs.services == 'all' || github.event_name == 'pull_request') && env.RAILWAY_TOKEN != ''
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           SERVICE_NAME="api-preview-${{ steps.branch.outputs.clean_branch_name }}"
           
@@ -84,7 +90,9 @@ jobs:
           echo "🔧 API Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
           
       - name: Create/Update MiniApp Preview Service  
-        if: github.event.inputs.services == 'miniapp' || github.event.inputs.services == 'all' || github.event_name == 'pull_request'
+        if: (github.event.inputs.services == 'miniapp' || github.event.inputs.services == 'all' || github.event_name == 'pull_request') && env.RAILWAY_TOKEN != ''
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           SERVICE_NAME="miniapp-preview-${{ steps.branch.outputs.clean_branch_name }}"
           API_SERVICE_NAME="api-preview-${{ steps.branch.outputs.clean_branch_name }}"
@@ -106,7 +114,9 @@ jobs:
           echo "📱 MiniApp Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
           
       - name: Create/Update Bot Preview Service
-        if: github.event.inputs.services == 'bot' || github.event.inputs.services == 'all' || github.event_name == 'pull_request'
+        if: (github.event.inputs.services == 'bot' || github.event.inputs.services == 'all' || github.event_name == 'pull_request') && env.RAILWAY_TOKEN != ''
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           SERVICE_NAME="bot-preview-${{ steps.branch.outputs.clean_branch_name }}"
           API_SERVICE_NAME="api-preview-${{ steps.branch.outputs.clean_branch_name }}"
@@ -130,7 +140,9 @@ jobs:
           echo "🤖 Bot Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
           
       - name: Comment PR with preview URLs
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && env.RAILWAY_TOKEN != ''
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -159,7 +171,7 @@ jobs:
   cleanup-preview:
     name: Cleanup Preview Environment
     runs-on: ubuntu-latest
-    if: github.event.action == 'closed'
+    if: github.event.action == 'closed' && secrets.RAILWAY_TOKEN != ''
     
     steps:
       - name: Checkout code
@@ -174,6 +186,10 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "⚠️ RAILWAY_TOKEN not set, skipping preview deployment"
+            exit 0
+          fi
           railway login
           
       - name: Get branch name
