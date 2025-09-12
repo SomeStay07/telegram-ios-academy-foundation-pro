@@ -23,8 +23,23 @@ if (redisUrl) {
       if (!redisUrl) throw new Error('Redis URL not provided');
       const url = new URL(redisUrl);
       console.log('🔍 Checking DNS resolution for:', url.hostname);
-      const resolved = await dnsLookup(url.hostname);
-      console.log('✅ DNS resolved:', url.hostname, '->', resolved.address);
+      
+      // Check IPv6
+      try {
+        const resolved6 = await dnsLookup(url.hostname, { family: 6 });
+        console.log('✅ IPv6 resolved:', url.hostname, '->', resolved6.address);
+      } catch (err) {
+        console.log('ℹ️ IPv6 resolution failed for:', url.hostname);
+      }
+      
+      // Check IPv4 
+      try {
+        const resolved4 = await dnsLookup(url.hostname, { family: 4 });
+        console.log('✅ IPv4 resolved:', url.hostname, '->', resolved4.address);
+      } catch (err) {
+        console.log('ℹ️ IPv4 resolution failed for:', url.hostname);
+      }
+      
       return true;
     } catch (error) {
       console.error('❌ DNS resolution failed:', error);
@@ -41,6 +56,7 @@ if (redisUrl) {
       connectTimeout: 10000,
       commandTimeout: 5000,
       enableReadyCheck: false,
+      family: 4, // Force IPv4
     });
 
     redis.on('error', (error) => {
