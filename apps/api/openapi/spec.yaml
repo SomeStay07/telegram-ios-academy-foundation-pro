@@ -7,8 +7,6 @@ paths:
       responses:
         '200':
           description: ''
-      tags:
-        - Health
   /api/auth/verifyInitData:
     post:
       operationId: AuthController_verify
@@ -16,11 +14,10 @@ paths:
       responses:
         '201':
           description: ''
-      tags:
-        - Auth
   /api/lessons/{id}:
     get:
       operationId: LessonController_getLesson
+      summary: Get lesson by ID
       parameters:
         - name: id
           required: true
@@ -37,15 +34,15 @@ paths:
                 $ref: '#/components/schemas/LessonDto'
         '404':
           description: Lesson not found
-      security: &ref_0
+      tags: &ref_0
+        - Lessons
+      security: &ref_1
         - &ref_2
           telegram-auth: []
-      summary: Get lesson by ID
-      tags: &ref_1
-        - Lessons
   /api/lessons/progress/{lessonId}:
     put:
       operationId: LessonController_updateProgress
+      summary: Update user progress for a lesson
       parameters:
         - name: lessonId
           required: true
@@ -75,12 +72,12 @@ paths:
           description: Unauthorized
         '404':
           description: Lesson not found
-      security: *ref_0
-      summary: Update user progress for a lesson
-      tags: *ref_1
+      tags: *ref_0
+      security: *ref_1
   /api/lessons/attempts/{lessonId}:
     post:
       operationId: LessonController_createAttempt
+      summary: Create attempt for a lesson
       parameters:
         - name: lessonId
           required: true
@@ -89,6 +86,11 @@ paths:
           schema:
             type: string
         - name: X-Telegram-Init-Data
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: Idempotency-Key
           required: true
           in: header
           schema:
@@ -110,14 +112,14 @@ paths:
           description: Unauthorized
         '404':
           description: Lesson not found
+      tags: *ref_0
       security:
         - *ref_2
         - idempotency: []
-      summary: Create attempt for a lesson
-      tags: *ref_1
   /api/courses/{id}:
     get:
       operationId: CourseController_getCourse
+      summary: Get course by ID
       parameters:
         - name: id
           required: true
@@ -134,15 +136,15 @@ paths:
                 $ref: '#/components/schemas/CourseDto'
         '404':
           description: Course not found
-      security: &ref_3
+      tags: &ref_3
+        - Courses
+      security: &ref_4
         - &ref_5
           telegram-auth: []
-      summary: Get course by ID
-      tags: &ref_4
-        - Courses
   /api/courses/{id}/progress:
     get:
       operationId: CourseController_getCourseProgress
+      summary: Get user progress for a course
       parameters:
         - name: id
           required: true
@@ -166,12 +168,12 @@ paths:
           description: Unauthorized
         '404':
           description: Course not found
-      security: *ref_3
-      summary: Get user progress for a course
-      tags: *ref_4
+      tags: *ref_3
+      security: *ref_4
   /api/courses/{id}/unlock:
     post:
       operationId: CourseController_unlockCourse
+      summary: Unlock course for user
       parameters:
         - name: id
           required: true
@@ -201,11 +203,10 @@ paths:
           description: Unauthorized
         '404':
           description: Course not found
+      tags: *ref_3
       security:
         - *ref_5
         - idempotency: []
-      summary: Unlock course for user
-      tags: *ref_4
 info:
   title: Telegram iOS Academy API
   description: API for Telegram Mini App educational platform

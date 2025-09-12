@@ -1,0 +1,123 @@
+{
+  "meta": {
+    "id": "swift-variables-constants",
+    "title": "Переменные и константы",
+    "description": "var vs let, мутабельность, best practices",
+    "duration": 20,
+    "level": "beginner",
+    "order": 1,
+    "tags": [
+      "swift",
+      "basics"
+    ]
+  },
+  "outcomes": [
+    {
+      "id": "o1",
+      "text": "Объяснить разницу var и let",
+      "bloom": "understand",
+      "verifiedBy": [
+        {
+          "kind": "quiz",
+          "refId": "q1"
+        }
+      ]
+    },
+    {
+      "id": "o2",
+      "text": "Выбирать let по умолчанию",
+      "bloom": "apply",
+      "verifiedBy": [
+        {
+          "kind": "workedExample",
+          "refId": "we1"
+        },
+        {
+          "kind": "checkpoint",
+          "refId": "cp1"
+        }
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "kind": "hook",
+      "id": "h1",
+      "title": "Почему приложение падает?",
+      "body": "Кейс про мутабельность..."
+    },
+    {
+      "kind": "concept",
+      "id": "c1",
+      "title": "var и let",
+      "explanation": "let — неизменяемая ссылка..."
+    },
+    {
+      "kind": "workedExample",
+      "id": "we1",
+      "title": "Рефакторинг var→let",
+      "outcomeId": "o2",
+      "steps": [
+        {
+          "id": "s1",
+          "code": "var a = 1; a = 2",
+          "explanation": "Меняем значение → var"
+        },
+        {
+          "id": "s2",
+          "code": "let b = 1",
+          "explanation": "Не меняем → let (меньше подсказок)"
+        }
+      ]
+    },
+    {
+      "kind": "quiz",
+      "id": "q1",
+      "question": "Что верно о let?",
+      "options": [
+        "Можно менять",
+        "Нельзя менять"
+      ],
+      "correctAnswer": 1,
+      "explanation": "let immutable"
+    },
+    {
+      "kind": "quiz",
+      "id": "q2",
+      "question": "Скомпилируется ли?",
+      "options": [
+        "Да",
+        "Нет"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Проверяем понимание"
+    },
+    {
+      "kind": "callout",
+      "id": "co1",
+      "tone": "warning",
+      "text": "Не путай неизменяемость ссылки и значения"
+    }
+  ],
+  "assessment": {
+    "formativeQuizIds": [
+      "q1",
+      "q2"
+    ],
+    "checkpoint": {
+      "id": "cp1",
+      "quizIds": [
+        "q1",
+        "q2"
+      ],
+      "passThreshold": 0.8
+    }
+  },
+  "spacedReview": {
+    "schedule": [
+      "D1",
+      "D7",
+      "D30"
+    ]
+  }
+}

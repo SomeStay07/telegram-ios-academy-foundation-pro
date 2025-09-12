@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { VITE } from '../env'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+const API_BASE_URL = VITE.API_BASE_URL
 
 // Get Telegram WebApp init data for authentication
 function getTelegramInitData(): string {

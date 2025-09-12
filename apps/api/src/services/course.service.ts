@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../modules/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { UnlockCourseDto } from '../dto/course.dto';
 
 @Injectable()

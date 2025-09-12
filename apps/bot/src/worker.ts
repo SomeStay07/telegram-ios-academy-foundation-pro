@@ -1,1 +1,21 @@
-import { Worker } from 'bullmq'; import Redis from 'ioredis'; import { Bot } from 'grammy'; const redis=new Redis(process.env.REDIS_URL||''); const bot=new Bot(process.env.BOT_TOKEN!); const worker=new Worker('reminders', async(job)=>{const{userId,lessonId,day}=job.data as any; const link=`https://t.me/${process.env.BOT_USERNAME}?startapp=${encodeURIComponent('lesson='+lessonId)}`; await bot.api.sendMessage(userId,`Пора на ревью (D${day}) по уроку: ${lessonId}\n${link}`)}, { connection: redis as any }); worker.on('ready',()=>console.log('Reminder worker ready')); worker.on('failed',(j,err)=>console.error('Reminder job failed', j?.id, err));
+import { Worker } from 'bullmq'; 
+import Redis from 'ioredis'; 
+import { Bot } from 'grammy'; 
+
+const redisUrl = process.env.REDIS_URL;
+if (!redisUrl || redisUrl === '' || (!redisUrl.startsWith('redis://') && !redisUrl.startsWith('rediss://'))) {
+  console.error('REDIS_URL configuration error:', redisUrl);
+  throw new Error("REDIS_URL required and must be a valid Redis URL");
+}
+
+const redis = new Redis(redisUrl); 
+const bot = new Bot(process.env.BOT_TOKEN!); 
+
+const worker = new Worker('reminders', async(job) => {
+  const { userId, lessonId, day } = job.data as any; 
+  const link = `https://t.me/${process.env.BOT_USERNAME}?startapp=${encodeURIComponent('lesson='+lessonId)}`; 
+  await bot.api.sendMessage(userId, `Пора на ревью (D${day}) по уроку: ${lessonId}\n${link}`)
+}, { connection: redis as any }); 
+
+worker.on('ready', () => console.log('Reminder worker ready')); 
+worker.on('failed', (j, err) => console.error('Reminder job failed', j?.id, err));

@@ -27,7 +27,21 @@
       "Bash(kill:*)",
       "Bash(MINIAPP_BASE_URL=http://localhost:5173 npx playwright test tests/e2e/lesson-flow.spec.ts --reporter=line)",
       "Bash(awk:*)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(brew install:*)",
+      "Bash(gitleaks detect:*)",
+      "Bash(railway whoami:*)",
+      "Bash(railway project create:*)",
+      "Bash(railway:*)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test\" PORT=3000 pnpm start)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" PORT=3000 timeout 10s node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" PORT=3000 node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test\" PORT=3000 node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" PORT=3000 node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" PORT=3000 timeout 5s node dist/main.js)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git branch:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
