@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { HealthController } from './health.controller'
+import { MetricsController } from './metrics.controller'
 import { PrismaService } from '../prisma/prisma.service'
 import { AuthController } from './auth.controller'
 import { IdempotencyInterceptorProvider } from './idempotency'
@@ -18,7 +19,7 @@ import { CourseService } from '../services/course.service'
       limit: 100, // 100 requests per minute globally
     }])
   ],
-  controllers: [HealthController, AuthController, LessonController, CourseController], 
+  controllers: [HealthController, MetricsController, AuthController, LessonController, CourseController], 
   providers: [
     PrismaService, 
     LessonService, 
