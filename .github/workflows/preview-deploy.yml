@@ -39,9 +39,7 @@ jobs:
           node-version: '20'
           
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
+        uses: pnpm/action-setup@v4
           
       - name: Install Railway CLI
         run: |
@@ -49,10 +47,10 @@ jobs:
           echo "$HOME/.railway/bin" >> $GITHUB_PATH
           
       - name: Setup Railway authentication
-        run: |
-          railway login --token ${{ secrets.RAILWAY_TOKEN }}
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway login
           
       - name: Get branch name
         id: branch
@@ -173,10 +171,10 @@ jobs:
           echo "$HOME/.railway/bin" >> $GITHUB_PATH
           
       - name: Setup Railway authentication
-        run: |
-          railway login --token ${{ secrets.RAILWAY_TOKEN }}
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway login
           
       - name: Get branch name
         id: branch
