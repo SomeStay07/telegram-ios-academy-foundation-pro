@@ -125,6 +125,8 @@ jobs:
       - uses: pnpm/action-setup@v4
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Build MiniApp for testing
+        run: pnpm -C apps/miniapp build
       - name: Install Playwright with dependencies
         run: pnpm -C apps/miniapp exec playwright install --with-deps
       - name: Run Playwright E2E tests
