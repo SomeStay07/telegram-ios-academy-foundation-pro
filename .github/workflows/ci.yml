@@ -155,6 +155,7 @@ jobs:
         run: pnpm -C apps/api build
       - name: Start API in background
         run: |
+          cd apps/api
           DATABASE_URL="postgresql://test:test@localhost:5432/test" \
           REDIS_URL="redis://localhost:6379" \
           API_PUBLIC_ORIGIN="http://localhost:4010" \
@@ -164,7 +165,7 @@ jobs:
           METRICS_TOKEN="test-schemathesis-token" \
           NODE_ENV=test \
           PORT=4010 \
-          pnpm -C apps/api start:prod & echo $! > api.pid
+          node dist/main.js & echo $! > ../../api.pid
       - name: Wait for API to be ready
         run: |
           for i in {1..30}; do 
