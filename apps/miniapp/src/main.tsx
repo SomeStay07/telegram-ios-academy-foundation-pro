@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { createRootRoute, createRoute, createRouter, RouterProvider, Outlet } from '@tanstack/react-router'
+import { createRootRoute, createRoute, createRouter, RouterProvider, Outlet, useParams } from '@tanstack/react-router'
 import lesson from './data/lessons/swift-variables.json'
 import { parseLessonStrict } from './lesson-spec/src'
 // Use local version for now
@@ -9,6 +9,9 @@ import { ModuleRenderer } from './ui/src'
 import { InterviewRenderer } from './features/interview/InterviewRenderer'
 import { useInterviewProgress } from './hooks/useInterviewProgress'
 import interview from './data/interviews/swift-fundamentals.json'
+import { CourseView } from './features/course/CourseView'
+import { getCourse, getCourseProgress, transformCourseData } from './features/course/api'
+import { processDeepLink, trackDeepLink } from './utils/deep-linking'
 import './ui/src/styles/globals.css'
 import { analytics } from './analytics/lazy'
 import { useTranslation } from './i18n/lazy'
@@ -113,9 +116,125 @@ const LessonPage = () => {
   </div>
 }
 
-// Interview Page Component
+// Course Loader Page Component
+const CourseLoader = () => {
+  const { courseId } = useParams({ from: '/course/$courseId' })
+  const [courseData, setCourseData] = React.useState<any>(null)
+  const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    let mounted = true
+    
+    const loadCourseData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        // Load course and progress data in parallel
+        const [course, progress] = await Promise.all([
+          getCourse(courseId),
+          getCourseProgress(courseId)
+        ])
+
+        if (!mounted) return
+
+        if (!course) {
+          setError('Course not found')
+          return
+        }
+
+        // Transform API data to component format
+        const transformedCourse = transformCourseData(course, progress)
+        setCourseData(transformedCourse)
+
+        // Track course viewed
+        analytics.courseViewed?.({
+          course_id: course.id,
+          course_title: course.title,
+          difficulty: course.difficulty,
+          user_progress: progress?.overallProgress || 0
+        })
+      } catch (err: any) {
+        if (!mounted) return
+        console.error('Failed to load course:', err)
+        setError('Failed to load course data')
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+
+    loadCourseData()
+    return () => { mounted = false }
+  }, [courseId])
+
+  const handleLessonSelect = (lessonId: string) => {
+    // Navigate to lesson page
+    router.navigate({ to: `/lesson/${lessonId}` })
+    
+    // Track lesson started from course
+    analytics.lessonStarted?.({
+      lesson_id: lessonId,
+      lesson_title: lessonId.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      source: 'course_navigation',
+      course_id: courseId
+    })
+  }
+
+  const handleInterviewSelect = (interviewId: string, mode: 'drill' | 'explain' | 'mock') => {
+    // Navigate to interview page
+    router.navigate({ to: `/interview/${interviewId}/${mode}` })
+    
+    // Track interview started from course
+    analytics.interviewStarted?.({
+      interview_id: interviewId,
+      mode,
+      source: 'course_navigation',
+      course_id: courseId
+    })
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading course...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !courseData) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Course Not Found</h3>
+          <p className="text-gray-600 mb-4">{error || 'The requested course could not be loaded'}</p>
+          <button 
+            onClick={() => router.navigate({ to: '/' })}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <CourseView
+      course={courseData}
+      onLessonSelect={handleLessonSelect}
+      onInterviewSelect={handleInterviewSelect}
+    />
+  )
+}
+
+// Interview Page Component  
 const InterviewPage = () => {
-  const { interviewId, mode } = { interviewId: 'swift-fundamentals', mode: 'drill' } // Will get from URL params later
+  const { interviewId, mode } = useParams({ from: '/interview/$interviewId/$mode' })
   const { saveProgress, getProgress, clearProgress } = useInterviewProgress()
   const parsedInterview = parseInterviewStrict(interview as any)
   
@@ -157,7 +276,7 @@ const HomePage = () => {
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '300px', margin: '0 auto' }}>
         <a 
-          href="/lesson" 
+          href="/course/ios-fundamentals" 
           style={{ 
             padding: '16px', 
             background: 'var(--color-primary)', 
@@ -167,7 +286,21 @@ const HomePage = () => {
             fontWeight: 'bold'
           }}
         >
-          📚 View Lesson
+          📱 iOS Fundamentals Course
+        </a>
+        
+        <a 
+          href="/lesson" 
+          style={{ 
+            padding: '16px', 
+            background: '#f0f0f0', 
+            color: '#333', 
+            textDecoration: 'none', 
+            borderRadius: '12px',
+            fontWeight: 'bold'
+          }}
+        >
+          📚 Single Lesson Demo
         </a>
         
         <a 
@@ -217,11 +350,13 @@ const HomePage = () => {
 }
 
 const homeRoute = createRoute({ getParent: () => rootRoute, path: '/', component: HomePage })
+const courseRoute = createRoute({ getParent: () => rootRoute, path: '/course/$courseId', component: CourseLoader })
 const lessonRoute = createRoute({ getParent: () => rootRoute, path: '/lesson', component: LessonPage })
+const lessonByIdRoute = createRoute({ getParent: () => rootRoute, path: '/lesson/$lessonId', component: LessonPage })
 const interviewRoute = createRoute({ getParent: () => rootRoute, path: '/interview/$interviewId/$mode', component: InterviewPage })
 
 const router = createRouter({ 
-  routeTree: rootRoute.addChildren([homeRoute, lessonRoute, interviewRoute]) 
+  routeTree: rootRoute.addChildren([homeRoute, courseRoute, lessonRoute, lessonByIdRoute, interviewRoute]) 
 })
 
 declare module '@tanstack/react-router' { interface Register { router: typeof router } }
@@ -245,8 +380,18 @@ function initTmaRouting() {
   }
   tg.BackButton?.onClick?.(() => router.history.back())
   router.subscribe(setBack); setBack()
-  const startParam = tg.initDataUnsafe?.start_param
-  if (startParam) router.navigate({ to: `/lesson/${startParam}` })
+  
+  // Process deep-link from start_param or URL parameters
+  const deepLinkResult = processDeepLink()
+  if (deepLinkResult) {
+    console.log('🔗 Deep-link detected:', deepLinkResult)
+    
+    // Track deep-link usage
+    trackDeepLink(deepLinkResult.parsed, 'telegram')
+    
+    // Navigate to the parsed route
+    router.navigate({ to: deepLinkResult.route })
+  }
 }
 initTmaRouting()
 

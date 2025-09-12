@@ -1,6 +1,7 @@
 import { Controller, Get, Put, Post, Param, Body, Headers, UsePipes, ValidationPipe } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiSecurity } from '@nestjs/swagger'
 import { InterviewService, UpdateInterviewProgressDto, CreateInterviewAttemptDto } from '../services/interview.service'
+import { MetricsService } from '../metrics/metrics.service'
 import { InterviewMode } from '@prisma/client'
 import { IsString, IsOptional, IsNumber, IsBoolean, IsEnum, IsObject } from 'class-validator'
 import { Transform } from 'class-transformer'
@@ -57,7 +58,10 @@ class CreateInterviewAttemptBodyDto {
 @ApiSecurity('telegram-auth')
 @Controller('interviews')
 export class InterviewController {
-  constructor(private readonly interviewService: InterviewService) {}
+  constructor(
+    private readonly interviewService: InterviewService,
+    private readonly metricsService: MetricsService
+  ) {}
 
   @Get(':id/progress')
   @ApiOperation({ summary: 'Get interview progress for user' })
@@ -125,7 +129,25 @@ export class InterviewController {
       idempotencyKey
     }
 
-    return this.interviewService.createInterviewAttempt(userId, attemptData)
+    // Record interview attempt metrics
+    this.metricsService.recordInterviewAttempt(
+      body.interviewId,
+      body.mode as 'drill' | 'explain' | 'mock',
+      userId,
+      'started'
+    )
+
+    const result = await this.interviewService.createInterviewAttempt(userId, attemptData)
+
+    // Record attempt completion
+    this.metricsService.recordInterviewAttempt(
+      body.interviewId,
+      body.mode as 'drill' | 'explain' | 'mock',
+      userId,
+      body.correct ? 'completed' : 'abandoned'
+    )
+
+    return result
   }
 
   @Get(':id/attempts')

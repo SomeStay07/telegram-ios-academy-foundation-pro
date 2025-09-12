@@ -1,8 +1,7 @@
-import { Module } from '@nestjs/common'
+import { Module, MiddlewareConsumer } from '@nestjs/common'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { HealthController } from './health.controller'
-import { MetricsController } from './metrics.controller'
 import { PrismaService } from '../prisma/prisma.service'
 import { AuthController } from './auth.controller'
 import { IdempotencyInterceptorProvider } from './idempotency'
@@ -12,6 +11,8 @@ import { InterviewController } from '../controllers/interview.controller'
 import { LessonService } from '../services/lesson.service'
 import { CourseService } from '../services/course.service'
 import { InterviewService } from '../services/interview.service'
+import { MetricsModule } from '../metrics/metrics.module'
+import { MetricsMiddleware } from '../metrics/metrics.middleware'
 
 @Module({ 
   imports: [
@@ -19,9 +20,10 @@ import { InterviewService } from '../services/interview.service'
       name: 'short',
       ttl: 60000, // 1 minute
       limit: 100, // 100 requests per minute globally
-    }])
+    }]),
+    MetricsModule
   ],
-  controllers: [HealthController, MetricsController, AuthController, LessonController, CourseController, InterviewController], 
+  controllers: [HealthController, AuthController, LessonController, CourseController, InterviewController], 
   providers: [
     PrismaService, 
     LessonService, 
@@ -34,4 +36,10 @@ import { InterviewService } from '../services/interview.service'
     }
   ] 
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(MetricsMiddleware)
+      .forRoutes('*')
+  }
+}
