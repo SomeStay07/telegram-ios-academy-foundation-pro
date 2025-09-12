@@ -7,6 +7,7 @@ import helmet from 'helmet'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join } from 'path'
 import { parseEnv } from './config/env'
+import { PrismaService } from './prisma/prisma.service'
 
 async function bootstrap() {
   const env = parseEnv(process.env)
@@ -14,9 +15,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: false })
   app.setGlobalPrefix('api')
   
-  // Enable Prisma shutdown hooks
-  const prismaService = app.get('PrismaService')
-  await prismaService.enableShutdownHooks(app)
+  // Enable Prisma shutdown hooks (optional for graceful shutdown)
+  try {
+    const prismaService = app.get(PrismaService)
+    await prismaService.enableShutdownHooks(app)
+  } catch (error) {
+    console.warn('Warning: Could not enable Prisma shutdown hooks:', error instanceof Error ? error.message : String(error))
+  }
   
   // Security hardening with Helmet
   app.use(helmet({
