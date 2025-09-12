@@ -175,10 +175,10 @@ jobs:
             --url=http://127.0.0.1:4010 \
             --checks=all \
             --request-timeout=5 \
-            --header="Authorization: Bearer test" \
-            --header="Idempotency-Key: ci-$(date +%s)" \
-            --stateful=links \
-            --validate-schema
+            -H "Authorization: Bearer test" \
+            -H "Idempotency-Key: ci-$(date +%s)" \
+            --phases=examples,fuzzing,stateful \
+            --max-examples=50
       - name: Cleanup API process
         if: always()
         run: kill $(cat api.pid) || true
