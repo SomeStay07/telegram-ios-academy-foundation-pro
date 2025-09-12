@@ -41,7 +41,12 @@
       "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:3000\" ALLOWED_ORIGINS=\"http://localhost:5173\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"1234567890abcdef\" PORT=3000 timeout 5s node dist/main.js)",
       "Bash(git cherry-pick:*)",
       "Bash(git branch:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(git remote get-url:*)",
+      "Bash(git reset:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(chmod:*)",
+      "Bash(./scripts/deploy-preview.sh:*)"
     ],
     "deny": [],
     "ask": []

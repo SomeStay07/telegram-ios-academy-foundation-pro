@@ -86,6 +86,48 @@ export interface LessonCompletedEvent {
   mastery_level: 'beginner' | 'intermediate' | 'advanced'
 }
 
+// Interview analytics event types
+export interface InterviewStartedEvent {
+  interview_id: string
+  interview_title: string
+  mode: 'drill' | 'explain' | 'mock'
+  total_questions: number
+  difficulty_level: 'beginner' | 'intermediate' | 'advanced'
+  categories: string[]
+}
+
+export interface QuestionRevealedEvent {
+  interview_id: string
+  question_id: string
+  question_index: number
+  category: string
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  mode: 'drill' | 'explain' | 'mock'
+  tags: string[]
+}
+
+export interface AnswerSubmittedEvent {
+  interview_id: string
+  question_id: string
+  question_index: number
+  mode: 'drill' | 'explain' | 'mock'
+  answer_type: 'text' | 'audio'
+  answer_length_chars?: number
+  time_spent_seconds: number
+  self_rating?: 1 | 2 | 3 | 4 | 5
+}
+
+export interface InterviewCompletedEvent {
+  interview_id: string
+  interview_title: string
+  mode: 'drill' | 'explain' | 'mock'
+  total_questions: number
+  questions_completed: number
+  total_time_seconds: number
+  completion_rate: number
+  average_time_per_question: number
+}
+
 // Analytics functions
 export const analytics = {
   lessonStarted: (data: LessonStartedEvent) => {
@@ -144,6 +186,79 @@ export const analytics = {
     })
     
     posthog.capture('lesson_completed', data)
+    
+    span.setStatus({ code: SpanStatusCode.OK })
+    span.end()
+  },
+
+  interviewStarted: (data: InterviewStartedEvent) => {
+    const span = tracer.startSpan('interview_started')
+    span.setAttributes({
+      'interview.id': data.interview_id,
+      'interview.title': data.interview_title,
+      'interview.mode': data.mode,
+      'interview.total_questions': data.total_questions,
+      'interview.difficulty_level': data.difficulty_level,
+      'interview.categories': data.categories.join(',')
+    })
+    
+    posthog.capture('interview_started', data)
+    
+    span.setStatus({ code: SpanStatusCode.OK })
+    span.end()
+  },
+
+  questionRevealed: (data: QuestionRevealedEvent) => {
+    const span = tracer.startSpan('question_revealed')
+    span.setAttributes({
+      'interview.id': data.interview_id,
+      'question.id': data.question_id,
+      'question.index': data.question_index,
+      'question.category': data.category,
+      'question.difficulty': data.difficulty,
+      'question.mode': data.mode,
+      'question.tags': data.tags.join(',')
+    })
+    
+    posthog.capture('question_revealed', data)
+    
+    span.setStatus({ code: SpanStatusCode.OK })
+    span.end()
+  },
+
+  answerSubmitted: (data: AnswerSubmittedEvent) => {
+    const span = tracer.startSpan('answer_submitted')
+    span.setAttributes({
+      'interview.id': data.interview_id,
+      'question.id': data.question_id,
+      'question.index': data.question_index,
+      'answer.mode': data.mode,
+      'answer.type': data.answer_type,
+      'answer.time_spent': data.time_spent_seconds,
+      ...(data.answer_length_chars && { 'answer.length_chars': data.answer_length_chars }),
+      ...(data.self_rating && { 'answer.self_rating': data.self_rating })
+    })
+    
+    posthog.capture('answer_submitted', data)
+    
+    span.setStatus({ code: SpanStatusCode.OK })
+    span.end()
+  },
+
+  interviewCompleted: (data: InterviewCompletedEvent) => {
+    const span = tracer.startSpan('interview_completed')
+    span.setAttributes({
+      'interview.id': data.interview_id,
+      'interview.title': data.interview_title,
+      'interview.mode': data.mode,
+      'interview.total_questions': data.total_questions,
+      'interview.questions_completed': data.questions_completed,
+      'interview.total_time': data.total_time_seconds,
+      'interview.completion_rate': data.completion_rate,
+      'interview.average_time_per_question': data.average_time_per_question
+    })
+    
+    posthog.capture('interview_completed', data)
     
     span.setStatus({ code: SpanStatusCode.OK })
     span.end()

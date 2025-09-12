@@ -1,0 +1,96 @@
+{
+  "id": "swift-fundamentals",
+  "title": "Swift Fundamentals Interview",
+  "questions": [
+    {
+      "id": "q1-variables",
+      "category": "swift",
+      "difficulty": "beginner",
+      "prompt": "Explain the difference between var and let in Swift. When would you use each?",
+      "modelAnswer": "var declares a mutable variable that can be changed after initialization, while let declares an immutable constant that cannot be changed once set. Use let for values that won't change (preferred for safety and performance), and var only when you need to modify the value later.",
+      "pitfalls": [
+        "Thinking let variables can be changed later",
+        "Using var when let would be more appropriate",
+        "Not understanding compile-time vs runtime immutability"
+      ],
+      "codeSample": "let name = \"John\" // Immutable\nvar age = 25     // Mutable\nage += 1         // OK\n// name = \"Jane\"  // Error: Cannot assign to value",
+      "tags": ["variables", "constants", "mutability"],
+      "references": [
+        "Swift Language Guide - Constants and Variables",
+        "Apple Developer Documentation"
+      ]
+    },
+    {
+      "id": "q2-optionals",
+      "category": "swift",
+      "difficulty": "intermediate",
+      "prompt": "What are optionals in Swift and why are they important? Show different ways to safely unwrap them.",
+      "modelAnswer": "Optionals represent values that might be absent (nil). They prevent null pointer exceptions and make nil-handling explicit. Safe unwrapping methods include: optional binding (if let/guard let), nil coalescing operator (??), optional chaining (?.), and forced unwrapping (!) when certain the value exists.",
+      "pitfalls": [
+        "Force unwrapping without checking for nil",
+        "Not understanding the difference between nil and empty",
+        "Pyramid of doom with nested optional binding"
+      ],
+      "codeSample": "var name: String? = \"John\"\n\n// Optional binding\nif let unwrappedName = name {\n    print(unwrappedName)\n}\n\n// Nil coalescing\nlet displayName = name ?? \"Unknown\"\n\n// Optional chaining\nlet count = name?.count",
+      "tags": ["optionals", "safety", "unwrapping"],
+      "references": [
+        "Swift Language Guide - Optionals",
+        "Swift Optional Chaining Documentation"
+      ]
+    },
+    {
+      "id": "q3-memory",
+      "category": "memory",
+      "difficulty": "advanced",
+      "prompt": "Explain Automatic Reference Counting (ARC) in Swift. How do you prevent retain cycles?",
+      "modelAnswer": "ARC automatically manages memory by tracking references to objects. When reference count reaches zero, the object is deallocated. Retain cycles occur when objects hold strong references to each other. Prevent them using weak references (for optional relationships) or unowned references (for non-optional relationships that won't outlive the referenced object).",
+      "pitfalls": [
+        "Creating retain cycles with closures",
+        "Using strong references in delegate patterns",
+        "Not understanding weak vs unowned references"
+      ],
+      "codeSample": "class Person {\n    let name: String\n    weak var apartment: Apartment? // Weak to prevent cycle\n    \n    init(name: String) { self.name = name }\n}\n\nclass Apartment {\n    let unit: String\n    var tenant: Person?\n    \n    init(unit: String) { self.unit = unit }\n}",
+      "tags": ["memory", "arc", "retain-cycle", "weak", "unowned"],
+      "references": [
+        "Swift Language Guide - Automatic Reference Counting",
+        "Memory Management Best Practices"
+      ]
+    },
+    {
+      "id": "q4-protocols",
+      "category": "architecture",
+      "difficulty": "intermediate",
+      "prompt": "What are protocols in Swift? How do they differ from classes and when would you use them?",
+      "modelAnswer": "Protocols define a blueprint of methods, properties, and other requirements that classes, structs, or enums can adopt. Unlike classes, protocols support multiple inheritance and don't provide implementations (except with extensions). Use protocols for defining contracts, enabling polymorphism, and creating flexible, testable code architectures.",
+      "pitfalls": [
+        "Confusing protocols with abstract classes",
+        "Not leveraging protocol extensions effectively",
+        "Creating overly complex protocol hierarchies"
+      ],
+      "codeSample": "protocol Drawable {\n    func draw()\n}\n\nstruct Circle: Drawable {\n    func draw() {\n        print(\"Drawing a circle\")\n    }\n}\n\nclass Rectangle: Drawable {\n    func draw() {\n        print(\"Drawing a rectangle\")\n    }\n}",
+      "tags": ["protocols", "pop", "architecture", "polymorphism"],
+      "references": [
+        "Swift Language Guide - Protocols",
+        "Protocol-Oriented Programming in Swift"
+      ]
+    },
+    {
+      "id": "q5-closures",
+      "category": "swift",
+      "difficulty": "advanced",
+      "prompt": "Explain closures in Swift. What are trailing closures and when would you use @escaping?",
+      "modelAnswer": "Closures are self-contained blocks of functionality that can be passed around and used in your code. Trailing closure syntax allows you to write the closure outside parentheses when it's the last parameter. @escaping is required when a closure parameter can outlive the function call, typically in asynchronous operations.",
+      "pitfalls": [
+        "Creating retain cycles with [self] in closures",
+        "Not understanding when @escaping is needed",
+        "Confusing trailing closure syntax with regular closures"
+      ],
+      "codeSample": "// Basic closure\nlet numbers = [1, 2, 3, 4, 5]\nlet doubled = numbers.map { $0 * 2 }\n\n// @escaping closure\nfunc fetchData(completion: @escaping (String) -> Void) {\n    DispatchQueue.global().async {\n        // Simulate network call\n        DispatchQueue.main.async {\n            completion(\"Data loaded\")\n        }\n    }\n}",
+      "tags": ["closures", "async", "escaping", "trailing-closure"],
+      "references": [
+        "Swift Language Guide - Closures",
+        "Escaping and Non-escaping Closures"
+      ]
+    }
+  ]
+}
