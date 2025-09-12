@@ -23,7 +23,7 @@ import { MetricsMiddleware } from '../metrics/metrics.middleware'
     }]),
     MetricsModule
   ],
-  controllers: [AuthController, LessonController, CourseController, InterviewController], 
+  controllers: [AuthController, LessonController, CourseController, InterviewController, HealthController], 
   providers: [
     PrismaService, 
     LessonService, 
