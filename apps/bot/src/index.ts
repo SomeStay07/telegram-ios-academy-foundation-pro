@@ -1,9 +1,11 @@
 import { Bot, InlineKeyboard } from "grammy"; import { Queue } from "bullmq"; import Redis from "ioredis"; import express from "express";
+import { DeepLinkGenerator, COURSES, INTERVIEWS, CourseId, InterviewId } from "./utils/deep-links.js";
 
-const token = process.env.BOT_TOKEN!; if (!token) throw new Error("BOT_TOKEN required");
+const token = process.env.BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN; if (!token) throw new Error("BOT_TOKEN or TELEGRAM_BOT_TOKEN required");
 console.log('Environment variables check:');
 console.log('REDIS_URL:', process.env.REDIS_URL);
 console.log('BOT_TOKEN:', process.env.BOT_TOKEN ? 'SET' : 'NOT_SET');
+console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? 'SET' : 'NOT_SET');
 console.log('BOT_USERNAME:', process.env.BOT_USERNAME);
 
 const redisUrl = process.env.REDIS_URL;
@@ -53,12 +55,84 @@ if (redisUrl) {
   }, 3000); // Wait 3 seconds before connecting to Redis
 } else {
   console.log('⚠️ No Redis URL provided, running without reminder system');
-} const bot = new Bot(token);
-const BOT_USERNAME = process.env.BOT_USERNAME || "your_bot"; const WEBAPP_URL = process.env.WEBAPP_URL || "https://example.com";
-function startAppLink(payload: string) { return `https://t.me/${BOT_USERNAME}?startapp=${encodeURIComponent(payload)}` }
-bot.command("start", async (ctx) => { const kb = new InlineKeyboard().webApp("Открыть MiniApp", WEBAPP_URL); await ctx.reply("Добро пожаловать!", { reply_markup: kb }) })
-bot.command("courses", async (ctx) => { await ctx.reply("Открой курс:", { reply_markup: new InlineKeyboard().url("UIKit", startAppLink("course=uikit")) }) })
-bot.command("profile", async (ctx) => { await ctx.reply("Профиль:", { reply_markup: new InlineKeyboard().url("Профиль", startAppLink("profile")) }) })
+} 
+
+const bot = new Bot(token);
+const BOT_USERNAME = process.env.BOT_USERNAME || "your_bot"; 
+const WEBAPP_URL = process.env.WEBAPP_URL || "https://example.com";
+
+// Initialize deep-link generator
+const deepLinks = new DeepLinkGenerator(BOT_USERNAME, WEBAPP_URL);
+
+bot.command("start", async (ctx) => { 
+  const kb = new InlineKeyboard()
+    .webApp("📱 Открыть Академию", WEBAPP_URL)
+    .row()
+    .url("📚 Курсы", deepLinks.courseLink('ios-fundamentals'))
+    .row()
+    .url("⚡ Тренировка", deepLinks.interviewLink('swift-fundamentals', 'drill'))
+    .url("🎓 Объяснения", deepLinks.interviewLink('swift-fundamentals', 'explain'))
+    .url("⏱️ Мок-интервью", deepLinks.interviewLink('swift-fundamentals', 'mock'));
+  
+  await ctx.reply(
+    "🎉 Добро пожаловать в Telegram iOS Academy!\n\n" +
+    "🚀 Изучайте iOS разработку с интерактивными уроками\n" +
+    "💡 Тренируйтесь на вопросах интервью\n" +
+    "📊 Отслеживайте свой прогресс\n\n" +
+    "Выберите действие:", 
+    { reply_markup: kb }
+  );
+});
+
+bot.command("courses", async (ctx) => { 
+  const keyboard = new InlineKeyboard();
+  
+  // Add all available courses
+  Object.entries(COURSES).forEach(([courseId, course]) => {
+    keyboard.url(
+      `${course.emoji} ${course.title}`, 
+      deepLinks.courseLink(courseId as CourseId, { source: 'bot_command' })
+    ).row();
+  });
+  
+  await ctx.reply(
+    "📚 Доступные курсы:\n\n" +
+    "Выберите курс для изучения:", 
+    { reply_markup: keyboard }
+  );
+});
+
+bot.command("interviews", async (ctx) => {
+  const keyboard = new InlineKeyboard();
+  
+  // Add all available interviews with modes
+  Object.entries(INTERVIEWS).forEach(([interviewId, interview]) => {
+    keyboard.url(
+      `${interview.emoji} ${interview.title}`, 
+      deepLinks.interviewLink(interviewId as InterviewId, 'drill', { source: 'bot_command' })
+    ).row();
+  });
+  
+  await ctx.reply(
+    "💬 Интервью-тренировки:\n\n" +
+    "Выберите тему для практики:", 
+    { reply_markup: keyboard }
+  );
+});
+
+bot.command("profile", async (ctx) => { 
+  const keyboard = new InlineKeyboard()
+    .webApp("👤 Профиль", WEBAPP_URL + "?startapp=profile")
+    .row()
+    .webApp("📊 Статистика", WEBAPP_URL + "?startapp=stats")
+    .webApp("🏆 Достижения", WEBAPP_URL + "?startapp=achievements");
+  
+  await ctx.reply(
+    "👤 Ваш профиль:\n\n" +
+    "Здесь вы можете посмотреть свой прогресс и статистику.", 
+    { reply_markup: keyboard }
+  );
+});
 bot.command("review", async (ctx) => {
   const userId = ctx.from?.id; 
   if (!userId) return ctx.reply("Не удалось определить пользователя")

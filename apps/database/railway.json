@@ -1,0 +1,11 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "nixpacks",
+    "buildCommand": "cd ../.. && pnpm install && cd apps/database && pnpm install"
+  },
+  "deploy": {
+    "startCommand": "prisma db push --force-reset && prisma generate && prisma db seed",
+    "restartPolicyType": "never"
+  }
+}

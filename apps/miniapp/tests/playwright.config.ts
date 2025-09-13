@@ -20,9 +20,9 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] }
     }
   ],
-  // webServer: {
-  //   command: 'pnpm build && NODE_ENV=development pnpm serve',
-  //   port: 5173,
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: 'pnpm build && NODE_ENV=development pnpm serve',
+    port: 5173,
+    reuseExistingServer: !process.env.CI,
+  },
 });

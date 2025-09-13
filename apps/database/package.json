@@ -1,0 +1,25 @@
+{
+  "name": "@telegram-ios-academy/database",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "deploy": "prisma db push --force-reset && prisma generate && prisma db seed",
+    "migrate": "prisma migrate dev",
+    "seed": "tsx seed.ts",
+    "reset": "prisma migrate reset --force",
+    "studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.16.1",
+    "prisma": "^5.16.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.5"
+  }
+}

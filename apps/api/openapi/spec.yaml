@@ -1,12 +1,5 @@
 openapi: 3.0.0
 paths:
-  /api/health:
-    get:
-      operationId: HealthController_get
-      parameters: []
-      responses:
-        '200':
-          description: ''
   /api/auth/verifyInitData:
     post:
       operationId: AuthController_verify
@@ -207,6 +200,131 @@ paths:
       security:
         - *ref_5
         - idempotency: []
+  /api/interviews/{id}/progress:
+    get:
+      operationId: InterviewController_getInterviewProgress
+      summary: Get interview progress for user
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Interview ID
+          schema:
+            type: string
+        - name: x-telegram-init-data
+          required: true
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Interview progress retrieved successfully
+      tags: &ref_6
+        - interviews
+      security: &ref_7
+        - telegram-auth: []
+  /api/interviews/progress/{id}:
+    put:
+      operationId: InterviewController_updateInterviewProgress
+      summary: Update interview progress
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Interview ID
+          schema:
+            type: string
+        - name: x-telegram-init-data
+          required: true
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInterviewProgressBodyDto'
+      responses:
+        '200':
+          description: Interview progress updated successfully
+      tags: *ref_6
+      security: *ref_7
+  /api/interviews/attempts/start:
+    post:
+      operationId: InterviewController_startInterviewAttempt
+      summary: Start interview attempt
+      parameters:
+        - name: idempotency-key
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: x-telegram-init-data
+          required: true
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartInterviewAttemptBodyDto'
+      responses:
+        '201':
+          description: Interview attempt started successfully
+      tags: *ref_6
+      security: *ref_7
+  /api/interviews/attempts/finish:
+    put:
+      operationId: InterviewController_finishInterviewAttempt
+      summary: Finish interview attempt
+      parameters:
+        - name: x-telegram-init-data
+          required: true
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinishInterviewAttemptBodyDto'
+      responses:
+        '200':
+          description: Interview attempt finished successfully
+      tags: *ref_6
+      security: *ref_7
+  /api/interviews/{id}/attempts:
+    get:
+      operationId: InterviewController_getInterviewAttempts
+      summary: Get interview attempts for user
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Interview ID
+          schema:
+            type: string
+        - name: x-telegram-init-data
+          required: true
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Interview attempts retrieved successfully
+      tags: *ref_6
+      security: *ref_7
+  /api/health:
+    get:
+      operationId: HealthController_health
+      parameters: []
+      responses:
+        '200':
+          description: ''
 info:
   title: Telegram iOS Academy API
   description: API for Telegram Mini App educational platform
@@ -487,3 +605,12 @@ components:
         - unlocked
         - accessLevel
         - unlockedAt
+    UpdateInterviewProgressBodyDto:
+      type: object
+      properties: {}
+    StartInterviewAttemptBodyDto:
+      type: object
+      properties: {}
+    FinishInterviewAttemptBodyDto:
+      type: object
+      properties: {}
