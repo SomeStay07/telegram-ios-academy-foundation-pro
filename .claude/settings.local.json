@@ -71,7 +71,13 @@
       "Bash(pkill:*)",
       "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 timeout 5s node dist/main.js)",
       "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 gtimeout 5s node dist/main.js)",
-      "Read(//Users/timurceberda/**)"
+      "Read(//Users/timurceberda/**)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 timeout 10s node dist/main.js)",
+      "Bash(DATABASE_URL=\"postgresql://test:test@localhost:5432/test\" REDIS_URL=\"redis://localhost:6379\" API_PUBLIC_ORIGIN=\"http://localhost:4010\" ALLOWED_ORIGINS=\"*\" CSP_REPORT_ONLY=\"1\" TELEGRAM_BOT_TOKEN=\"test-bot-token\" METRICS_TOKEN=\"test-schemathesis-token\" NODE_ENV=test PORT=4010 gtimeout 10s node dist/main.js)",
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --base-url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1)",
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1)",
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)",
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010 --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)"
     ],
     "deny": [],
     "ask": []

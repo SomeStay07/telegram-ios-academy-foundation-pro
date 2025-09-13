@@ -8,7 +8,7 @@ import { writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join } from 'path'
 import { parseEnv } from './config/env'
 import { PrismaService } from './prisma/prisma.service'
-import { PrismaExceptionFilter } from './filters/prisma-exception.filter'
+import { GlobalExceptionFilter } from './filters/global-exception.filter'
 
 async function bootstrap() {
   const env = parseEnv(process.env)
@@ -58,7 +58,7 @@ async function bootstrap() {
   }))
   
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
-  app.useGlobalFilters(new PrismaExceptionFilter())
+  app.useGlobalFilters(new GlobalExceptionFilter())
 
   // Strict CORS configuration
   app.enableCors({
