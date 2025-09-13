@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { InterviewRenderer } from '../InterviewRenderer'
 import type { InterviewSet, InterviewAnalytics } from '../InterviewRenderer'
@@ -60,29 +60,36 @@ describe('InterviewRenderer', () => {
     })
   })
 
-  it('renders interview header and first question', () => {
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+  it('renders interview header and first question', async () => {
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
-    expect(screen.getByText('Test Interview')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Test Interview')).toBeInTheDocument()
+    })
+    
     expect(screen.getByText('Drill Mode')).toBeInTheDocument()
     expect(screen.getByText('What is Swift?')).toBeInTheDocument()
     expect(screen.getByText('Question 1 of 2')).toBeInTheDocument()
   })
 
   it('starts API attempt on initialization', async () => {
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
@@ -106,13 +113,15 @@ describe('InterviewRenderer', () => {
   it('tracks analytics events on initialization', async () => {
     const { trackInterviewStarted } = await import('../../../lib/analytics')
     
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
     expect(trackInterviewStarted).toHaveBeenCalledWith({
       interviewId: 'test-interview',
@@ -129,13 +138,15 @@ describe('InterviewRenderer', () => {
   it('allows user to submit answer and reveal model answer', async () => {
     const { trackAnswerSubmitted } = await import('../../../lib/analytics')
     
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
     // Type an answer
     const textarea = screen.getByPlaceholderText('Type your answer here...')
@@ -163,10 +174,11 @@ describe('InterviewRenderer', () => {
     render(
       <InterviewRenderer
         interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
     // Submit answer to reveal model answer
     const textarea = screen.getByPlaceholderText('Type your answer here...')
@@ -177,14 +189,16 @@ describe('InterviewRenderer', () => {
     expect(screen.getByText('Don\'t confuse with Objective-C')).toBeInTheDocument()
   })
 
-  it('advances to next question', () => {
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+  it('advances to next question', async () => {
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
     // Submit first answer
     const textarea = screen.getByPlaceholderText('Type your answer here...')
@@ -204,14 +218,16 @@ describe('InterviewRenderer', () => {
     const { trackInterviewCompleted } = await import('../../../lib/analytics')
     const onComplete = vi.fn()
     
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-        onComplete={onComplete}
-      />
-    )
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+          onComplete={onComplete}
+        />
+      )
+    })
 
     // Go through all questions
     const textarea = screen.getByPlaceholderText('Type your answer here...')
@@ -261,13 +277,15 @@ describe('InterviewRenderer', () => {
     
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith('Failed to start interview attempt:', expect.any(Error))
@@ -276,47 +294,60 @@ describe('InterviewRenderer', () => {
     consoleSpy.mockRestore()
   })
 
-  it('shows skip button in drill mode', () => {
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+  it('shows skip button in drill mode', async () => {
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
-    expect(screen.getByText('Skip & Show Answer')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Skip & Show Answer')).toBeInTheDocument()
+    })
   })
 
-  it('does not show skip button in mock mode', () => {
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="mock"
-        onAnalytics={mockAnalytics}
-      />
-    )
+  it('does not show skip button in mock mode', async () => {
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="mock"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
-    expect(screen.queryByText('Skip & Show Answer')).not.toBeInTheDocument()
-    expect(screen.getByText('Time to think: 2-3 minutes')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.queryByText('Skip & Show Answer')).not.toBeInTheDocument()
+      expect(screen.getByText('Time to think: 2-3 minutes')).toBeInTheDocument()
+    })
   })
 
-  it('disables submit button when answer is empty', () => {
-    render(
-      <InterviewRenderer
-        interviewSet={mockInterviewSet}
-        mode="drill"
-        onAnalytics={mockAnalytics}
-      />
-    )
+  it('disables submit button when answer is empty', async () => {
+    await act(async () => {
+      render(
+        <InterviewRenderer
+          interviewSet={mockInterviewSet}
+          mode="drill"
+          onAnalytics={mockAnalytics}
+        />
+      )
+    })
 
-    const submitButton = screen.getByText('Submit Answer')
-    expect(submitButton).toBeDisabled()
+    await waitFor(() => {
+      const submitButton = screen.getByText('Submit Answer')
+      expect(submitButton).toBeDisabled()
+    })
 
     // Type something
     const textarea = screen.getByPlaceholderText('Type your answer here...')
     fireEvent.change(textarea, { target: { value: 'Some answer' } })
     
+    const submitButton = screen.getByText('Submit Answer')
     expect(submitButton).not.toBeDisabled()
   })
 })
