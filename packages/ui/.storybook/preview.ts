@@ -6,10 +6,11 @@ import React from 'react';
 import '@telegram-ios-academy/tokens/css/tokens.css';
 import '../src/styles/globals.css';
 
-// Theme decorator to switch between light and dark themes
+// Preact-compatible theme decorator that works with both React and Preact components
 const ThemeDecorator = (Story: any, context: any) => {
   const theme = context.globals.theme || 'light';
   
+  // Use React.useEffect for compatibility with both React and Preact
   React.useEffect(() => {
     const root = document.documentElement;
     root.setAttribute('data-theme', theme);
@@ -21,12 +22,14 @@ const ThemeDecorator = (Story: any, context: any) => {
     }
   }, [theme]);
 
+  // Use React.createElement for maximum compatibility with preact/compat
   return React.createElement('div', {
+    'data-theme': theme,
     style: {
       minHeight: '100vh',
       padding: '1rem',
-      backgroundColor: theme === 'dark' ? 'var(--ds-surface-primary)' : 'var(--ds-surface-primary)',
-      color: theme === 'dark' ? 'var(--ds-content-primary)' : 'var(--ds-content-primary)',
+      backgroundColor: 'var(--ds-surface-primary)',
+      color: 'var(--ds-content-primary)',
       fontFamily: 'var(--ds-typography-font-family-body)',
       transition: 'background-color 0.3s ease, color 0.3s ease',
     }
