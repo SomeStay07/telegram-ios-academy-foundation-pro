@@ -1,5 +1,5 @@
 import React from 'react'
-import { trackInterviewStarted, trackInterviewAnswerSubmitted, trackInterviewCompleted } from '../../lib/analytics'
+import { trackInterviewStarted, trackAnswerSubmitted, trackInterviewCompleted } from '../../lib/analytics'
 
 export interface InterviewQuestion {
   id: string
@@ -25,6 +25,7 @@ export interface InterviewProgress {
   score: number
   timeSpent: number
   startTime: number
+  attemptId?: string
 }
 
 export interface InterviewAnalytics {
@@ -55,21 +56,51 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
   const [isAnswerVisible, setIsAnswerVisible] = React.useState(false)
   const [userAnswer, setUserAnswer] = React.useState('')
   const [startTime] = React.useState(Date.now())
+  const [currentAttemptId, setCurrentAttemptId] = React.useState<string | null>(progress?.attemptId || null)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const currentQuestion = interviewSet.questions[currentIndex]
 
   React.useEffect(() => {
-    trackInterviewStarted({
-      interviewId: interviewSet.id,
-      mode
-    })
+    const initializeInterview = async () => {
+      try {
+        // Start API attempt with idempotency key
+        const idempotencyKey = crypto.randomUUID()
+        const response = await fetch(`/api/interviews/${interviewSet.id}/attempts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Idempotency-Key': idempotencyKey,
+            'X-Telegram-Init-Data': 'mock-data' // TODO: get real telegram data
+          },
+          body: JSON.stringify({
+            questionId: interviewSet.questions[0]?.id,
+            mode
+          })
+        })
+        
+        if (response.ok) {
+          const result = await response.json()
+          setCurrentAttemptId(result.attemptId)
+        }
+      } catch (error) {
+        console.error('Failed to start interview attempt:', error)
+      }
+      
+      trackInterviewStarted({
+        interviewId: interviewSet.id,
+        mode
+      })
+      
+      // Call legacy analytics for backward compatibility
+      onAnalytics.interviewStarted({
+        interview_id: interviewSet.id,
+        mode,
+        question_count: interviewSet.questions.length
+      })
+    }
     
-    // Call legacy analytics for backward compatibility
-    onAnalytics.interviewStarted({
-      interview_id: interviewSet.id,
-      mode,
-      question_count: interviewSet.questions.length
-    })
+    initializeInterview()
   }, [])
 
   const handleRevealAnswer = () => {
@@ -80,18 +111,46 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
     })
   }
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (currentIndex < interviewSet.questions.length - 1) {
       setCurrentIndex(currentIndex + 1)
       setIsAnswerVisible(false)
       setUserAnswer('')
     } else {
+      // Complete interview
       const finalProgress: InterviewProgress = {
         currentQuestionIndex: currentIndex,
         answeredQuestions: interviewSet.questions.map(q => q.id),
         score: 1.0,
         timeSpent: Date.now() - startTime,
-        startTime
+        startTime,
+        attemptId: currentAttemptId || undefined
+      }
+      
+      // Finish API attempt
+      if (currentAttemptId) {
+        try {
+          setIsLoading(true)
+          await fetch(`/api/interviews/attempts/${currentAttemptId}/finish`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Telegram-Init-Data': 'mock-data'
+            },
+            body: JSON.stringify({
+              correct: Math.round(finalProgress.score * interviewSet.questions.length),
+              answerJson: JSON.stringify({
+                totalQuestions: interviewSet.questions.length,
+                answeredCount: finalProgress.answeredQuestions.length
+              }),
+              timeSpent: finalProgress.timeSpent
+            })
+          })
+        } catch (error) {
+          console.error('Failed to finish interview attempt:', error)
+        } finally {
+          setIsLoading(false)
+        }
       }
       
       trackInterviewCompleted({
@@ -114,11 +173,10 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
   const handleSubmitAnswer = () => {
     const answerTime = Date.now() - startTime
     
-    trackInterviewAnswerSubmitted({
+    trackAnswerSubmitted({
       interviewId: interviewSet.id,
       questionId: currentQuestion.id,
-      mode,
-      timeMs: answerTime
+      mode
     })
     
     // Call legacy analytics for backward compatibility
@@ -239,9 +297,10 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
           
           <button
             onClick={handleNextQuestion}
-            className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
+            disabled={isLoading}
+            className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-medium"
           >
-            {currentIndex < interviewSet.questions.length - 1 ? 'Next Question' : 'Complete Interview'}
+            {isLoading ? 'Saving...' : (currentIndex < interviewSet.questions.length - 1 ? 'Next Question' : 'Complete Interview')}
           </button>
         </div>
       )}

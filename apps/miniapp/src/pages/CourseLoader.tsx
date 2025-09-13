@@ -2,7 +2,7 @@ import React from 'react'
 import { useParams, useRouter } from '@tanstack/react-router'
 import { CourseView } from '../features/course/CourseView'
 import { getCourse, getCourseProgress, transformCourseData } from '../features/course/api'
-import { analytics } from '../analytics/lazy'
+import { analytics } from "../lib/analytics"
 
 export const CourseLoader = () => {
   const { courseId } = useParams({ from: '/course/$courseId' })

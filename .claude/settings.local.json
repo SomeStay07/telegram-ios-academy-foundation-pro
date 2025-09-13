@@ -77,7 +77,8 @@
       "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --base-url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1)",
       "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1)",
       "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)",
-      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010 --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)"
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010 --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)",
+      "Bash(xargs sed:*)"
     ],
     "deny": [],
     "ask": []

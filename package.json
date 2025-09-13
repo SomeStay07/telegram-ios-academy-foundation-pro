@@ -27,7 +27,14 @@
     "test": "turbo run test",
     "e2e": "turbo run e2e",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "lesson:lint": "node tools/content-linter/lesson-lint.js",
+    "course:lint": "node tools/content-linter/course-lint.js",
+    "interview:lint": "node tools/content-linter/interview-lint.js",
+    "content:check-duplicates": "node tools/content-linter/check-duplicates.js",
+    "content:a11y-check": "node tools/content-linter/a11y-check.js",
+    "content:validate-links": "node tools/content-linter/link-validator.js",
+    "content:check-external-links": "node tools/content-linter/external-links.js"
   },
   "devDependencies": {
     "turbo": "^2.0.5",

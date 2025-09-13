@@ -1,0 +1,131 @@
+name: Content Quality Assurance
+
+on:
+  pull_request:
+    paths:
+      - 'content/**'
+      - 'packages/content/**'
+      - '**.json' # Catch content in JSON files
+  push:
+    branches: [main, develop]
+    paths:
+      - 'content/**'
+      - 'packages/content/**'
+      - '**.json'
+
+jobs:
+  content-validation:
+    name: Validate Content Structure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run lesson content validation
+        run: pnpm -w lesson:lint
+
+      - name: Run course content validation
+        run: pnpm -w course:lint
+
+      - name: Run interview content validation
+        run: pnpm -w interview:lint
+
+      - name: Check for content duplicates
+        run: pnpm -w content:check-duplicates
+
+  accessibility-check:
+    name: Content Accessibility Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run accessibility content check
+        run: pnpm -w content:a11y-check
+
+  content-security:
+    name: Content Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Scan for sensitive data in content
+        run: |
+          # Check for potential API keys, tokens, or sensitive info in content files
+          if grep -r -E "(api[_-]?key|secret|token|password|private[_-]?key)" content/ --include="*.json" --include="*.md" --include="*.txt"; then
+            echo "❌ Potential sensitive data found in content files"
+            exit 1
+          fi
+          
+          # Check for hardcoded URLs that might leak info
+          if grep -r -E "https?://[^/]+\.[^/]+/[^\\s]*\\?(.*token|.*key|.*secret)" content/ --include="*.json" --include="*.md"; then
+            echo "❌ Potential sensitive URLs found in content files"
+            exit 1
+          fi
+          
+          echo "✅ No sensitive data detected in content files"
+
+  link-validation:
+    name: Validate Content Links
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate internal links
+        run: pnpm -w content:validate-links
+
+      - name: Check external links (non-blocking)
+        continue-on-error: true
+        run: pnpm -w content:check-external-links

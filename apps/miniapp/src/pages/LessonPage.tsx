@@ -4,7 +4,7 @@ import lesson from '../data/lessons/swift-variables.json'
 import { parseLessonStrict } from '../lesson-spec/src'
 import { ModuleRenderer } from '../ui/src'
 import { useTranslation } from '../i18n/lazy'
-import { analytics } from '../analytics/lazy'
+import { analytics } from "../lib/analytics"
 import { useLightApiHealth } from '../hooks/useLightApi'
 
 export const LessonPage = () => {

@@ -8,6 +8,8 @@ export class MetricsService {
   private interviewAttempts: Counter<string>
   private lessonCheckpoints: Counter<string>
   private courseProgress: Histogram<string>
+  private eventsIngested: Counter<string>
+  private eventsDropped: Counter<string>
 
   constructor() {
     // Collect default metrics (CPU, memory, etc.)
@@ -48,6 +50,20 @@ export class MetricsService {
       help: 'Time taken to complete course milestones',
       labelNames: ['course_id', 'milestone'],
       buckets: [60, 300, 900, 1800, 3600, 7200, 14400, 28800, 86400] // 1min to 1day
+    })
+
+    // Events ingested counter
+    this.eventsIngested = new Counter({
+      name: 'events_ingested_total',
+      help: 'Total number of analytics events successfully ingested',
+      labelNames: ['event_type', 'source']
+    })
+
+    // Events dropped counter
+    this.eventsDropped = new Counter({
+      name: 'events_dropped_total',
+      help: 'Total number of analytics events dropped',
+      labelNames: ['event_type', 'reason']
     })
   }
 
@@ -114,6 +130,22 @@ export class MetricsService {
       .replace(/\/c[a-z0-9]{24}(?=\/|$)/gi, '/:cuid') // Replace CUID format (starts with 'c' + 24 chars)
       .replace(/\/[a-z0-9]{21}(?=\/|$)/gi, '/:nanoid') // Replace common nanoid format (21 chars)
       .toLowerCase() // Ensure consistent casing
+  }
+
+  // Record analytics event ingestion
+  recordEventIngested(eventType: string, source: 'proxy' | 'direct' = 'proxy') {
+    this.eventsIngested.inc({
+      event_type: eventType,
+      source
+    })
+  }
+
+  // Record analytics event drop
+  recordEventDropped(eventType: string, reason: 'PII' | 'oversize' | 'rate_limit' | 'invalid_format' | 'processing_error') {
+    this.eventsDropped.inc({
+      event_type: eventType,
+      reason
+    })
   }
 
   // Helper method to measure execution time
