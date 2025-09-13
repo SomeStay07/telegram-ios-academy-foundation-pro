@@ -26,15 +26,10 @@ jobs:
     name: Deploy Preview Environment
     runs-on: ubuntu-latest
     
-<<<<<<< HEAD
-    # Only run on feature branches or manual trigger
-    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop'
-=======
     # Only run on push to develop/main OR manual trigger with secrets
     if: |
       (github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/main'))) ||
       (github.event_name == 'workflow_dispatch' && secrets.RAILWAY_TOKEN != '')
->>>>>>> feature/design-system-foundation
     
     steps:
       - name: Checkout code
@@ -74,11 +69,7 @@ jobs:
           echo "clean_branch_name=$CLEAN_BRANCH_NAME" >> $GITHUB_OUTPUT
           
       - name: Create/Update API Preview Service
-<<<<<<< HEAD
-        if: (github.event.inputs.services == 'api' || github.event.inputs.services == 'all' || github.event_name == 'pull_request') && env.RAILWAY_TOKEN != ''
-=======
         if: (github.event.inputs.services == 'api' || github.event.inputs.services == 'all' || github.event_name == 'push') && env.RAILWAY_TOKEN != ''
->>>>>>> feature/design-system-foundation
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
@@ -103,11 +94,7 @@ jobs:
           echo "🔧 API Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
           
       - name: Create/Update MiniApp Preview Service  
-<<<<<<< HEAD
-        if: (github.event.inputs.services == 'miniapp' || github.event.inputs.services == 'all' || github.event_name == 'pull_request') && env.RAILWAY_TOKEN != ''
-=======
         if: (github.event.inputs.services == 'miniapp' || github.event.inputs.services == 'all' || github.event_name == 'push') && env.RAILWAY_TOKEN != ''
->>>>>>> feature/design-system-foundation
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
@@ -131,11 +118,7 @@ jobs:
           echo "📱 MiniApp Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
           
       - name: Create/Update Bot Preview Service
-<<<<<<< HEAD
-        if: (github.event.inputs.services == 'bot' || github.event.inputs.services == 'all' || github.event_name == 'pull_request') && env.RAILWAY_TOKEN != ''
-=======
         if: (github.event.inputs.services == 'bot' || github.event.inputs.services == 'all' || github.event_name == 'push') && env.RAILWAY_TOKEN != ''
->>>>>>> feature/design-system-foundation
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
@@ -161,11 +144,7 @@ jobs:
           echo "🤖 Bot Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
           
       - name: Comment PR with preview URLs
-<<<<<<< HEAD
-        if: github.event_name == 'pull_request' && env.RAILWAY_TOKEN != ''
-=======
         if: github.event_name == 'push' && env.RAILWAY_TOKEN != ''
->>>>>>> feature/design-system-foundation
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         uses: actions/github-script@v7
