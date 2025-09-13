@@ -7,6 +7,7 @@ export interface InputProps
           ComponentWithSize,
           BaseProps {
   error?: boolean
+  errorMessage?: string
   leftAddon?: React.ReactNode
   rightAddon?: React.ReactNode
 }
@@ -41,14 +42,22 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     type = 'text',
     size = 'md',
     error = false,
+    errorMessage,
     leftAddon,
     rightAddon,
+    id,
     ...props
   }, ref) => {
+    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
+    const errorId = error && errorMessage ? `${inputId}-error` : undefined
+    
     const inputElement = (
       <input
         ref={ref}
+        id={inputId}
         type={type}
+        aria-invalid={error}
+        aria-describedby={errorId}
         className={cn(
           inputStyles.base,
           inputStyles.size[size],
@@ -62,39 +71,54 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       />
     )
 
-    if (leftAddon || rightAddon) {
-      return (
-        <div className={cn('flex items-stretch', className)}>
-          {leftAddon && (
-            <div className={cn(
-              'flex items-center px-3 border border-r-0',
-              'bg-[var(--ds-color-bg-muted)]',
-              'border-[var(--ds-component-input-border)]',
-              'rounded-l-[var(--ds-radius-md)]',
-              'text-[var(--ds-color-fg-muted)]',
-              error && 'border-[var(--ds-color-danger-border)]'
-            )}>
-              {leftAddon}
-            </div>
-          )}
-          {inputElement}
-          {rightAddon && (
-            <div className={cn(
-              'flex items-center px-3 border border-l-0',
-              'bg-[var(--ds-color-bg-muted)]',
-              'border-[var(--ds-component-input-border)]',
-              'rounded-r-[var(--ds-radius-md)]',
-              'text-[var(--ds-color-fg-muted)]',
-              error && 'border-[var(--ds-color-danger-border)]'
-            )}>
-              {rightAddon}
-            </div>
-          )}
-        </div>
-      )
-    }
+    const inputGroup = (leftAddon || rightAddon) ? (
+      <div className={cn('flex items-stretch', className)}>
+        {leftAddon && (
+          <div className={cn(
+            'flex items-center px-3 border border-r-0',
+            'bg-[var(--ds-color-bg-muted)]',
+            'border-[var(--ds-component-input-border)]',
+            'rounded-l-[var(--ds-radius-md)]',
+            'text-[var(--ds-color-fg-muted)]',
+            error && 'border-[var(--ds-color-danger-border)]'
+          )}>
+            {leftAddon}
+          </div>
+        )}
+        {inputElement}
+        {rightAddon && (
+          <div className={cn(
+            'flex items-center px-3 border border-l-0',
+            'bg-[var(--ds-color-bg-muted)]',
+            'border-[var(--ds-component-input-border)]',
+            'rounded-r-[var(--ds-radius-md)]',
+            'text-[var(--ds-color-fg-muted)]',
+            error && 'border-[var(--ds-color-danger-border)]'
+          )}>
+            {rightAddon}
+          </div>
+        )}
+      </div>
+    ) : inputElement
 
-    return inputElement
+    return (
+      <div>
+        {inputGroup}
+        {error && errorMessage && (
+          <div
+            id={errorId}
+            role="alert"
+            aria-live="polite"
+            className={cn(
+              'mt-1 text-sm',
+              'text-[var(--ds-color-danger-fg)]'
+            )}
+          >
+            {errorMessage}
+          </div>
+        )}
+      </div>
+    )
   }
 )
 

@@ -1,0 +1,189 @@
+/* RTL Support for UI Components */
+
+/* Global RTL utilities */
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+/* Logical CSS Properties for Components */
+
+/* Button */
+.button-base {
+  /* Use logical properties instead of physical */
+  padding-inline: var(--button-padding-x);
+  padding-block: var(--button-padding-y);
+  margin-inline: var(--button-margin-x);
+  margin-block: var(--button-margin-y);
+  border-inline-start: var(--button-border-start);
+  border-inline-end: var(--button-border-end);
+}
+
+/* Input */
+.input-base {
+  padding-inline: var(--input-padding-x);
+  padding-block: var(--input-padding-y);
+  text-align: start; /* Uses direction context */
+}
+
+/* Modal */
+.modal-content {
+  /* Ensure proper direction inheritance */
+  direction: inherit;
+}
+
+/* Link with external icon */
+.link-external {
+  /* Icon positioning for RTL */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.link-external[dir="rtl"] .external-icon {
+  transform: scaleX(-1); /* Flip icon in RTL */
+}
+
+/* Text content alignment */
+.text-start {
+  text-align: start;
+}
+
+.text-end {
+  text-align: end;
+}
+
+/* Flex utilities for RTL */
+.flex-start {
+  justify-content: flex-start;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+/* RTL-aware spacing */
+.space-inline-start {
+  margin-inline-start: var(--space-2);
+}
+
+.space-inline-end {
+  margin-inline-end: var(--space-2);
+}
+
+/* Tabs component RTL support */
+.tabs-list {
+  /* Use logical properties for tab navigation */
+  border-block-end: 2px solid var(--ds-border-default);
+}
+
+.tab-item {
+  border-block-end: 2px solid transparent;
+  padding-inline: var(--ds-space-3);
+  padding-block: var(--ds-space-2);
+}
+
+.tab-item[aria-selected="true"] {
+  border-block-end-color: var(--ds-border-accent);
+}
+
+/* Code block RTL support */
+.code-block {
+  /* Code should always be LTR regardless of document direction */
+  direction: ltr;
+  text-align: start;
+}
+
+/* Form elements RTL support */
+.form-field {
+  text-align: start;
+}
+
+.form-label {
+  display: block;
+  text-align: start;
+  margin-block-end: var(--ds-space-1);
+}
+
+/* Navigation elements */
+.nav-item {
+  padding-inline: var(--ds-space-2);
+  padding-block: var(--ds-space-1);
+}
+
+/* RTL-aware animations */
+@keyframes slideInStart {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInEnd {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+[dir="rtl"] .slide-in-start {
+  animation: slideInEnd 0.3s ease-out;
+}
+
+[dir="ltr"] .slide-in-start {
+  animation: slideInStart 0.3s ease-out;
+}
+
+/* Tooltip positioning for RTL */
+.tooltip {
+  direction: inherit;
+}
+
+/* Ensure icons and symbols maintain proper orientation */
+.icon-arrow-left[dir="rtl"] {
+  transform: scaleX(-1);
+}
+
+.icon-arrow-right[dir="rtl"] {
+  transform: scaleX(-1);
+}
+
+/* Breadcrumb separator for RTL */
+.breadcrumb-separator[dir="rtl"] {
+  transform: scaleX(-1);
+}
+
+/* Progress indicators */
+.progress-bar {
+  direction: ltr; /* Progress always goes left-to-right visually */
+}
+
+/* Stepper component */
+.stepper-item {
+  text-align: start;
+}
+
+.stepper-connector {
+  /* Use logical properties for connecting lines */
+  border-inline-start: 1px solid var(--ds-border-default);
+  margin-inline-start: calc(var(--stepper-indicator-size) / 2);
+  margin-block: var(--ds-space-1);
+}
+
+/* Media queries for RTL support in specific locales */
+:lang(ar), :lang(he), :lang(fa), :lang(ur) {
+  direction: rtl;
+}
+
+/* Ensure critical UI elements maintain usability in RTL */
+.focus-visible {
+  outline: 2px solid var(--ds-border-focus);
+  outline-offset: 2px;
+}

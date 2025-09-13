@@ -18,3 +18,10 @@ export * from './Card'
 // Content Components  
 export * from './CodeBlock'
 export * from './Markdown'
+
+// Legacy Components (migrated to separate files)
+export { Modal } from './Modal'
+export { Tabs } from './Tabs'
+export { QuizItem } from './QuizItem'
+export { WorkedExampleStepper } from './WorkedExampleStepper'
+export { Progress } from './Progress'

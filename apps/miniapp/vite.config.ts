@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const bundleSizePlugin = () => {
   return {
@@ -36,7 +37,16 @@ const bundleSizePlugin = () => {
 };
 
 export default defineConfig({
-  plugins: [react(), bundleSizePlugin()],
+  plugins: [
+    react(), 
+    bundleSizePlugin(),
+    visualizer({ 
+      filename: 'stats.html',
+      open: false,
+      gzipSize: true,
+      brotliSize: false
+    })
+  ],
   server: { 
     port: 5173, 
     strictPort: true 
@@ -65,7 +75,10 @@ export default defineConfig({
           'i18n': ['i18next', 'react-i18next'],
           
           // Form handling
-          'forms': ['react-hook-form', '@hookform/resolvers']
+          'forms': ['react-hook-form', '@hookform/resolvers'],
+          
+          // Code highlighting (lazy loaded)
+          'prism': []
         }
       }
     },

@@ -8,10 +8,10 @@ import {
   Stack, 
   Link, 
   Icon, 
-  Divider,
-  CodeBlock,
-  Markdown
+  Divider
 } from '@telegram-ios-academy/ui';
+import { LazyCodeBlock } from '../components/LazyCodeBlock';
+import { LazyMarkdown } from '../components/LazyMarkdown';
 
 const UIShowcasePage: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
@@ -214,7 +214,7 @@ This is a **comprehensive showcase** of our UI components built with:
               <Text size="sm" color="secondary">
                 Syntax-highlighted code with security features:
               </Text>
-              <CodeBlock 
+              <LazyCodeBlock 
                 code={codeExample}
                 language="typescript"
               />
@@ -227,7 +227,7 @@ This is a **comprehensive showcase** of our UI components built with:
               <Text size="sm" color="secondary">
                 Secure markdown parsing with sanitization:
               </Text>
-              <Markdown content={markdownExample} />
+              <LazyMarkdown content={markdownExample} />
             </Stack>
           </Card>
         </Stack>

@@ -2,24 +2,19 @@ import { forwardRef, useEffect, useState, type HTMLAttributes } from 'react'
 import { cn } from '../../utils/cn'
 import type { ComponentWithSize, ComponentWithVariant } from '../../types'
 
-// Dynamically import Prism to avoid SSR issues
-const loadPrism = async () => {
+// Dynamically import Prism with minimal language support
+const loadPrism = async (language: string) => {
   try {
     const Prism = await import('prismjs')
     
-    // Load common language components
-    await import('prismjs/components/prism-javascript')
-    await import('prismjs/components/prism-typescript')
-    await import('prismjs/components/prism-jsx')
-    await import('prismjs/components/prism-tsx')
-    await import('prismjs/components/prism-python')
-    await import('prismjs/components/prism-java')
-    await import('prismjs/components/prism-json')
-    await import('prismjs/components/prism-bash')
-    await import('prismjs/components/prism-sql')
-    await import('prismjs/components/prism-css')
-    await import('prismjs/components/prism-scss')
-    await import('prismjs/components/prism-markdown')
+    // Load only required languages for MiniApp
+    if (language === 'swift') {
+      await import('prismjs/components/prism-swift')
+    } else if (language === 'json') {
+      await import('prismjs/components/prism-json')
+    } else if (language === 'markdown' || language === 'md') {
+      await import('prismjs/components/prism-markdown')
+    }
     
     return Prism.default
   } catch (error) {
@@ -92,18 +87,10 @@ const sanitizeCode = (code: string): string => {
 // Get language name for display
 const getLanguageDisplayName = (language?: string): string => {
   const languageMap: Record<string, string> = {
-    'js': 'JavaScript',
-    'jsx': 'React JSX', 
-    'ts': 'TypeScript',
-    'tsx': 'React TSX',
-    'py': 'Python',
-    'bash': 'Bash',
-    'sh': 'Shell',
+    'swift': 'Swift',
     'json': 'JSON',
-    'css': 'CSS',
-    'scss': 'SCSS',
-    'html': 'HTML',
-    'md': 'Markdown'
+    'md': 'Markdown',
+    'markdown': 'Markdown'
   }
   
   return languageMap[language || ''] || language?.toUpperCase() || 'Code'
@@ -132,7 +119,7 @@ export const CodeBlock = forwardRef<HTMLPreElement, CodeBlockProps>(
       
       const highlightCode = async () => {
         try {
-          const Prism = await loadPrism()
+          const Prism = await loadPrism(language)
           
           if (!isMounted) return
           

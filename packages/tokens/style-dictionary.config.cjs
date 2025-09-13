@@ -2,15 +2,45 @@
 const fs = require('fs');
 const path = require('path');
 
+// Helper to resolve token aliases
+function resolveAlias(value, allTokens) {
+  if (typeof value !== 'string' || !value.includes('{')) {
+    return value;
+  }
+  
+  const aliasRegex = /\{([^}]+)\}/g;
+  return value.replace(aliasRegex, (match, path) => {
+    const pathParts = path.split('.');
+    let current = allTokens;
+    
+    for (const part of pathParts) {
+      if (current && current[part]) {
+        current = current[part];
+      } else {
+        // Alias not found, return original
+        return match;
+      }
+    }
+    
+    if (current && current.value) {
+      // Recursively resolve nested aliases
+      return resolveAlias(current.value, allTokens);
+    }
+    
+    return match;
+  });
+}
+
 // Helper to recursively process tokens
-function processTokens(obj, prefix = '', cssVars = {}, jsTokens = {}) {
+function processTokens(obj, prefix = '', cssVars = {}, jsTokens = {}, allTokens = {}) {
   for (const [key, value] of Object.entries(obj)) {
     const currentPath = prefix ? `${prefix}-${key}` : key;
     
     if (value && typeof value === 'object' && value.value !== undefined) {
-      // This is a token
+      // This is a token - resolve aliases
       const cssVar = `--ds-${currentPath}`;
-      cssVars[cssVar] = value.value;
+      const resolvedValue = resolveAlias(value.value, allTokens);
+      cssVars[cssVar] = resolvedValue;
       
       // Build JS object structure
       const pathParts = currentPath.split('-');
@@ -20,14 +50,29 @@ function processTokens(obj, prefix = '', cssVars = {}, jsTokens = {}) {
         current = current[pathParts[i]];
       }
       current[pathParts[pathParts.length - 1]] = {
-        value: value.value,
+        value: resolvedValue,
         variable: cssVar
       };
     } else if (value && typeof value === 'object') {
       // Recurse deeper
-      processTokens(value, currentPath, cssVars, jsTokens);
+      processTokens(value, currentPath, cssVars, jsTokens, allTokens);
     }
   }
+}
+
+// Helper to deep merge objects
+function deepMerge(target, source) {
+  for (const key in source) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      if (!target[key] || typeof target[key] !== 'object') {
+        target[key] = {};
+      }
+      deepMerge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
 }
 
 // Load all token files
@@ -42,14 +87,14 @@ let allTokens = {};
 tokenFiles.forEach(file => {
   if (fs.existsSync(file)) {
     const content = JSON.parse(fs.readFileSync(file, 'utf8'));
-    allTokens = { ...allTokens, ...content };
+    allTokens = deepMerge(allTokens, content);
   }
 });
 
 // Process tokens
 const cssVars = {};
 const jsTokens = {};
-processTokens(allTokens, '', cssVars, jsTokens);
+processTokens(allTokens, '', cssVars, jsTokens, allTokens);
 
 // Ensure output directories exist
 fs.mkdirSync('dist/css', { recursive: true });

@@ -1,9 +1,9 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: ['src/index.ts', 'src/styles/index.css'],
   format: ['esm', 'cjs'],
-  dts: true,
+  dts: false,
   splitting: false,
   sourcemap: true,
   clean: true,
@@ -14,7 +14,6 @@ export default defineConfig({
     'react-aria',
     'react-stately',
     'clsx',
-    'dompurify',
     'marked',
     'prismjs',
     'sanitize-html'

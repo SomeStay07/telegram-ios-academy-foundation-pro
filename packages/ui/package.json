@@ -12,7 +12,8 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./css": "./dist/styles.css"
+    "./css": "./dist/index.css",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist/**"
@@ -32,7 +33,6 @@
   "dependencies": {
     "@telegram-ios-academy/tokens": "workspace:*",
     "clsx": "^2.1.1",
-    "dompurify": "^3.2.6",
     "marked": "^16.2.1",
     "prismjs": "^1.29.0",
     "react-aria": "^3.36.0",
@@ -56,8 +56,6 @@
     "@storybook/react": "7.6.20",
     "@storybook/react-vite": "7.6.20",
     "@storybook/test": "7.6.20",
-    "@types/dompurify": "^3.2.0",
-    "@types/marked": "^6.0.0",
     "@types/prismjs": "^1.26.5",
     "@types/react": "^18.2.67",
     "@types/react-dom": "^18.2.22",
@@ -78,7 +76,5 @@
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
-  "sideEffects": [
-    "**/*.css"
-  ]
+  "sideEffects": false
 }

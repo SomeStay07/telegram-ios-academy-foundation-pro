@@ -93,6 +93,8 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
             stroke="currentColor"
             viewBox="0 0 24 24"
             aria-hidden="true"
+            role="img"
+            aria-label="Внешняя ссылка"
           >
             <path
               strokeLinecap="round"

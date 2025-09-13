@@ -1,6 +1,5 @@
 import { forwardRef, useMemo, type HTMLAttributes } from 'react'
 import { marked } from 'marked'
-import DOMPurify from 'dompurify'
 import sanitizeHtml from 'sanitize-html'
 import { cn } from '../../utils/cn'
 import { CodeBlock } from '../CodeBlock'
@@ -35,14 +34,13 @@ const DEFAULT_ALLOWED_ATTRIBUTES = {
   '*': ['id', 'class', 'data-*']
 }
 
-// Secure sanitization using multiple layers
+// Secure sanitization using single layer
 const sanitizeContent = (
   html: string, 
   allowedTags: string[], 
   allowedAttributes: Record<string, string[]>
 ): string => {
-  // First pass: sanitize-html (more configurable)
-  const firstPass = sanitizeHtml(html, {
+  return sanitizeHtml(html, {
     allowedTags,
     allowedAttributes,
     allowedSchemes: ['http', 'https', 'mailto'],
@@ -69,17 +67,6 @@ const sanitizeContent = (
       }
       return false
     }
-  })
-
-  // Second pass: DOMPurify (additional XSS protection)
-  return DOMPurify.sanitize(firstPass, {
-    ALLOWED_TAGS: allowedTags,
-    ALLOWED_ATTR: Object.values(allowedAttributes).flat(),
-    FORBID_SCRIPT: true,
-    FORBID_TAGS: ['script', 'object', 'embed', 'base', 'link', 'meta', 'style'],
-    FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur'],
-    KEEP_CONTENT: true,
-    SAFE_FOR_TEMPLATES: true
   })
 }
 
