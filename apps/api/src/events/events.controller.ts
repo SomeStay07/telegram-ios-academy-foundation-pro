@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Headers, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiOperation, ApiBody, ApiAcceptedResponse, ApiBadRequestResponse, ApiTooManyRequestsResponse } from '@nestjs/swagger';
 import { EventsService } from './events.service';
 import { IngestEventDto } from './events.dto';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -20,16 +20,9 @@ export class EventsController {
     description: 'Accepts analytics events from the miniapp and forwards them to PostHog'
   })
   @ApiBody({ type: CreateEventDto })
-  @ApiResponse({ 
-    status: 202, 
-    description: 'Event accepted for processing',
-    schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'string', example: 'ok' }
-      }
-    }
-  })
+  @ApiAcceptedResponse({ description: 'Event accepted for processing' })
+  @ApiBadRequestResponse({ description: 'Validation error' })
+  @ApiTooManyRequestsResponse({ description: 'Rate limit exceeded' })
   async ingest(
     @Body() dto: IngestEventDto,
     @Headers('x-forwarded-for') xff?: string,
