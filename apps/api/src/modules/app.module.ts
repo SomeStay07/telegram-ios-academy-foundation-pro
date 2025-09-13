@@ -1,4 +1,5 @@
 import { Module, MiddlewareConsumer } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { HealthController } from './health.controller'
@@ -17,6 +18,9 @@ import { EventsModule } from '../events/events.module'
 
 @Module({ 
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     ThrottlerModule.forRoot([{
       name: 'short',
       ttl: 60000, // 1 minute
