@@ -1,0 +1,13 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "SomeStay07/telegram-ios-academy-foundation-pro" }],
+  "commit": false,
+  "fixed": [],
+  "linked": [
+    ["@telegram-ios-academy/ui", "@telegram-ios-academy/tokens"]
+  ],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": ["@telegram-ios-academy/miniapp", "@telegram-ios-academy/api"]
+}

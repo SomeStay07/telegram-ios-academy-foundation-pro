@@ -4,6 +4,10 @@ import { CourseLoader } from '../pages/CourseLoader'
 import { InterviewPage } from '../pages/InterviewPage'
 import { HomePage } from '../pages/HomePage'
 import { RouteErrorBoundary } from '../components/RouteErrorBoundary'
+<<<<<<< HEAD
+=======
+import { LazyUIShowcase } from '../components/LazyUIShowcase'
+>>>>>>> feature/design-system-foundation
 
 // 1) ЕДИНСТВЕННЫЙ root
 export const rootRoute = createRootRoute({
@@ -47,6 +51,15 @@ export const interviewRoute = createRoute({
   component: InterviewPage,
 })
 
+<<<<<<< HEAD
+=======
+export const uiShowcaseRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'ui-showcase',
+  component: LazyUIShowcase,
+})
+
+>>>>>>> feature/design-system-foundation
 // 4) Собери дерево ОДИН раз
 export const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -54,4 +67,8 @@ export const routeTree = rootRoute.addChildren([
   lessonRoute,
   lessonByIdRoute,
   interviewRoute,
+<<<<<<< HEAD
+=======
+  uiShowcaseRoute,
+>>>>>>> feature/design-system-foundation
 ])

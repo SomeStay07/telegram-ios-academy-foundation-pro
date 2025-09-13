@@ -13,6 +13,10 @@ import { CourseService } from '../services/course.service'
 import { InterviewService } from '../services/interview.service'
 import { MetricsModule } from '../metrics/metrics.module'
 import { MetricsMiddleware } from '../metrics/metrics.middleware'
+<<<<<<< HEAD
+=======
+import { EventsModule } from '../events/events.module'
+>>>>>>> feature/design-system-foundation
 
 @Module({ 
   imports: [
@@ -21,7 +25,12 @@ import { MetricsMiddleware } from '../metrics/metrics.middleware'
       ttl: 60000, // 1 minute
       limit: 100, // 100 requests per minute globally
     }]),
+<<<<<<< HEAD
     MetricsModule
+=======
+    MetricsModule,
+    EventsModule
+>>>>>>> feature/design-system-foundation
   ],
   controllers: [AuthController, LessonController, CourseController, InterviewController, HealthController], 
   providers: [

@@ -1,4 +1,5 @@
 import React from 'react'
+<<<<<<< HEAD
 
 export function RouteErrorBoundary({ error }: { error: any }) {
   React.useEffect(() => {
@@ -11,6 +12,22 @@ export function RouteErrorBoundary({ error }: { error: any }) {
     if (process.env.NODE_ENV === 'development') {
       console.error('Route error:', error)
     }
+=======
+import { reportError, CriticalErrorType } from '../lib/error-monitoring'
+
+export function RouteErrorBoundary({ error }: { error: any }) {
+  React.useEffect(() => {
+    // Report through centralized error monitoring
+    reportError(
+      CriticalErrorType.ROUTE_ERROR,
+      error.message || String(error),
+      {
+        stack: error.stack,
+        componentStack: error.componentStack,
+        errorBoundary: 'RouteErrorBoundary'
+      }
+    )
+>>>>>>> feature/design-system-foundation
   }, [error])
 
   return (

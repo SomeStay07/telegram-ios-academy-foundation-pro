@@ -1,0 +1,11 @@
+{
+  "name": "@telegram-ios-academy/eslint-rules",
+  "version": "0.1.0",
+  "description": "Custom ESLint rules for design system enforcement",
+  "main": "index.js",
+  "files": ["*.js"],
+  "keywords": ["eslint", "design-system", "rules"],
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  }
+}

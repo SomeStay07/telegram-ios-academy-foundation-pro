@@ -1,5 +1,14 @@
 import React from 'react'
 import { trackInterviewStarted, trackInterviewAnswerSubmitted, trackInterviewCompleted } from '../../lib/analytics'
+<<<<<<< HEAD
+=======
+import { 
+  startInterviewAttempt, 
+  updateInterviewProgress, 
+  finishInterviewAttempt,
+  InterviewAttemptResponse
+} from '../../api/interview'
+>>>>>>> feature/design-system-foundation
 
 export interface InterviewQuestion {
   id: string
@@ -55,10 +64,16 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
   const [isAnswerVisible, setIsAnswerVisible] = React.useState(false)
   const [userAnswer, setUserAnswer] = React.useState('')
   const [startTime] = React.useState(Date.now())
+<<<<<<< HEAD
+=======
+  const [attemptId, setAttemptId] = React.useState<string | null>(null)
+  const [isLoading, setIsLoading] = React.useState(false)
+>>>>>>> feature/design-system-foundation
 
   const currentQuestion = interviewSet.questions[currentIndex]
 
   React.useEffect(() => {
+<<<<<<< HEAD
     trackInterviewStarted({
       interviewId: interviewSet.id,
       mode
@@ -70,6 +85,51 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
       mode,
       question_count: interviewSet.questions.length
     })
+=======
+    const initializeInterview = async () => {
+      setIsLoading(true)
+      try {
+        // Start interview attempt with API
+        const attempt = await startInterviewAttempt({
+          interview_id: interviewSet.id,
+          mode
+        })
+        
+        setAttemptId(attempt.id)
+        
+        // Track analytics events
+        await trackInterviewStarted({
+          interviewId: interviewSet.id,
+          mode
+        })
+        
+        // Call legacy analytics for backward compatibility
+        onAnalytics.interviewStarted({
+          interview_id: interviewSet.id,
+          mode,
+          question_count: interviewSet.questions.length,
+          attempt_id: attempt.id
+        })
+      } catch (error) {
+        console.error('Failed to initialize interview:', error)
+        // Continue without API tracking
+        await trackInterviewStarted({
+          interviewId: interviewSet.id,
+          mode
+        })
+        
+        onAnalytics.interviewStarted({
+          interview_id: interviewSet.id,
+          mode,
+          question_count: interviewSet.questions.length
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    initializeInterview()
+>>>>>>> feature/design-system-foundation
   }, [])
 
   const handleRevealAnswer = () => {
@@ -80,11 +140,43 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
     })
   }
 
+<<<<<<< HEAD
   const handleNextQuestion = () => {
     if (currentIndex < interviewSet.questions.length - 1) {
       setCurrentIndex(currentIndex + 1)
       setIsAnswerVisible(false)
       setUserAnswer('')
+=======
+  const handleNextQuestion = async () => {
+    if (currentIndex < interviewSet.questions.length - 1) {
+      const nextIndex = currentIndex + 1
+      setCurrentIndex(nextIndex)
+      setIsAnswerVisible(false)
+      setUserAnswer('')
+      
+      // Update progress on API if available
+      if (attemptId) {
+        try {
+          await updateInterviewProgress(attemptId, {
+            current_question_index: nextIndex,
+            answered_questions: interviewSet.questions.slice(0, nextIndex + 1).map(q => q.id),
+            time_spent: Date.now() - startTime
+          })
+        } catch (error) {
+          console.error('Failed to update progress:', error)
+        }
+      }
+      
+      // Update local progress
+      const updatedProgress: InterviewProgress = {
+        currentQuestionIndex: nextIndex,
+        answeredQuestions: interviewSet.questions.slice(0, nextIndex + 1).map(q => q.id),
+        score: 1.0,
+        timeSpent: Date.now() - startTime,
+        startTime
+      }
+      onProgressUpdate?.(updatedProgress)
+>>>>>>> feature/design-system-foundation
     } else {
       const finalProgress: InterviewProgress = {
         currentQuestionIndex: currentIndex,
@@ -94,6 +186,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
         startTime
       }
       
+<<<<<<< HEAD
       trackInterviewCompleted({
         interviewId: interviewSet.id,
         mode,
@@ -128,11 +221,102 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
     })
     
     handleRevealAnswer()
+=======
+      try {
+        // Finish interview attempt via API
+        if (attemptId) {
+          await finishInterviewAttempt(attemptId, {
+            total_questions: interviewSet.questions.length,
+            questions_completed: interviewSet.questions.length,
+            total_time_seconds: Math.round(finalProgress.timeSpent / 1000),
+            completion_rate: finalProgress.score
+          })
+        }
+        
+        // Track completion analytics
+        await trackInterviewCompleted({
+          interviewId: interviewSet.id,
+          mode,
+          totalQuestions: interviewSet.questions.length,
+          correctCount: Math.round(finalProgress.score * interviewSet.questions.length),
+          durationMs: finalProgress.timeSpent
+        })
+        
+        onComplete?.(finalProgress)
+        onAnalytics.interviewCompleted({
+          interview_id: interviewSet.id,
+          total_time: finalProgress.timeSpent,
+          questions_answered: finalProgress.answeredQuestions.length,
+          attempt_id: attemptId
+        })
+      } catch (error) {
+        console.error('Failed to complete interview:', error)
+        // Continue with local completion
+        await trackInterviewCompleted({
+          interviewId: interviewSet.id,
+          mode,
+          totalQuestions: interviewSet.questions.length,
+          correctCount: Math.round(finalProgress.score * interviewSet.questions.length),
+          durationMs: finalProgress.timeSpent
+        })
+        
+        onComplete?.(finalProgress)
+        onAnalytics.interviewCompleted({
+          interview_id: interviewSet.id,
+          total_time: finalProgress.timeSpent,
+          questions_answered: finalProgress.answeredQuestions.length
+        })
+      }
+    }
+  }
+
+  const handleSubmitAnswer = async () => {
+    const answerTime = Date.now() - startTime
+    
+    try {
+      // Track answer submission analytics
+      await trackInterviewAnswerSubmitted({
+        interviewId: interviewSet.id,
+        questionId: currentQuestion.id,
+        mode,
+        timeMs: answerTime
+      })
+      
+      // Call legacy analytics for backward compatibility
+      onAnalytics.answerSubmitted({
+        question_id: currentQuestion.id,
+        user_answer: userAnswer,
+        attempt_id: attemptId,
+        time_spent_seconds: Math.round(answerTime / 1000)
+      })
+      
+      handleRevealAnswer()
+    } catch (error) {
+      console.error('Failed to track answer submission:', error)
+      handleRevealAnswer()
+    }
+>>>>>>> feature/design-system-foundation
   }
 
   if (!currentQuestion) {
     return <div>No questions available</div>
   }
+<<<<<<< HEAD
+=======
+  
+  if (isLoading) {
+    return (
+      <div className="interview-renderer p-6 max-w-4xl mx-auto">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Starting interview...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+>>>>>>> feature/design-system-foundation
 
   return (
     <div className="interview-renderer p-6 max-w-4xl mx-auto">

@@ -4,7 +4,11 @@ import lesson from '../data/lessons/swift-variables.json'
 import { parseLessonStrict } from '../lesson-spec/src'
 import { ModuleRenderer } from '../ui/src'
 import { useTranslation } from '../i18n/lazy'
+<<<<<<< HEAD
 import { analytics } from '../analytics/lazy'
+=======
+import { analytics } from '../lib/analytics/index'
+>>>>>>> feature/design-system-foundation
 import { useLightApiHealth } from '../hooks/useLightApi'
 
 export const LessonPage = () => {
@@ -16,19 +20,31 @@ export const LessonPage = () => {
   // Track lesson started
   React.useEffect(() => {
     analytics.lessonStarted({
+<<<<<<< HEAD
       lesson_id: parsed.meta.id,
       lesson_title: parsed.meta.title,
       user_language: navigator.language.split('-')[0] || 'en'
+=======
+      lessonId: parsed.meta.id,
+      title: parsed.meta.title
+>>>>>>> feature/design-system-foundation
     })
   }, [parsed.meta.id, parsed.meta.title])
 
   const handleQuizAnswer = (questionId: string, isCorrect: boolean, selectedAnswer: string, timeSpent: number) => {
     analytics.quizAnswered({
+<<<<<<< HEAD
       lesson_id: parsed.meta.id,
       question_id: questionId,
       is_correct: isCorrect,
       selected_answer: selectedAnswer,
       time_spent_seconds: timeSpent
+=======
+      lessonId: parsed.meta.id,
+      questionId: questionId,
+      correct: isCorrect,
+      timeSpent: timeSpent
+>>>>>>> feature/design-system-foundation
     })
 
     console.log('Quiz answered:', { questionId, isCorrect, selectedAnswer, timeSpent })

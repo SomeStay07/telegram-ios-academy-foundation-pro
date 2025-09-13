@@ -1,0 +1,149 @@
+{
+  "color": {
+    "bg": {
+      "canvas": { "value": "{color.palette.white}" },
+      "surface": { "value": "{color.palette.white}" },
+      "overlay": { "value": "{color.palette.white}" },
+      "backdrop": { "value": "{color.palette.black}" },
+      "muted": { "value": "{color.palette.grey.50}" },
+      "subtle": { "value": "{color.palette.grey.100}" },
+      "emphasis": { "value": "{color.palette.grey.200}" },
+      "disabled": { "value": "{color.palette.grey.100}" }
+    },
+    "fg": {
+      "default": { "value": "{color.palette.grey.900}" },
+      "muted": { "value": "{color.palette.grey.600}" },
+      "subtle": { "value": "{color.palette.grey.500}" },
+      "disabled": { "value": "{color.palette.grey.400}" },
+      "onEmphasis": { "value": "{color.palette.white}" },
+      "inverted": { "value": "{color.palette.white}" }
+    },
+    "border": {
+      "default": { "value": "{color.palette.grey.200}" },
+      "muted": { "value": "{color.palette.grey.100}" },
+      "subtle": { "value": "{color.palette.grey.50}" },
+      "emphasis": { "value": "{color.palette.grey.300}" },
+      "strong": { "value": "{color.palette.grey.400}" },
+      "disabled": { "value": "{color.palette.grey.100}" }
+    },
+    "primary": {
+      "bg": { "value": "{color.palette.telegram.500}" },
+      "bgHover": { "value": "{color.palette.telegram.600}" },
+      "bgPressed": { "value": "{color.palette.telegram.700}" },
+      "bgSubtle": { "value": "{color.palette.telegram.50}" },
+      "bgDisabled": { "value": "{color.palette.grey.100}" },
+      "fg": { "value": "{color.palette.telegram.600}" },
+      "fgOnBg": { "value": "{color.palette.white}" },
+      "border": { "value": "{color.palette.telegram.300}" },
+      "borderSubtle": { "value": "{color.palette.telegram.200}" }
+    },
+    "secondary": {
+      "bg": { "value": "{color.palette.grey.100}" },
+      "bgHover": { "value": "{color.palette.grey.200}" },
+      "bgPressed": { "value": "{color.palette.grey.300}" },
+      "bgSubtle": { "value": "{color.palette.grey.50}" },
+      "bgDisabled": { "value": "{color.palette.grey.50}" },
+      "fg": { "value": "{color.palette.grey.700}" },
+      "fgOnBg": { "value": "{color.palette.grey.700}" },
+      "border": { "value": "{color.palette.grey.300}" },
+      "borderSubtle": { "value": "{color.palette.grey.200}" }
+    },
+    "success": {
+      "bg": { "value": "{color.palette.green.500}" },
+      "bgHover": { "value": "{color.palette.green.600}" },
+      "bgPressed": { "value": "{color.palette.green.700}" },
+      "bgSubtle": { "value": "{color.palette.green.50}" },
+      "fg": { "value": "{color.palette.green.600}" },
+      "fgOnBg": { "value": "{color.palette.white}" },
+      "border": { "value": "{color.palette.green.300}" },
+      "borderSubtle": { "value": "{color.palette.green.200}" }
+    },
+    "danger": {
+      "bg": { "value": "{color.palette.red.500}" },
+      "bgHover": { "value": "{color.palette.red.600}" },
+      "bgPressed": { "value": "{color.palette.red.700}" },
+      "bgSubtle": { "value": "{color.palette.red.50}" },
+      "fg": { "value": "{color.palette.red.600}" },
+      "fgOnBg": { "value": "{color.palette.white}" },
+      "border": { "value": "{color.palette.red.300}" },
+      "borderSubtle": { "value": "{color.palette.red.200}" }
+    },
+    "warning": {
+      "bg": { "value": "{color.palette.amber.500}" },
+      "bgHover": { "value": "{color.palette.amber.600}" },
+      "bgPressed": { "value": "{color.palette.amber.700}" },
+      "bgSubtle": { "value": "{color.palette.amber.50}" },
+      "fg": { "value": "{color.palette.amber.600}" },
+      "fgOnBg": { "value": "{color.palette.white}" },
+      "border": { "value": "{color.palette.amber.300}" },
+      "borderSubtle": { "value": "{color.palette.amber.200}" }
+    },
+    "info": {
+      "bg": { "value": "{color.palette.cyan.500}" },
+      "bgHover": { "value": "{color.palette.cyan.600}" },
+      "bgPressed": { "value": "{color.palette.cyan.700}" },
+      "bgSubtle": { "value": "{color.palette.cyan.50}" },
+      "fg": { "value": "{color.palette.cyan.600}" },
+      "fgOnBg": { "value": "{color.palette.white}" },
+      "border": { "value": "{color.palette.cyan.300}" },
+      "borderSubtle": { "value": "{color.palette.cyan.200}" }
+    },
+    "focus": {
+      "ring": { "value": "{color.palette.telegram.500}" },
+      "ringOffset": { "value": "{color.palette.white}" }
+    },
+    "selection": {
+      "bg": { "value": "{color.palette.telegram.100}" },
+      "fg": { "value": "{color.palette.telegram.900}" }
+    }
+  },
+  "typography": {
+    "heading": {
+      "fontFamily": { "value": "{font.family.sans}" },
+      "fontWeight": { "value": "{font.weight.bold}" },
+      "lineHeight": { "value": "{font.lineHeight.tight}" }
+    },
+    "body": {
+      "fontFamily": { "value": "{font.family.sans}" },
+      "fontWeight": { "value": "{font.weight.normal}" },
+      "lineHeight": { "value": "{font.lineHeight.normal}" }
+    },
+    "caption": {
+      "fontFamily": { "value": "{font.family.sans}" },
+      "fontWeight": { "value": "{font.weight.normal}" },
+      "lineHeight": { "value": "{font.lineHeight.snug}" }
+    },
+    "code": {
+      "fontFamily": { "value": "{font.family.mono}" },
+      "fontWeight": { "value": "{font.weight.normal}" },
+      "lineHeight": { "value": "{font.lineHeight.normal}" }
+    }
+  },
+  "layout": {
+    "minTapTarget": { "value": "{spacing.11}" },
+    "containerPadding": { "value": "{spacing.4}" },
+    "sectionSpacing": { "value": "{spacing.8}" },
+    "componentSpacing": { "value": "{spacing.4}" }
+  },
+  "elevation": {
+    "card": { "value": "{shadow.sm}" },
+    "modal": { "value": "{shadow.lg}" },
+    "popover": { "value": "{shadow.md}" },
+    "tooltip": { "value": "{shadow.sm}" },
+    "toast": { "value": "{shadow.lg}" }
+  },
+  "interaction": {
+    "duration": {
+      "instant": { "value": "{motion.duration.instant}" },
+      "fast": { "value": "{motion.duration.fast}" },
+      "normal": { "value": "{motion.duration.normal}" },
+      "slow": { "value": "{motion.duration.slow}" }
+    },
+    "easing": {
+      "standard": { "value": "{motion.easing.easeInOut}" },
+      "enter": { "value": "{motion.easing.easeOut}" },
+      "exit": { "value": "{motion.easing.easeIn}" },
+      "bounce": { "value": "{motion.easing.bounce}" }
+    }
+  }
+}

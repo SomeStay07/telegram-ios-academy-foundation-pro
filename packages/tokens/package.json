@@ -1,0 +1,46 @@
+{
+  "name": "@telegram-ios-academy/tokens",
+  "version": "0.1.0",
+  "description": "Design tokens for Telegram iOS Academy",
+  "type": "module",
+  "main": "./dist/ts/index.js",
+  "types": "./dist/ts/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/ts/index.d.ts",
+      "import": "./dist/ts/index.js"
+    },
+    "./css": "./dist/css/tokens.css",
+    "./css/tokens.css": "./dist/css/tokens.css",
+    "./css/light": "./dist/css/tokens.light.css",
+    "./css/dark": "./dist/css/tokens.dark.css",
+    "./css/high-contrast": "./dist/css/tokens.high-contrast.css",
+    "./css/amoled": "./dist/css/tokens.amoled.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node style-dictionary.config.cjs",
+    "build:watch": "node style-dictionary.config.cjs --watch",
+    "check:contrast": "node scripts/check-contrast.js",
+    "clean": "rimraf dist",
+    "dev": "pnpm build:watch"
+  },
+  "devDependencies": {
+    "style-dictionary": "^4.0.1",
+    "rimraf": "^6.0.1"
+  },
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "telegram",
+    "css-variables",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SomeStay07/telegram-ios-academy-foundation-pro.git",
+    "directory": "packages/tokens"
+  }
+}
