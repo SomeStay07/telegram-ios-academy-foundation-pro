@@ -5,7 +5,7 @@ import { router } from './router'
 import { processDeepLink, trackDeepLink } from './utils/deep-linking'
 import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
 import { initThemeSync } from './lib/tmaTheme'
-import './styles.css'
+import '@telegram-ios-academy/ui/dist/tokens.css'
 
 // Lazy load QueryClient when needed
 let queryClient: any = null

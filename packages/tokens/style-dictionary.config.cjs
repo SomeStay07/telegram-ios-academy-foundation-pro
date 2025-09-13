@@ -10,23 +10,50 @@ function resolveAlias(value, allTokens) {
   
   const aliasRegex = /\{([^}]+)\}/g;
   return value.replace(aliasRegex, (match, path) => {
-    const pathParts = path.split('.');
+    // More sophisticated path resolution to handle numeric keys with dots
     let current = allTokens;
     
-    for (const part of pathParts) {
-      if (current && current[part]) {
-        current = current[part];
+    // First try the simple approach - split by dots and traverse
+    const pathSegments = path.split('.');
+    let resolved = false;
+    
+    // Try normal traversal first
+    let temp = current;
+    for (const segment of pathSegments) {
+      if (temp && temp[segment] !== undefined) {
+        temp = temp[segment];
       } else {
-        // Alias not found, return original
-        return match;
+        temp = null;
+        break;
       }
     }
     
-    if (current && current.value) {
+    if (temp && temp.value !== undefined) {
+      current = temp;
+      resolved = true;
+    }
+    
+    // If normal traversal failed, try alternative parsing for numeric keys with dots
+    if (!resolved && pathSegments.length >= 2) {
+      const firstSegment = pathSegments[0];
+      const remainingSegments = pathSegments.slice(1);
+      
+      // Try joining remaining segments to handle cases like "2.5"
+      if (current[firstSegment]) {
+        const joinedKey = remainingSegments.join('.');
+        if (current[firstSegment][joinedKey] && current[firstSegment][joinedKey].value !== undefined) {
+          current = current[firstSegment][joinedKey];
+          resolved = true;
+        }
+      }
+    }
+    
+    if (resolved && current && current.value !== undefined) {
       // Recursively resolve nested aliases
       return resolveAlias(current.value, allTokens);
     }
     
+    // Alias not found, return original token reference
     return match;
   });
 }

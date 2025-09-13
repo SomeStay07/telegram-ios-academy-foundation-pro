@@ -3,8 +3,8 @@ import { LessonPage } from '../pages/LessonPage'
 import { CourseLoader } from '../pages/CourseLoader'
 import { InterviewPage } from '../pages/InterviewPage'
 import { HomePage } from '../pages/HomePage'
-import UIShowcasePage from '../pages/UIShowcasePage'
 import { RouteErrorBoundary } from '../components/RouteErrorBoundary'
+import { LazyUIShowcase } from '../components/LazyUIShowcase'
 
 // 1) ЕДИНСТВЕННЫЙ root
 export const rootRoute = createRootRoute({
@@ -51,7 +51,7 @@ export const interviewRoute = createRoute({
 export const uiShowcaseRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'ui-showcase',
-  component: UIShowcasePage,
+  component: LazyUIShowcase,
 })
 
 // 4) Собери дерево ОДИН раз

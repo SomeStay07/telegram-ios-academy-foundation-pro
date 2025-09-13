@@ -25,8 +25,8 @@ export default defineConfig({
     // Enhanced tree-shaking
     options.treeShaking = true
   },
-  // Skip dts build issues for now
-  onSuccess: 'echo "Build completed successfully"',
+  // Copy tokens CSS after build
+  onSuccess: 'cp ../tokens/dist/css/tokens.css dist/tokens.css && echo "Build completed successfully"',
   // Enable conditional exports for better tree-shaking
   outExtension({ format }) {
     return {
