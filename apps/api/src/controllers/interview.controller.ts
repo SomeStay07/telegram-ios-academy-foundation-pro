@@ -30,7 +30,7 @@ export class InterviewController {
     return this.interviewService.getInterviewProgress(userId, interviewId)
   }
 
-  @Put('progress/:id')
+  @Put(':id/progress')
   @ApiOperation({ summary: 'Update interview progress' })
   @ApiParam({ name: 'id', description: 'Interview ID' })
   @ApiHeader({ name: 'X-Telegram-Init-Data', required: true })
@@ -57,14 +57,16 @@ export class InterviewController {
     return this.interviewService.updateInterviewProgress(userId, progressData)
   }
 
-  @Post('attempts/start')
+  @Post(':id/attempts')
   @ApiOperation({ summary: 'Start interview attempt' })
+  @ApiParam({ name: 'id', description: 'Interview ID' })
   @ApiHeader({ name: 'idempotency-key', required: true })
   @ApiHeader({ name: 'X-Telegram-Init-Data', required: true })
   @ApiBody({ type: StartInterviewAttemptBodyDto })
   @ApiResponse({ status: 201, description: 'Interview attempt started successfully' })
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async startInterviewAttempt(
+    @Param('id') interviewId: string,
     @Body() body: StartInterviewAttemptBodyDto,
     @Headers('idempotency-key') idempotencyKey?: string,
     @Headers('X-Telegram-Init-Data') telegramData?: string
@@ -73,7 +75,7 @@ export class InterviewController {
     const userId = 'demo-user'
     
     const attemptData: StartInterviewAttemptDto = {
-      interviewId: body.interviewId,
+      interviewId: interviewId,
       questionId: body.questionId,
       mode: body.mode,
       idempotencyKey
@@ -81,7 +83,7 @@ export class InterviewController {
 
     // Record interview attempt start metrics
     this.metricsService.recordInterviewAttempt(
-      body.interviewId,
+      interviewId,
       body.mode as 'drill' | 'explain' | 'mock',
       'started'
     )
@@ -89,13 +91,15 @@ export class InterviewController {
     return this.interviewService.startInterviewAttempt(userId, attemptData)
   }
 
-  @Put('attempts/finish')
+  @Put('attempts/:attemptId/finish')
   @ApiOperation({ summary: 'Finish interview attempt' })
+  @ApiParam({ name: 'attemptId', description: 'Interview attempt ID' })
   @ApiHeader({ name: 'X-Telegram-Init-Data', required: true })
   @ApiBody({ type: FinishInterviewAttemptBodyDto })
   @ApiResponse({ status: 200, description: 'Interview attempt finished successfully' })
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async finishInterviewAttempt(
+    @Param('attemptId') attemptId: string,
     @Body() body: FinishInterviewAttemptBodyDto,
     @Headers('X-Telegram-Init-Data') telegramData?: string
   ) {
@@ -103,7 +107,7 @@ export class InterviewController {
     const userId = 'demo-user'
     
     const attemptData: FinishInterviewAttemptDto = {
-      attemptId: body.attemptId,
+      attemptId: attemptId,
       correct: body.correct,
       answerJson: body.answerJson,
       timeSpent: body.timeSpent

@@ -34,10 +34,6 @@ export class UpdateInterviewProgressBodyDto {
 }
 
 export class StartInterviewAttemptBodyDto {
-  @ApiProperty({ description: 'Interview ID' })
-  @IsString()
-  interviewId!: string;
-
   @ApiProperty({ description: 'Question ID' })
   @IsString()
   questionId!: string;
@@ -48,10 +44,6 @@ export class StartInterviewAttemptBodyDto {
 }
 
 export class FinishInterviewAttemptBodyDto {
-  @ApiProperty({ description: 'Attempt ID' })
-  @IsString()
-  attemptId!: string;
-
   @ApiProperty({ description: 'Whether answer was correct', required: false })
   @IsOptional()
   @IsBoolean()
