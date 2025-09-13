@@ -4,7 +4,8 @@ import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
 import { processDeepLink, trackDeepLink } from './utils/deep-linking'
 import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
-import '@telegram-ios-academy/tokens/css'
+import { initThemeSync } from './lib/tmaTheme'
+import './styles.css'
 
 // Lazy load QueryClient when needed
 let queryClient: any = null
@@ -38,6 +39,9 @@ function initTmaRouting() {
   
   // Apply Telegram theme on startup
   applyTelegramTheme()
+  
+  // Initialize design system theme sync
+  initThemeSync(tg)
   
   // Watch for theme changes
   watchTelegramTheme((newTheme) => {

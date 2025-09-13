@@ -83,7 +83,9 @@
       "Bash(CI=true npx playwright test tests/e2e/basic-smoke.spec.ts --reporter=line --timeout=10000)",
       "Bash(CI=true npx playwright test tests/e2e/route-navigation.spec.ts:29 --reporter=line --timeout=15000)",
       "Bash(VITE_API_BASE_URL=http://localhost:3000/api npx playwright test tests/e2e/route-navigation.spec.ts:29 --reporter=line --config playwright.config.ts)",
-      "Bash(git rebase:*)"
+      "Bash(git rebase:*)",
+      "Bash(npx storybook@7 init:*)",
+      "Bash(NODE_ENV=production FORCE_BUNDLE_CHECK=1 pnpm bundle-check)"
     ],
     "deny": [],
     "ask": []
