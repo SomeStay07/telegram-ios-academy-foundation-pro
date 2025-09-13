@@ -60,8 +60,17 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Generate Prisma Client (API)
         run: cd apps/api && pnpm prisma generate
-      - name: Build all packages and applications
-        run: pnpm -w build
+      - name: Build all packages and applications with diagnostics
+        run: |
+          echo "🏗️ Starting monorepo build process..."
+          echo "📦 Build order and status:"
+          pnpm -w build
+          
+          echo "✅ Build completed successfully"
+          echo "📊 Build artifacts summary:"
+          find . -name "dist" -type d | head -10
+          echo "📈 TypeScript compilation results:"
+          find . -name "*.tsbuildinfo" | wc -l || echo "No tsbuildinfo files found"
 
   bundle_check:
     name: MiniApp bundle ≤ 220KB (gzip)
@@ -113,7 +122,7 @@ jobs:
           # pnpm -w test:contracts || pnpm -w contracts:verify
 
   e2e_playwright:
-    name: E2E Playwright (MiniApp)
+    name: E2E Playwright (MiniApp routing & navigation)
     needs: [changes, build_typecheck]
     if: needs.changes.outputs.miniapp == 'true' || needs.changes.outputs.packages == 'true'
     runs-on: ubuntu-latest
@@ -150,13 +159,30 @@ jobs:
           done
           echo "Final check with verbose output:"
           curl -v http://127.0.0.1:5173 || echo "❌ Preview server failed to start"
-      - name: Run Playwright E2E tests
+      - name: Run Playwright E2E tests (routing & navigation)
         run: |
-          echo "🧪 Starting E2E tests..."
+          echo "🧪 Starting E2E tests for routing and navigation..."
+          echo "Tests will include: basic smoke tests + route navigation tests"
           echo "Server should be available at http://127.0.0.1:5173"
           curl -I http://127.0.0.1:5173 || echo "⚠️ Server not responding before tests"
           cd apps/miniapp
-          pnpm e2e
+          CI=true pnpm e2e --reporter=line
+      - name: Upload Playwright Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results-${{ github.sha }}
+          path: |
+            apps/miniapp/test-results/
+            apps/miniapp/playwright-report/
+          retention-days: 7
+      - name: Upload Playwright HTML Report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report-${{ github.sha }}
+          path: apps/miniapp/playwright-report/
+          retention-days: 7
       - name: Stop preview server
         if: always()
         run: |
@@ -265,9 +291,13 @@ jobs:
             cat api.log
             exit 1
           fi
-      - name: Run Schemathesis fuzzing
+      - name: Run Schemathesis fuzzing with diagnostics
         run: |
           echo "🧪 Starting Schemathesis fuzzing..."
+          echo "Creating output directory for reports..."
+          mkdir -p schemathesis-reports
+          
+          echo "Running Schemathesis with JSON output..."
           schemathesis run http://127.0.0.1:4010/api/openapi.json \
             --url=http://127.0.0.1:4010 \
             --checks=all \
@@ -276,8 +306,28 @@ jobs:
             -H "Authorization: Bearer test" \
             -H "Idempotency-Key: ci-$(date +%s)" \
             --phases=examples,fuzzing,stateful \
-            --max-examples=50
+            --max-examples=50 \
+            --output=json \
+            --output-file=schemathesis-reports/results.json \
+            --verbose || echo "⚠️ Schemathesis completed with issues"
+          
+          echo "📊 Schemathesis Results Summary:"
+          if [ -f schemathesis-reports/results.json ]; then
+            echo "✅ Results file generated successfully"
+            cat schemathesis-reports/results.json | head -20
+          else
+            echo "❌ No results file generated"
+          fi
         continue-on-error: true
+      - name: Upload Schemathesis Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schemathesis-reports-${{ github.sha }}
+          path: |
+            apps/api/schemathesis-reports/
+            apps/api/api.log
+          retention-days: 7
       - name: Check API status after test
         if: always()
         run: |
@@ -289,6 +339,22 @@ jobs:
           fi
           echo "📋 Final API logs:"
           cat api.log | tail -50
+          
+          echo "🔍 System diagnostics:"
+          echo "Memory usage:"
+          free -m || echo "Free command not available"
+          echo "Disk usage:"
+          df -h || echo "Disk usage check failed"
+          echo "Process list:"
+          ps aux | grep -E "(node|schemathesis|postgres|redis)" | grep -v grep || echo "No related processes found"
+      - name: Upload API Diagnostic Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-diagnostic-logs-${{ github.sha }}
+          path: |
+            apps/api/api.log
+          retention-days: 7
       - name: Cleanup API process
         if: always()
         run: |

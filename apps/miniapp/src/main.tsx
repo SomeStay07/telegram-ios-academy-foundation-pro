@@ -52,35 +52,35 @@ function initTmaRouting() {
   router.subscribe(setBack)
   setBack()
   
-  // Process deep-link from start_param or URL parameters
-  try {
-    const deepLinkResult = processDeepLink()
-    if (deepLinkResult) {
-      console.log('🔗 Deep-link detected:', deepLinkResult)
-      
-      // Track deep-link usage
-      trackDeepLink(deepLinkResult.parsed, 'telegram')
-      
-      // Navigate to the parsed route
-      router.navigate({ to: deepLinkResult.route })
-    }
-  } catch (error) {
-    console.error('Deep-link processing failed:', error)
-    // Continue with normal app initialization
-  }
+  // TODO: Re-enable deep-link processing after router is stable
+  // Process deep-link from start_param or URL parameters (temporarily disabled)
+  // setTimeout(() => {
+  //   try {
+  //     const deepLinkResult = processDeepLink()
+  //     if (deepLinkResult) {
+  //       console.log('🔗 Deep-link detected:', deepLinkResult)
+  //       
+  //       // Track deep-link usage
+  //       trackDeepLink(deepLinkResult.parsed, 'telegram')
+  //       
+  //       // Navigate to the parsed route after router is ready
+  //       router.navigate({ to: deepLinkResult.route })
+  //     }
+  //   } catch (error) {
+  //     console.error('Deep-link processing failed:', error)
+  //     // Continue with normal app initialization
+  //   }
+  // }, 100)
 }
 
 function App() {
-  const [enhanced, setEnhanced] = React.useState(false)
-  
   React.useEffect(() => {
     // Initialize Telegram routing
     initTmaRouting()
     
-    // Enhance the app after initial render
+    // Preload QueryClient for future use
     setTimeout(async () => {
-      await getQueryClient() // Preload for future use
-      setEnhanced(true)
+      await getQueryClient()
     }, 1000)
   }, [])
 
