@@ -13,10 +13,10 @@ async function initTelemetry() {
     { getWebAutoInstrumentations },
     posthogModule
   ] = await Promise.all([
-    import('@opentelemetry/api'),
-    import('@opentelemetry/sdk-trace-web'),
-    import('@opentelemetry/auto-instrumentations-web'),
-    import('posthog-js')
+    import(/* @vite-ignore */ '@opentelemetry/api'),
+    import(/* @vite-ignore */ '@opentelemetry/sdk-trace-web'),
+    import(/* @vite-ignore */ '@opentelemetry/auto-instrumentations-web'),
+    import(/* @vite-ignore */ 'posthog-js')
   ])
 
   // Initialize OpenTelemetry

@@ -1,8 +1,10 @@
 import React, { Suspense, lazy } from 'react'
 
+import { lazyImport } from '../utils/lazyImport'
+
 // Lazy load Markdown with the heavy sanitize-html dependency
 const MarkdownImpl = lazy(() => 
-  import('@telegram-ios-academy/ui').then(module => ({ 
+  lazyImport(() => import(/* @vite-ignore */ '@telegram-ios-academy/ui'))().then(module => ({ 
     default: module.Markdown 
   }))
 )

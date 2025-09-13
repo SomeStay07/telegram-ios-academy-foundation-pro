@@ -1,6 +1,5 @@
 import { forwardRef, type HTMLAttributes } from 'react'
 import { cn } from '../../utils/cn'
-import type { ComponentWithColor, BaseProps } from '../../types'
 
 export interface HeadingProps 
   extends Omit<HTMLAttributes<HTMLHeadingElement>, 'color'> {
@@ -58,11 +57,11 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
     children,
     ...props
   }, ref) => {
-    const Component = as || (`h${level}` as keyof JSX.IntrinsicElements)
+    const Tag = as || (`h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6')
 
     return (
-      <Component
-        ref={ref as any}
+      <Tag
+        ref={ref}
         className={cn(
           headingStyles.base,
           headingStyles.level[level],
@@ -75,7 +74,7 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
         {...props}
       >
         {children}
-      </Component>
+      </Tag>
     )
   }
 )

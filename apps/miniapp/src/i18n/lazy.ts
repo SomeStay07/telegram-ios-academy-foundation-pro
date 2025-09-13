@@ -16,9 +16,11 @@ const fallbackTranslations = {
   'common.error': 'Error'
 }
 
+import { lazyImport } from '../utils/lazyImport'
+
 export async function loadI18n(): Promise<TFunction> {
   if (!i18nInstance) {
-    const i18n = await import('./index')
+    const i18n = await lazyImport(() => import(/* @vite-ignore */ './index'))()
     i18nInstance = i18n.default
     await i18nInstance.loadResources() // Ensure resources are loaded
   }

@@ -1,11 +1,12 @@
 // Analytics helper functions for easy event tracking
-import { analytics } from '../analytics/lazy'
+import { loadAnalytics } from '../analytics/lazy'
 
 // Interview analytics helpers
-export function trackInterviewStarted(data: {
+export async function trackInterviewStarted(data: {
   interviewId: string
   mode: 'drill' | 'explain' | 'mock'
 }) {
+  const analytics = await loadAnalytics()
   // Use default values for optional fields
   return analytics.interviewStarted({
     interview_id: data.interviewId,
@@ -17,13 +18,14 @@ export function trackInterviewStarted(data: {
   })
 }
 
-export function trackInterviewAnswerSubmitted(data: {
+export async function trackInterviewAnswerSubmitted(data: {
   interviewId: string
   questionId: string
   mode: 'drill' | 'explain' | 'mock'
   correct?: boolean
   timeMs: number
 }) {
+  const analytics = await loadAnalytics()
   return analytics.answerSubmitted({
     interview_id: data.interviewId,
     question_id: data.questionId,
@@ -35,13 +37,14 @@ export function trackInterviewAnswerSubmitted(data: {
   })
 }
 
-export function trackInterviewCompleted(data: {
+export async function trackInterviewCompleted(data: {
   interviewId: string
   mode: 'drill' | 'explain' | 'mock'
   totalQuestions: number
   correctCount: number
   durationMs: number
 }) {
+  const analytics = await loadAnalytics()
   const completionRate = data.totalQuestions > 0 ? data.correctCount / data.totalQuestions : 0
   const averageTime = data.totalQuestions > 0 ? data.durationMs / data.totalQuestions / 1000 : 0
 

@@ -1,10 +1,12 @@
+import { lazyImport } from '../utils/lazyImport'
+
 // Lazy analytics loader to reduce initial bundle size
 export async function loadAnalytics() {
   // Dynamically import analytics to split into separate chunk
-  const { analytics, initAnalytics } = await import('./index')
+  const { analytics, initAnalytics } = await lazyImport(() => import(/* @vite-ignore */ './index'))()
   
   // Initialize analytics
-  initAnalytics()
+  await initAnalytics()
   
   return analytics
 }

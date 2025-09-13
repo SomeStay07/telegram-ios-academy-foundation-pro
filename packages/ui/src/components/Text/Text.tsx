@@ -1,10 +1,11 @@
 import { forwardRef, type HTMLAttributes } from 'react'
 import { cn } from '../../utils/cn'
-import type { ComponentWithSize, ComponentWithColor, BaseProps } from '../../types'
+import type { ComponentWithSize } from '../../types'
 
 export interface TextProps 
-  extends Omit<HTMLAttributes<HTMLSpanElement>, 'color'>,
-          ComponentWithSize {
+  extends Omit<HTMLAttributes<HTMLSpanElement>, 'color' | 'className'> {
+  className?: string
+  size?: ComponentWithSize['size']
   as?: 'span' | 'p' | 'div' | 'label'
   weight?: 'normal' | 'medium' | 'semibold' | 'bold'
   align?: 'left' | 'center' | 'right' | 'justify'

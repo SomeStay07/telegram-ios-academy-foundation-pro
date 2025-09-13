@@ -1,6 +1,9 @@
-import { forwardRef, useMemo, type HTMLAttributes } from 'react'
+import { forwardRef, useState, useEffect, type HTMLAttributes } from 'react'
 import { marked } from 'marked'
-import sanitizeHtml from 'sanitize-html'
+import { unified } from 'unified'
+import rehypeParse from 'rehype-parse'
+import rehypeSanitize from 'rehype-sanitize'
+import rehypeStringify from 'rehype-stringify'
 import { cn } from '../../utils/cn'
 import { CodeBlock } from '../CodeBlock'
 
@@ -14,60 +17,58 @@ export interface MarkdownProps extends HTMLAttributes<HTMLDivElement> {
   className?: string
 }
 
-// Default security configuration
-const DEFAULT_ALLOWED_TAGS = [
-  'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'p', 'div', 'span', 'br',
-  'strong', 'b', 'em', 'i', 'u', 'del', 'ins', 'mark',
-  'ul', 'ol', 'li',
-  'blockquote', 'pre', 'code',
-  'table', 'thead', 'tbody', 'tr', 'td', 'th',
-  'img', 'a',
-  'hr'
-]
-
-const DEFAULT_ALLOWED_ATTRIBUTES = {
-  'a': ['href', 'title', 'target', 'rel'],
-  'img': ['src', 'alt', 'title', 'width', 'height'],
-  'pre': ['class'],
-  'code': ['class'],
-  '*': ['id', 'class', 'data-*']
+// Default security configuration for rehype-sanitize
+const DEFAULT_SANITIZE_SCHEMA = {
+  tagNames: [
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'p', 'div', 'span', 'br',
+    'strong', 'b', 'em', 'i', 'u', 'del', 'ins', 'mark',
+    'ul', 'ol', 'li',
+    'blockquote', 'pre', 'code',
+    'table', 'thead', 'tbody', 'tr', 'td', 'th',
+    'img', 'a',
+    'hr'
+  ],
+  attributes: {
+    'a': ['href', 'title', 'target', 'rel'],
+    'img': ['src', 'alt', 'title', 'width', 'height'],
+    'pre': ['className'],
+    'code': ['className'],
+    '*': ['id', 'className', 'data*']
+  },
+  protocols: {
+    href: ['http', 'https', 'mailto'],
+    src: ['http', 'https', 'data']
+  }
 }
 
-// Secure sanitization using single layer
-const sanitizeContent = (
+// Secure sanitization using rehype
+const sanitizeContent = async (
   html: string, 
   allowedTags: string[], 
   allowedAttributes: Record<string, string[]>
-): string => {
-  return sanitizeHtml(html, {
-    allowedTags,
-    allowedAttributes,
-    allowedSchemes: ['http', 'https', 'mailto'],
-    allowedSchemesByTag: {
-      img: ['http', 'https', 'data'],
-      a: ['http', 'https', 'mailto']
-    },
-    selfClosing: ['img', 'br', 'hr'],
-    transformTags: {
-      'a': (tagName, attribs) => ({
-        tagName,
-        attribs: {
-          ...attribs,
-          rel: 'noopener noreferrer',
-          target: '_blank'
-        }
-      })
-    },
-    exclusiveFilter: (frame) => {
-      // Block any javascript: or data: URLs in links
-      if (frame.tag === 'a' && frame.attribs.href) {
-        const href = frame.attribs.href.toLowerCase()
-        return href.startsWith('javascript:') || href.startsWith('vbscript:')
-      }
-      return false
+): Promise<string> => {
+  const schema = {
+    ...DEFAULT_SANITIZE_SCHEMA,
+    tagNames: allowedTags,
+    attributes: {
+      ...DEFAULT_SANITIZE_SCHEMA.attributes,
+      ...allowedAttributes
     }
-  })
+  }
+
+  try {
+    const result = await unified()
+      .use(rehypeParse, { fragment: true })
+      .use(rehypeSanitize, schema)
+      .use(rehypeStringify)
+      .process(html)
+    
+    return String(result)
+  } catch (error) {
+    console.error('Rehype sanitization failed:', error)
+    return html // fallback to unsanitized HTML in case of error
+  }
 }
 
 // Extract and replace code blocks with placeholders
@@ -151,72 +152,82 @@ const markdownStyles = {
 export const Markdown = forwardRef<HTMLDivElement, MarkdownProps>(
   ({ 
     content,
-    allowedTags = DEFAULT_ALLOWED_TAGS,
-    allowedAttributes = DEFAULT_ALLOWED_ATTRIBUTES,
+    allowedTags = DEFAULT_SANITIZE_SCHEMA.tagNames,
+    allowedAttributes = DEFAULT_SANITIZE_SCHEMA.attributes,
     enableCodeBlocks = true,
     enableLinks = true,
     maxLength,
     className,
     ...props
   }, ref) => {
-    const processedContent = useMemo(() => {
-      if (!content) return ''
-      
-      // Truncate content if maxLength is specified
-      let processedText = maxLength && content.length > maxLength 
-        ? content.substring(0, maxLength) + '...'
-        : content
-      
-      let codeBlocks: Array<{ language?: string; code: string }> = []
-      
-      // Extract code blocks if enabled
-      if (enableCodeBlocks) {
-        const extracted = extractCodeBlocks(processedText)
-        processedText = extracted.content
-        codeBlocks = extracted.blocks
-      }
-      
-      // Filter allowed tags based on settings
-      const filteredTags = allowedTags.filter(tag => {
-        if (!enableLinks && tag === 'a') return false
-        if (!enableCodeBlocks && ['pre', 'code'].includes(tag)) return false
-        return true
-      })
-      
-      try {
-        // Parse markdown to HTML
-        const html = marked(processedText, {
-          breaks: true,
-          gfm: true
-        })
-        
-        // Sanitize the HTML
-        const sanitized = sanitizeContent(html, filteredTags, allowedAttributes)
-        
-        // Replace code block placeholders with actual CodeBlock components
-        if (enableCodeBlocks && codeBlocks.length > 0) {
-          let result = sanitized
-          codeBlocks.forEach((block, index) => {
-            const placeholder = `__CODE_BLOCK_${index}__`
-            const codeBlockHtml = `<div data-code-block="${index}" data-language="${block.language || 'text'}" data-code="${encodeURIComponent(block.code)}"></div>`
-            result = result.replace(placeholder, codeBlockHtml)
-          })
-          return { html: result, codeBlocks }
+    const [processedContent, setProcessedContent] = useState<{ html: string; codeBlocks: Array<{ language?: string; code: string }> }>({ html: '', codeBlocks: [] })
+    
+    useEffect(() => {
+      const processMarkdown = async () => {
+        if (!content) {
+          setProcessedContent({ html: '', codeBlocks: [] })
+          return
         }
         
-        return { html: sanitized, codeBlocks }
-      } catch (error) {
-        console.error('Markdown processing failed:', error)
-        // Fallback to plain text
-        const escaped = processedText
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#x27;')
+        // Truncate content if maxLength is specified
+        let processedText = maxLength && content.length > maxLength 
+          ? content.substring(0, maxLength) + '...'
+          : content
         
-        return { html: `<p>${escaped}</p>`, codeBlocks: [] }
+        let codeBlocks: Array<{ language?: string; code: string }> = []
+        
+        // Extract code blocks if enabled
+        if (enableCodeBlocks) {
+          const extracted = extractCodeBlocks(processedText)
+          processedText = extracted.content
+          codeBlocks = extracted.blocks
+        }
+        
+        // Filter allowed tags based on settings
+        const filteredTags = allowedTags.filter(tag => {
+          if (!enableLinks && tag === 'a') return false
+          if (!enableCodeBlocks && ['pre', 'code'].includes(tag)) return false
+          return true
+        })
+        
+        try {
+          // Parse markdown to HTML
+          const html = marked(processedText, {
+            breaks: true,
+            gfm: true
+          })
+          
+          // Sanitize the HTML
+          const sanitized = await sanitizeContent(html, filteredTags, allowedAttributes)
+          
+          // Replace code block placeholders with actual CodeBlock components
+          if (enableCodeBlocks && codeBlocks.length > 0) {
+            let result = sanitized
+            codeBlocks.forEach((block, index) => {
+              const placeholder = `__CODE_BLOCK_${index}__`
+              const codeBlockHtml = `<div data-code-block="${index}" data-language="${block.language || 'text'}" data-code="${encodeURIComponent(block.code)}"></div>`
+              result = result.replace(placeholder, codeBlockHtml)
+            })
+            setProcessedContent({ html: result, codeBlocks })
+            return
+          }
+          
+          setProcessedContent({ html: sanitized, codeBlocks })
+        } catch (error) {
+          console.error('Markdown processing failed:', error)
+          // Fallback to plain text
+          const escaped = processedText
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#x27;')
+          
+          setProcessedContent({ html: `<p>${escaped}</p>`, codeBlocks: [] })
+        }
       }
+      
+      processMarkdown()
     }, [content, allowedTags, allowedAttributes, enableCodeBlocks, enableLinks, maxLength])
     
     return (
