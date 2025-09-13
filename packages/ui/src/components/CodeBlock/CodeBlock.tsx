@@ -7,13 +7,11 @@ const loadPrism = async (language: string) => {
   try {
     const Prism = await import('prismjs')
     
-    // Load only required languages for MiniApp
+    // Load only required languages for MiniApp: Swift and JSON
     if (language === 'swift') {
       await import('prismjs/components/prism-swift')
     } else if (language === 'json') {
       await import('prismjs/components/prism-json')
-    } else if (language === 'markdown' || language === 'md') {
-      await import('prismjs/components/prism-markdown')
     }
     
     return Prism.default
@@ -88,9 +86,7 @@ const sanitizeCode = (code: string): string => {
 const getLanguageDisplayName = (language?: string): string => {
   const languageMap: Record<string, string> = {
     'swift': 'Swift',
-    'json': 'JSON',
-    'md': 'Markdown',
-    'markdown': 'Markdown'
+    'json': 'JSON'
   }
   
   return languageMap[language || ''] || language?.toUpperCase() || 'Code'

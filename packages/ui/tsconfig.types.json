@@ -19,7 +19,16 @@
     "**/*.test.*",
     "**/*.spec.*", 
     "**/*.stories.*",
+    "**/*.mdx",
+    "**/*.md",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx", 
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx",
     "dist",
-    "node_modules"
+    "node_modules",
+    "storybook-static"
   ]
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, forwardRef } from 'react'
 
 export interface ModalProps {
   open: boolean
@@ -7,18 +7,22 @@ export interface ModalProps {
   children: React.ReactNode
   closeOnEscape?: boolean
   closeOnBackdropClick?: boolean
+  className?: string
   'aria-describedby'?: string
+  'aria-label'?: string
 }
 
-export const Modal: React.FC<ModalProps> = ({
+export const Modal = forwardRef<HTMLDivElement, ModalProps>(({
   open,
   onClose,
   title,
   children,
   closeOnEscape = true,
   closeOnBackdropClick = true,
-  'aria-describedby': ariaDescribedBy
-}) => {
+  className,
+  'aria-describedby': ariaDescribedBy,
+  'aria-label': ariaLabel
+}, ref) => {
   const modalRef = useRef<HTMLDivElement>(null)
   const lastActiveElement = useRef<HTMLElement | null>(null)
 
@@ -95,9 +99,19 @@ export const Modal: React.FC<ModalProps> = ({
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
       aria-describedby={ariaDescribedBy}
-      aria-label={!title ? 'Диалоговое окно' : undefined}
-      ref={modalRef}
+      aria-label={ariaLabel || (!title ? 'Диалоговое окно' : undefined)}
+      ref={(node) => {
+        if (modalRef.current !== node) {
+          modalRef.current = node
+        }
+        if (typeof ref === 'function') {
+          ref(node)
+        } else if (ref && ref.current !== node) {
+          ref.current = node
+        }
+      }}
       tabIndex={-1}
+      className={className}
       style={{
         position: 'fixed',
         inset: 0,
@@ -131,4 +145,6 @@ export const Modal: React.FC<ModalProps> = ({
       </section>
     </div>
   )
-}
+})
+
+Modal.displayName = 'Modal'

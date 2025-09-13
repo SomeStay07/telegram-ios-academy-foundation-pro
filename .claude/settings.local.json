@@ -89,7 +89,8 @@
       "Bash(grep:*)",
       "Bash(sort:*)",
       "Bash(npx vite-bundle-analyzer:*)",
-      "Bash(npx @changesets/cli:*)"
+      "Bash(npx @changesets/cli:*)",
+      "WebFetch(domain:localhost)"
     ],
     "deny": [],
     "ask": []

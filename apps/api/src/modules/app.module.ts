@@ -13,6 +13,7 @@ import { CourseService } from '../services/course.service'
 import { InterviewService } from '../services/interview.service'
 import { MetricsModule } from '../metrics/metrics.module'
 import { MetricsMiddleware } from '../metrics/metrics.middleware'
+import { EventsModule } from '../events/events.module'
 
 @Module({ 
   imports: [
@@ -21,7 +22,8 @@ import { MetricsMiddleware } from '../metrics/metrics.middleware'
       ttl: 60000, // 1 minute
       limit: 100, // 100 requests per minute globally
     }]),
-    MetricsModule
+    MetricsModule,
+    EventsModule
   ],
   controllers: [AuthController, LessonController, CourseController, InterviewController, HealthController], 
   providers: [

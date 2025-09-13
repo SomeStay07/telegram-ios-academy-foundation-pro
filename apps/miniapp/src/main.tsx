@@ -5,6 +5,9 @@ import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
 import { initThemeSync } from './lib/tmaTheme'
 import '@telegram-ios-academy/ui/dist/tokens.css'
 
+// Ленивый импорт аналитики и web vitals
+import('./lib/web-vitals').catch(console.error)
+
 // Lazy load router components
 const RouterProvider = React.lazy(() => 
   lazyImport(() => import(/* @vite-ignore */ '@tanstack/react-router'))().then(module => ({ 

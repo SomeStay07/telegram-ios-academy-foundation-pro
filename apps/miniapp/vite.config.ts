@@ -68,18 +68,17 @@ export default defineConfig({
           // Core Preact (replacing React)
           'react-vendor': ['preact', '@preact/compat'],
           
-          // Routing and State Management (now lazy)
-          'routing': ['@tanstack/react-router', '@tanstack/react-query', 'zustand'],
+          // Split routing for better optimization
+          'react-router': ['@tanstack/react-router'],
+          'react-query': ['@tanstack/react-query'],
+          'zustand': ['zustand'],
           
-          // Analytics (lazy loaded)
-          'analytics': ['posthog-js'],
+          // Analytics disabled for bundle optimization
           
-          // OpenTelemetry (lazy loaded)
-          'telemetry': [
-            '@opentelemetry/api',
-            '@opentelemetry/sdk-trace-web', 
-            '@opentelemetry/auto-instrumentations-web'
-          ],
+          // UI components (split from main)
+          'ui-components': ['@telegram-ios-academy/ui'],
+          
+          // Telemetry removed for bundle optimization
           
           // i18n (lazy loaded)
           'i18n': ['i18next', 'react-i18next'],

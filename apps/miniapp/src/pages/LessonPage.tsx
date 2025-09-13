@@ -4,7 +4,7 @@ import lesson from '../data/lessons/swift-variables.json'
 import { parseLessonStrict } from '../lesson-spec/src'
 import { ModuleRenderer } from '../ui/src'
 import { useTranslation } from '../i18n/lazy'
-import { analytics } from '../analytics/lazy'
+import { analytics } from '../lib/analytics/index'
 import { useLightApiHealth } from '../hooks/useLightApi'
 
 export const LessonPage = () => {
@@ -16,19 +16,17 @@ export const LessonPage = () => {
   // Track lesson started
   React.useEffect(() => {
     analytics.lessonStarted({
-      lesson_id: parsed.meta.id,
-      lesson_title: parsed.meta.title,
-      user_language: navigator.language.split('-')[0] || 'en'
+      lessonId: parsed.meta.id,
+      title: parsed.meta.title
     })
   }, [parsed.meta.id, parsed.meta.title])
 
   const handleQuizAnswer = (questionId: string, isCorrect: boolean, selectedAnswer: string, timeSpent: number) => {
     analytics.quizAnswered({
-      lesson_id: parsed.meta.id,
-      question_id: questionId,
-      is_correct: isCorrect,
-      selected_answer: selectedAnswer,
-      time_spent_seconds: timeSpent
+      lessonId: parsed.meta.id,
+      questionId: questionId,
+      correct: isCorrect,
+      timeSpent: timeSpent
     })
 
     console.log('Quiz answered:', { questionId, isCorrect, selectedAnswer, timeSpent })
