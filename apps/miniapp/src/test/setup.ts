@@ -18,20 +18,80 @@ Object.defineProperty(window, 'location', {
   writable: true,
 })
 
-// Mock Telegram WebApp
+// Mock Telegram WebApp with comprehensive TMA API
 global.window = Object.assign(global.window, {
   Telegram: {
     WebApp: {
       ready: vi.fn(),
       expand: vi.fn(),
+      close: vi.fn(),
+      isExpanded: true,
+      viewportHeight: 600,
+      viewportStableHeight: 600,
+      platform: 'web',
+      colorScheme: 'light',
+      themeParams: {
+        bg_color: '#ffffff',
+        text_color: '#000000',
+        hint_color: '#999999',
+        link_color: '#007acc',
+        button_color: '#40a7e3',
+        button_text_color: '#ffffff'
+      },
+      isVersionAtLeast: vi.fn(() => true),
+      sendData: vi.fn(),
+      openLink: vi.fn(),
+      openTelegramLink: vi.fn(),
+      showPopup: vi.fn(),
+      showAlert: vi.fn(),
+      showConfirm: vi.fn(),
+      requestWriteAccess: vi.fn(),
+      requestContact: vi.fn(),
+      onEvent: vi.fn(),
+      offEvent: vi.fn(),
       BackButton: {
+        isVisible: false,
         show: vi.fn(),
         hide: vi.fn(),
-        onClick: vi.fn()
+        onClick: vi.fn(),
+        offClick: vi.fn()
+      },
+      MainButton: {
+        text: '',
+        color: '#40a7e3',
+        textColor: '#ffffff',
+        isVisible: false,
+        isActive: true,
+        isProgressVisible: false,
+        setText: vi.fn(),
+        onClick: vi.fn(),
+        offClick: vi.fn(),
+        show: vi.fn(),
+        hide: vi.fn(),
+        enable: vi.fn(),
+        disable: vi.fn(),
+        showProgress: vi.fn(),
+        hideProgress: vi.fn(),
+        setParams: vi.fn()
+      },
+      HapticFeedback: {
+        impactOccurred: vi.fn(),
+        notificationOccurred: vi.fn(),
+        selectionChanged: vi.fn()
       },
       initDataUnsafe: {
-        start_param: null
-      }
+        user: {
+          id: 12345,
+          first_name: 'Test',
+          last_name: 'User',
+          username: 'testuser',
+          language_code: 'en'
+        },
+        start_param: null,
+        auth_date: Date.now(),
+        hash: 'test-hash'
+      },
+      initData: 'test-init-data'
     }
   }
 })
