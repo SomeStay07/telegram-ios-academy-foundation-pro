@@ -2,8 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/e2e',
-  // In CI, only run smoke tests to avoid complex lesson-specific failures
-  testMatch: process.env.CI ? '**/basic-smoke.spec.ts' : '**/*.spec.ts',
+  // In CI, run core routing tests and smoke tests
+  testMatch: process.env.CI ? ['**/basic-smoke.spec.ts', '**/route-navigation.spec.ts'] : '**/*.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
