@@ -1,28 +1,6 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/api/health": {
-      "get": {
-        "operationId": "HealthController_get",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/health/health": {
-      "get": {
-        "operationId": "HealthController_health",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/api/auth/verifyInitData": {
       "post": {
         "operationId": "AuthController_verify",
@@ -570,6 +548,17 @@
             "telegram-auth": []
           }
         ]
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "HealthController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
       }
     }
   },

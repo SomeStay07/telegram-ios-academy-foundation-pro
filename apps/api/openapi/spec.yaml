@@ -1,19 +1,5 @@
 openapi: 3.0.0
 paths:
-  /api/health:
-    get:
-      operationId: HealthController_get
-      parameters: []
-      responses:
-        '200':
-          description: ''
-  /api/health/health:
-    get:
-      operationId: HealthController_health
-      parameters: []
-      responses:
-        '200':
-          description: ''
   /api/auth/verifyInitData:
     post:
       operationId: AuthController_verify
@@ -332,6 +318,13 @@ paths:
           description: Interview attempts retrieved successfully
       tags: *ref_6
       security: *ref_7
+  /api/health:
+    get:
+      operationId: HealthController_health
+      parameters: []
+      responses:
+        '200':
+          description: ''
 info:
   title: Telegram iOS Academy API
   description: API for Telegram Mini App educational platform
