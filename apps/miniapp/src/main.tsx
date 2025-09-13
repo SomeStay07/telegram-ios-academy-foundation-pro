@@ -4,7 +4,7 @@ import { RouterProvider } from '@tanstack/react-router'
 import { router } from './router'
 import { processDeepLink, trackDeepLink } from './utils/deep-linking'
 import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
-import './ui/src/styles/globals.css'
+import '@telegram-ios-academy/tokens/css'
 
 // Lazy load QueryClient when needed
 let queryClient: any = null
