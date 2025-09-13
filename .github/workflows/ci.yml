@@ -87,6 +87,10 @@ jobs:
       - uses: pnpm/action-setup@v4
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Build design tokens (required for UI package)
+        run: pnpm --filter @telegram-ios-academy/tokens build
+      - name: Build UI package (required for MiniApp)
+        run: pnpm --filter @telegram-ios-academy/ui build
       - name: Build MiniApp for production
         run: pnpm -C apps/miniapp build
       - name: Assert bundle size ≤ 220KB gzipped
@@ -138,6 +142,10 @@ jobs:
       - uses: pnpm/action-setup@v4
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Build design tokens (required for UI package)
+        run: pnpm --filter @telegram-ios-academy/tokens build
+      - name: Build UI package (required for MiniApp)
+        run: pnpm --filter @telegram-ios-academy/ui build
       - name: Build MiniApp for testing
         run: pnpm -C apps/miniapp build
         env:
