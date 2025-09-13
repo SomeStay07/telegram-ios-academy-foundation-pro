@@ -50,5 +50,6 @@ commits = [
   "46f102a",  # fix: Add required environment variables for GitHub Actions CI  
   "05ac04d",  # feat: Complete CI/CD pipeline fixes and API improvements (squashed commit)
   "a08027e",  # Force Railway API service redeploy to apply Redis validation fixes
-  "cb346e6"   # Update database connections: use Railway service references
+  "cb346e6",  # Update database connections: use Railway service references
+  "98306a0"   # feat: implement comprehensive CI/security fixes - posthogApiKey variable reference
 ]

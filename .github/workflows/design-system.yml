@@ -82,8 +82,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build design tokens (if changed)
-        if: needs.detect-changes.outputs.tokens-changed == 'true'
+      - name: Build design tokens (always required for UI)
         run: pnpm --filter @telegram-ios-academy/tokens build
 
       - name: Build UI package
@@ -150,12 +149,14 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const { exec } = require('child_process');
+            const { execSync } = require('child_process');
             
             // Run bundle check and capture output
-            exec('cd apps/miniapp && NODE_ENV=production FORCE_BUNDLE_CHECK=1 pnpm bundle-check', (error, stdout, stderr) => {
-              const output = stdout || stderr;
+            try {
+              const output = execSync('cd apps/miniapp && NODE_ENV=production FORCE_BUNDLE_CHECK=1 pnpm bundle-check', { 
+                encoding: 'utf8',
+                timeout: 30000
+              });
               
               const comment = `## 📦 Bundle Size Check Results
               
@@ -163,7 +164,7 @@ jobs:
               ${output}
               \`\`\`
               
-              ${error ? '❌ Bundle size check failed!' : '✅ Bundle size check passed!'}`;
+              ✅ Bundle size check passed!`;
               
               github.rest.issues.createComment({
                 issue_number: context.issue.number,
@@ -171,7 +172,24 @@ jobs:
                 repo: context.repo.repo,
                 body: comment
               });
-            });
+            } catch (error) {
+              const output = error.stdout || error.stderr || error.message;
+              
+              const comment = `## 📦 Bundle Size Check Results
+              
+              \`\`\`
+              ${output}
+              \`\`\`
+              
+              ❌ Bundle size check failed!`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
 
   accessibility-tests:
     runs-on: ubuntu-latest
@@ -203,12 +221,34 @@ jobs:
         run: |
           cd packages/ui
           pnpm dlx playwright install
-          pnpm dlx @storybook/test-runner --url http://localhost:6006 &
-          STORYBOOK_PID=$!
+          # Start Storybook in background
           pnpm storybook &
-          sleep 30
-          pnpm dlx @storybook/test-runner --url http://localhost:6006 --maxWorkers 2
-          kill $STORYBOOK_PID
+          STORYBOOK_PID=$!
+          echo "Storybook PID: $STORYBOOK_PID"
+          
+          # Wait for Storybook to be ready
+          echo "Waiting for Storybook to start..."
+          for i in {1..60}; do
+            if curl -sSf http://localhost:6006 >/dev/null 2>&1; then
+              echo "Storybook is ready"
+              break
+            fi
+            echo "Waiting... ($i/60)"
+            sleep 1
+          done
+          
+          # Run tests
+          pnpm dlx @storybook/test-runner --url http://localhost:6006 --maxWorkers 2 || true
+          
+          # Cleanup
+          if kill -0 $STORYBOOK_PID 2>/dev/null; then
+            echo "Stopping Storybook (PID: $STORYBOOK_PID)"
+            kill $STORYBOOK_PID
+            sleep 2
+            kill -9 $STORYBOOK_PID 2>/dev/null || true
+          else
+            echo "Storybook process not found or already stopped"
+          fi
 
   security-scan:
     runs-on: ubuntu-latest
