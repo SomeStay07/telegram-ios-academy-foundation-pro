@@ -1,4 +1,5 @@
 title = "allowlist for rotated tokens and examples"
+redact = true
 
 [allowlist]
 # Разрешаем ложные срабатывания в примерах/доках
@@ -10,7 +11,12 @@ paths = [
   '''\.github/workflows/.*\.yml''',
   '''apps/.*/tsconfig\.build\.json''',
   '''apps/.*/package\.json''',
-  '''pnpm-lock\.yaml'''
+  '''pnpm-lock\.yaml''',
+  '''node_modules/''',
+  '''.*/dist/.*''',
+  '''.*/build/.*''',
+  '''.*/\.turbo/.*''',
+  '''.*/coverage/.*'''
 ]
 
 # Глобальные регексы для исключения тестовых значений
@@ -23,7 +29,11 @@ regexes = [
   '''"test"''',
   '''safe-regex-test''',
   '''NODE_ENV=test''',
-  '''TELEGRAM_BOT_TOKEN="test"'''
+  '''TELEGRAM_BOT_TOKEN="test"''',
+  '''pk_example_.*''',
+  '''bot_token_example''',
+  '''api_key_example''',
+  '''secret_example'''
 ]
 
 # Правила редактирования для логирования (скрываем чувствительные данные)
