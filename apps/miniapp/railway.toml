@@ -1,6 +1,7 @@
 [build]
 builder = "NIXPACKS"
-watchPatterns = ["apps/miniapp/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+buildCommand = "cd ../.. && pnpm install && pnpm build --filter=@telegram-ios-academy/miniapp"
+watchPatterns = ["apps/miniapp/**","packages/ui/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
 
 [deploy]
 healthcheckPath = "/health"
