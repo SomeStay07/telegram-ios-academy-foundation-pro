@@ -1,14 +1,27 @@
-import posthog from 'posthog-js'
-import { trace, SpanStatusCode } from '@opentelemetry/api'
-import { WebTracerProvider } from '@opentelemetry/sdk-trace-web'
-import { getWebAutoInstrumentations } from '@opentelemetry/auto-instrumentations-web'
+// Lazy imports for telemetry to reduce bundle size
+let telemetryLoaded = false
+let tracer: any = null
+let posthog: any = null
 
-// Initialize OpenTelemetry
-const provider = new WebTracerProvider()
-provider.addSpanProcessor(
-  // For now, just log traces to console in development
-  // In production, this would send to a backend
-  {
+async function initTelemetry() {
+  if (telemetryLoaded) return { tracer, posthog }
+  
+  // Lazy import telemetry dependencies
+  const [
+    { trace, SpanStatusCode },
+    { WebTracerProvider },
+    { getWebAutoInstrumentations },
+    posthogModule
+  ] = await Promise.all([
+    import('@opentelemetry/api'),
+    import('@opentelemetry/sdk-trace-web'),
+    import('@opentelemetry/auto-instrumentations-web'),
+    import('posthog-js')
+  ])
+
+  // Initialize OpenTelemetry
+  const provider = new WebTracerProvider()
+  provider.addSpanProcessor({
     onStart: () => {},
     onEnd: (span) => {
       if (import.meta.env.DEV) {
@@ -22,17 +35,22 @@ provider.addSpanProcessor(
     },
     forceFlush: () => Promise.resolve(),
     shutdown: () => Promise.resolve()
-  }
-)
-provider.register()
+  })
+  provider.register()
 
-// Auto-instrument fetch, DOM events, etc.
-getWebAutoInstrumentations()
+  // Auto-instrument fetch, DOM events, etc.
+  getWebAutoInstrumentations()
 
-const tracer = trace.getTracer('telegram-ios-academy-miniapp')
+  tracer = trace.getTracer('telegram-ios-academy-miniapp')
+  posthog = posthogModule.default
+  telemetryLoaded = true
 
-// Initialize PostHog
-function initPostHog() {
+  return { tracer, posthog, SpanStatusCode }
+}
+
+// Initialize PostHog (lazy)
+async function initPostHog() {
+  const { posthog } = await initTelemetry()
   const tg = (window as any).Telegram?.WebApp
   const userId = tg?.initDataUnsafe?.user?.id?.toString()
   
@@ -40,7 +58,7 @@ function initPostHog() {
     posthog.init(import.meta.env.VITE_POSTHOG_API_KEY, {
       api_host: 'https://us.i.posthog.com',
       person_profiles: 'identified_only',
-      loaded: (posthog) => {
+      loaded: (posthog: any) => {
         if (userId) {
           posthog.identify(userId, {
             telegram_user_id: userId,
@@ -130,7 +148,8 @@ export interface InterviewCompletedEvent {
 
 // Analytics functions
 export const analytics = {
-  lessonStarted: (data: LessonStartedEvent) => {
+  lessonStarted: async (data: LessonStartedEvent) => {
+    const { tracer, posthog, SpanStatusCode } = await initTelemetry()
     const span = tracer.startSpan('lesson_started')
     span.setAttributes({
       'lesson.id': data.lesson_id,
@@ -144,7 +163,8 @@ export const analytics = {
     span.end()
   },
 
-  quizAnswered: (data: QuizAnsweredEvent) => {
+  quizAnswered: async (data: QuizAnsweredEvent) => {
+    const { tracer, posthog, SpanStatusCode } = await initTelemetry()
     const span = tracer.startSpan('quiz_answered')
     span.setAttributes({
       'lesson.id': data.lesson_id,
@@ -159,7 +179,8 @@ export const analytics = {
     span.end()
   },
 
-  checkpointPassed: (data: CheckpointPassedEvent) => {
+  checkpointPassed: async (data: CheckpointPassedEvent) => {
+    const { tracer, posthog, SpanStatusCode } = await initTelemetry()
     const span = tracer.startSpan('checkpoint_passed')
     span.setAttributes({
       'lesson.id': data.lesson_id,
@@ -175,7 +196,8 @@ export const analytics = {
     span.end()
   },
 
-  lessonCompleted: (data: LessonCompletedEvent) => {
+  lessonCompleted: async (data: LessonCompletedEvent) => {
+    const { tracer, posthog, SpanStatusCode } = await initTelemetry()
     const span = tracer.startSpan('lesson_completed')
     span.setAttributes({
       'lesson.id': data.lesson_id,
@@ -191,7 +213,8 @@ export const analytics = {
     span.end()
   },
 
-  interviewStarted: (data: InterviewStartedEvent) => {
+  interviewStarted: async (data: InterviewStartedEvent) => {
+    const { tracer, posthog, SpanStatusCode } = await initTelemetry()
     const span = tracer.startSpan('interview_started')
     span.setAttributes({
       'interview.id': data.interview_id,
@@ -208,7 +231,8 @@ export const analytics = {
     span.end()
   },
 
-  questionRevealed: (data: QuestionRevealedEvent) => {
+  questionRevealed: async (data: QuestionRevealedEvent) => {
+    const { tracer, posthog, SpanStatusCode } = await initTelemetry()
     const span = tracer.startSpan('question_revealed')
     span.setAttributes({
       'interview.id': data.interview_id,
@@ -226,7 +250,8 @@ export const analytics = {
     span.end()
   },
 
-  answerSubmitted: (data: AnswerSubmittedEvent) => {
+  answerSubmitted: async (data: AnswerSubmittedEvent) => {
+    const { tracer, posthog, SpanStatusCode } = await initTelemetry()
     const span = tracer.startSpan('answer_submitted')
     span.setAttributes({
       'interview.id': data.interview_id,
@@ -245,7 +270,8 @@ export const analytics = {
     span.end()
   },
 
-  interviewCompleted: (data: InterviewCompletedEvent) => {
+  interviewCompleted: async (data: InterviewCompletedEvent) => {
+    const { tracer, posthog, SpanStatusCode } = await initTelemetry()
     const span = tracer.startSpan('interview_completed')
     span.setAttributes({
       'interview.id': data.interview_id,
@@ -265,8 +291,8 @@ export const analytics = {
   }
 }
 
-// Initialize analytics
-export function initAnalytics() {
-  initPostHog()
+// Initialize analytics (lazy)
+export async function initAnalytics() {
+  await initPostHog()
   console.log('Analytics initialized')
 }

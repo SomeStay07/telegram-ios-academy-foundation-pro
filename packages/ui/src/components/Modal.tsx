@@ -79,6 +79,9 @@ export const Modal: React.FC<ModalProps> = ({
         }
       }
     }
+    
+    // Return cleanup function for case when open is false
+    return () => {}
   }, [open, onClose, closeOnEscape])
 
   if (!open) return null
