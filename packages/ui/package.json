@@ -1,11 +1,87 @@
 {
   "name": "@telegram-ios-academy/ui",
   "version": "0.1.0",
+  "private": false,
   "type": "module",
-  "main": "src/index.ts",
-  "scripts": {
-    "build": "echo ui uses src directly",
-    "lint": "echo ok"
+  "main": "./dist/index.js",
+  "module": "./dist/index.js", 
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./css": "./dist/index.css",
+    "./dist/tokens.css": "./dist/tokens.css",
+    "./package.json": "./package.json"
   },
-  "dependencies": {}
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "types": "tsc -p tsconfig.types.json", 
+    "release": "pnpm run build && pnpm run types",
+    "dev": "tsup --watch",
+    "lint": "eslint src --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:design": "eslint src --ext .ts,.tsx --rule 'design-tokens/no-raw-design-values: error'",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@telegram-ios-academy/tokens": "workspace:*",
+    "clsx": "^2.1.1",
+    "marked": "^16.2.1",
+    "prismjs": "^1.29.0",
+    "react-aria": "^3.36.0",
+    "react-stately": "^3.34.0",
+    "rehype-parse": "^9.0.1",
+    "rehype-sanitize": "^6.0.0",
+    "rehype-stringify": "^10.0.1",
+    "unified": "^11.0.5"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "7.6.20",
+    "@storybook/addon-actions": "7.6.20",
+    "@storybook/addon-backgrounds": "7.6.20",
+    "@storybook/addon-controls": "7.6.20",
+    "@storybook/addon-docs": "7.6.20",
+    "@storybook/addon-essentials": "7.6.20",
+    "@storybook/addon-interactions": "7.6.20",
+    "@storybook/addon-links": "7.6.20",
+    "@storybook/addon-measure": "7.6.20",
+    "@storybook/addon-onboarding": "^1.0.11",
+    "@storybook/addon-outline": "7.6.20",
+    "@storybook/addon-viewport": "7.6.20",
+    "@storybook/blocks": "7.6.20",
+    "@storybook/react": "7.6.20",
+    "@storybook/react-vite": "7.6.20",
+    "@storybook/test": "7.6.20",
+    "@types/prismjs": "^1.26.5",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
+    "@types/sanitize-html": "^2.16.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "autoprefixer": "^10.4.19",
+    "eslint-plugin-storybook": "^9.1.5",
+    "minimatch": "^9",
+    "postcss": "^8.4.38",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "7.6.20",
+    "tailwindcss": "^3.4.7",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "vitest": "^2.1.5"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "sideEffects": false
 }

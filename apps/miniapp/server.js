@@ -11,6 +11,7 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 5173;
 const isDevelopment = process.env.NODE_ENV === 'development';
+const analyticsEnabled = process.env.VITE_ENABLE_ANALYTICS === '1';
 
 // Generate nonce for CSP
 app.use((req, res, next) => {
@@ -30,9 +31,20 @@ app.use(helmet({
       ],
       styleSrc: ["'self'", "'unsafe-inline'"], // Required for Tailwind CSS
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: isDevelopment 
-        ? ["'self'", "http://localhost:3001", "ws://localhost:5173", "https://us.i.posthog.com", "https://o4507902681923584.ingest.sentry.io"]
-        : ["'self'", "https://api-production-3e0e.up.railway.app", "https://us.i.posthog.com", "https://o4507902681923584.ingest.sentry.io", "https://api.telegram.org"],
+      connectSrc: (() => {
+        const baseSources = ["'self'"];
+        const devSources = ["http://localhost:3001", "ws://localhost:5173"];
+        const prodSources = ["https://api-production-3e0e.up.railway.app", "https://api.telegram.org"];
+        const sentrySources = ["https://o4507902681923584.ingest.sentry.io"];
+        const analyticsSources = analyticsEnabled ? ["https://us.i.posthog.com"] : [];
+        
+        return [
+          ...baseSources,
+          ...(isDevelopment ? devSources : prodSources),
+          ...sentrySources,
+          ...analyticsSources
+        ];
+      })(),
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],

@@ -1,27 +1,19 @@
-import { IsString, IsOptional, IsNumber, IsObject, ValidateNested } from 'class-validator'
-import { Type } from 'class-transformer'
-import { ApiProperty } from '@nestjs/swagger'
+import { IsString, IsOptional, IsObject, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreateEventDto {
-  @ApiProperty({ description: 'Event name', example: 'interview_started' })
+export class IngestEventDto {
   @IsString()
-  event: string
+  event!: string; // обязательное поле — definite assignment
 
-  @ApiProperty({ 
-    description: 'Event properties', 
-    example: { interview_id: 'ios-basics', mode: 'drill' },
-    required: false 
-  })
   @IsOptional()
   @IsObject()
-  props?: Record<string, unknown>
+  props?: Record<string, unknown>;
 
-  @ApiProperty({ 
-    description: 'Event timestamp (Unix timestamp in milliseconds)', 
-    example: 1704067200000,
-    required: false 
-  })
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
-  ts?: number
+  ts?: number;
 }
+
+// Keep legacy export for backward compatibility
+export class CreateEventDto extends IngestEventDto {}

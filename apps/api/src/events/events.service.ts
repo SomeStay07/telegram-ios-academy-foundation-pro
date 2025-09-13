@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { CreateEventDto } from './events.dto'
+import { ConfigService } from '@nestjs/config'
+import { IngestEventDto } from './events.dto'
 import { MetricsService } from '../metrics/metrics.service'
+import { toLogError, messageOf } from '../common/utils/error'
 
 @Injectable()
 export class EventsService {
   private readonly logger = new Logger(EventsService.name)
-  
-  constructor(private readonly metricsService: MetricsService) {}
+  private readonly posthogApiKey: string
+  private readonly posthogHost: string
   
   private readonly PII_FIELDS = [
     'email', 'phone', 'ip', 'user_agent', 'device_id', 'full_name', 
@@ -15,7 +17,15 @@ export class EventsService {
   
   private readonly MAX_FIELD_SIZE = 2048 // 2KB max per field
 
-  async processEvent(createEventDto: CreateEventDto): Promise<{ success: boolean; reason?: string }> {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly metricsService: MetricsService
+  ) {
+    this.posthogApiKey = this.configService.get('POSTHOG_API_KEY')
+    this.posthogHost = this.configService.get('POSTHOG_HOST', 'https://us.i.posthog.com')
+  }
+
+  async processEvent(createEventDto: IngestEventDto): Promise<{ success: boolean; reason?: string }> {
     const { event, props = {}, ts = Date.now() } = createEventDto
 
     // Validate event name
@@ -43,7 +53,7 @@ export class EventsService {
     }
 
     // Forward to PostHog if enabled
-    if (process.env.POSTHOG_PROXY === '1') {
+    if (process.env.POSTHOG_PROXY === '1' && this.posthogApiKey) {
       await this.forwardToPostHog(cleanEvent)
     } else {
       // Log event for local processing
@@ -93,6 +103,12 @@ export class EventsService {
       }
     })
 
+    // Hash user identifiers if present
+    if (scrubbed.userId) {
+      scrubbed.user_hash = this.hashString(String(scrubbed.userId))
+      delete scrubbed.userId
+    }
+
     return scrubbed
   }
 
@@ -139,39 +155,60 @@ export class EventsService {
     return /^\d{7,15}$/.test(digitsOnly) // 7-15 digits is common phone range
   }
 
-  private async forwardToPostHog(event: any): Promise<void> {
-    try {
-      const posthogApiKey = process.env.POSTHOG_API_KEY
-      const posthogHost = process.env.POSTHOG_HOST || 'https://us.i.posthog.com'
-      
-      if (!posthogApiKey) {
-        this.logger.warn('PostHog API key not configured, cannot forward event')
-        return
-      }
-
-      const response = await fetch(`${posthogHost}/capture/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${posthogApiKey}`
-        },
-        body: JSON.stringify({
-          api_key: posthogApiKey,
-          event: event.event,
-          properties: event.props,
-          timestamp: new Date(event.ts).toISOString(),
-          distinct_id: 'anonymous' // Could be enhanced with user ID from context
+  private async forwardToPostHog(event: any, retries = 3): Promise<void> {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const response = await fetch(`${this.posthogHost}/capture/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.posthogApiKey}`
+          },
+          body: JSON.stringify({
+            api_key: this.posthogApiKey,
+            event: event.event,
+            properties: event.props,
+            timestamp: new Date(event.ts).toISOString(),
+            distinct_id: 'anonymous'
+          })
         })
-      })
 
-      if (!response.ok) {
-        throw new Error(`PostHog responded with ${response.status}: ${response.statusText}`)
+        if (response.ok) {
+          this.logger.debug(`Event forwarded to PostHog: ${event.event}`)
+          return
+        } else {
+          throw new Error(`PostHog responded with ${response.status}: ${await response.text()}`)
+        }
+      } catch (err: unknown) {
+        const logErr = toLogError(err, { reason: 'forward_failed', attempt });
+        this.logger.warn(`PostHog forward attempt ${attempt}/${retries} failed: ${logErr.message}`, logErr.stack)
+        
+        if (attempt === retries) {
+          this.logger.error(`Events forward failed: ${logErr.message}`, logErr.stack, {
+            ...logErr.extra,
+            name: logErr.name,
+          } as any);
+          // можно увеличивать счетчик dropped по причине processing_error
+          this.metricsService.recordEventDropped('unknown', 'processing_error');
+          // реши политику: либо проглатываем (не валим запрос), либо бросаем:
+          // throw err; // если хотим 500
+          return
+        }
+        
+        // Exponential backoff
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000))
       }
-
-      this.logger.debug(`Event forwarded to PostHog: ${event.event}`)
-    } catch (error) {
-      this.logger.error(`Failed to forward event to PostHog: ${error.message}`, error.stack)
-      // Don't throw - we don't want to fail the whole request because PostHog is down
     }
+  }
+
+  private hashString(input: string): string {
+    // Simple hash for anonymization (use crypto.createHash in real implementation)
+    let hash = 0
+    for (let i = 0; i < input.length; i++) {
+      const char = input.charCodeAt(i)
+      hash = ((hash << 5) - hash) + char
+      hash = hash & hash // Convert to 32-bit integer
+    }
+    return Math.abs(hash).toString(36)
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { CodeBlock } from '../components/CodeBlock'
+import { LazyCodeBlock } from '../../../components/LazyCodeBlock'
 import { Card } from '../components/Card'
 import { QuizItem } from '../components/QuizItem'
 import { WorkedExampleStepper } from '../components/WorkedExampleStepper'
@@ -21,7 +21,7 @@ export const ModuleRenderer: React.FC<{ module: Module; onQuizAnswer?:(id:string
     case 'analogy': return <Card title='Аналогия'><p>{module.text}</p></Card>
     case 'callout': return <Card title='Важно'><p>{module.text}</p></Card>
     case 'workedExample': return <WorkedExampleStepper title={module.title} steps={module.steps} />
-    case 'snippet': return <Card title={module.title}><CodeBlock code={module.code} language={module.language ?? 'swift'} /></Card>
+    case 'snippet': return <Card title={module.title}><LazyCodeBlock code={module.code} language={module.language ?? 'swift'} /></Card>
     case 'media': return <Card title={module.caption || module.mediaType}>
       {module.mediaType==='image' ? <img src={module.url} alt={module.caption||'image'} style={{maxWidth:'100%',borderRadius:12}}/> : <a href={module.url} target='_blank' rel='noreferrer'>Открыть медиа</a>}
     </Card>

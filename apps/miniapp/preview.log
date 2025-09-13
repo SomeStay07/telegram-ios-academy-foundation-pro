@@ -1,0 +1,7 @@
+
+> @telegram-ios-academy/miniapp@0.1.0 preview /Users/timurceberda/Developer/telegram-ios-academy-foundation-pro/apps/miniapp
+> vite preview --port 5173 "--port" "5173" "--host" "0.0.0.0"
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://192.168.1.39:5173/
+  ➜  Network: http://10.41.200.54:5173/

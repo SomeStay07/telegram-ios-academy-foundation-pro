@@ -77,8 +77,29 @@
       "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --base-url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1)",
       "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --phases=examples --max-examples=1)",
       "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010/api --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)",
+<<<<<<< HEAD
       "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010 --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)",
       "Bash(xargs sed:*)"
+=======
+<<<<<<< HEAD
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010 --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)"
+=======
+      "Bash(/Users/timurceberda/Library/Python/3.9/bin/schemathesis run http://localhost:4010/api/openapi.json --url=http://localhost:4010 --checks=all --request-timeout=5 -H \"Authorization: Bearer test\" --max-examples=3)",
+      "Bash(git merge:*)",
+      "Bash(xargs kill:*)",
+      "Bash(CI=true npx playwright test tests/e2e/basic-smoke.spec.ts --reporter=line --timeout=10000)",
+      "Bash(CI=true npx playwright test tests/e2e/route-navigation.spec.ts:29 --reporter=line --timeout=15000)",
+      "Bash(VITE_API_BASE_URL=http://localhost:3000/api npx playwright test tests/e2e/route-navigation.spec.ts:29 --reporter=line --config playwright.config.ts)",
+      "Bash(git rebase:*)",
+      "Bash(npx storybook@7 init:*)",
+      "Bash(NODE_ENV=production FORCE_BUNDLE_CHECK=1 pnpm bundle-check)",
+      "Bash(grep:*)",
+      "Bash(sort:*)",
+      "Bash(npx vite-bundle-analyzer:*)",
+      "Bash(npx @changesets/cli:*)",
+      "WebFetch(domain:localhost)"
+>>>>>>> feature/design-system-foundation
+>>>>>>> origin/develop
     ],
     "deny": [],
     "ask": []

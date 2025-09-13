@@ -2,6 +2,7 @@
 // Re-export from the new analytics adapter
 export { 
   trackInterviewStarted, 
-  trackAnswerSubmitted as trackInterviewAnswerSubmitted,
-  trackInterviewCompleted 
-} from './analytics'
+  trackInterviewAnswerSubmitted,
+  trackInterviewCompleted,
+  analytics
+} from './analytics/index'

@@ -1,5 +1,6 @@
 // Analytics adapter - mini layer for tracking
 import { NoOpTracker } from './noop'
+import { ProxyTracker } from './proxy'
 import type { AnalyticsTracker, AnalyticsEvent, AnalyticsProps } from './types'
 
 let tracker: AnalyticsTracker = new NoOpTracker()
@@ -12,18 +13,26 @@ function shouldEnableAnalytics(): boolean {
 async function initializeAnalytics(): Promise<void> {
   if (isInitialized) return
 
-  if (import.meta.env.VITE_ANALYTICS_PROXY === '1') {
-    // Use proxy mode - send to /api/events
-    const { ProxyTracker } = await import('./proxy')
-    tracker = new ProxyTracker()
-  } else {
-    // Use PostHog SDK directly
-    const { PostHogTracker } = await import('./posthog')
-    tracker = new PostHogTracker()
-  }
+  try {
+    if (import.meta.env.VITE_ANALYTICS_PROXY === '1') {
+      // Use proxy mode - send to /api/events
+      tracker = new ProxyTracker()
+    } else {
+      // Use PostHog SDK directly
+      const { PostHogTracker } = await import('./posthog')
+      tracker = new PostHogTracker()
+    }
 
-  await tracker.init()
-  isInitialized = true
+    await tracker.init()
+    isInitialized = true
+    
+    if (import.meta.env.DEV) {
+      console.log('📊 Analytics initialized')
+    }
+  } catch (error) {
+    console.error('Failed to initialize analytics:', error)
+    // Keep using no-op tracker
+  }
 }
 
 export function track(event: AnalyticsEvent, props?: AnalyticsProps): void {
@@ -33,6 +42,16 @@ export function track(event: AnalyticsEvent, props?: AnalyticsProps): void {
   }
   
   tracker.track(event, props)
+}
+
+export function identify(userId: string, traits?: Record<string, any>): void {
+  if (!isInitialized && shouldEnableAnalytics()) {
+    initializeAnalytics().catch(console.error)
+  }
+  
+  if ('identify' in tracker) {
+    tracker.identify(userId, traits)
+  }
 }
 
 // Interview specific events
@@ -46,15 +65,17 @@ export function trackInterviewStarted(data: {
   })
 }
 
-export function trackAnswerSubmitted(data: {
+export function trackInterviewAnswerSubmitted(data: {
   interviewId: string
   questionId: string
   mode: 'drill' | 'explain' | 'mock'
+  timeMs?: number
 }): void {
   track('answer_submitted', {
     interview_id: data.interviewId,
     question_id: data.questionId,
-    mode: data.mode
+    mode: data.mode,
+    time_ms: data.timeMs
   })
 }
 
@@ -74,10 +95,33 @@ export function trackInterviewCompleted(data: {
   })
 }
 
-// Legacy exports for compatibility
+// Helpers for typed events
 export const analytics = {
+  // Core tracking
   track,
-  trackInterviewStarted,
-  trackAnswerSubmitted,
-  trackInterviewCompleted
+  identify,
+  
+  // Lesson events
+  lessonStarted: (props: { lessonId: string; title: string }) => 
+    track('lesson_started', props),
+  
+  lessonCompleted: (props: { lessonId: string; score: number; duration: number }) => 
+    track('lesson_completed', props),
+  
+  // Quiz events  
+  quizAnswered: (props: { lessonId: string; questionId: string; correct: boolean; timeSpent: number }) =>
+    track('quiz_answered', props),
+  
+  // Interview events
+  interviewStarted: trackInterviewStarted,
+  interviewAnswerSubmitted: trackInterviewAnswerSubmitted,
+  interviewCompleted: trackInterviewCompleted,
+    
+  // Performance events
+  pageLoad: (props: { route: string; loadTime: number }) =>
+    track('page_load', props),
+    
+  // Error events
+  error: (props: { error: string; context?: string }) =>
+    track('error', props)
 }
