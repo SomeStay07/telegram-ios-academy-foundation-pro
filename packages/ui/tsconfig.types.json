@@ -4,15 +4,22 @@
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "include": [
-    "src/**/*"
+    "src/index.ts",
+    "src/components/**/*.tsx",
+    "src/utils/**/*.ts",
+    "src/types/**/*.ts"
   ],
   "exclude": [
     "**/*.test.*",
-    "**/*.spec.*",
+    "**/*.spec.*", 
     "**/*.stories.*",
-    "dist"
+    "dist",
+    "node_modules"
   ]
 }

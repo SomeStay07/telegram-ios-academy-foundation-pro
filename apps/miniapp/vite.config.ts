@@ -62,11 +62,13 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        // Disable modulepreload for lazy chunks  
+        experimentalMinChunkSize: 0,
         manualChunks: {
           // Core Preact (replacing React)
           'react-vendor': ['preact', '@preact/compat'],
           
-          // Routing and State Management
+          // Routing and State Management (now lazy)
           'routing': ['@tanstack/react-router', '@tanstack/react-query', 'zustand'],
           
           // Analytics (lazy loaded)
@@ -79,7 +81,7 @@ export default defineConfig({
             '@opentelemetry/auto-instrumentations-web'
           ],
           
-          // i18n
+          // i18n (lazy loaded)
           'i18n': ['i18next', 'react-i18next'],
           
           // Form handling
@@ -90,6 +92,9 @@ export default defineConfig({
         }
       }
     },
+    // Disable modulepreload for all chunks
+    modulePreload: false,
+    
     // Target smaller initial bundle
     chunkSizeWarningLimit: 400, // Reduced from default 500
     

@@ -4,7 +4,7 @@
   "private": false,
   "type": "module",
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "module": "./dist/index.js", 
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -21,6 +21,8 @@
   ],
   "scripts": {
     "build": "tsup",
+    "types": "tsc -p tsconfig.types.json", 
+    "release": "pnpm run build && pnpm run types",
     "dev": "tsup --watch",
     "lint": "eslint src --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
     "lint:design": "eslint src --ext .ts,.tsx --rule 'design-tokens/no-raw-design-values: error'",

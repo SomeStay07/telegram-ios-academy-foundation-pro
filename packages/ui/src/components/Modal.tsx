@@ -23,65 +23,62 @@ export const Modal: React.FC<ModalProps> = ({
   const lastActiveElement = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
-    if (open) {
-      // Store the currently focused element
-      lastActiveElement.current = document.activeElement as HTMLElement
+    if (!open) return
+    
+    // Store the currently focused element
+    lastActiveElement.current = document.activeElement as HTMLElement
+    
+    // Focus the modal
+    modalRef.current?.focus()
+    
+    // Trap focus within modal
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
       
-      // Focus the modal
-      modalRef.current?.focus()
+      const focusableElements = modalRef.current?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
       
-      // Trap focus within modal
-      const handleTabKey = (e: KeyboardEvent) => {
-        if (e.key !== 'Tab') return
-        
-        const focusableElements = modalRef.current?.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )
-        
-        if (!focusableElements || focusableElements.length === 0) return
-        
-        const firstElement = focusableElements[0] as HTMLElement
-        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
-        
-        if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
-            lastElement.focus()
-            e.preventDefault()
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            firstElement.focus()
-            e.preventDefault()
-          }
+      if (!focusableElements || focusableElements.length === 0) return
+      
+      const firstElement = focusableElements[0] as HTMLElement
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+      
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus()
+          e.preventDefault()
         }
-      }
-      
-      const handleEscapeKey = (e: KeyboardEvent) => {
-        if (e.key === 'Escape' && closeOnEscape) {
-          onClose()
-        }
-      }
-      
-      document.addEventListener('keydown', handleTabKey)
-      document.addEventListener('keydown', handleEscapeKey)
-      
-      // Prevent scrolling on body
-      document.body.style.overflow = 'hidden'
-      
-      return () => {
-        document.removeEventListener('keydown', handleTabKey)
-        document.removeEventListener('keydown', handleEscapeKey)
-        document.body.style.overflow = ''
-        
-        // Restore focus to the previously focused element
-        if (lastActiveElement.current) {
-          lastActiveElement.current.focus()
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus()
+          e.preventDefault()
         }
       }
     }
     
-    // Return cleanup function for case when open is false
-    return () => {}
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && closeOnEscape) {
+        onClose()
+      }
+    }
+    
+    document.addEventListener('keydown', handleTabKey)
+    document.addEventListener('keydown', handleEscapeKey)
+    
+    // Prevent scrolling on body
+    document.body.style.overflow = 'hidden'
+    
+    return () => {
+      document.removeEventListener('keydown', handleTabKey)
+      document.removeEventListener('keydown', handleEscapeKey)
+      document.body.style.overflow = ''
+      
+      // Restore focus to the previously focused element
+      if (lastActiveElement.current) {
+        lastActiveElement.current.focus()
+      }
+    }
   }, [open, onClose, closeOnEscape])
 
   if (!open) return null
