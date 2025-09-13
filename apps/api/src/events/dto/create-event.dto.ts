@@ -9,14 +9,14 @@ export class CreateEventDto {
   })
   @IsString()
   @IsNotEmpty()
-  event: string
+  event!: string
 
   @ApiProperty({ 
     description: 'Event properties (arbitrary key-value pairs)',
     example: { lessonId: 'swift-basics', userId: '12345' }
   })
   @IsObject()
-  props: Record<string, unknown>
+  props!: Record<string, unknown>
 
   @ApiProperty({ 
     description: 'Timestamp (unix ms)',

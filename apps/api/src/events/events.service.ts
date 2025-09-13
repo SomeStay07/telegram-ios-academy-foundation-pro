@@ -21,8 +21,8 @@ export class EventsService {
     private readonly configService: ConfigService,
     private readonly metricsService: MetricsService
   ) {
-    this.posthogApiKey = this.configService.get('POSTHOG_API_KEY')
-    this.posthogHost = this.configService.get('POSTHOG_HOST', 'https://us.i.posthog.com')
+    this.posthogApiKey = this.configService.get('POSTHOG_API_KEY') || ''
+    this.posthogHost = this.configService.get('POSTHOG_HOST') || 'https://us.i.posthog.com'
   }
 
   async processEvent(createEventDto: IngestEventDto): Promise<{ success: boolean; reason?: string }> {

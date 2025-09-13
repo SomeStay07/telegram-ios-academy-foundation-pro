@@ -1,18 +1,11 @@
 name: Preview Deployment
 
 on:
-<<<<<<< HEAD
-  pull_request:
-    branches: [develop]
-    types: [opened, synchronize, reopened]
-=======
   push:
     branches: [develop, main]
   pull_request:
-    branches: [develop]
-    types: [opened, synchronize, reopened] 
-    paths-ignore: ['.github/workflows/preview-deploy.yml']  # не гонять на PR
->>>>>>> feature/design-system-foundation
+    branches: [develop, main]
+    types: [opened, synchronize, reopened]
   
   # Allow manual deployment from any branch
   workflow_dispatch:

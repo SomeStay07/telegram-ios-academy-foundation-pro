@@ -26,6 +26,25 @@ regexes = [
   '''TELEGRAM_BOT_TOKEN="test"'''
 ]
 
+# Правила редактирования для логирования (скрываем чувствительные данные)
+[[rules]]
+id = "redact-api-key"
+description = "Redact API keys in logs"
+regex = '''(api[_-]?key|token|password|secret)['"]?\s*[:=]\s*['"]?([A-Za-z0-9_-]{10,})['"]?'''
+tags = ["redaction"]
+
+[[rules]]
+id = "redact-bearer-token"
+description = "Redact Bearer tokens"
+regex = '''\b[Bb]earer\s+([A-Za-z0-9_-]{20,})'''
+tags = ["redaction"]
+
+[[rules]]
+id = "redact-database-url"
+description = "Redact database connection strings"
+regex = '''(postgres|mysql|mongodb)://([^:\s]+):([^@\s]+)@'''
+tags = ["redaction"]
+
 # Игнорируем конкретные коммиты, где секрет уже РОТИРОВАН  
 commits = [
   "46f102a",  # fix: Add required environment variables for GitHub Actions CI  

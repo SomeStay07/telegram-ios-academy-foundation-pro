@@ -4,8 +4,9 @@
   "packageManager": "pnpm@9.0.0",
   "pnpm": {
     "overrides": {
-      "cross-spawn": "^7.0.6",
-      "axios": "^1.12.0"
+      "axios": "^1.12.0",
+      "cross-spawn": "^7.0.5",
+      "@pact-foundation/pact-core": "^16.1.0"
     }
   },
   "engines": {
