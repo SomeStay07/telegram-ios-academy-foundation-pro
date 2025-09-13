@@ -87,7 +87,7 @@ export class AuthController {
     const urlSearch = new URLSearchParams(initData)
     const authDate = Number(urlSearch.get('auth_date') || '0')
     const now = Math.floor(Date.now()/1000)
-    if (Math.abs(now - authDate) > 330) throw new BadRequestException('initData expired')
+    if (Math.abs(now - authDate) > 330) throw new UnauthorizedException('initData expired')
 
     const hash = urlSearch.get('hash') || ''
     urlSearch.delete('hash')

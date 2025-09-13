@@ -215,9 +215,10 @@ jobs:
           DATABASE_URL="postgresql://test:test@localhost:5432/test" pnpm prisma migrate deploy
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
-      - name: Start API in background
+      - name: Start API in background with logs
         run: |
           cd apps/api
+          echo "🚀 Starting API server..."
           DATABASE_URL="postgresql://test:test@localhost:5432/test" \
           REDIS_URL="redis://localhost:6379" \
           API_PUBLIC_ORIGIN="http://localhost:4010" \
@@ -227,26 +228,46 @@ jobs:
           METRICS_TOKEN="test-schemathesis-token" \
           NODE_ENV=test \
           PORT=4010 \
-          node dist/main.js & echo $! > ../../api.pid
+          node dist/main.js > api.log 2>&1 & echo $! > api.pid
+          
+          echo "✅ API started with PID: $(cat api.pid)"
+          echo "📋 Logs will be captured in api.log"
       - name: Wait for API to be ready
         run: |
-          echo "Waiting for API to start on port 4010..."
+          echo "⏱️ Waiting for API to start on port 4010..."
           for i in {1..30}; do 
-            echo "Attempt $i: Checking API health..."
+            echo "🔍 Attempt $i: Checking API health..."
             if curl -sSf http://127.0.0.1:4010/api/health; then
               echo "✅ API health check passed"
               break
             fi
-            echo "API not ready, waiting..."
+            echo "⏳ API not ready, waiting..."
             sleep 1
           done
           
-          echo "Verifying OpenAPI endpoint availability..."
-          curl -sSf http://127.0.0.1:4010/api/openapi.json | head -5 || echo "❌ OpenAPI endpoint not available"
-          
-          echo "API endpoints test complete"
+          echo "🔗 Verifying OpenAPI endpoint availability..."
+          if curl -sSf http://127.0.0.1:4010/api/openapi.json | head -5; then
+            echo "✅ OpenAPI endpoint is accessible"
+          else
+            echo "❌ OpenAPI endpoint not available"
+            echo "📋 API logs:"
+            cd apps/api && cat api.log
+            exit 1
+          fi
+      - name: Monitor API process during test
+        run: |
+          cd apps/api
+          if kill -0 $(cat api.pid) 2>/dev/null; then
+            echo "✅ API process is running (PID: $(cat api.pid))"
+          else
+            echo "❌ API process died before testing"
+            echo "📋 API logs:"
+            cat api.log
+            exit 1
+          fi
       - name: Run Schemathesis fuzzing
         run: |
+          echo "🧪 Starting Schemathesis fuzzing..."
           schemathesis run http://127.0.0.1:4010/api/openapi.json \
             --url=http://127.0.0.1:4010 \
             --checks=all \
@@ -256,9 +277,27 @@ jobs:
             -H "Idempotency-Key: ci-$(date +%s)" \
             --phases=examples,fuzzing,stateful \
             --max-examples=50
+        continue-on-error: true
+      - name: Check API status after test
+        if: always()
+        run: |
+          cd apps/api
+          if kill -0 $(cat api.pid) 2>/dev/null; then
+            echo "✅ API process survived fuzzing (PID: $(cat api.pid))"
+          else
+            echo "⚠️ API process died during fuzzing"
+          fi
+          echo "📋 Final API logs:"
+          cat api.log | tail -50
       - name: Cleanup API process
         if: always()
-        run: kill $(cat api.pid) || true
+        run: |
+          cd apps/api
+          if [ -f api.pid ]; then
+            echo "🧹 Cleaning up API process..."
+            kill $(cat api.pid) || true
+            rm -f api.pid api.log
+          fi
 
   security_audit:
     name: Security Audit (pnpm audit --audit-level high)

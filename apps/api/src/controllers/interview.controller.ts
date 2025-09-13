@@ -1,63 +1,9 @@
 import { Controller, Get, Put, Post, Param, Body, Headers, UsePipes, ValidationPipe } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiSecurity } from '@nestjs/swagger'
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiSecurity, ApiHeader } from '@nestjs/swagger'
 import { InterviewService, UpdateInterviewProgressDto, StartInterviewAttemptDto, FinishInterviewAttemptDto } from '../services/interview.service'
 import { MetricsService } from '../metrics/metrics.service'
-import { InterviewMode, InterviewAttemptStatus } from '@prisma/client'
-import { IsString, IsOptional, IsNumber, IsBoolean, IsEnum, IsObject } from 'class-validator'
-import { Transform } from 'class-transformer'
+import { UpdateInterviewProgressBodyDto, StartInterviewAttemptBodyDto, FinishInterviewAttemptBodyDto } from '../dto/interview.dto'
 
-// DTOs for validation
-class UpdateInterviewProgressBodyDto {
-  @IsString()
-  interviewId!: string
-
-  @IsEnum(InterviewMode)
-  mode!: InterviewMode
-
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value))
-  lastIndex!: number
-
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value))
-  correct!: number
-
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value))
-  total!: number
-
-  @IsOptional()
-  @IsObject()
-  metadata?: any
-}
-
-class StartInterviewAttemptBodyDto {
-  @IsString()
-  interviewId!: string
-
-  @IsString()
-  questionId!: string
-
-  @IsEnum(InterviewMode)
-  mode!: InterviewMode
-}
-
-class FinishInterviewAttemptBodyDto {
-  @IsString()
-  attemptId!: string
-
-  @IsOptional()
-  @IsBoolean()
-  correct?: boolean
-
-  @IsOptional()
-  @IsObject()
-  answerJson?: any
-
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value))
-  timeSpent!: number
-}
 
 @ApiTags('interviews')
 @ApiSecurity('telegram-auth')
@@ -71,10 +17,11 @@ export class InterviewController {
   @Get(':id/progress')
   @ApiOperation({ summary: 'Get interview progress for user' })
   @ApiParam({ name: 'id', description: 'Interview ID' })
+  @ApiHeader({ name: 'X-Telegram-Init-Data', required: true })
   @ApiResponse({ status: 200, description: 'Interview progress retrieved successfully' })
   async getInterviewProgress(
     @Param('id') interviewId: string,
-    @Headers('x-telegram-init-data') telegramData?: string
+    @Headers('X-Telegram-Init-Data') telegramData?: string
   ) {
     // For demo purposes, use hardcoded user ID
     // In production, extract from validated Telegram init data
@@ -86,13 +33,14 @@ export class InterviewController {
   @Put('progress/:id')
   @ApiOperation({ summary: 'Update interview progress' })
   @ApiParam({ name: 'id', description: 'Interview ID' })
+  @ApiHeader({ name: 'X-Telegram-Init-Data', required: true })
   @ApiBody({ type: UpdateInterviewProgressBodyDto })
   @ApiResponse({ status: 200, description: 'Interview progress updated successfully' })
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async updateInterviewProgress(
     @Param('id') interviewId: string,
     @Body() body: UpdateInterviewProgressBodyDto,
-    @Headers('x-telegram-init-data') telegramData?: string
+    @Headers('X-Telegram-Init-Data') telegramData?: string
   ) {
     // For demo purposes, use hardcoded user ID
     const userId = 'demo-user'
@@ -111,13 +59,15 @@ export class InterviewController {
 
   @Post('attempts/start')
   @ApiOperation({ summary: 'Start interview attempt' })
+  @ApiHeader({ name: 'idempotency-key', required: true })
+  @ApiHeader({ name: 'X-Telegram-Init-Data', required: true })
   @ApiBody({ type: StartInterviewAttemptBodyDto })
   @ApiResponse({ status: 201, description: 'Interview attempt started successfully' })
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async startInterviewAttempt(
     @Body() body: StartInterviewAttemptBodyDto,
     @Headers('idempotency-key') idempotencyKey?: string,
-    @Headers('x-telegram-init-data') telegramData?: string
+    @Headers('X-Telegram-Init-Data') telegramData?: string
   ) {
     // For demo purposes, use hardcoded user ID
     const userId = 'demo-user'
@@ -141,12 +91,13 @@ export class InterviewController {
 
   @Put('attempts/finish')
   @ApiOperation({ summary: 'Finish interview attempt' })
+  @ApiHeader({ name: 'X-Telegram-Init-Data', required: true })
   @ApiBody({ type: FinishInterviewAttemptBodyDto })
   @ApiResponse({ status: 200, description: 'Interview attempt finished successfully' })
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async finishInterviewAttempt(
     @Body() body: FinishInterviewAttemptBodyDto,
-    @Headers('x-telegram-init-data') telegramData?: string
+    @Headers('X-Telegram-Init-Data') telegramData?: string
   ) {
     // For demo purposes, use hardcoded user ID
     const userId = 'demo-user'
@@ -173,10 +124,11 @@ export class InterviewController {
   @Get(':id/attempts')
   @ApiOperation({ summary: 'Get interview attempts for user' })
   @ApiParam({ name: 'id', description: 'Interview ID' })
+  @ApiHeader({ name: 'X-Telegram-Init-Data', required: true })
   @ApiResponse({ status: 200, description: 'Interview attempts retrieved successfully' })
   async getInterviewAttempts(
     @Param('id') interviewId: string,
-    @Headers('x-telegram-init-data') telegramData?: string
+    @Headers('X-Telegram-Init-Data') telegramData?: string
   ) {
     // For demo purposes, use hardcoded user ID
     const userId = 'demo-user'
