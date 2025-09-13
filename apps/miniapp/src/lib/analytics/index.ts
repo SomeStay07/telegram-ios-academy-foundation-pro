@@ -116,6 +116,17 @@ export const analytics = {
   interviewStarted: trackInterviewStarted,
   interviewAnswerSubmitted: trackInterviewAnswerSubmitted,
   interviewCompleted: trackInterviewCompleted,
+  
+  // Deep link events
+  deepLinkOpened: (props: { 
+    link_type: string; 
+    content_id: string; 
+    mode?: string; 
+    metadata?: Record<string, any>; 
+    source: string; 
+    user_agent?: string;
+    timestamp?: string;
+  }) => track('deep_link_opened', props),
     
   // Performance events
   pageLoad: (props: { route: string; loadTime: number }) =>

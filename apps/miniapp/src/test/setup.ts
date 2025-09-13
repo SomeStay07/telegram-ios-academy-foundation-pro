@@ -8,6 +8,46 @@ vi.mock('../env.ts', () => ({
   }
 }))
 
+// Mock analytics modules to prevent dynamic import errors
+vi.mock('../analytics/lazy', () => ({
+  analytics: {
+    deepLinkOpened: vi.fn(),
+    interviewStarted: vi.fn(),
+    interviewAnswerSubmitted: vi.fn(),
+    interviewCompleted: vi.fn(),
+    track: vi.fn(),
+    identify: vi.fn()
+  }
+}))
+
+// Also mock with the path used by deep-linking.ts
+vi.mock('../../analytics/lazy', () => ({
+  analytics: {
+    deepLinkOpened: vi.fn(),
+    interviewStarted: vi.fn(),
+    interviewAnswerSubmitted: vi.fn(),
+    interviewCompleted: vi.fn(),
+    track: vi.fn(),
+    identify: vi.fn()
+  }
+}))
+
+vi.mock('../lib/analytics', () => ({
+  analytics: {
+    deepLinkOpened: vi.fn(),
+    interviewStarted: vi.fn(),
+    interviewAnswerSubmitted: vi.fn(),
+    interviewCompleted: vi.fn(),
+    track: vi.fn(),
+    identify: vi.fn()
+  },
+  track: vi.fn(),
+  identify: vi.fn(),
+  trackInterviewStarted: vi.fn(),
+  trackInterviewAnswerSubmitted: vi.fn(),
+  trackInterviewCompleted: vi.fn()
+}))
+
 // Mock global objects that might be used in components
 Object.defineProperty(window, 'location', {
   value: {

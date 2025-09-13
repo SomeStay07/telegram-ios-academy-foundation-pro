@@ -347,7 +347,9 @@ describe('InterviewRenderer', () => {
     const textarea = screen.getByPlaceholderText('Type your answer here...')
     fireEvent.change(textarea, { target: { value: 'Some answer' } })
     
-    const submitButton = screen.getByText('Submit Answer')
-    expect(submitButton).not.toBeDisabled()
+    await waitFor(() => {
+      const submitButton = screen.getByText('Submit Answer')
+      expect(submitButton).not.toBeDisabled()
+    })
   })
 })
