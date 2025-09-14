@@ -43,7 +43,7 @@ export const WorkedExampleStepper: React.FC<WorkedExampleStepperProps> = ({
       <div 
         role="group" 
         aria-label="Навигация по шагам"
-        style={{ display: 'flex', gap: 8, marginTop: 16 }}
+        style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}
       >
         <Button 
           onClick={goToPrevious} 
@@ -64,8 +64,8 @@ export const WorkedExampleStepper: React.FC<WorkedExampleStepperProps> = ({
       <div 
         aria-label={`Текущий прогресс: шаг ${currentIndex + 1} из ${steps.length}`}
         style={{ 
-          marginTop: 8, 
-          fontSize: '0.875rem', 
+          marginTop: 'var(--ds-spacing-2)', 
+          fontSize: 'var(--ds-fontSize-sm, 0.875rem)', 
           color: 'var(--color-fg-muted)',
           textAlign: 'center'
         }}

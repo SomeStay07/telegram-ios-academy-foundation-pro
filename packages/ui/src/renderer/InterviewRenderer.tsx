@@ -277,32 +277,32 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
 
   if (!isStarted) {
     return (
-      <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
+      <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: 'var(--ds-spacing-4)' }}>
         <h1 style={{ marginTop: 0, color: 'var(--color-primary)' }}>
           {interviewSet.title}
         </h1>
         
         <div style={{ 
-          padding: '16px', 
-          background: mode === 'drill' ? '#e0f2fe' : mode === 'explain' ? '#f3e5f5' : '#fff3e0',
-          borderRadius: '8px',
-          marginBottom: '24px'
+          padding: 'var(--ds-spacing-4)', 
+          background: mode === 'drill' ? 'var(--ds-color-palette-blue-50)' : mode === 'explain' ? 'var(--ds-color-palette-purple-50)' : 'var(--ds-color-palette-amber-50)',
+          borderRadius: 'var(--ds-spacing-2)',
+          marginBottom: 'var(--ds-spacing-6)'
         }}>
-          <h3 style={{ margin: '0 0 8px 0' }}>
+          <h3 style={{ margin: '0 0 var(--ds-spacing-2) 0' }}>
             {mode.charAt(0).toUpperCase() + mode.slice(1)} Mode
           </h3>
-          <p style={{ margin: 0, fontSize: '14px' }}>
+          <p style={{ margin: 0, fontSize: 'var(--ds-spacing-3)' }}>
             {ModeDescription[mode]}
           </p>
         </div>
 
-        <div style={{ marginBottom: '24px', fontSize: '14px', color: 'var(--color-text-secondary)' }}>
+        <div style={{ marginBottom: 'var(--ds-spacing-6)', fontSize: 'var(--ds-spacing-3)', color: 'var(--color-text-secondary)' }}>
           <p>📊 {totalQuestions} questions</p>
           <p>🏷️ Categories: {getUniqueCategories().join(', ')}</p>
           <p>⏱️ {mode === 'mock' ? 'Timed practice session' : 'Self-paced learning'}</p>
         </div>
 
-        <Button onClick={startInterview} variant="primary" style={{ padding: '16px 32px', fontSize: '16px' }}>
+        <Button onClick={startInterview} variant="primary" style={{ padding: 'var(--ds-spacing-4) var(--ds-spacing-8)', fontSize: 'var(--ds-spacing-4)' }}>
           Start Interview
         </Button>
       </div>
@@ -311,7 +311,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
 
   if (!currentQuestion) {
     return (
-      <div style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
+      <div style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: 'var(--ds-spacing-4)' }}>
         <h2>🎉 Interview Complete!</h2>
         <p>You've completed {currentProgress.answers.length} out of {totalQuestions} questions.</p>
         <Button onClick={() => onComplete(currentProgress)}>
@@ -328,16 +328,16 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        marginBottom: '24px',
-        padding: '16px',
+        marginBottom: 'var(--ds-spacing-6)',
+        padding: 'var(--ds-spacing-4)',
         background: 'var(--color-bg-secondary)',
-        borderRadius: '8px'
+        borderRadius: 'var(--ds-spacing-2)'
       }}>
         <div>
           <h2 style={{ margin: 0 }}>
             Question {currentProgress.current_question_index + 1} of {totalQuestions}
           </h2>
-          <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
+          <div style={{ fontSize: 'var(--ds-spacing-3)', color: 'var(--color-text-secondary)' }}>
             {currentQuestion.category} • {currentQuestion.difficulty}
             {mode === 'mock' && (
               <> • ⏱️ {formatTime(timer.elapsedSeconds)}</>
@@ -347,7 +347,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
         <Button 
           onClick={() => setShowExitModal(true)} 
           variant="secondary"
-          style={{ padding: '8px 16px' }}
+          style={{ padding: 'var(--ds-spacing-2) var(--ds-spacing-4)' }}
         >
           Exit
         </Button>
@@ -356,35 +356,35 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
       {/* Progress bar */}
       <div style={{ 
         width: '100%', 
-        height: '4px', 
+        height: 'var(--ds-spacing-1)', 
         background: 'var(--color-bg-secondary)', 
-        borderRadius: '2px',
-        marginBottom: '24px'
+        borderRadius: 'var(--ds-spacing-0.5)',
+        marginBottom: 'var(--ds-spacing-6)'
       }}>
         <div style={{ 
           width: `${((currentProgress.current_question_index + 1) / totalQuestions) * 100}%`,
           height: '100%',
           background: 'var(--color-primary)',
-          borderRadius: '2px',
-          transition: 'width 0.3s ease'
+          borderRadius: 'var(--ds-spacing-0.5)',
+          transition: 'width var(--ds-motion-duration-fast) ease'
         }} />
       </div>
 
       {/* Question */}
-      <div style={{ marginBottom: '24px', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
+      <div style={{ marginBottom: 'var(--ds-spacing-6)', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: 'var(--ds-spacing-4)' }}>
         <h3 style={{ marginTop: 0, color: 'var(--color-primary)' }}>
           Question
         </h3>
-        <p style={{ fontSize: '16px', lineHeight: 1.6, marginBottom: '16px' }}>
+        <p style={{ fontSize: 'var(--ds-spacing-4)', lineHeight: 1.6, marginBottom: 'var(--ds-spacing-4)' }}>
           {currentQuestion.prompt}
         </p>
         
         {currentQuestion.codeSample && (
           <pre style={{
             background: 'var(--color-bg-secondary)',
-            padding: '16px',
-            borderRadius: '8px',
-            fontSize: '14px',
+            padding: 'var(--ds-spacing-4)',
+            borderRadius: 'var(--ds-spacing-2)',
+            fontSize: 'var(--ds-spacing-3)',
             overflow: 'auto'
           }}>
             <code>{currentQuestion.codeSample}</code>
@@ -392,7 +392,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
         )}
         
         {currentQuestion.tags.length > 0 && (
-          <div style={{ marginTop: '16px' }}>
+          <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
             {currentQuestion.tags.map(tag => (
               <span 
                 key={tag}
@@ -400,10 +400,10 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
                   display: 'inline-block',
                   background: 'var(--color-primary)',
                   color: 'white',
-                  padding: '4px 8px',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  marginRight: '8px'
+                  padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+                  borderRadius: 'var(--ds-spacing-3)',
+                  fontSize: 'var(--ds-spacing-3)',
+                  marginRight: 'var(--ds-spacing-2)'
                 }}
               >
                 {tag}
@@ -414,15 +414,15 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
       </div>
 
       {/* Answer input */}
-      <div style={{ marginBottom: '24px', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
+      <div style={{ marginBottom: 'var(--ds-spacing-6)', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: 'var(--ds-spacing-4)' }}>
         <h3 style={{ marginTop: 0 }}>Your Answer</h3>
         
         {mode !== 'drill' && (
-          <div style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             <Button
               onClick={isRecording ? stopRecording : startRecording}
               variant={isRecording ? 'danger' : 'secondary'}
-              style={{ marginRight: '8px' }}
+              style={{ marginRight: 'var(--ds-spacing-2)' }}
             >
               {isRecording ? '⏹️ Stop Recording' : '🎤 Voice Answer'}
             </Button>
@@ -436,27 +436,27 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
           disabled={currentAnswer.startsWith('blob:')}
           style={{
             width: '100%',
-            minHeight: '120px',
-            padding: '12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: '8px',
-            fontSize: '14px',
+            minHeight: 'var(--ds-spacing-30)',
+            padding: 'var(--ds-spacing-3)',
+            border: 'var(--ds-spacing-px) solid var(--color-border)',
+            borderRadius: 'var(--ds-spacing-2)',
+            fontSize: 'var(--ds-spacing-3)',
             resize: 'vertical'
           }}
         />
 
         {mode === 'mock' && (
-          <div style={{ marginTop: '16px' }}>
-            <p style={{ margin: '0 0 8px 0', fontSize: '14px' }}>
+          <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
+            <p style={{ margin: '0 0 var(--ds-spacing-2) 0', fontSize: 'var(--ds-spacing-3)' }}>
               Rate your confidence (1-5):
             </p>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
               {[1, 2, 3, 4, 5].map(rating => (
                 <Button
                   key={rating}
                   onClick={() => setSelfRating(rating as 1 | 2 | 3 | 4 | 5)}
                   variant={selfRating === rating ? 'primary' : 'secondary'}
-                  style={{ padding: '8px 12px' }}
+                  style={{ padding: 'var(--ds-spacing-2) var(--ds-spacing-3)' }}
                 >
                   {rating}
                 </Button>
@@ -465,7 +465,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
           </div>
         )}
 
-        <div style={{ marginTop: '16px', display: 'flex', gap: '12px' }}>
+        <div style={{ marginTop: 'var(--ds-spacing-4)', display: 'flex', gap: 'var(--ds-spacing-3)' }}>
           <Button
             onClick={submitAnswer}
             variant="primary"
@@ -487,16 +487,16 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
 
       {/* Model answer (explain mode) */}
       {mode === 'explain' && showAnswer && (
-        <div style={{ marginBottom: '24px', background: '#f0f9ff', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
-          <h3 style={{ marginTop: 0, color: '#0369a1' }}>Model Answer</h3>
-          <p style={{ marginBottom: '16px' }}>{currentQuestion.modelAnswer}</p>
+        <div style={{ marginBottom: 'var(--ds-spacing-6)', background: 'var(--ds-color-palette-blue-50)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: 'var(--ds-spacing-4)' }}>
+          <h3 style={{ marginTop: 0, color: 'var(--ds-color-palette-blue-700)' }}>Model Answer</h3>
+          <p style={{ marginBottom: 'var(--ds-spacing-4)' }}>{currentQuestion.modelAnswer}</p>
           
           {currentQuestion.pitfalls.length > 0 && (
             <>
-              <h4 style={{ color: '#dc2626', marginBottom: '8px' }}>Common Pitfalls:</h4>
-              <ul style={{ marginBottom: '16px' }}>
+              <h4 style={{ color: 'var(--ds-color-palette-red-600)', marginBottom: 'var(--ds-spacing-2)' }}>Common Pitfalls:</h4>
+              <ul style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                 {currentQuestion.pitfalls.map((pitfall, index) => (
-                  <li key={index} style={{ marginBottom: '4px' }}>{pitfall}</li>
+                  <li key={index} style={{ marginBottom: 'var(--ds-spacing-1)' }}>{pitfall}</li>
                 ))}
               </ul>
             </>
@@ -504,10 +504,10 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
           
           {currentQuestion.references.length > 0 && (
             <>
-              <h4 style={{ marginBottom: '8px' }}>References:</h4>
+              <h4 style={{ marginBottom: 'var(--ds-spacing-2)' }}>References:</h4>
               <ul>
                 {currentQuestion.references.map((ref, index) => (
-                  <li key={index} style={{ marginBottom: '4px' }}>{ref}</li>
+                  <li key={index} style={{ marginBottom: 'var(--ds-spacing-1)' }}>{ref}</li>
                 ))}
               </ul>
             </>
@@ -517,11 +517,11 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
 
       {/* Navigation */}
       {currentAnswer && (
-        <div style={{ textAlign: 'center', marginTop: '24px' }}>
+        <div style={{ textAlign: 'center', marginTop: 'var(--ds-spacing-6)' }}>
           <Button
             onClick={nextQuestion}
             variant="primary"
-            style={{ padding: '12px 24px', fontSize: '16px' }}
+            style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-6)', fontSize: 'var(--ds-spacing-4)' }}
           >
             {isLastQuestion ? 'Complete Interview' : 'Next Question →'}
           </Button>
@@ -535,7 +535,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
         title="Exit Interview"
       >
         <p>Are you sure you want to exit? Your progress will be saved.</p>
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' }}>
+        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end', marginTop: 'var(--ds-spacing-6)' }}>
           <Button onClick={() => setShowExitModal(false)} variant="secondary">
             Continue
           </Button>
