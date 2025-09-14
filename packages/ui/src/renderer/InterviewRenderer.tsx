@@ -277,7 +277,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
 
   if (!isStarted) {
     return (
-      <Card style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
+      <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
         <h1 style={{ marginTop: 0, color: 'var(--color-primary)' }}>
           {interviewSet.title}
         </h1>
@@ -305,19 +305,19 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
         <Button onClick={startInterview} variant="primary" style={{ padding: '16px 32px', fontSize: '16px' }}>
           Start Interview
         </Button>
-      </Card>
+      </div>
     )
   }
 
   if (!currentQuestion) {
     return (
-      <Card style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
         <h2>🎉 Interview Complete!</h2>
         <p>You've completed {currentProgress.answers.length} out of {totalQuestions} questions.</p>
         <Button onClick={() => onComplete(currentProgress)}>
           View Results
         </Button>
-      </Card>
+      </div>
     )
   }
 
@@ -371,7 +371,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
       </div>
 
       {/* Question */}
-      <Card style={{ marginBottom: '24px' }}>
+      <div style={{ marginBottom: '24px', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
         <h3 style={{ marginTop: 0, color: 'var(--color-primary)' }}>
           Question
         </h3>
@@ -411,10 +411,10 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
             ))}
           </div>
         )}
-      </Card>
+      </div>
 
       {/* Answer input */}
-      <Card style={{ marginBottom: '24px' }}>
+      <div style={{ marginBottom: '24px', background: 'var(--ds-component-card-bg)', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
         <h3 style={{ marginTop: 0 }}>Your Answer</h3>
         
         {mode !== 'drill' && (
@@ -483,11 +483,11 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
             </Button>
           )}
         </div>
-      </Card>
+      </div>
 
       {/* Model answer (explain mode) */}
       {mode === 'explain' && showAnswer && (
-        <Card style={{ marginBottom: '24px', background: '#f0f9ff' }}>
+        <div style={{ marginBottom: '24px', background: '#f0f9ff', border: 'var(--ds-component-card-border)', borderRadius: 'var(--ds-radius-lg)', padding: '16px' }}>
           <h3 style={{ marginTop: 0, color: '#0369a1' }}>Model Answer</h3>
           <p style={{ marginBottom: '16px' }}>{currentQuestion.modelAnswer}</p>
           
@@ -512,7 +512,7 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
               </ul>
             </>
           )}
-        </Card>
+        </div>
       )}
 
       {/* Navigation */}

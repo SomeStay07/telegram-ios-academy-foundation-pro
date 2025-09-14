@@ -11,5 +11,4 @@ export * from './types'
 // Utils
 export * from './utils/cn'
 
-// Styles
-export * from './styles/globals.css';
+// Styles imported via bundler

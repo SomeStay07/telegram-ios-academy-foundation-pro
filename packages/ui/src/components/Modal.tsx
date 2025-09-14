@@ -101,13 +101,11 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(({
       aria-describedby={ariaDescribedBy}
       aria-label={ariaLabel || (!title ? 'Диалоговое окно' : undefined)}
       ref={(node) => {
-        if (modalRef.current !== node) {
-          modalRef.current = node
-        }
+        (modalRef as React.MutableRefObject<HTMLDivElement | null>).current = node
         if (typeof ref === 'function') {
           ref(node)
-        } else if (ref && ref.current !== node) {
-          ref.current = node
+        } else if (ref && 'current' in ref) {
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node
         }
       }}
       tabIndex={-1}
