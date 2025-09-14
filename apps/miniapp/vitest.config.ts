@@ -4,6 +4,15 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    'import.meta.env.MODE': JSON.stringify('test'),
+    'import.meta.env.VITE_ENABLE_ANALYTICS': JSON.stringify('0'),
+    'import.meta.env.VITE_ANALYTICS_PROXY': JSON.stringify('0'),
+    'import.meta.env.VITE_POSTHOG_API_KEY': JSON.stringify(''),
+    'import.meta.env.PROD': JSON.stringify(false),
+    'import.meta.env.DEV': JSON.stringify(false),
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify('test')
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

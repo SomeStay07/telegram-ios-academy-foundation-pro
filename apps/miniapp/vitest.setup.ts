@@ -265,6 +265,65 @@ vi.mock('src/analytics/lazy', () => ({
   analytics: analyticsMock
 }))
 
+// Mock fetch for API endpoints
+vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
+  const urlStr = url.toString()
+  
+  // Interview API endpoints
+  if (urlStr.includes('/api/interviews/attempts/start')) {
+    return new Response(JSON.stringify({
+      id: 'test-attempt-123',
+      interview_id: 'test-interview',
+      mode: 'drill',
+      status: 'in_progress',
+      progress: {
+        current_question_index: 0,
+        answered_questions: [],
+        score: 0,
+        time_spent: 0,
+        start_time: new Date('2025-01-01T00:00:00Z').toISOString()
+      }
+    }), { 
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
+  
+  if (urlStr.includes('/api/interviews/attempts/') && urlStr.includes('/progress')) {
+    return new Response('{}', { 
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
+  
+  if (urlStr.includes('/api/interviews/attempts/') && urlStr.includes('/finish')) {
+    return new Response(JSON.stringify({
+      id: 'test-attempt-123',
+      interview_id: 'test-interview',
+      mode: 'drill',
+      status: 'completed',
+      progress: {
+        current_question_index: 2,
+        answered_questions: ['q1', 'q2'],
+        score: 2,
+        time_spent: 120,
+        start_time: new Date('2025-01-01T00:00:00Z').toISOString()
+      }
+    }), { 
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
+  
+  // Analytics proxy - no-op
+  if (urlStr.includes('/api/events')) {
+    return new Response('{}', { status: 204 })
+  }
+  
+  // Default 404 for unhandled URLs
+  return new Response('Not found', { status: 404 })
+}))
+
 // Console mocks to reduce noise in tests
 vi.spyOn(console, 'warn').mockImplementation(() => {})
 vi.spyOn(console, 'error').mockImplementation(() => {})
@@ -278,6 +337,28 @@ Object.defineProperty(window, 'performance', {
     getEntriesByType: vi.fn(() => []),
     getEntriesByName: vi.fn(() => [])
   }
+})
+
+// Mock window.scrollTo
+Object.defineProperty(window, 'scrollTo', {
+  value: vi.fn(),
+  writable: true
+})
+
+// Mock alert, confirm, prompt
+Object.defineProperty(window, 'alert', {
+  value: vi.fn(),
+  writable: true
+})
+
+Object.defineProperty(window, 'confirm', {
+  value: vi.fn(() => true),
+  writable: true
+})
+
+Object.defineProperty(window, 'prompt', {
+  value: vi.fn(() => 'test'),
+  writable: true
 })
 
 // Mock HTMLElement.prototype methods to fix React Dom issues
