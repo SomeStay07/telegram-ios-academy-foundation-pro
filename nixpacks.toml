@@ -3,3 +3,7 @@ providers = ["node"]
 nixPkgs = ["nodejs_20", "pnpm"]
 [phases.install]
 cmds = ["pnpm i --frozen-lockfile || pnpm i"]
+[phases.build]
+cmds = ["pnpm build --filter=@telegram-ios-academy/miniapp"]
+[start]
+cmd = "cd apps/miniapp && pnpm start"
