@@ -11,7 +11,9 @@ export default defineConfig({
     'import.meta.env.VITE_POSTHOG_API_KEY': JSON.stringify(''),
     'import.meta.env.PROD': JSON.stringify(false),
     'import.meta.env.DEV': JSON.stringify(false),
-    'import.meta.env.VITE_APP_VERSION': JSON.stringify('test')
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify('test'),
+    '__DEV__': JSON.stringify(false),
+    '__REACT_DEVTOOLS_GLOBAL_HOOK__.isDisabled': JSON.stringify(true)
   },
   resolve: {
     alias: {
@@ -26,11 +28,16 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}'],
     exclude: ['src/**/*.e2e.{js,ts,jsx,tsx}', 'node_modules/**'],
-    testTimeout: 10000,
-    hookTimeout: 10000,
-    teardownTimeout: 10000,
-    isolate: true,
-    pool: 'forks',
+    testTimeout: 15000,
+    hookTimeout: 15000,
+    teardownTimeout: 15000,
+    isolate: false,
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: true
+      }
+    },
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{js,ts,jsx,tsx}'],

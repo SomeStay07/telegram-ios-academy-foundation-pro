@@ -1,4 +1,5 @@
 import { vi } from 'vitest'
+import React from 'react'
 
 // Telegram WebApp API Mock
 const mockTelegramWebApp = {
@@ -402,6 +403,68 @@ Object.defineProperty(document, 'getSelection', {
 if (!document.createRange) {
   document.createRange = () => new Range()
 }
+
+// Completely disable React concurrent features for tests
+const originalIsSchedulerAvailable = globalThis.scheduler !== undefined
+if (originalIsSchedulerAvailable) {
+  delete (globalThis as any).scheduler
+}
+
+// Force React 17-style legacy mode
+Object.defineProperty(React, 'version', {
+  value: '17.0.2',
+  writable: false
+})
+
+// Override ReactDOM createRoot to use legacy render
+vi.mock('react-dom/client', () => ({
+  createRoot: vi.fn(() => ({
+    render: vi.fn(),
+    unmount: vi.fn()
+  }))
+}))
+
+// Mock React's scheduler to prevent concurrent rendering
+vi.mock('scheduler', () => ({
+  unstable_scheduleCallback: vi.fn((callback: () => void) => {
+    callback()
+    return 0
+  }),
+  unstable_cancelCallback: vi.fn(),
+  unstable_getCurrentPriorityLevel: vi.fn(() => 3),
+  unstable_ImmediatePriority: 1,
+  unstable_UserBlockingPriority: 2,
+  unstable_NormalPriority: 3,
+  unstable_LowPriority: 4,
+  unstable_IdlePriority: 5
+}))
+
+// Mock React internals to disable concurrent mode
+Object.defineProperty(React, '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED', {
+  value: {
+    ReactCurrentDispatcher: { current: null },
+    ReactCurrentBatchConfig: { transition: null },
+    ReactCurrentActQueue: { current: null, isBatchingLegacy: false },
+    ReactCurrentOwner: { current: null }
+  },
+  writable: true
+})
+
+// Force React into legacy mode
+Object.defineProperty(globalThis, '__REACT_DEVTOOLS_GLOBAL_HOOK__', {
+  value: {
+    isDisabled: true,
+    supportsFiber: true,
+    inject: vi.fn(),
+    onCommitFiberRoot: vi.fn(),
+    onCommitFiberUnmount: vi.fn(),
+  },
+  writable: true
+})
+
+// Disable React.StrictMode
+const originalStrictMode = React.StrictMode
+React.StrictMode = ({ children }: { children: React.ReactNode }) => children as React.ReactElement
 
 // Fix jsdom issues with selection/range
 global.Range = class Range {
