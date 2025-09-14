@@ -5,13 +5,15 @@ nixPkgs = ['nodejs_20']
 cmds = [
   'corepack enable',
   'corepack prepare pnpm@9.0.0 --activate',
+  'cd ../..',
   'pnpm install'
 ]
 
 [phases.build]
 cmds = [
-  'pnpm build'
+  'cd ../..',
+  'pnpm build --filter=@telegram-ios-academy/miniapp'
 ]
 
 [start]
-cmd = 'pnpm start'
+cmd = 'cd apps/miniapp && pnpm start'
