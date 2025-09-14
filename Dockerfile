@@ -22,7 +22,7 @@ RUN ls -la
 RUN cat package.json | head -10
 
 # Install dependencies with pnpm only
-RUN echo "Installing with pnpm..." && pnpm install --frozen-lockfile
+RUN echo "Installing with pnpm..." && pnpm install --no-frozen-lockfile
 
 # Build miniapp
 RUN echo "Building miniapp..." && pnpm build --filter=@telegram-ios-academy/miniapp
