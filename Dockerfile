@@ -8,6 +8,10 @@ WORKDIR /app
 RUN corepack enable
 RUN corepack prepare pnpm@9.0.0 --activate
 
+# Verify pnpm is working
+RUN which pnpm
+RUN pnpm --version
+
 # Copy workspace files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/ ./packages/
@@ -15,11 +19,15 @@ COPY apps/ ./apps/
 COPY tools/ ./tools/
 COPY content/ ./content/
 
-# Install dependencies with pnpm
-RUN pnpm install --frozen-lockfile
+# Debug: show what we copied
+RUN ls -la
+RUN cat package.json | head -10
+
+# Install dependencies with pnpm only
+RUN echo "Installing with pnpm..." && pnpm install --frozen-lockfile
 
 # Build miniapp
-RUN pnpm build --filter=@telegram-ios-academy/miniapp
+RUN echo "Building miniapp..." && pnpm build --filter=@telegram-ios-academy/miniapp
 
 # Set working directory to miniapp
 WORKDIR /app/apps/miniapp
