@@ -16,8 +16,6 @@ RUN pnpm --version
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/ ./packages/
 COPY apps/ ./apps/
-COPY tools/ ./tools/
-COPY content/ ./content/
 
 # Debug: show what we copied
 RUN ls -la
