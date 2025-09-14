@@ -174,11 +174,10 @@ describe('InterviewRenderer', () => {
     render(
       <InterviewRenderer
         interviewSet={mockInterviewSet}
-          mode="drill"
-          onAnalytics={mockAnalytics}
-        />
-      )
-    })
+        mode="drill"
+        onAnalytics={mockAnalytics}
+      />
+    )
 
     // Submit answer to reveal model answer
     const textarea = screen.getByPlaceholderText('Type your answer here...')

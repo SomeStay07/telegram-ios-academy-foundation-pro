@@ -22,6 +22,14 @@ vi.mock('../analytics/lazy', () => ({
 
 // Also mock with the path used by deep-linking.ts
 vi.mock('../../analytics/lazy', () => ({
+  default: {
+    deepLinkOpened: vi.fn(),
+    interviewStarted: vi.fn(),
+    interviewAnswerSubmitted: vi.fn(),
+    interviewCompleted: vi.fn(),
+    track: vi.fn(),
+    identify: vi.fn()
+  },
   analytics: {
     deepLinkOpened: vi.fn(),
     interviewStarted: vi.fn(),
@@ -131,7 +139,7 @@ global.window = Object.assign(global.window, {
         auth_date: Date.now(),
         hash: 'test-hash'
       },
-      initData: 'test-init-data'
+      initData: 'mock-data'
     }
   }
 })
