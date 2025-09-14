@@ -2,12 +2,24 @@
 
 const fs = require('fs')
 const { glob } = require('glob')
+const { promisify } = require('util')
+const globAsync = promisify(glob)
 
 async function checkAccessibility() {
   console.log('🔍 Checking content accessibility...')
   
   let issues = 0
-  const contentFiles = await glob('content/**/*.json')
+  let contentFiles
+  try {
+    contentFiles = await globAsync('../../content/**/*.json')
+    // Ensure we have an array
+    if (!Array.isArray(contentFiles)) {
+      contentFiles = []
+    }
+  } catch (error) {
+    console.error(`Failed to search for content files: ${error.message}`)
+    process.exit(1)
+  }
   
   for (const file of contentFiles) {
     try {
