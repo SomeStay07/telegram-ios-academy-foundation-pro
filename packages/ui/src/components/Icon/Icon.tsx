@@ -3,7 +3,7 @@ import { cn } from '../../utils/cn'
 import type { ComponentWithSize, ComponentWithColor, BaseProps } from '../../types'
 
 export interface IconProps 
-  extends SVGAttributes<SVGSVGElement>,
+  extends Omit<SVGAttributes<SVGSVGElement>, 'color'>,
           ComponentWithSize,
           ComponentWithColor,
           BaseProps {

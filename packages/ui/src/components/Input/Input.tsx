@@ -3,7 +3,7 @@ import { cn } from '../../utils/cn'
 import type { ComponentWithSize, BaseProps } from '../../types'
 
 export interface InputProps 
-  extends InputHTMLAttributes<HTMLInputElement>, 
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>, 
           ComponentWithSize,
           BaseProps {
   error?: boolean
