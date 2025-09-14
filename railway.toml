@@ -1,5 +1,7 @@
-[environments.production.services.miniapp]
-build = { builder = "NIXPACKS", buildCommand = "pnpm install && pnpm build --filter=@telegram-ios-academy/miniapp" }
-deploy = { startCommand = "cd apps/miniapp && pnpm start", healthcheckPath = "/health", restartPolicyType = "always" }
-source = { repo = "SomeStay07/telegram-ios-academy-foundation-pro" }
-variables = { NODE_ENV = "production" }
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "cd apps/miniapp && pnpm start"
+healthcheckPath = "/health"
+restartPolicyType = "always"
