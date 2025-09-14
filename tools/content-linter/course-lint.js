@@ -3,6 +3,8 @@
 const fs = require('fs')
 const path = require('path')
 const { glob } = require('glob')
+const { promisify } = require('util')
+const globAsync = promisify(glob)
 
 class CourseLinter {
   constructor() {
@@ -27,10 +29,20 @@ class CourseLinter {
     await this.loadAllLessons()
     
     // Find all course files
-    const courseFiles = await glob('content/courses/**/*.json')
+    let courseFiles
+    try {
+      courseFiles = await globAsync('../../content/**/courses/**/*.json')
+      // Ensure we have an array
+      if (!Array.isArray(courseFiles)) {
+        courseFiles = []
+      }
+    } catch (error) {
+      console.warn(`Failed to search for course files: ${error.message}`)
+      courseFiles = []
+    }
     
     if (courseFiles.length === 0) {
-      this.warning('No course files found in content/courses/')
+      this.warning('No course files found in content/seed/courses/')
       return
     }
 
@@ -42,7 +54,17 @@ class CourseLinter {
   }
 
   async loadAllLessons() {
-    const lessonFiles = await glob('content/lessons/**/*.json')
+    let lessonFiles
+    try {
+      lessonFiles = await globAsync('../../content/seed/lessons/**/*.json')
+      // Ensure we have an array
+      if (!Array.isArray(lessonFiles)) {
+        lessonFiles = []
+      }
+    } catch (error) {
+      console.warn(`Failed to search for lesson files: ${error.message}`)
+      lessonFiles = []
+    }
     
     for (const file of lessonFiles) {
       try {
