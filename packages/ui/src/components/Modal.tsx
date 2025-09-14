@@ -118,7 +118,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(({
         background: 'rgba(0, 0, 0, 0.4)',
         display: 'grid',
         placeItems: 'center',
-        padding: 16,
+        padding: 'var(--ds-spacing-4)',
         zIndex: 1000
       }}
       onClick={handleBackdropClick}
@@ -127,10 +127,10 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(({
         style={{
           background: 'var(--color-bg)',
           color: 'var(--color-fg)',
-          borderRadius: 12,
+          borderRadius: 'var(--ds-spacing-3)',
           boxShadow: 'var(--shadow)',
-          width: 'min(560px, 92vw)',
-          padding: 24,
+          width: 'min(var(--ds-spacing-96), 92vw)',
+          padding: 'var(--ds-spacing-6)',
           maxHeight: '90vh',
           overflow: 'auto'
         }}
