@@ -1,6 +1,6 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
-import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { render, screen, fireEvent, waitFor, act, cleanup } from '@testing-library/react'
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { InterviewRenderer } from '../InterviewRenderer'
 import type { InterviewSet, InterviewAnalytics } from '../InterviewRenderer'
 
@@ -58,6 +58,12 @@ describe('InterviewRenderer', () => {
       ok: true,
       json: () => Promise.resolve({ attemptId: 'mock-attempt-id' })
     })
+  })
+
+  afterEach(() => {
+    cleanup()
+    vi.clearAllTimers()
+    vi.useRealTimers()
   })
 
   it('renders interview header and first question', async () => {

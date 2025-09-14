@@ -7,7 +7,7 @@ let tracker: AnalyticsTracker = new NoOpTracker()
 let isInitialized = false
 
 function shouldEnableAnalytics(): boolean {
-  return import.meta.env.VITE_ENABLE_ANALYTICS === '1'
+  return typeof window !== 'undefined' && import.meta.env.VITE_ENABLE_ANALYTICS === '1'
 }
 
 async function initializeAnalytics(): Promise<void> {

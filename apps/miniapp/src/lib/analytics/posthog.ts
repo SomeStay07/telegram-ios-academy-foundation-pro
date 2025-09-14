@@ -9,8 +9,8 @@ export class PostHogTracker implements AnalyticsTracker {
     if (this.initialized) return
 
     try {
-      // Only load PostHog in production with API key
-      if (import.meta.env.PROD && import.meta.env.VITE_POSTHOG_API_KEY) {
+      // Only load PostHog in production with API key and when window is available
+      if (typeof window !== 'undefined' && import.meta.env.PROD && import.meta.env.VITE_POSTHOG_API_KEY) {
         // Lazy load PostHog SDK
         const posthogModule = await import(/* @vite-ignore */ 'posthog-js')
         this.posthog = posthogModule.default
