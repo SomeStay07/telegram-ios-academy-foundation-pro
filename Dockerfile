@@ -13,7 +13,7 @@ RUN which pnpm
 RUN pnpm --version
 
 # Copy workspace files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc turbo.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc turbo.json tsconfig.json ./
 COPY packages/ ./packages/
 COPY apps/ ./apps/
 
