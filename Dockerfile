@@ -4,17 +4,18 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
-# Install pnpm globally
-RUN npm install -g pnpm@9.0.0
+# Disable npm and enable corepack for pnpm
+RUN corepack enable
+RUN corepack prepare pnpm@9.0.0 --activate
 
 # Copy workspace files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY packages/ ./packages/
 COPY apps/ ./apps/
 COPY tools/ ./tools/
 COPY content/ ./content/
 
-# Install dependencies
+# Install dependencies with pnpm
 RUN pnpm install --frozen-lockfile
 
 # Build miniapp
