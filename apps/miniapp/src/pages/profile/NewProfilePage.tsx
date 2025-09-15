@@ -1,35 +1,29 @@
 import { useState, useEffect } from 'react'
-import { Card, Badge, Button, AccountCard } from '@telegram-ios-academy/ui'
+import { Card, Badge, Button, ProfileHeroCard } from '@telegram-ios-academy/ui'
 import { Languages, Palette, Bell, Smartphone, User, Hash, Copy, LogOut, RotateCcw } from 'lucide-react'
 import { EnhancedProgressSection } from './sections/EnhancedProgressSection'
 import { DangerZoneSection } from './sections/DangerZoneSection'
 import { useTelegramTheme } from '../../shared/lib/telegram/useTelegramTheme'
 import { useTelegramViewport } from '../../shared/lib/telegram/useTelegramViewport'
-import { useAppStore } from '../../shared/model/store'
+import { getDataSource } from '../../shared/data/source'
 
 export function NewProfilePage() {
-  const {
-    profile,
-    activity,
-    preferences,
-    dirty,
-    loading,
-    loadProfile,
-    loadActivity,
-    updatePreferences,
-    savePreferences,
-    signOut,
-  } = useAppStore()
-
   // Initialize Telegram integrations
   useTelegramTheme()
   useTelegramViewport()
 
+  const [user, setUser] = useState<any | null>(null)
+  const [loading, setLoading] = useState(true)
+
   // Load data on mount
   useEffect(() => {
-    loadProfile()
-    loadActivity()
-  }, [loadProfile, loadActivity])
+    getDataSource()
+      .getProfile()
+      .then(r => {
+        setUser(r.user)
+        setLoading(false)
+      })
+  }, [])
 
   // MainButton integration for saving preferences
   useEffect(() => {
@@ -93,12 +87,13 @@ export function NewProfilePage() {
   }, [])
 
   // Handlers
-  const handleCopyId = (id: number) => {
-    navigator.clipboard.writeText(id.toString())
+  const handleCopyId = async (id?: number) => {
+    if (!id) return
+    await navigator.clipboard.writeText(String(id))
     const { WebApp } = (window as any)?.Telegram || {}
     
-    if (WebApp?.HapticFeedback) {
-      WebApp.HapticFeedback.impactOccurred('light')
+    if (WebApp?.HapticFeedback?.selectionChanged) {
+      WebApp.HapticFeedback.selectionChanged()
     }
     
     if (WebApp?.showAlert) {
@@ -205,13 +200,15 @@ export function NewProfilePage() {
 
       {/* Content */}
       <div className="space-y-4">
-        <AccountCard 
-          user={profile?.user || {
+        <ProfileHeroCard 
+          user={user || {
             first_name: 'Telegram',
             last_name: 'User',
             username: undefined,
             photo_url: undefined
-          }} 
+          }}
+          onCopyId={handleCopyId}
+          className="mb-3"
         />
 
         {/* User Details */}

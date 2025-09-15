@@ -35,6 +35,7 @@ export * from './Markdown'
 
 // Profile Components
 export * from './profile/AccountCard'
+export * from './profile/ProfileHeroCard'
 
 // Legacy Components (migrated to separate files)
 export { Modal } from './Modal'

@@ -1,0 +1,81 @@
+/* Спокойный премиум-градиент из TG токенов (адаптивен к light/dark) */
+.profile-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg,
+    color-mix(in oklab, var(--tg-theme-button-color) 20%, var(--background)) 0%,
+    color-mix(in oklab, var(--tg-theme-link-color) 18%, var(--background)) 60%,
+    color-mix(in oklab, var(--tg-theme-button-color) 12%, var(--background)) 100%);
+  opacity: 0.95;
+  border-radius: inherit;
+}
+
+/* лёгкий верхний блик для объёма */
+.profile-hero_glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 60% at 50% -10%,
+    rgba(255, 255, 255, 0.10), transparent 60%);
+}
+
+/* Контент поверх градиентов */
+.profile-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover-эффект только на десктопе (pointer-fine); без layout shift */
+@media (hover: hover) and (pointer: fine) {
+  .profile-hero {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    will-change: transform;
+  }
+  
+  .profile-hero:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+  }
+}
+
+/* Reduced motion — выключаем динамику фона */
+@media (prefers-reduced-motion: no-preference) {
+  .profile-hero::before {
+    background-size: 160% 160%;
+    animation: hero-pan 16s ease-in-out infinite alternate;
+  }
+  
+  @keyframes hero-pan {
+    to {
+      background-position: 100% 100%;
+    }
+  }
+}
+
+/* Градиентное кольцо вокруг аватара (conic) */
+.avatar-ring {
+  --sz: 72px;
+  --pad: 2px;
+  width: var(--sz);
+  height: var(--sz);
+  border-radius: 9999px;
+  padding: var(--pad);
+  background: conic-gradient(from 220deg,
+    color-mix(in oklab, var(--tg-theme-button-color) 55%, transparent),
+    color-mix(in oklab, var(--tg-theme-link-color) 45%, transparent));
+}
+
+/* Текст не должен вылезать */
+.profile-hero .truncate {
+  min-width: 0;
+}
+
+/* Белый текст для читаемости на градиенте */
+.profile-hero,
+.profile-hero * {
+  color: white !important;
+}
