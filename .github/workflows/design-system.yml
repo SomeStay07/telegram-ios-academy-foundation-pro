@@ -114,6 +114,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, build-and-test-ui]
     if: always() && needs.detect-changes.outputs.miniapp-changed == 'true'
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

@@ -23,6 +23,12 @@ class InterviewLinter {
     
     const interviewFiles = await glob('content/interviews/**/*.json')
     
+    // Handle case where glob returns undefined or null
+    if (!interviewFiles || !Array.isArray(interviewFiles)) {
+      this.warning('No interview files found in content/interviews/ (glob returned undefined)')
+      return
+    }
+    
     if (interviewFiles.length === 0) {
       this.warning('No interview files found in content/interviews/')
       return
