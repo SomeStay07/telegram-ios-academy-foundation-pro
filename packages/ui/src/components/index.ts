@@ -14,6 +14,8 @@ export * from './Input'
 
 // Container Components
 export * from './Card'
+export * from './Avatar'
+export * from './Badge'
 
 // Content Components  
 export * from './CodeBlock'
