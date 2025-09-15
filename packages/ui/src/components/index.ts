@@ -4,6 +4,7 @@ export * from './Heading'
 export * from './Link'
 export * from './Icon'
 export * from './Divider'
+export * from './Separator'
 
 // Layout Components
 export * from './Stack'
