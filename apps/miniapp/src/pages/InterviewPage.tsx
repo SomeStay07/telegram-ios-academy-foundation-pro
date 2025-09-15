@@ -30,18 +30,20 @@ export function InterviewPage() {
   const store = useAppStore()
   const { 
     selectedCategory, 
-    currentAttempt = { status: 'idle' }, 
+    currentAttempt, 
     setCategory, 
     startAttempt, 
     resumeAttempt 
   } = store || {}
+  
+  const safeCurrentAttempt = currentAttempt || { status: 'idle' as const }
 
   const handleCategorySelect = (categoryId: string) => {
     setCategory?.(categoryId)
   }
 
   const handleStartInterview = () => {
-    if (currentAttempt.status === 'in_progress') {
+    if (safeCurrentAttempt.status === 'in_progress') {
       resumeAttempt?.()
     } else {
       startAttempt?.()
@@ -110,12 +112,12 @@ export function InterviewPage() {
             className="w-full bg-primary text-primary-foreground"
             disabled={!selectedCategory}
           >
-            {currentAttempt.status === 'in_progress' ? 'Resume Interview' : 'Start Interview'}
+            {safeCurrentAttempt.status === 'in_progress' ? 'Resume Interview' : 'Start Interview'}
           </Button>
         </Card>
       )}
 
-      {currentAttempt.attemptId && (
+      {safeCurrentAttempt.attemptId && (
         <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-medium text-card-foreground">
@@ -123,15 +125,15 @@ export function InterviewPage() {
             </h3>
             <span 
               className={`text-sm px-2 py-1 rounded ${
-                currentAttempt.status === 'completed' ? 'bg-green-50 text-green-700' : 'bg-muted text-primary'
+                safeCurrentAttempt.status === 'completed' ? 'bg-green-50 text-green-700' : 'bg-muted text-primary'
               }`}
             >
-              {currentAttempt.status === 'completed' ? 'Completed' : 'In Progress'}
+              {safeCurrentAttempt.status === 'completed' ? 'Completed' : 'In Progress'}
             </span>
           </div>
           
           <div className="flex items-center text-sm text-muted-foreground">
-            {currentAttempt.status === 'completed' ? (
+            {safeCurrentAttempt.status === 'completed' ? (
               <>
                 <CheckCircleIcon className="w-4 h-4 mr-1" />
                 Completed recently
