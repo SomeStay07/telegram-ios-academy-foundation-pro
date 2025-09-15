@@ -1,7 +1,6 @@
 import { Link, useRouterState } from '@tanstack/react-router'
 import { MapIcon, MessageSquareIcon, UserIcon } from 'lucide-react'
 import { cn } from '@telegram-ios-academy/ui'
-import { useTelegramUI } from '../../shared/lib/telegram/useTelegramUI'
 
 const tabs = [
   {
@@ -24,12 +23,10 @@ const tabs = [
 export function TabBar() {
   const routerState = useRouterState()
   const currentPath = routerState.location.pathname
-  
-  useTelegramUI()
 
   const handleTabClick = (path: string) => {
     // Haptic feedback on tab selection
-    const webApp = (window as any).Telegram?.WebApp
+    const webApp = (window as any)?.Telegram?.WebApp
     if (webApp?.HapticFeedback) {
       webApp.HapticFeedback.selectionChanged()
     }

@@ -1,25 +1,17 @@
 import React from 'react'
 import { createRouter, createRootRoute, createRoute, redirect } from '@tanstack/react-router'
-import { TabBar } from '../widgets/tab-bar/TabBar'
 import { Outlet } from '@tanstack/react-router'
+import { AppShell } from '../app/AppShell'
 import { RoadmapPage } from '../pages/RoadmapPage'
 import { InterviewPage } from '../pages/InterviewPage'
 import { ProfilePage } from '../pages/ProfilePage'
-import { useTelegramTheme } from '../shared/lib/telegram/useTelegramTheme'
-import { useTelegramViewport } from '../shared/lib/telegram/useTelegramViewport'
 
-// Root component with Telegram integration
+// Root component with AppShell
 function RootComponent() {
-  useTelegramTheme()
-  useTelegramViewport()
-  
   return (
-    <div className="min-h-[calc(var(--tg-vph,100svh))] bg-background text-foreground flex flex-col">
-      <main className="flex-1 pb-[calc(env(safe-area-inset-bottom)+64px)]">
-        <Outlet />
-      </main>
-      <TabBar />
-    </div>
+    <AppShell>
+      <Outlet />
+    </AppShell>
   )
 }
 
@@ -28,12 +20,31 @@ const rootRoute = createRootRoute({
   component: RootComponent,
 })
 
-// Index route - redirect to roadmap
+// Helper function to handle deeplinks
+function getDeeplinkTab(): string {
+  // Check Telegram WebApp start parameter
+  const webApp = (window as any)?.Telegram?.WebApp
+  const startParam = webApp?.initDataUnsafe?.start_param || 
+    new URLSearchParams(window.location.search).get('tgWebAppStartParam')
+  
+  if (startParam?.startsWith('tab=')) {
+    const tab = startParam.split('=')[1]
+    if (['roadmap', 'interview', 'profile'].includes(tab)) {
+      return `/${tab}`
+    }
+  }
+  
+  // Default to roadmap
+  return '/roadmap'
+}
+
+// Index route - redirect to appropriate tab (with deeplink support)
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   beforeLoad: () => {
-    throw redirect({ to: '/roadmap' })
+    const targetTab = getDeeplinkTab()
+    throw redirect({ to: targetTab })
   },
 })
 

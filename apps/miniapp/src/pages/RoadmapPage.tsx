@@ -10,8 +10,9 @@ export function RoadmapPage() {
   const incompleteModule = modules.find(m => m.progress > 0 && m.progress < 100)
 
   return (
-    <main className="mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24">
-      <div className="text-center mb-6">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-center">
         <h1 className="text-2xl font-bold mb-2 text-foreground">
           iOS Roadmap
         </h1>
@@ -20,8 +21,9 @@ export function RoadmapPage() {
         </p>
       </div>
 
+      {/* Continue Learning Card - Only visible if there's an incomplete module */}
       {incompleteModule && (
-        <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4 mb-6">
+        <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-primary">
               Continue where you left off
@@ -30,58 +32,56 @@ export function RoadmapPage() {
               {incompleteModule.progress}% complete
             </span>
           </div>
-          <p className="mb-3 text-card-foreground">
+          <p className="text-card-foreground">
             {incompleteModule.title}
           </p>
-          <Button onClick={() => continueModule?.()} className="w-full bg-primary text-primary-foreground">
-            <PlayIcon className="w-4 h-4 mr-2" />
-            Continue Learning
-          </Button>
+          <div className="mt-3">
+            <Progress value={incompleteModule.progress} className="h-2" />
+          </div>
+          {/* Note: Continue action is handled by MainButton hook */}
         </Card>
       )}
 
+      {/* All Modules */}
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-foreground">
           All Modules
         </h2>
         
-        {modules.map((module) => (
-          <Card key={module.id} className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-card-foreground">
-                {module.title}
-              </h3>
-              <span 
-                className={`text-sm px-2 py-1 rounded ${
-                  module.progress === 100 ? 'bg-green-500 text-white' : 
-                  module.progress > 0 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-                }`}
-              >
-                {module.progress === 100 ? 'Complete' : 
-                 module.progress > 0 ? 'In Progress' : 'Not Started'}
-              </span>
-            </div>
-            
-            <div className="mb-3">
-              <Progress value={module.progress} className="h-2" />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">
+        <div className="space-y-3">
+          {modules.map((module) => (
+            <Card key={module.id} className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-medium text-card-foreground">
+                  {module.title}
+                </h3>
+                <span 
+                  className={`text-sm px-2 py-1 rounded ${
+                    module.progress === 100 
+                      ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400' 
+                      : module.progress > 0 
+                      ? 'bg-primary/10 text-primary' 
+                      : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  {module.progress === 100 ? 'Complete' : 
+                   module.progress > 0 ? 'In Progress' : 'Not Started'}
+                </span>
+              </div>
+              
+              <div className="mb-3">
+                <Progress value={module.progress} className="h-2" />
+              </div>
+              
+              <div className="text-sm text-muted-foreground">
                 {module.progress}% complete
-              </span>
-              <Button 
-                variant={module.progress === 100 ? "outline" : "default"}
-                size="sm"
-                className={module.progress === 100 ? "" : "bg-primary text-primary-foreground"}
-              >
-                {module.progress === 100 ? 'Review' : 
-                 module.progress > 0 ? 'Continue' : 'Start'}
-              </Button>
-            </div>
-          </Card>
-        ))}
+              </div>
+              
+              {/* Remove individual action buttons - use MainButton instead */}
+            </Card>
+          ))}
+        </div>
       </div>
-    </main>
+    </div>
   )
 }

@@ -35,8 +35,9 @@ export function ProfilePage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24">
-      <div className="text-center mb-6">
+    <div className="space-y-6">
+      {/* Profile Header */}
+      <div className="text-center">
         <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-muted">
           {user.avatarUrl ? (
             <img 
@@ -56,7 +57,8 @@ export function ProfilePage() {
         </p>
       </div>
 
-      <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4 mb-6">
+      {/* Settings Card */}
+      <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4">
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2 text-foreground">
@@ -103,15 +105,16 @@ export function ProfilePage() {
         </div>
       </Card>
 
-      <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4 mb-6">
-        <h3 className="font-medium mb-3 text-card-foreground">
+      {/* Progress Overview */}
+      <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4">
+        <h3 className="font-medium mb-4 text-card-foreground">
           Progress Overview
         </h3>
         
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Modules Completed</span>
-            <span className="text-sm px-2 py-1 rounded bg-muted text-primary">
+            <span className="text-sm px-2 py-1 rounded bg-primary/10 text-primary">
               3 of 6
             </span>
           </div>
@@ -125,18 +128,14 @@ export function ProfilePage() {
           
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Average Score</span>
-            <span className="text-sm px-2 py-1 rounded bg-green-50 text-green-700">
+            <span className="text-sm px-2 py-1 rounded bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400">
               85%
             </span>
           </div>
         </div>
       </Card>
 
-      {hasChanges && (
-        <Button onClick={handleSave} className="w-full bg-primary text-primary-foreground">
-          Save Changes
-        </Button>
-      )}
-    </main>
+      {/* Note: Save action handled by MainButton hook */}
+    </div>
   )
 }
