@@ -229,22 +229,22 @@ export function ProfilePage() {
     <main className="mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24 min-h-[calc(var(--tg-vph,100svh))] bg-background text-foreground">
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center gap-4 mb-2">
+        <div className="flex items-center gap-4 mb-2 min-w-0">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-foreground truncate">
+            <h1 className="text-2xl font-bold text-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">
               {displayUser.fullName}
             </h1>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1 min-w-0">
               {displayUser.username && (
-                <p className="text-muted-foreground truncate">@{displayUser.username}</p>
+                <p className="text-muted-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap flex-shrink">@{displayUser.username}</p>
               )}
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs flex-shrink-0">
                 {displayUser.languageCode.toUpperCase()}
               </Badge>
             </div>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground line-clamp-2">
           {user ? 'Data synced from Telegram' : 'Using default profile data'}
         </p>
       </div>

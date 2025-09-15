@@ -1,5 +1,5 @@
-import { Languages, Palette, Bell } from 'lucide-react'
-import { Card, Button, Separator } from '@telegram-ios-academy/ui'
+import { Languages, Palette, Bell, Smartphone } from 'lucide-react'
+import { CardSurface, Button } from '@telegram-ios-academy/ui'
 
 interface PreferencesSectionProps {
   languageCode: string
@@ -18,76 +18,114 @@ export function PreferencesSection({
   onThemeChange,
   onNotificationsToggle,
 }: PreferencesSectionProps) {
+  
+  const handleLanguageChange = (lang: string) => {
+    onLanguageChange(lang)
+    
+    // Haptic feedback
+    const { WebApp } = (window as any)?.Telegram || {}
+    WebApp?.HapticFeedback?.selectionChanged?.()
+  }
+  
+  const handleThemeChange = (themeValue: string) => {
+    onThemeChange(themeValue as any)
+    
+    // Haptic feedback
+    const { WebApp } = (window as any)?.Telegram || {}
+    WebApp?.HapticFeedback?.selectionChanged?.()
+  }
+  
+  const handleNotificationsToggle = () => {
+    onNotificationsToggle(!notificationsEnabled)
+    
+    // Haptic feedback
+    const { WebApp } = (window as any)?.Telegram || {}
+    WebApp?.HapticFeedback?.selectionChanged?.()
+  }
+
   return (
-    <Card className="p-4 bg-card text-card-foreground border border-border rounded-2xl shadow-sm">
-      <h3 className="text-lg font-semibold text-foreground mb-4">Preferences</h3>
+    <CardSurface className="p-4 sm:p-5 space-y-3">
+      <div className="flex items-center gap-3 mb-4">
+        <Smartphone className="w-5 h-5 text-muted-foreground" />
+        <h3 className="text-lg font-semibold text-foreground">Preferences</h3>
+      </div>
       
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Languages className="w-4 h-4 text-muted-foreground" />
-            <div>
+        <div className="flex items-center justify-between min-w-0">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <Languages className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-foreground">Language</p>
-              <p className="text-xs text-muted-foreground">App interface language</p>
+              <p className="text-xs text-muted-foreground line-clamp-2">App interface language</p>
             </div>
           </div>
           <select
             value={languageCode}
-            onChange={(e) => onLanguageChange(e.target.value)}
-            className="px-3 py-2 text-sm bg-background border border-border rounded-xl text-foreground min-w-0"
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            className="ml-3 px-3 py-2 text-sm bg-background border border-border rounded-xl text-foreground flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
-            <option value="en">🇺🇸 English</option>
-            <option value="ru">🇷🇺 Русский</option>
+            <option value="en">🇺🇸 EN</option>
+            <option value="ru">🇷🇺 RU</option>
           </select>
         </div>
 
-        <Separator />
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Palette className="w-4 h-4 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-medium text-foreground">Theme</p>
-              <p className="text-xs text-muted-foreground">Follow Telegram or set custom</p>
+        <div className="border-t border-border pt-4">
+          <div className="flex items-center justify-between min-w-0">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <Palette className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-foreground">Theme</p>
+                <p className="text-xs text-muted-foreground line-clamp-2">Follow Telegram or set custom</p>
+              </div>
+            </div>
+            
+            {/* Segmented control for theme */}
+            <div className="ml-3 flex bg-muted rounded-xl p-1 flex-shrink-0">
+              {['system', 'light', 'dark'].map((themeOption) => (
+                <button
+                  key={themeOption}
+                  onClick={() => handleThemeChange(themeOption)}
+                  className={`px-3 py-1 text-xs font-medium rounded-lg transition-colors duration-150 ${
+                    theme === themeOption
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {themeOption === 'system' && '🔄'}
+                  {themeOption === 'light' && '☀️'}
+                  {themeOption === 'dark' && '🌙'}
+                </button>
+              ))}
             </div>
           </div>
-          <select
-            value={theme}
-            onChange={(e) => onThemeChange(e.target.value as any)}
-            className="px-3 py-2 text-sm bg-background border border-border rounded-xl text-foreground min-w-0"
-          >
-            <option value="system">🔄 System</option>
-            <option value="light">☀️ Light</option>
-            <option value="dark">🌙 Dark</option>
-          </select>
         </div>
 
-        <Separator />
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Bell className="w-4 h-4 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-medium text-foreground">Notifications</p>
-              <p className="text-xs text-muted-foreground">Course updates and reminders</p>
+        <div className="border-t border-border pt-4">
+          <div className="flex items-center justify-between min-w-0">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <Bell className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-foreground">Notifications</p>
+                <p className="text-xs text-muted-foreground line-clamp-2">Course updates and reminders</p>
+              </div>
             </div>
+            <Button
+              variant={notificationsEnabled ? "default" : "outline"}
+              size="sm"
+              onClick={handleNotificationsToggle}
+              className="ml-3 flex-shrink-0 min-w-[60px]"
+            >
+              {notificationsEnabled ? 'On' : 'Off'}
+            </Button>
           </div>
-          <Button
-            variant={notificationsEnabled ? "default" : "outline"}
-            size="sm"
-            onClick={() => onNotificationsToggle(!notificationsEnabled)}
-            className="min-w-0"
-          >
-            {notificationsEnabled ? 'On' : 'Off'}
-          </Button>
         </div>
       </div>
       
       <div className="mt-4 pt-4 border-t border-border">
-        <p className="text-xs text-muted-foreground text-center">
-          Use the Save button below to apply changes
+        <p className="text-xs text-muted-foreground text-center line-clamp-2">
+          Changes will be saved automatically when you modify settings
         </p>
       </div>
-    </Card>
+    </CardSurface>
   )
 }

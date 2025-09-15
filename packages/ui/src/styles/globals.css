@@ -2,7 +2,7 @@
 
 /* Telegram WebApp theme integration with shadcn/ui tokens */
 :root {
-  /* Map Telegram CSS vars to shadcn tokens */
+  /* Core Telegram theme mapping to shadcn tokens */
   --background: var(--tg-theme-bg-color, hsl(0 0% 100%));
   --foreground: var(--tg-theme-text-color, hsl(0 0% 10%));
 
@@ -16,6 +16,9 @@
   --primary: var(--tg-theme-button-color, hsl(222 47% 50%));
   --primary-foreground: var(--tg-theme-button-text-color, hsl(0 0% 100%));
 
+  /* Links and interactive elements */
+  --link: var(--tg-theme-link-color, hsl(222 47% 50%));
+  
   /* Additional shadcn tokens */
   --popover: var(--card);
   --popover-foreground: var(--card-foreground);
@@ -25,8 +28,13 @@
   --accent-foreground: var(--muted-foreground);
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 98%);
-  --ring: var(--primary);
+  --ring: 0 0 0 1px var(--border);
   --radius: 0.5rem;
+  
+  /* Elevation system - Material-inspired, adaptive to theme */
+  --elev-0: 0 0 0 0 color-mix(in oklab, var(--foreground) 0%, transparent);
+  --elev-1: 0 1px 2px 0 color-mix(in oklab, var(--foreground) 10%, transparent);
+  --elev-2: 0 4px 12px -2px color-mix(in oklab, var(--foreground) 14%, transparent);
 
   color-scheme: var(--tg-color-scheme, light);
   background: var(--background);

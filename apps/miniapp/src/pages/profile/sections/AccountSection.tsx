@@ -1,46 +1,89 @@
-import { Copy, User, Hash } from 'lucide-react'
-import { Card, Avatar, Button, Separator } from '@telegram-ios-academy/ui'
+import { Copy, Edit, User, Hash, Crown } from 'lucide-react'
+import { CardSurface, Avatar, Button, Badge } from '@telegram-ios-academy/ui'
 import { TelegramUser } from '../../../shared/lib/telegram/useTelegramUser'
-import { cn } from '../../../shared/lib/utils'
 
 interface AccountSectionProps {
   user: TelegramUser
   onCopyId: (id: number) => void
+  onEdit?: () => void
 }
 
-export function AccountSection({ user, onCopyId }: AccountSectionProps) {
+export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) {
+  // Helper to get avatar initials from first_name + last_name
+  const getInitials = () => {
+    if (user.firstName && user.lastName) {
+      return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
+    }
+    if (user.firstName) {
+      return user.firstName[0].toUpperCase()
+    }
+    if (user.fullName) {
+      return user.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+    }
+    return 'U'
+  }
+
   return (
-    <Card className="p-4 bg-card text-card-foreground border border-border rounded-2xl shadow-sm">
-      <div className="flex items-center gap-4 mb-4">
-        <Avatar
-          src={user.avatarUrl}
-          alt={user.fullName}
-          fallback={user.fullName}
-          size="lg"
-          className="ring-2 ring-border"
-        />
-        
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-foreground truncate">
-            {user.fullName}
-          </h3>
-          {user.username && (
-            <p className="text-sm text-muted-foreground truncate">
-              @{user.username}
-            </p>
+    <CardSurface className="p-4 sm:p-5">
+      <div className="flex items-start gap-4">
+        {/* Avatar with premium indicator */}
+        <div className="relative flex-shrink-0">
+          <Avatar
+            src={user.avatarUrl}
+            alt={user.fullName}
+            fallback={getInitials()}
+            size="xl"
+            className="ring-1 ring-border"
+          />
+          {user.isPremium && (
+            <div className="absolute -top-1 -right-1 bg-primary rounded-full p-1">
+              <Crown className="w-3 h-3 text-primary-foreground" />
+            </div>
           )}
+        </div>
+        
+        {/* User info */}
+        <div className="flex-1 min-w-0 space-y-1">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-lg font-semibold text-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">
+                {user.fullName}
+              </h2>
+              <div className="flex items-center gap-2 mt-1">
+                {user.username && (
+                  <p className="text-sm text-muted-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">
+                    @{user.username}
+                  </p>
+                )}
+                <Badge variant="outline" className="text-xs flex-shrink-0">
+                  {user.languageCode.toUpperCase()}
+                </Badge>
+              </div>
+            </div>
+            
+            {/* Edit button */}
+            {onEdit && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onEdit}
+                className="flex-shrink-0"
+              >
+                <Edit className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
-      <Separator className="my-4" />
-
-      <div className="space-y-3">
+      {/* Details */}
+      <div className="mt-4 pt-4 border-t border-border space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <User className="w-4 h-4 text-muted-foreground flex-shrink-0" />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-foreground">Full Name</p>
-              <p className="text-sm text-muted-foreground truncate">{user.fullName}</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Full Name</p>
+              <p className="text-sm text-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">{user.fullName}</p>
             </div>
           </div>
         </div>
@@ -48,10 +91,10 @@ export function AccountSection({ user, onCopyId }: AccountSectionProps) {
         {user.username && (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <span className="w-4 h-4 text-muted-foreground flex-shrink-0 text-sm">@</span>
+              <span className="w-4 h-4 text-muted-foreground flex-shrink-0 text-sm font-bold">@</span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-foreground">Username</p>
-                <p className="text-sm text-muted-foreground truncate">{user.username}</p>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Username</p>
+                <p className="text-sm text-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">{user.username}</p>
               </div>
             </div>
           </div>
@@ -61,8 +104,8 @@ export function AccountSection({ user, onCopyId }: AccountSectionProps) {
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <Hash className="w-4 h-4 text-muted-foreground flex-shrink-0" />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-foreground">User ID</p>
-              <p className="text-sm text-muted-foreground font-mono break-all">{user.id}</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">User ID</p>
+              <p className="text-sm text-foreground font-mono break-all">{user.id}</p>
             </div>
           </div>
           <Button
@@ -75,6 +118,6 @@ export function AccountSection({ user, onCopyId }: AccountSectionProps) {
           </Button>
         </div>
       </div>
-    </Card>
+    </CardSurface>
   )
 }

@@ -15,6 +15,7 @@ export * from './Input'
 
 // Container Components
 export * from './Card'
+export * from './CardSurface'
 export * from './Avatar'
 export * from './Badge'
 
