@@ -78,4 +78,13 @@
 .profile-hero,
 .profile-hero * {
   color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Более заметная тень при hover для лучшей читаемости */
+@media (hover: hover) and (pointer: fine) {
+  .profile-hero:hover,
+  .profile-hero:hover * {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
 }
