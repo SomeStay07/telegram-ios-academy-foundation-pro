@@ -51,7 +51,7 @@ export const Tabs: React.FC<TabsProps> = ({
       <div 
         role="tablist" 
         aria-label={ariaLabel}
-        style={{ display: 'flex', gap: 8, marginBottom: 12 }}
+        style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}
       >
         {tabs.map((tab) => (
           <button
@@ -64,18 +64,18 @@ export const Tabs: React.FC<TabsProps> = ({
             onClick={() => setActive(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, tab.id)}
             style={{
-              padding: '8px 12px',
-              borderRadius: 10,
+              padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+              borderRadius: 'var(--ds-radius-lg)',
               border: active === tab.id 
-                ? '1px solid var(--color-primary)' 
-                : '1px solid var(--color-muted)',
+                ? 'var(--ds-borderWidth-1) solid var(--color-primary)' 
+                : 'var(--ds-borderWidth-1) solid var(--color-muted)',
               background: active === tab.id 
-                ? 'rgba(13, 110, 253, 0.08)' 
+                ? 'var(--ds-color-palette-blue-50)' 
                 : 'transparent',
               color: 'inherit',
               cursor: 'pointer',
               outline: 'none',
-              transition: 'all 0.2s ease'
+              transition: 'all var(--ds-motion-duration-fast) ease'
             }}
           >
             {tab.label}

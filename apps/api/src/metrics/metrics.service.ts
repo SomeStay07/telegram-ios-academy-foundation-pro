@@ -8,46 +8,58 @@ export class MetricsService {
   private interviewAttempts: Counter<string>
   private lessonCheckpoints: Counter<string>
   private courseProgress: Histogram<string>
+  private eventsIngested: Counter<string>
+  private eventsDropped: Counter<string>
+  private static defaultMetricsInitialized = false
 
   constructor() {
-    // Collect default metrics (CPU, memory, etc.)
-    collectDefaultMetrics()
+    // Collect default metrics only once globally to avoid registration conflicts
+    if (!MetricsService.defaultMetricsInitialized) {
+      try {
+        collectDefaultMetrics()
+        MetricsService.defaultMetricsInitialized = true
+      } catch (error: any) {
+        // If metrics are already registered, ignore the error
+        console.warn('Default metrics already initialized, skipping:', error?.message)
+      }
+    }
 
-    // HTTP request duration histogram with p95 percentile
-    this.httpDuration = new Histogram({
-      name: 'http_request_duration_seconds',
+    // Initialize custom metrics with duplicate registration protection
+    this.httpDuration = this.getOrCreateHistogram('http_request_duration_seconds', {
       help: 'Duration of HTTP requests in seconds',
       labelNames: ['method', 'route', 'status_code'],
       buckets: [0.001, 0.005, 0.015, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 2, 5, 10]
     })
 
-    // HTTP request counter
-    this.httpRequests = new Counter({
-      name: 'http_requests_total',
+    this.httpRequests = this.getOrCreateCounter('http_requests_total', {
       help: 'Total number of HTTP requests',
       labelNames: ['method', 'route', 'status_code']
     })
 
-    // Interview attempts counter
-    this.interviewAttempts = new Counter({
-      name: 'interview_attempts_total',
+    this.interviewAttempts = this.getOrCreateCounter('interview_attempts_total', {
       help: 'Total number of interview attempts',
       labelNames: ['interview_id', 'mode', 'result']
     })
 
-    // Lesson checkpoint counter
-    this.lessonCheckpoints = new Counter({
-      name: 'lesson_checkpoints_total',
+    this.lessonCheckpoints = this.getOrCreateCounter('lesson_checkpoints_total', {
       help: 'Total number of lesson checkpoints reached',
       labelNames: ['lesson_id', 'checkpoint_type']
     })
 
-    // Course progress histogram
-    this.courseProgress = new Histogram({
-      name: 'course_progress_duration_seconds',
+    this.courseProgress = this.getOrCreateHistogram('course_progress_duration_seconds', {
       help: 'Time taken to complete course milestones',
       labelNames: ['course_id', 'milestone'],
       buckets: [60, 300, 900, 1800, 3600, 7200, 14400, 28800, 86400] // 1min to 1day
+    })
+
+    this.eventsIngested = this.getOrCreateCounter('events_ingested_total', {
+      help: 'Total number of analytics events successfully ingested',
+      labelNames: ['event_type', 'source']
+    })
+
+    this.eventsDropped = this.getOrCreateCounter('events_dropped_total', {
+      help: 'Total number of analytics events dropped',
+      labelNames: ['event_type', 'reason']
     })
   }
 
@@ -116,9 +128,50 @@ export class MetricsService {
       .toLowerCase() // Ensure consistent casing
   }
 
+  // Record analytics event ingestion
+  recordEventIngested(eventType: string, source: 'proxy' | 'direct' = 'proxy') {
+    this.eventsIngested.inc({
+      event_type: eventType,
+      source
+    })
+  }
+
+  // Record analytics event drop
+  recordEventDropped(eventType: string, reason: 'PII' | 'oversize' | 'rate_limit' | 'invalid_format' | 'processing_error') {
+    this.eventsDropped.inc({
+      event_type: eventType,
+      reason
+    })
+  }
+
   // Helper method to measure execution time
   startTimer() {
     const start = Date.now()
     return () => Date.now() - start
+  }
+
+  // Safe metric creation helpers to avoid duplicate registration errors
+  private getOrCreateCounter(name: string, config: any): Counter<string> {
+    try {
+      return new Counter({ name, ...config })
+    } catch (error: any) {
+      if (error?.message?.includes('has already been registered')) {
+        // Return the existing metric from the registry
+        return register.getSingleMetric(name) as Counter<string>
+      }
+      throw error
+    }
+  }
+
+  private getOrCreateHistogram(name: string, config: any): Histogram<string> {
+    try {
+      return new Histogram({ name, ...config })
+    } catch (error: any) {
+      if (error?.message?.includes('has already been registered')) {
+        // Return the existing metric from the registry
+        return register.getSingleMetric(name) as Histogram<string>
+      }
+      throw error
+    }
   }
 }

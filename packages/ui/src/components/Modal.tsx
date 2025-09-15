@@ -101,13 +101,11 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(({
       aria-describedby={ariaDescribedBy}
       aria-label={ariaLabel || (!title ? 'Диалоговое окно' : undefined)}
       ref={(node) => {
-        if (modalRef.current !== node) {
-          modalRef.current = node
-        }
+        (modalRef as React.MutableRefObject<HTMLDivElement | null>).current = node
         if (typeof ref === 'function') {
           ref(node)
-        } else if (ref && ref.current !== node) {
-          ref.current = node
+        } else if (ref && 'current' in ref) {
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node
         }
       }}
       tabIndex={-1}
@@ -118,7 +116,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(({
         background: 'rgba(0, 0, 0, 0.4)',
         display: 'grid',
         placeItems: 'center',
-        padding: 16,
+        padding: 'var(--ds-spacing-4)',
         zIndex: 1000
       }}
       onClick={handleBackdropClick}
@@ -127,10 +125,10 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(({
         style={{
           background: 'var(--color-bg)',
           color: 'var(--color-fg)',
-          borderRadius: 12,
+          borderRadius: 'var(--ds-radius-lg)',
           boxShadow: 'var(--shadow)',
-          width: 'min(560px, 92vw)',
-          padding: 24,
+          width: 'min(calc(var(--ds-spacing-96) + var(--ds-spacing-44)), 92vw)',
+          padding: 'var(--ds-spacing-6)',
           maxHeight: '90vh',
           overflow: 'auto'
         }}

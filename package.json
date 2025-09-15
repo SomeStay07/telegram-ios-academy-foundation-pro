@@ -1,11 +1,12 @@
 {
   "name": "telegram-ios-academy",
   "private": true,
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.0.0",
   "pnpm": {
     "overrides": {
-      "cross-spawn": "^7.0.6",
-      "axios": "^1.12.0"
+      "axios": "^1.12.0",
+      "cross-spawn": "^7.0.5",
+      "@pact-foundation/pact-core": "^16.1.0"
     }
   },
   "engines": {
@@ -28,6 +29,13 @@
     "e2e": "turbo run e2e",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
+    "lesson:lint": "node tools/content-linter/lesson-lint.js",
+    "course:lint": "node tools/content-linter/course-lint.js",
+    "interview:lint": "node tools/content-linter/interview-lint.js",
+    "content:check-duplicates": "node tools/content-linter/check-duplicates.js",
+    "content:a11y-check": "node tools/content-linter/a11y-check.js",
+    "content:validate-links": "node tools/content-linter/link-validator.js",
+    "content:check-external-links": "node tools/content-linter/external-links.js",
     "changeset": "changeset",
     "changeset:add": "changeset add",
     "changeset:status": "changeset status",

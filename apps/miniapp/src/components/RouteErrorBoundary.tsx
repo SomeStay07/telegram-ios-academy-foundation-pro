@@ -1,18 +1,4 @@
 import React from 'react'
-<<<<<<< HEAD
-
-export function RouteErrorBoundary({ error }: { error: any }) {
-  React.useEffect(() => {
-    // Send to Sentry/analytics if available
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      (window as any).Sentry.captureException(error)
-    }
-    
-    // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Route error:', error)
-    }
-=======
 import { reportError, CriticalErrorType } from '../lib/error-monitoring'
 
 export function RouteErrorBoundary({ error }: { error: any }) {
@@ -27,7 +13,6 @@ export function RouteErrorBoundary({ error }: { error: any }) {
         errorBoundary: 'RouteErrorBoundary'
       }
     )
->>>>>>> feature/design-system-foundation
   }, [error])
 
   return (

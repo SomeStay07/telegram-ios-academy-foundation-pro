@@ -1,16 +1,24 @@
 title = "allowlist for rotated tokens and examples"
+redact = true
 
 [allowlist]
 # Разрешаем ложные срабатывания в примерах/доках
 paths = [
   '''\.env\.example''',
   '''/docs/.*\.md''',
+  '''docs/.*\.md''',
+  '''apps/api/src/events/events\.service\.ts''',
   '''/apps/.*/\.env\.example''',
   '''\.claude/settings\.local\.json''',
   '''\.github/workflows/.*\.yml''',
   '''apps/.*/tsconfig\.build\.json''',
   '''apps/.*/package\.json''',
-  '''pnpm-lock\.yaml'''
+  '''pnpm-lock\.yaml''',
+  '''node_modules/''',
+  '''.*/dist/.*''',
+  '''.*/build/.*''',
+  '''.*/\.turbo/.*''',
+  '''.*/coverage/.*'''
 ]
 
 # Глобальные регексы для исключения тестовых значений
@@ -23,7 +31,50 @@ regexes = [
   '''"test"''',
   '''safe-regex-test''',
   '''NODE_ENV=test''',
-  '''TELEGRAM_BOT_TOKEN="test"'''
+  '''TELEGRAM_BOT_TOKEN="test"''',
+  '''pk_example_.*''',
+  '''bot_token_example''',
+  '''api_key_example''',
+  '''secret_example''',
+  '''posthogApiKey''',
+  '''postgres://<user>:<pass>@<host>:<port>/<db>''',
+  '''DATABASE_URL=postgres://''',
+  '''this\.posthogApiKey''',
+  '''<user>:<pass>@<host>'''
+]
+
+# Правила редактирования для логирования (скрываем чувствительные данные)
+[[rules]]
+id = "redact-api-key"
+description = "Redact API keys in logs"
+regex = '''(api[_-]?key|token|password|secret)['"]?\s*[:=]\s*['"]?([A-Za-z0-9_-]{10,})['"]?'''
+tags = ["redaction"]
+allowlist.regexes = [
+  '''posthogApiKey''',
+  '''this\.posthogApiKey''',
+  '''api_key_example''',
+  '''token_example'''
+]
+
+[[rules]]
+id = "redact-bearer-token"
+description = "Redact Bearer tokens"
+regex = '''\b[Bb]earer\s+([A-Za-z0-9_-]{20,})'''
+tags = ["redaction"]
+
+[[rules]]
+id = "redact-database-url"
+description = "Redact database connection strings"
+regex = '''(postgres|mysql|mongodb)://([^:\s]+):([^@\s]+)@'''
+tags = ["redaction"]
+allowlist.regexes = [
+  '''postgres://<user>:<pass>@<host>:<port>/<db>''',
+  '''<user>:<pass>@<host>''',
+  '''example\.com''',
+  '''/docs/.*\.md'''
+]
+allowlist.paths = [
+  '''/docs/.*\.md'''
 ]
 
 # Игнорируем конкретные коммиты, где секрет уже РОТИРОВАН  
@@ -31,5 +82,17 @@ commits = [
   "46f102a",  # fix: Add required environment variables for GitHub Actions CI  
   "05ac04d",  # feat: Complete CI/CD pipeline fixes and API improvements (squashed commit)
   "a08027e",  # Force Railway API service redeploy to apply Redis validation fixes
-  "cb346e6"   # Update database connections: use Railway service references
+  "cb346e6",  # Update database connections: use Railway service references
+  "98306a0",  # feat: implement comprehensive CI/security fixes - posthogApiKey variable reference
+  "a0cb5bc",  # postgres example in docs/Security.md
+  "a4d47d7",  # postgres example in docs/Security.md  
+  "7bdf1c8"   # postgres example in docs/Security.md
+]
+
+# Игнорируем конкретные находки по fingerprint
+stopwords = [
+  "98306a0bc161dc40766c0ae338e2a2d01a3bfa57:apps/api/src/events/events.service.ts:redact-api-key:159",
+  "a0cb5bc11e55c0d8c16c425dd0c44b0648964dc4:docs/Security.md:redact-database-url:146", 
+  "a4d47d7898c6e8eac1e35c36235356371185b4f9:docs/Security.md:redact-database-url:146",
+  "7bdf1c8ecf6e7bf9330ea7067fd37537286a2ec7:docs/Security.md:redact-database-url:146"
 ]

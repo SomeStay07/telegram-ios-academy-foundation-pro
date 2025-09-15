@@ -1,18 +1,11 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
-<<<<<<< HEAD
-import { RouterProvider } from '@tanstack/react-router'
-import { router } from './router'
-import { processDeepLink, trackDeepLink } from './utils/deep-linking'
-import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
-import './ui/src/styles/globals.css'
-=======
 import { lazyImport } from './utils/lazyImport'
 import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
 import { initThemeSync } from './lib/tmaTheme'
 import '@telegram-ios-academy/ui/dist/tokens.css'
 
-// Ленивый импорт аналитики и web vitals
+// Lazy import analytics and web vitals
 import('./lib/web-vitals').catch(console.error)
 
 // Lazy load router components
@@ -26,7 +19,6 @@ const getRouter = async () => {
   const routerModule = await lazyImport(() => import(/* @vite-ignore */ './router'))()
   return routerModule.router
 }
->>>>>>> feature/design-system-foundation
 
 // Lazy load QueryClient when needed
 let queryClient: any = null
@@ -45,17 +37,7 @@ async function getQueryClient() {
   return queryClient
 }
 
-<<<<<<< HEAD
-declare module '@tanstack/react-router' { 
-  interface Register { 
-    router: typeof router 
-  } 
-}
-
-function initTmaRouting() {
-=======
 async function initTmaRouting(router: any) {
->>>>>>> feature/design-system-foundation
   const tg = (window as any).Telegram?.WebApp
   if (!tg) return
   
@@ -82,37 +64,6 @@ async function initTmaRouting(router: any) {
   setBack()
   
   // TODO: Re-enable deep-link processing after router is stable
-<<<<<<< HEAD
-  // Process deep-link from start_param or URL parameters (temporarily disabled)
-  // setTimeout(() => {
-  //   try {
-  //     const deepLinkResult = processDeepLink()
-  //     if (deepLinkResult) {
-  //       console.log('🔗 Deep-link detected:', deepLinkResult)
-  //       
-  //       // Track deep-link usage
-  //       trackDeepLink(deepLinkResult.parsed, 'telegram')
-  //       
-  //       // Navigate to the parsed route after router is ready
-  //       router.navigate({ to: deepLinkResult.route })
-  //     }
-  //   } catch (error) {
-  //     console.error('Deep-link processing failed:', error)
-  //     // Continue with normal app initialization
-  //   }
-  // }, 100)
-}
-
-function App() {
-  React.useEffect(() => {
-    // Initialize Telegram routing
-    initTmaRouting()
-    
-    // Preload QueryClient for future use
-    setTimeout(async () => {
-      await getQueryClient()
-    }, 1000)
-=======
 }
 
 function LazyApp() {
@@ -133,7 +84,6 @@ function LazyApp() {
     }
     
     initRouter()
->>>>>>> feature/design-system-foundation
   }, [])
 
   if (!router) {

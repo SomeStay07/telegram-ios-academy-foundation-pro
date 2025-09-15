@@ -57,7 +57,11 @@ async function bootstrap() {
     referrerPolicy: { policy: 'no-referrer' }
   }))
   
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }))
   app.useGlobalFilters(new GlobalExceptionFilter())
 
   // Strict CORS configuration

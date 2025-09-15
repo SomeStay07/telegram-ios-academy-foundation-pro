@@ -62,9 +62,8 @@ create_preview_service() {
                 NODE_ENV=preview \
                 PORT=$PORT \
                 VITE_API_URL="https://api-preview-$(echo $CURRENT_BRANCH | sed 's/[^a-zA-Z0-9-]/-/g').up.railway.app" \
-                NIXPACKS_BUILD_CMD="cd apps/miniapp && pnpm install && pnpm build" \
-                NIXPACKS_START_CMD="cd apps/miniapp && pnpm serve" \
-                RAILWAY_DOCKERFILE_PATH="apps/miniapp/Dockerfile"
+                NIXPACKS_BUILD_CMD="pnpm install && pnpm build --filter=@telegram-ios-academy/miniapp" \
+                NIXPACKS_START_CMD="cd apps/miniapp && pnpm serve"
             ;;
         "bot")
             railway variables set \

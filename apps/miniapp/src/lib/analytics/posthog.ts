@@ -1,12 +1,5 @@
-// PostHog трекер - загружается lazy и только в production
-// В dev остается console.log
-
-// Интерфейс трекера
-interface AnalyticsTracker {
-  track(event: string, props?: Record<string, any>): void
-  identify(userId: string, traits?: Record<string, any>): void
-  init(): Promise<void>
-}
+// PostHog analytics tracker with lazy loading
+import type { AnalyticsTracker, AnalyticsEvent, AnalyticsProps } from './types'
 
 export class PostHogTracker implements AnalyticsTracker {
   private posthog: any = null
@@ -16,17 +9,18 @@ export class PostHogTracker implements AnalyticsTracker {
     if (this.initialized) return
 
     try {
-      // Загружаем PostHog только в production
-      if (import.meta.env.PROD && import.meta.env.VITE_POSTHOG_API_KEY) {
+      // Only load PostHog in production with API key and when window is available
+      if (typeof window !== 'undefined' && import.meta.env.PROD && import.meta.env.VITE_POSTHOG_API_KEY) {
+        // Lazy load PostHog SDK
         const posthogModule = await import(/* @vite-ignore */ 'posthog-js')
         this.posthog = posthogModule.default
 
-        // Инициализируем PostHog
+        // Initialize PostHog
         this.posthog.init(import.meta.env.VITE_POSTHOG_API_KEY, {
           api_host: 'https://us.i.posthog.com',
           person_profiles: 'identified_only',
           loaded: (posthog: any) => {
-            // Автоматически идентифицируем Telegram пользователя
+            // Automatically identify Telegram user
             this.identifyTelegramUser(posthog)
           }
         })
@@ -38,9 +32,9 @@ export class PostHogTracker implements AnalyticsTracker {
     }
   }
 
-  track(event: string, props?: Record<string, any>): void {
+  track(event: AnalyticsEvent, props?: AnalyticsProps): void {
     if (import.meta.env.PROD && this.posthog && this.initialized) {
-      // Production: отправляем в PostHog
+      // Production: send to PostHog
       this.posthog.capture(event, {
         ...props,
         timestamp: Date.now(),
@@ -54,7 +48,7 @@ export class PostHogTracker implements AnalyticsTracker {
 
   identify(userId: string, traits?: Record<string, any>): void {
     if (import.meta.env.PROD && this.posthog && this.initialized) {
-      // Production: идентифицируем в PostHog
+      // Production: identify in PostHog
       this.posthog.identify(userId, {
         ...traits,
         platform: 'telegram_miniapp'

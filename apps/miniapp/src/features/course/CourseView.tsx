@@ -72,6 +72,34 @@ const ProgressBadge: React.FC<{ score: number; isCompleted: boolean }> = ({ scor
   return <span className="text-gray-500 text-sm">🔘 Not started</span>
 }
 
+const MilestoneBadge: React.FC<{ milestone: string; achieved: boolean }> = ({ milestone, achieved }) => {
+  const badgeStyles = {
+    'first_lesson': { emoji: '🚀', label: 'First Steps', color: 'blue' },
+    'quarter_complete': { emoji: '🎯', label: '25% Complete', color: 'yellow' },
+    'half_complete': { emoji: '⭐', label: 'Halfway Hero', color: 'orange' },
+    'three_quarters': { emoji: '🔥', label: 'Almost There', color: 'red' },
+    'completed': { emoji: '🏆', label: 'Course Master', color: 'green' },
+    'perfect_score': { emoji: '💎', label: 'Perfect Score', color: 'purple' },
+  }
+  
+  const style = badgeStyles[milestone as keyof typeof badgeStyles] || badgeStyles.first_lesson
+  const colorClasses = {
+    blue: achieved ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-gray-100 text-gray-500 border-gray-300',
+    yellow: achieved ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 'bg-gray-100 text-gray-500 border-gray-300',
+    orange: achieved ? 'bg-orange-100 text-orange-800 border-orange-300' : 'bg-gray-100 text-gray-500 border-gray-300',
+    red: achieved ? 'bg-red-100 text-red-800 border-red-300' : 'bg-gray-100 text-gray-500 border-gray-300',
+    green: achieved ? 'bg-green-100 text-green-800 border-green-300' : 'bg-gray-100 text-gray-500 border-gray-300',
+    purple: achieved ? 'bg-purple-100 text-purple-800 border-purple-300' : 'bg-gray-100 text-gray-500 border-gray-300',
+  }
+  
+  return (
+    <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full border text-xs font-medium ${colorClasses[style.color]}`}>
+      <span className={achieved ? '' : 'grayscale opacity-50'}>{style.emoji}</span>
+      <span>{style.label}</span>
+    </div>
+  )
+}
+
 const LockIcon: React.FC = () => (
   <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
@@ -123,6 +151,28 @@ export const CourseView: React.FC<CourseViewProps> = ({
   const nextLesson = getNextAvailableLesson()
   const progressPercent = course.progress?.overallProgress ? Math.round(course.progress.overallProgress * 100) : 0
 
+  // Calculate milestones
+  const calculateMilestones = () => {
+    if (!course.progress) return []
+    
+    const completedCount = course.progress.completedLessons
+    const totalCount = course.progress.totalLessons
+    const avgScore = course.progress.lessonProgress 
+      ? Object.values(course.progress.lessonProgress).reduce((acc, lesson) => acc + lesson.score, 0) / Object.values(course.progress.lessonProgress).length 
+      : 0
+    
+    return [
+      { key: 'first_lesson', achieved: completedCount >= 1 },
+      { key: 'quarter_complete', achieved: completedCount >= Math.ceil(totalCount * 0.25) },
+      { key: 'half_complete', achieved: completedCount >= Math.ceil(totalCount * 0.5) },
+      { key: 'three_quarters', achieved: completedCount >= Math.ceil(totalCount * 0.75) },
+      { key: 'completed', achieved: completedCount === totalCount },
+      { key: 'perfect_score', achieved: completedCount === totalCount && avgScore >= 0.95 },
+    ]
+  }
+  
+  const milestones = calculateMilestones()
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Course Header */}
@@ -156,7 +206,21 @@ export const CourseView: React.FC<CourseViewProps> = ({
               </span>
               <span className="text-sm text-gray-500">{progressPercent}%</span>
             </div>
-            <Progress value={progressPercent} max={100} className="w-full" />
+            <Progress value={progressPercent} max={100} className="w-full mb-3" />
+            
+            {/* Milestone Badges */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-gray-700">Achievements</h3>
+              <div className="flex flex-wrap gap-2">
+                {milestones.map(milestone => (
+                  <MilestoneBadge 
+                    key={milestone.key} 
+                    milestone={milestone.key} 
+                    achieved={milestone.achieved} 
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         )}
 

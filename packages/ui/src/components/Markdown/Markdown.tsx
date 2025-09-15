@@ -192,7 +192,7 @@ export const Markdown = forwardRef<HTMLDivElement, MarkdownProps>(
         
         try {
           // Parse markdown to HTML
-          const html = marked(processedText, {
+          const html = await marked(processedText, {
             breaks: true,
             gfm: true
           })

@@ -9,9 +9,9 @@ const loadPrism = async (language: string) => {
     
     // Load only required languages for MiniApp: Swift and JSON
     if (language === 'swift') {
-      await import('prismjs/components/prism-swift')
+      await import('prismjs/components/prism-swift' as any)
     } else if (language === 'json') {
-      await import('prismjs/components/prism-json')
+      await import('prismjs/components/prism-json' as any)
     }
     
     return Prism.default

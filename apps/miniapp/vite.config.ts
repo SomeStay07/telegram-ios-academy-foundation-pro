@@ -39,7 +39,10 @@ const bundleSizePlugin = () => {
 
 export default defineConfig({
   plugins: [
-    react(), 
+    react({
+      // Configure React plugin to work with Preact aliases
+      jsxImportSource: '@preact/compat'
+    }), 
     bundleSizePlugin(),
     visualizer({ 
       filename: 'stats.html',

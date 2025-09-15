@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-watchPatterns = ["apps/miniapp/**","pnpm-lock.yaml","pnpm-workspace.yaml"]
+watchPatterns = ["apps/miniapp/**","packages/**","pnpm-lock.yaml","pnpm-workspace.yaml","package.json"]
 
 [deploy]
 healthcheckPath = "/health"

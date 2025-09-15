@@ -42,5 +42,24 @@ const config: StorybookConfig = {
       propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
     },
   },
+  viteFinal: async (config) => {
+    // Add preact compatibility via vite aliases
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      // Enable preact/compat to use preact components in React Storybook
+      'react': 'preact/compat',
+      'react-dom': 'preact/compat'
+    };
+    
+    // Ensure preact/compat is available by adding conditional resolution
+    config.define = {
+      ...config.define,
+      // Enable compatibility mode for preact components
+      'process.env.PREACT_COMPAT': JSON.stringify(true),
+    };
+    
+    return config;
+  },
 };
 export default config;

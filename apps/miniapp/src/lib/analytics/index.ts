@@ -1,131 +1,106 @@
-// Мини-слой аналитики через адаптер
-// По умолчанию no-op, lazy загрузка PostHog только при включенной аналитике
+// Analytics adapter - mini layer for tracking
+import { NoOpTracker } from './noop'
+import { ProxyTracker } from './proxy'
+import type { AnalyticsTracker, AnalyticsEvent, AnalyticsProps } from './types'
 
-type AnalyticsEvent = string
-type AnalyticsProps = Record<string, any>
-
-// Интерфейс трекера
-interface AnalyticsTracker {
-  track(event: AnalyticsEvent, props?: AnalyticsProps): void
-  identify(userId: string, traits?: Record<string, any>): void
-  init(): Promise<void>
-}
-
-// Proxy трекер для серверного проксирования
-class ProxyTracker implements AnalyticsTracker {
-  track(event: AnalyticsEvent, props?: AnalyticsProps): void {
-    if (typeof navigator !== 'undefined' && 'sendBeacon' in navigator) {
-      const payload = JSON.stringify({ event, props, ts: Date.now() })
-      navigator.sendBeacon('/api/events', payload)
-    } else {
-      // Fallback для случаев когда sendBeacon недоступен
-      fetch('/api/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event, props, ts: Date.now() })
-      }).catch(console.error)
-    }
-  }
-  
-  identify(userId: string, traits?: Record<string, any>): void {
-    this.track('$identify', { userId, ...traits })
-  }
-  
-  async init(): Promise<void> {
-    // No initialization needed for proxy mode
-  }
-}
-
-// No-op трекер по умолчанию
-class NoOpTracker implements AnalyticsTracker {
-  track(event: AnalyticsEvent, props?: AnalyticsProps): void {
-    if (import.meta.env.DEV) {
-      console.log(`📊 Analytics (disabled): ${event}`, props)
-    }
-  }
-  
-  identify(userId: string, traits?: Record<string, any>): void {
-    if (import.meta.env.DEV) {
-      console.log(`👤 Analytics (disabled): identify`, { userId, traits })
-    }
-  }
-  
-  async init(): Promise<void> {
-    // No-op
-  }
-}
-
-// Глобальный трекер (начинаем с no-op)
 let tracker: AnalyticsTracker = new NoOpTracker()
-
-// Флаг инициализации
 let isInitialized = false
 
-// Главная функция трекинга
+function shouldEnableAnalytics(): boolean {
+  return typeof window !== 'undefined' && import.meta.env.VITE_ENABLE_ANALYTICS === '1'
+}
+
+async function initializeAnalytics(): Promise<void> {
+  if (isInitialized) return
+
+  try {
+    if (import.meta.env.VITE_ANALYTICS_PROXY === '1') {
+      // Use proxy mode - send to /api/events
+      tracker = new ProxyTracker()
+    } else {
+      // Use PostHog SDK directly
+      const { PostHogTracker } = await import('./posthog')
+      tracker = new PostHogTracker()
+    }
+
+    await tracker.init()
+    isInitialized = true
+    
+    if (import.meta.env.DEV) {
+      console.log('📊 Analytics initialized')
+    }
+  } catch (error) {
+    console.error('Failed to initialize analytics:', error)
+    // Keep using no-op tracker
+  }
+}
+
 export function track(event: AnalyticsEvent, props?: AnalyticsProps): void {
-  // Ленивая инициализация при первом взаимодействии
   if (!isInitialized && shouldEnableAnalytics()) {
+    // Lazy initialize on first track call
     initializeAnalytics().catch(console.error)
   }
   
   tracker.track(event, props)
 }
 
-// Идентификация пользователя
 export function identify(userId: string, traits?: Record<string, any>): void {
   if (!isInitialized && shouldEnableAnalytics()) {
     initializeAnalytics().catch(console.error)
   }
   
-  tracker.identify(userId, traits)
-}
-
-// Проверяем, нужна ли аналитика
-function shouldEnableAnalytics(): boolean {
-  return import.meta.env.VITE_ENABLE_ANALYTICS === '1'
-}
-
-// Проверяем режим проксирования
-function shouldUseProxy(): boolean {
-  return import.meta.env.VITE_ANALYTICS_PROXY === '1'
-}
-
-// Ленивая инициализация аналитики
-async function initializeAnalytics(): Promise<void> {
-  if (isInitialized) return
-  
-  try {
-    if (shouldUseProxy()) {
-      // Режим проксирования через API
-      tracker = new ProxyTracker()
-      await tracker.init()
-      isInitialized = true
-      
-      if (import.meta.env.DEV) {
-        console.log('📊 Analytics initialized (Proxy mode)')
-      }
-    } else if (import.meta.env.PROD && import.meta.env.VITE_POSTHOG_API_KEY) {
-      // Прямой режим через PostHog SDK
-      const { PostHogTracker } = await import(/* @vite-ignore */ './posthog')
-      const posthogTracker = new PostHogTracker()
-      await posthogTracker.init()
-      
-      // Подменяем трекер
-      tracker = posthogTracker
-      isInitialized = true
-      
-      if (import.meta.env.DEV) {
-        console.log('📊 Analytics initialized (PostHog SDK)')
-      }
-    }
-  } catch (error) {
-    console.error('Failed to initialize analytics:', error)
-    // Остаемся с no-op трекером
+  if ('identify' in tracker) {
+    tracker.identify(userId, traits)
   }
 }
 
-// Хелперы для типизированных событий
+// Interview specific events
+export function trackInterviewStarted(data: {
+  interviewId: string
+  mode: 'drill' | 'explain' | 'mock'
+}): void {
+  track('interview_started', {
+    interview_id: data.interviewId,
+    mode: data.mode
+  })
+}
+
+export function trackInterviewAnswerSubmitted(data: {
+  interviewId: string
+  questionId: string
+  mode: 'drill' | 'explain' | 'mock'
+  timeMs?: number
+}): void {
+  track('answer_submitted', {
+    interview_id: data.interviewId,
+    question_id: data.questionId,
+    mode: data.mode,
+    time_ms: data.timeMs
+  })
+}
+
+export function trackInterviewCompleted(data: {
+  interviewId: string
+  mode: 'drill' | 'explain' | 'mock'
+  totalQuestions: number
+  correctCount: number
+  durationMs: number
+}): void {
+  track('interview_completed', {
+    interview_id: data.interviewId,
+    mode: data.mode,
+    total_questions: data.totalQuestions,
+    correct_count: data.correctCount,
+    duration_ms: data.durationMs
+  })
+}
+
+// Helpers for typed events
 export const analytics = {
+  // Core tracking
+  track,
+  identify,
+  
   // Lesson events
   lessonStarted: (props: { lessonId: string; title: string }) => 
     track('lesson_started', props),
@@ -138,11 +113,20 @@ export const analytics = {
     track('quiz_answered', props),
   
   // Interview events
-  interviewStarted: (props: { interviewId: string; mode: 'drill' | 'explain' | 'mock' }) =>
-    track('interview_started', props),
-    
-  interviewCompleted: (props: { interviewId: string; questionsCount: number; duration: number }) =>
-    track('interview_completed', props),
+  interviewStarted: trackInterviewStarted,
+  interviewAnswerSubmitted: trackInterviewAnswerSubmitted,
+  interviewCompleted: trackInterviewCompleted,
+  
+  // Deep link events
+  deepLinkOpened: (props: { 
+    link_type: string; 
+    content_id: string; 
+    mode?: string; 
+    metadata?: Record<string, any>; 
+    source: string; 
+    user_agent?: string;
+    timestamp?: string;
+  }) => track('deep_link_opened', props),
     
   // Performance events
   pageLoad: (props: { route: string; loadTime: number }) =>

@@ -3,11 +3,7 @@ import { useParams } from '@tanstack/react-router'
 import { InterviewRenderer } from '../features/interview/InterviewRenderer'
 import { useInterviewProgress } from '../hooks/useInterviewProgress'
 import interview from '../data/interviews/swift-fundamentals.json'
-<<<<<<< HEAD
-import { analytics } from '../analytics/lazy'
-=======
 import { analytics } from '../lib/analytics/index'
->>>>>>> feature/design-system-foundation
 
 // Use local version for now
 const parseInterviewStrict = (data: any) => data

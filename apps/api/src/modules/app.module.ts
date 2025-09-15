@@ -1,4 +1,5 @@
 import { Module, MiddlewareConsumer } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { HealthController } from './health.controller'
@@ -13,24 +14,20 @@ import { CourseService } from '../services/course.service'
 import { InterviewService } from '../services/interview.service'
 import { MetricsModule } from '../metrics/metrics.module'
 import { MetricsMiddleware } from '../metrics/metrics.middleware'
-<<<<<<< HEAD
-=======
 import { EventsModule } from '../events/events.module'
->>>>>>> feature/design-system-foundation
 
 @Module({ 
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     ThrottlerModule.forRoot([{
       name: 'short',
       ttl: 60000, // 1 minute
       limit: 100, // 100 requests per minute globally
     }]),
-<<<<<<< HEAD
-    MetricsModule
-=======
     MetricsModule,
     EventsModule
->>>>>>> feature/design-system-foundation
   ],
   controllers: [AuthController, LessonController, CourseController, InterviewController, HealthController], 
   providers: [
