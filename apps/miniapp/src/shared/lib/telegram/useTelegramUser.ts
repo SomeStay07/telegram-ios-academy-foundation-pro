@@ -28,18 +28,21 @@ export function useTelegramUser(): TelegramUser | null {
         avatarUrl: telegramUser.photo_url,
       })
     } else {
-      // Mock data for local development
+      // Fallback user data for cases where Telegram data is not available
       const isDevelopment = import.meta.env.DEV || process.env.NODE_ENV === 'development'
       
-      if (isDevelopment) {
+      // Provide fallback user after a short delay to allow Telegram to load
+      const timer = setTimeout(() => {
         setUser({
-          id: 123456789,
-          username: 'developer',
-          fullName: 'Local Developer',
+          id: isDevelopment ? 123456789 : 999999999,
+          username: isDevelopment ? 'developer' : 'telegram_user',
+          fullName: isDevelopment ? 'Local Developer' : 'Telegram User',
           languageCode: 'en',
           avatarUrl: undefined, // Will show fallback initials
         })
-      }
+      }, isDevelopment ? 100 : 1000) // Shorter delay in dev, longer in production
+
+      return () => clearTimeout(timer)
     }
   }, [])
 

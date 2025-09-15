@@ -36,9 +36,12 @@ export function ProfilePage() {
 
   // Sync with user data when available
   useEffect(() => {
-    if (user) {
+    if (user || !preferences.languageCode) {
+      const currentUser = user || {
+        languageCode: 'en',
+      }
       const newPrefs = {
-        languageCode: user.languageCode,
+        languageCode: currentUser.languageCode,
         theme: 'system' as const,
         notificationsEnabled: true,
       }
@@ -187,14 +190,39 @@ export function ProfilePage() {
     }
   }
 
-  if (!user) {
+  // Show loading state briefly, but don't block indefinitely
+  const [isLoading, setIsLoading] = useState(true)
+  
+  useEffect(() => {
+    if (user) {
+      setIsLoading(false)
+    } else {
+      // Stop loading after a reasonable time even if no user data
+      const timer = setTimeout(() => setIsLoading(false), 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [user])
+
+  if (isLoading && !user) {
     return (
-      <main className="mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24 min-h-[calc(var(--tg-vph,100svh))]">
+      <main className="mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24 min-h-[calc(var(--tg-vph,100svh))] bg-background text-foreground">
         <div className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground">Loading profile...</p>
+          <div className="text-center space-y-2">
+            <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full mx-auto"></div>
+            <p className="text-muted-foreground text-sm">Loading profile...</p>
+          </div>
         </div>
       </main>
     )
+  }
+
+  // Fallback user if still no data after loading
+  const displayUser = user || {
+    id: 999999999,
+    username: undefined,
+    fullName: 'Telegram User',
+    languageCode: 'en',
+    avatarUrl: undefined,
   }
 
   return (
@@ -204,27 +232,27 @@ export function ProfilePage() {
         <div className="flex items-center gap-4 mb-2">
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl font-bold text-foreground truncate">
-              {user.fullName}
+              {displayUser.fullName}
             </h1>
             <div className="flex items-center gap-2 mt-1">
-              {user.username && (
-                <p className="text-muted-foreground truncate">@{user.username}</p>
+              {displayUser.username && (
+                <p className="text-muted-foreground truncate">@{displayUser.username}</p>
               )}
               <Badge variant="outline" className="text-xs">
-                {user.languageCode.toUpperCase()}
+                {displayUser.languageCode.toUpperCase()}
               </Badge>
             </div>
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          Data synced from Telegram
+          {user ? 'Data synced from Telegram' : 'Using default profile data'}
         </p>
       </div>
 
       {/* Content */}
       <div className="space-y-4">
         <AccountSection
-          user={user}
+          user={displayUser}
           onCopyId={handleCopyId}
         />
 
