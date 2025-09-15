@@ -37,9 +37,12 @@ export * from './Markdown'
 export * from './profile/AccountCard'
 export * from './profile/ProfileHeroCard'
 
+// Navigation Components
+export { Tabs } from './Tabs'
+export { BottomNavigation } from './BottomNavigation'
+
 // Legacy Components (migrated to separate files)
 export { Modal } from './Modal'
-export { Tabs } from './Tabs'
 export { QuizItem } from './QuizItem'
 export { WorkedExampleStepper } from './WorkedExampleStepper'
 export { Progress } from './Progress'
