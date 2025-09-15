@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, Badge, Button, ProfileHeroCard } from '@telegram-ios-academy/ui'
-import { Languages, Palette, Bell, Smartphone, User, Hash, Copy, LogOut, RotateCcw } from 'lucide-react'
-import { EnhancedProgressSection } from './sections/EnhancedProgressSection'
+import { ProfileStatsSection } from './sections/ProfileStatsSection'
+import { ProfileSettingsSection } from './sections/ProfileSettingsSection'
 import { DangerZoneSection } from './sections/DangerZoneSection'
 import { useTelegramTheme } from '../../shared/lib/telegram/useTelegramTheme'
 import { useTelegramViewport } from '../../shared/lib/telegram/useTelegramViewport'
@@ -14,12 +14,18 @@ export function NewProfilePage() {
 
   const [user, setUser] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
+  const [preferences, setPreferences] = useState({
+    theme: 'system' as 'system' | 'light' | 'dark',
+    language: 'ru',
+    notifications: true
+  })
 
-  // Mock stats for progress section
+  // Enhanced mock stats
   const mockStats = {
     completed: 3,
     hours: 12,
-    streak: 5
+    streak: 5,
+    level: 8
   }
 
   // Load data on mount
@@ -95,7 +101,12 @@ export function NewProfilePage() {
     
     const confirmAction = (confirmed: boolean) => {
       if (confirmed) {
-        console.log('Reset settings requested')
+        setPreferences({
+          theme: 'system',
+          language: 'ru',
+          notifications: true
+        })
+        console.log('Settings reset to defaults')
         if (WebApp?.HapticFeedback) {
           WebApp.HapticFeedback.impactOccurred('medium')
         }
@@ -108,6 +119,22 @@ export function NewProfilePage() {
       const confirmed = confirm('Reset all settings to defaults?')
       confirmAction(confirmed)
     }
+  }
+
+  // Settings handlers
+  const handleThemeChange = (theme: 'system' | 'light' | 'dark') => {
+    setPreferences(prev => ({ ...prev, theme }))
+    console.log('Theme changed to:', theme)
+  }
+
+  const handleLanguageChange = (language: string) => {
+    setPreferences(prev => ({ ...prev, language }))
+    console.log('Language changed to:', language)
+  }
+
+  const handleNotificationsToggle = (notifications: boolean) => {
+    setPreferences(prev => ({ ...prev, notifications }))
+    console.log('Notifications toggled:', notifications)
   }
 
   if (loading) {
@@ -145,36 +172,36 @@ export function NewProfilePage() {
       </div>
 
       {/* Content */}
-      <div className="space-y-4">
+      <div className="space-y-6">
+        {/* Hero Card with enhanced features */}
         <ProfileHeroCard 
-          user={user || {
-            first_name: 'Telegram',
-            last_name: 'User',
-            username: undefined,
-            photo_url: undefined
+          user={{
+            ...user,
+            first_name: user?.first_name || 'Timur',
+            last_name: user?.last_name || 'C.',
+            username: user?.username || 'somestay07',
+            photo_url: user?.photo_url,
+            is_premium: true, // Mock premium status
+            language_code: preferences.language
           }}
+          stats={mockStats}
           onCopyId={handleCopyId}
-          className="mb-3"
         />
 
-        {/* Progress Section */}
-        <EnhancedProgressSection
-          coursesCompleted={mockStats.completed}
+        {/* Statistics Section */}
+        <ProfileStatsSection
+          stats={mockStats}
           totalCourses={6}
-          timeSpent={mockStats.hours}
-          currentStreak={mockStats.streak}
-          weeklyStreak={[1, 1, 0, 1, 1, 1, 0]} // Mon-Sun pattern
+          weeklyStreak={[1, 1, 0, 1, 1, 1, 0]}
         />
 
-        {/* Settings placeholder */}
-        <Card className="bg-card text-card-foreground border-border rounded-2xl p-4 sm:p-5">
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">Settings & Preferences</h3>
-            <p className="text-sm text-muted-foreground">
-              Theme, language, notifications and other preferences will be available here.
-            </p>
-          </div>
-        </Card>
+        {/* Settings Section */}
+        <ProfileSettingsSection
+          preferences={preferences}
+          onThemeChange={handleThemeChange}
+          onLanguageChange={handleLanguageChange}
+          onNotificationsToggle={handleNotificationsToggle}
+        />
 
         {/* Danger Zone */}
         <DangerZoneSection
