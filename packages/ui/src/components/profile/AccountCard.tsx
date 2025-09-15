@@ -13,10 +13,6 @@ interface AccountCardProps {
 export function AccountCard({ user }: AccountCardProps) {
   const initials = (user.first_name?.[0] ?? '') + (user.last_name?.[0] ?? '')
   const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ')
-  
-  // Debug: log user data received by AccountCard
-  console.log('AccountCard - user:', user)
-  console.log('AccountCard - photo_url:', user.photo_url)
 
   return (
     <Card className="account-card bg-card border border-border rounded-2xl relative overflow-hidden p-4 sm:p-5">
@@ -31,11 +27,11 @@ export function AccountCard({ user }: AccountCardProps) {
           />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-base font-semibold truncate">
+          <div className="text-base font-semibold min-w-0 truncate overflow-hidden text-ellipsis whitespace-nowrap">
             {fullName || user.username || 'Telegram User'}
           </div>
           {user.username && (
-            <div className="text-sm truncate">
+            <div className="text-sm min-w-0 truncate overflow-hidden text-ellipsis whitespace-nowrap">
               @{user.username}
             </div>
           )}

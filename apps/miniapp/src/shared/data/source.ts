@@ -27,21 +27,18 @@ export interface IDataSource {
   }>>;
 }
 
-const isTG = !!(window as any).Telegram?.WebApp?.initData;
-const useMocks = import.meta.env.VITE_USE_MOCKS === '1' || !isTG;
-
 export function getDataSource(): IDataSource {
-  return useMocks ? new MockDataSource() : new TelegramDataSource();
+  const isTG = !!(window as any)?.Telegram?.WebApp?.initData;
+  const useMocks = import.meta.env.VITE_USE_MOCKS === '1';
+  
+  // Use mocks if explicitly requested, otherwise use TG if available, fallback to mocks
+  return useMocks ? new MockDataSource() : (isTG ? new TelegramDataSource() : new MockDataSource());
 }
 
 class TelegramDataSource implements IDataSource {
   async getProfile(): Promise<ProfileData> {
     const wa = (window as any).Telegram?.WebApp;
     const u = wa?.initDataUnsafe?.user ?? {};
-    
-    // Debug: log what we get from Telegram
-    console.log('TelegramDataSource - Raw user data:', u);
-    console.log('TelegramDataSource - photo_url:', u.photo_url);
     
     // TODO: здесь только клиентское отображение. Для сервера — верификация initData по докам TG.
     return { 

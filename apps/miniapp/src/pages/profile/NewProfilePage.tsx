@@ -55,26 +55,29 @@ export function NewProfilePage() {
 
     if (!mainButton) return
 
+    const handleSave = async () => {
+      await savePreferences()
+      
+      // Show success feedback
+      if (WebApp?.HapticFeedback) {
+        WebApp.HapticFeedback.impactOccurred('light')
+      }
+    }
+
     if (dirty) {
       mainButton.text = 'Save'
       mainButton.show()
       mainButton.enable()
-      
-      const handleSave = async () => {
-        await savePreferences()
-        
-        // Show success feedback
-        if (WebApp?.HapticFeedback) {
-          WebApp.HapticFeedback.impactOccurred('light')
-        }
-      }
-
       mainButton.onClick(handleSave)
-      
-      return () => {
+    } else {
+      mainButton.hide()
+    }
+    
+    // Cleanup on unmount or dependency change
+    return () => {
+      if (mainButton.offClick) {
         mainButton.offClick(handleSave)
       }
-    } else {
       mainButton.hide()
     }
   }, [dirty, savePreferences])
