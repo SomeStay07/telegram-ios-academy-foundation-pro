@@ -53,10 +53,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - uses: pnpm/action-setup@v4
+          cache: 'pnpm'
+      - name: Verify pnpm version
+        run: pnpm --version
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Generate Prisma Client (API)
@@ -81,10 +86,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - uses: pnpm/action-setup@v4
+          cache: 'pnpm'
+      - name: Verify pnpm version
+        run: pnpm --version
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build design tokens (required for UI package)
@@ -114,10 +124,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - uses: pnpm/action-setup@v4
+          cache: 'pnpm'
+      - name: Verify pnpm version
+        run: pnpm --version
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Generate Prisma Client (API)
@@ -232,10 +247,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - uses: pnpm/action-setup@v4
+          cache: 'pnpm'
+      - name: Verify pnpm version
+        run: pnpm --version
       - name: Install Python for Schemathesis
         uses: actions/setup-python@v4
         with:
@@ -391,10 +411,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - uses: pnpm/action-setup@v4
+          cache: 'pnpm'
+      - name: Verify pnpm version
+        run: pnpm --version
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run security audit
