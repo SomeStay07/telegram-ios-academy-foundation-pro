@@ -78,3 +78,25 @@ body {
 a {
   color: var(--tg-theme-link-color, hsl(215 90% 56%));
 }
+
+/* CardSurface elevation effects */
+.card-surface-base {
+  box-shadow: var(--elev-1);
+}
+
+.card-surface-interactive:active {
+  transform: translateY(1px);
+  box-shadow: var(--elev-2);
+}
+
+.card-surface-interactive:focus-visible {
+  outline: none;
+  box-shadow: var(--elev-2), 0 0 0 2px var(--primary);
+}
+
+/* Responsive hover support - only hover devices */
+@media (hover: hover) {
+  .card-surface-interactive:hover {
+    box-shadow: var(--elev-2);
+  }
+}

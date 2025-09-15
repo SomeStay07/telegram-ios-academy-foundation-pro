@@ -18,23 +18,13 @@ export const CardSurface = forwardRef<HTMLDivElement, CardSurfaceProps>(
         tabIndex={interactive && !disabled ? 0 : undefined}
         aria-disabled={disabled}
         className={cn(
-          // Base card styles
+          // Base card styles with elevation
           'bg-card text-card-foreground border border-border rounded-2xl',
-          'shadow-[var(--elev-1)] transition-[transform,box-shadow,background] duration-150',
+          'card-surface-base transition-[transform,box-shadow,background] duration-150',
           
           // Interactive states
           interactive && [
-            'cursor-pointer',
-            
-            // Hover state (desktop only)
-            '@media(hover:hover) { &:hover { box-shadow: var(--elev-2) } }',
-            'hover:shadow-[var(--elev-2)]',
-            
-            // Press state (all devices)
-            'active:translate-y-[1px] active:shadow-[var(--elev-2)]',
-            
-            // Focus state
-            'focus-visible:outline-none focus-visible:shadow-[var(--elev-2),var(--ring)]',
+            'cursor-pointer card-surface-interactive',
             
             // Disabled state
             disabled && 'opacity-50 cursor-not-allowed pointer-events-none',

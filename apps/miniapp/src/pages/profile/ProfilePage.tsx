@@ -231,12 +231,12 @@ export function ProfilePage() {
       <div className="mb-6">
         <div className="flex items-center gap-4 mb-2 min-w-0">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">
+            <h1 className="text-2xl font-bold text-foreground truncate">
               {displayUser.fullName}
             </h1>
             <div className="flex items-center gap-2 mt-1 min-w-0">
               {displayUser.username && (
-                <p className="text-muted-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap flex-shrink">@{displayUser.username}</p>
+                <p className="text-muted-foreground truncate flex-shrink">@{displayUser.username}</p>
               )}
               <Badge variant="outline" className="text-xs flex-shrink-0">
                 {displayUser.languageCode.toUpperCase()}

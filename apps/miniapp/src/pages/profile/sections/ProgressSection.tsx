@@ -17,7 +17,7 @@ export function ProgressSection({
   const completionPercentage = Math.round((coursesCompleted / totalCourses) * 100)
 
   return (
-    <CardSurface className="p-4 sm:p-5 space-y-4">
+    <CardSurface interactive className="p-4 sm:p-5 space-y-4">
       <div className="flex items-center gap-3 mb-4">
         <Target className="w-5 h-5 text-muted-foreground" />
         <h3 className="text-lg font-semibold text-foreground">Learning Progress</h3>

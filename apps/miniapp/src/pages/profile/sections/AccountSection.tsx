@@ -24,7 +24,7 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
   }
 
   return (
-    <CardSurface className="p-4 sm:p-5">
+    <CardSurface interactive className="p-4 sm:p-5">
       <div className="flex items-start gap-4">
         {/* Avatar with premium indicator */}
         <div className="relative flex-shrink-0">
@@ -46,12 +46,12 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <h2 className="text-lg font-semibold text-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">
+              <h2 className="text-lg font-semibold text-foreground truncate">
                 {user.fullName}
               </h2>
               <div className="flex items-center gap-2 mt-1">
                 {user.username && (
-                  <p className="text-sm text-muted-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-sm text-muted-foreground truncate">
                     @{user.username}
                   </p>
                 )}
@@ -83,7 +83,7 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
             <User className="w-4 h-4 text-muted-foreground flex-shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Full Name</p>
-              <p className="text-sm text-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">{user.fullName}</p>
+              <p className="text-sm text-foreground truncate">{user.fullName}</p>
             </div>
           </div>
         </div>
@@ -94,7 +94,7 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
               <span className="w-4 h-4 text-muted-foreground flex-shrink-0 text-sm font-bold">@</span>
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Username</p>
-                <p className="text-sm text-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">{user.username}</p>
+                <p className="text-sm text-foreground truncate">{user.username}</p>
               </div>
             </div>
           </div>
