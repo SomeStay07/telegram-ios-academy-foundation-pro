@@ -17,6 +17,11 @@ export * from './Card'
 export * from './Avatar'
 export * from './Badge'
 
+// Statistics & Gamification Components
+export * from './StatCard'
+export * from './ProgressRing'
+export * from './AchievementBadge'
+
 // Content Components  
 export * from './CodeBlock'
 export * from './Markdown'
