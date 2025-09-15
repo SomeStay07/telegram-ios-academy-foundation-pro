@@ -8,7 +8,10 @@ import {
   AchievementIcon,
   ProgressIcon,
   LevelIcon,
-  SettingsIcon
+  SettingsIcon,
+  StatCard,
+  ProgressRing,
+  AchievementBadge
 } from '@telegram-ios-academy/ui'
 import { useAppStore } from '../shared/model/store'
 import { LanguagesIcon, PaletteIcon, TrophyIcon, CalendarIcon, ClockIcon } from 'lucide-react'
@@ -129,59 +132,164 @@ export function ProfilePage() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card className="p-4 text-center bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20 border-blue-200 dark:border-blue-800">
-          <LevelIcon className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-          <div className="text-2xl font-bold text-blue-700 dark:text-blue-400">85</div>
-          <div className="text-xs text-blue-600 dark:text-blue-500">Level</div>
-        </Card>
+      <div className="grid grid-cols-3 gap-3">
+        <StatCard
+          title="Level"
+          value="85"
+          subtitle="iOS Dev"
+          icon={<LevelIcon />}
+          variant="primary"
+          trend="up"
+          trendValue="+3"
+          progress={85}
+          animated
+        />
         
-        <Card className="p-4 text-center bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 border-green-200 dark:border-green-800">
-          <AchievementIcon className="w-8 h-8 mx-auto mb-2 text-green-600" />
-          <div className="text-2xl font-bold text-green-700 dark:text-green-400">12</div>
-          <div className="text-xs text-green-600 dark:text-green-500">Achievements</div>
-        </Card>
+        <StatCard
+          title="Achievements"
+          value="12"
+          subtitle="Unlocked"
+          icon={<AchievementIcon />}
+          variant="success"
+          trend="up"
+          trendValue="+2"
+          animated
+          badge={<Badge variant="success" size="sm">New!</Badge>}
+        />
         
-        <Card className="p-4 text-center bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20 border-purple-200 dark:border-purple-800">
-          <ProgressIcon className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-          <div className="text-2xl font-bold text-purple-700 dark:text-purple-400">78%</div>
-          <div className="text-xs text-purple-600 dark:text-purple-500">Progress</div>
-        </Card>
+        <StatCard
+          title="Progress"
+          value="78%"
+          subtitle="Complete"
+          icon={<ProgressIcon />}
+          variant="info"
+          trend="up"
+          trendValue="+12%"
+          progress={78}
+          animated
+        />
       </div>
 
       {/* Learning Progress */}
       <Card className="p-6 bg-gradient-to-r from-card to-card/50">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-6">
           <TrophyIcon className="w-6 h-6 text-yellow-600" />
           <h3 className="text-lg font-semibold">Learning Progress</h3>
         </div>
         
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <div className="font-medium">iOS Development</div>
-              <div className="text-sm text-muted-foreground">3 of 6 modules completed</div>
-            </div>
-            <Badge variant="primary" size="lg">
-              50%
-            </Badge>
-          </div>
+        <div className="flex items-center gap-8 mb-6">
+          <ProgressRing
+            progress={78}
+            size="lg"
+            variant="primary"
+            label="Overall"
+            animated
+          />
           
-          <div className="w-full bg-muted rounded-full h-3">
-            <div className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full transition-all duration-500" style={{ width: '50%' }} />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4 mt-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">24</div>
-              <div className="text-sm text-muted-foreground">Lessons completed</div>
+          <div className="flex-1 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <div className="font-medium">iOS Development</div>
+                <div className="text-sm text-muted-foreground">3 of 6 modules completed</div>
+              </div>
+              <Badge variant="primary" size="lg">
+                50%
+              </Badge>
             </div>
             
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">12</div>
-              <div className="text-sm text-muted-foreground">Interview attempts</div>
+            <div className="w-full bg-muted rounded-full h-2">
+              <div className="bg-gradient-to-r from-primary to-primary/80 h-2 rounded-full transition-all duration-1000" style={{ width: '50%' }} />
             </div>
           </div>
+        </div>
+        
+        <div className="grid grid-cols-3 gap-4">
+          <StatCard
+            title="Lessons"
+            value="24"
+            subtitle="Completed"
+            size="sm"
+            variant="success"
+            animated
+          />
+          
+          <StatCard
+            title="Interviews"
+            value="12"
+            subtitle="Attempts"
+            size="sm"
+            variant="warning"
+            animated
+          />
+          
+          <StatCard
+            title="Score"
+            value="85%"
+            subtitle="Average"
+            size="sm"
+            variant="primary"
+            trend="up"
+            trendValue="+5%"
+            animated
+          />
+        </div>
+      </Card>
+
+      {/* Achievements Section */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <AchievementIcon className="w-6 h-6 text-yellow-600" />
+            <h3 className="text-lg font-semibold">Recent Achievements</h3>
+          </div>
+          <Badge variant="info" size="sm">12/25</Badge>
+        </div>
+        
+        <div className="grid grid-cols-4 gap-3">
+          <AchievementBadge
+            title="First Steps"
+            description="Complete first lesson"
+            emoji="🎯"
+            unlocked
+            tier="bronze"
+            date="Jan 15"
+            rarity="common"
+          />
+          
+          <AchievementBadge
+            title="Week Warrior"
+            description="7 day streak"
+            emoji="🔥"
+            unlocked
+            tier="silver"
+            date="Jan 22"
+            rarity="rare"
+          />
+          
+          <AchievementBadge
+            title="Swift Master"
+            description="Complete Swift module"
+            emoji="⚡"
+            unlocked
+            tier="gold"
+            date="Feb 01"
+            rarity="epic"
+          />
+          
+          <AchievementBadge
+            title="Perfect Score"
+            description="100% on interview"
+            emoji="💎"
+            progress={85}
+            tier="diamond"
+            rarity="legendary"
+          />
+        </div>
+        
+        <div className="mt-4 text-center">
+          <button className="text-primary text-sm font-medium hover:underline">
+            View All Achievements →
+          </button>
         </div>
       </Card>
 
