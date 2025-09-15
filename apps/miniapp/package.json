@@ -23,6 +23,7 @@
     "@tanstack/react-router": "^1.49.3",
     "@telegram-ios-academy/ui": "workspace:*",
     "i18next": "^23.10.1",
+    "lucide-react": "^0.544.0",
     "preact": "^10.27.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -45,7 +45,7 @@ importers:
         version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
       '@storybook/react-vite':
         specifier: ^8.0.10
-        version: 8.6.14(@storybook/test@7.6.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.50.1)(storybook@8.6.14(prettier@3.6.2))(typescript@5.9.2)(vite@5.4.20(@types/node@20.19.13)(less@4.4.1)(terser@5.44.0))
+        version: 8.6.14(@storybook/test@8.6.14(storybook@8.6.14(prettier@3.6.2)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.50.1)(storybook@8.6.14(prettier@3.6.2))(typescript@5.9.2)(vite@5.4.20(@types/node@20.19.13)(less@4.4.1)(terser@5.44.0))
       '@types/node':
         specifier: ^20.11.30
         version: 20.19.13
@@ -75,10 +75,10 @@ importers:
         version: 10.4.20(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20)
       '@nestjs/swagger':
         specifier: ^7.4.2
-        version: 7.4.2(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/platform-express@10.4.20)(reflect-metadata@0.1.14)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)
+        version: 7.4.2(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20)(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)
       '@nestjs/throttler':
         specifier: ^6.4.0
-        version: 6.4.0(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/platform-express@10.4.20)(reflect-metadata@0.1.14)(rxjs@7.8.2))(reflect-metadata@0.1.14)
+        version: 6.4.0(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20)(reflect-metadata@0.1.14)
       '@prisma/client':
         specifier: ^5.16.1
         version: 5.22.0(prisma@5.22.0)
@@ -214,6 +214,9 @@ importers:
       i18next:
         specifier: ^23.10.1
         version: 23.16.8
+      lucide-react:
+        specifier: ^0.544.0
+        version: 0.544.0(react@18.3.1)
       preact:
         specifier: ^10.27.1
         version: 10.27.1
@@ -235,13 +238,6 @@ importers:
       zustand:
         specifier: ^4.5.2
         version: 4.5.7(@types/react@18.3.24)(react@18.3.1)
-    optionalDependencies:
-      posthog-js:
-        specifier: ^1.88.4
-        version: 1.265.0
-      web-vitals:
-        specifier: ^4.2.4
-        version: 4.2.4
     devDependencies:
       '@pact-foundation/pact':
         specifier: ^15.0.1
@@ -297,6 +293,13 @@ importers:
       vitest:
         specifier: ^2.1.5
         version: 2.1.9(@types/node@20.19.13)(jsdom@25.0.1)(less@4.4.1)(terser@5.44.0)
+    optionalDependencies:
+      posthog-js:
+        specifier: ^1.88.4
+        version: 1.265.0
+      web-vitals:
+        specifier: ^4.2.4
+        version: 4.2.4
 
   packages/course-spec:
     dependencies:
@@ -6045,6 +6048,11 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
+  lucide-react@0.544.0:
+    resolution: {integrity: sha512-t5tS44bqd825zAW45UQxpG2CvcC4urOwn2TrwSH8u+MjeE+1NnWl6QqeQ/6NdjMqdOygyiT9p3Ev0p1NJykxjw==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   luxon@3.7.2:
     resolution: {integrity: sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==}
     engines: {node: '>=12'}
@@ -9827,7 +9835,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@nestjs/swagger@7.4.2(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/platform-express@10.4.20)(reflect-metadata@0.1.14)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)':
+  '@nestjs/swagger@7.4.2(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20)(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)':
     dependencies:
       '@microsoft/tsdoc': 0.15.1
       '@nestjs/common': 10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2)
@@ -9842,7 +9850,7 @@ snapshots:
       class-transformer: 0.5.1
       class-validator: 0.14.2
 
-  '@nestjs/throttler@6.4.0(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/platform-express@10.4.20)(reflect-metadata@0.1.14)(rxjs@7.8.2))(reflect-metadata@0.1.14)':
+  '@nestjs/throttler@6.4.0(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.4.20)(reflect-metadata@0.1.14)':
     dependencies:
       '@nestjs/common': 10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2)
       '@nestjs/core': 10.4.20(@nestjs/common@10.4.20(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/platform-express@10.4.20)(reflect-metadata@0.1.14)(rxjs@7.8.2)
@@ -12151,12 +12159,12 @@ snapshots:
       - typescript
       - vite-plugin-glimmerx
 
-  '@storybook/react-vite@8.6.14(@storybook/test@7.6.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.50.1)(storybook@8.6.14(prettier@3.6.2))(typescript@5.9.2)(vite@5.4.20(@types/node@20.19.13)(less@4.4.1)(terser@5.44.0))':
+  '@storybook/react-vite@8.6.14(@storybook/test@8.6.14(storybook@8.6.14(prettier@3.6.2)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.50.1)(storybook@8.6.14(prettier@3.6.2))(typescript@5.9.2)(vite@5.4.20(@types/node@20.19.13)(less@4.4.1)(terser@5.44.0))':
     dependencies:
       '@joshwooding/vite-plugin-react-docgen-typescript': 0.5.0(typescript@5.9.2)(vite@5.4.20(@types/node@20.19.13)(less@4.4.1)(terser@5.44.0))
       '@rollup/pluginutils': 5.3.0(rollup@4.50.1)
       '@storybook/builder-vite': 8.6.14(storybook@8.6.14(prettier@3.6.2))(vite@5.4.20(@types/node@20.19.13)(less@4.4.1)(terser@5.44.0))
-      '@storybook/react': 8.6.14(@storybook/test@7.6.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.6.2))(typescript@5.9.2)
+      '@storybook/react': 8.6.14(@storybook/test@8.6.14(storybook@8.6.14(prettier@3.6.2)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.6.2))(typescript@5.9.2)
       find-up: 5.0.0
       magic-string: 0.30.19
       react: 18.3.1
@@ -12167,7 +12175,7 @@ snapshots:
       tsconfig-paths: 4.2.0
       vite: 5.4.20(@types/node@20.19.13)(less@4.4.1)(terser@5.44.0)
     optionalDependencies:
-      '@storybook/test': 7.6.20
+      '@storybook/test': 8.6.14(storybook@8.6.14(prettier@3.6.2))
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -12204,7 +12212,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@storybook/react@8.6.14(@storybook/test@7.6.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.6.2))(typescript@5.9.2)':
+  '@storybook/react@8.6.14(@storybook/test@8.6.14(storybook@8.6.14(prettier@3.6.2)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.6.2))(typescript@5.9.2)':
     dependencies:
       '@storybook/components': 8.6.14(storybook@8.6.14(prettier@3.6.2))
       '@storybook/global': 5.0.0
@@ -12216,7 +12224,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       storybook: 8.6.14(prettier@3.6.2)
     optionalDependencies:
-      '@storybook/test': 7.6.20
+      '@storybook/test': 8.6.14(storybook@8.6.14(prettier@3.6.2))
       typescript: 5.9.2
 
   '@storybook/router@7.6.17':
@@ -15082,6 +15090,10 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
+
+  lucide-react@0.544.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   luxon@3.7.2: {}
 

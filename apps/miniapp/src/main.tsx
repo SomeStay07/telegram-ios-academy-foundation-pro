@@ -16,7 +16,7 @@ const RouterProvider = React.lazy(() =>
 )
 
 const getRouter = async () => {
-  const routerModule = await lazyImport(() => import(/* @vite-ignore */ './router'))()
+  const routerModule = await lazyImport(() => import(/* @vite-ignore */ './router/index'))()
   return routerModule.router
 }
 

@@ -2,6 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Telegram WebApp safe area and viewport */
+:root {
+  --tg-vph: 100vh; /* Telegram viewport stable height */
+  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Telegram theme CSS variables */
+:root {
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-text-color: #000000;
+  --tg-theme-hint-color: #999999;
+  --tg-theme-link-color: #2481cc;
+  --tg-theme-button-color: #2481cc;
+  --tg-theme-button-text-color: #ffffff;
+  --tg-theme-secondary-bg-color: #f1f1f1;
+}
+
+.dark {
+  --tg-theme-bg-color: #212121;
+  --tg-theme-text-color: #ffffff;
+  --tg-theme-hint-color: #aaaaaa;
+  --tg-theme-link-color: #8cbbf0;
+  --tg-theme-button-color: #8cbbf0;
+  --tg-theme-button-text-color: #ffffff;
+  --tg-theme-secondary-bg-color: #181818;
+}
+
+/* Apply Telegram theme colors to body */
+body {
+  background-color: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
+}
+
+/* Safe area utilities */
+.safe-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+}
+
+.safe-top {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 0.5rem);
+}
+
+/* Viewport height using Telegram stable height */
+.h-screen-tg {
+  height: var(--tg-vph);
+}
+
+.min-h-screen-tg {
+  min-height: var(--tg-vph);
+}
+
 :root {
   --ds-color-bg-canvas: {color.palette.white};
   --ds-color-bg-surface: {color.palette.white};
