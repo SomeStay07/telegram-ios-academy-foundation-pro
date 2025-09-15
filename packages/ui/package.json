@@ -14,6 +14,7 @@
     },
     "./css": "./dist/index.css",
     "./dist/tokens.css": "./dist/tokens.css",
+    "./dist/styles/index.css": "./dist/styles/index.css",
     "./package.json": "./package.json"
   },
   "files": [

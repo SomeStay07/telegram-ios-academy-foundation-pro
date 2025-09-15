@@ -4,6 +4,8 @@ import { lazyImport } from './utils/lazyImport'
 import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
 import { initThemeSync } from './lib/tmaTheme'
 import '@telegram-ios-academy/ui/dist/tokens.css'
+import '@telegram-ios-academy/ui/dist/styles/index.css'
+import './styles.css'
 
 // Lazy import analytics and web vitals
 import('./lib/web-vitals').catch(console.error)
