@@ -33,6 +33,9 @@ export * from './ActivityListCard'
 export * from './CodeBlock'
 export * from './Markdown'
 
+// Profile Components
+export * from './profile/AccountCard'
+
 // Legacy Components (migrated to separate files)
 export { Modal } from './Modal'
 export { Tabs } from './Tabs'

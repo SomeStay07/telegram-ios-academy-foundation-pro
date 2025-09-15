@@ -1,3 +1,6 @@
+/* Profile Component Styles */
+@import '../components/profile/account-card.css';
+
 /* RTL Support for UI Components */
 
 /* Global RTL utilities */
