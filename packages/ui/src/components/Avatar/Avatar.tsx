@@ -40,12 +40,18 @@ export function Avatar({
 }: AvatarProps) {
   const [imgError, setImgError] = React.useState(false)
   
+  // Debug: log avatar src
+  console.log('Avatar - src:', src, 'alt:', alt, 'fallback:', fallback)
+  
   const handleImageError = () => {
+    console.log('Avatar - Image failed to load:', src)
     setImgError(true)
   }
 
   const showFallback = !src || imgError
   const initials = fallback || alt.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+  
+  console.log('Avatar - showFallback:', showFallback, 'initials:', initials)
 
   return (
     <div
