@@ -19,6 +19,16 @@
   /* Links and interactive elements */
   --link: var(--tg-theme-link-color, hsl(222 47% 50%));
   
+  /* Telegram-based accent tokens for gradients */
+  --accent: var(--tg-theme-button-color);
+  --accent-fg: var(--tg-theme-button-text-color);
+  /* Производные — мягкие оттенки акцента */
+  --accent-1: color-mix(in oklab, var(--accent) 85%, var(--background));
+  --accent-2: color-mix(in oklab, var(--accent) 55%, var(--background));
+  --accent-3: color-mix(in oklab, var(--link) 60%, var(--background));
+  /* Универсальный градиент */
+  --accent-gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2) 60%, var(--accent-3));
+  
   /* Additional shadcn tokens */
   --popover: var(--card);
   --popover-foreground: var(--card-foreground);
@@ -79,24 +89,3 @@ a {
   color: var(--tg-theme-link-color, hsl(215 90% 56%));
 }
 
-/* CardSurface elevation effects */
-.card-surface-base {
-  box-shadow: var(--elev-1);
-}
-
-.card-surface-interactive:active {
-  transform: translateY(1px);
-  box-shadow: var(--elev-2);
-}
-
-.card-surface-interactive:focus-visible {
-  outline: none;
-  box-shadow: var(--elev-2), 0 0 0 2px var(--primary);
-}
-
-/* Responsive hover support - only hover devices */
-@media (hover: hover) {
-  .card-surface-interactive:hover {
-    box-shadow: var(--elev-2);
-  }
-}

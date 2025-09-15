@@ -16,6 +16,7 @@ export * from './Input'
 // Container Components
 export * from './Card'
 export * from './CardSurface'
+export * from './InteractiveCard'
 export * from './Avatar'
 export * from './Badge'
 
@@ -25,6 +26,8 @@ export * from './ProgressRing'
 export * from './AchievementBadge'
 export * from './CircularProgress'
 export * from './StreakCounter'
+export * from './ProgressSummaryCard'
+export * from './ActivityListCard'
 
 // Content Components  
 export * from './CodeBlock'

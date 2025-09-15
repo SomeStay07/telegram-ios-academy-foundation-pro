@@ -394,3 +394,125 @@
 .skill-expert {
   --skill-color: #8b5cf6;
 }
+
+/* Activity Timeline */
+.activity-accent {
+  background-image: var(--accent-gradient);
+}
+
+/* InteractiveCard Component Styles */
+
+/* Base interactive card styles */
+.interactive-card-base {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Gradient outline overlay - hidden by default */
+.interactive-card-outline {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.interactive-card-outline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card);
+  border-radius: inherit;
+  z-index: 2;
+}
+
+/* Spotlight effect overlay */
+.interactive-card-spotlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    color-mix(in oklab, var(--accent) 8%, transparent),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Lift variant hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .interactive-card-lift:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 
+      0 8px 25px color-mix(in oklab, var(--foreground) 15%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--accent) 20%, transparent);
+  }
+  
+  .interactive-card-lift:hover .interactive-card-outline {
+    opacity: 0.7;
+  }
+}
+
+/* Glow variant hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .interactive-card-glow:hover {
+    box-shadow: 
+      0 4px 20px color-mix(in oklab, var(--accent) 25%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--accent) 30%, transparent);
+  }
+  
+  .interactive-card-glow:hover .interactive-card-outline {
+    opacity: 0.8;
+  }
+}
+
+/* Spotlight variant hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .interactive-card-spotlight:hover {
+    border-color: color-mix(in oklab, var(--border) 70%, var(--accent));
+  }
+  
+  .interactive-card-spotlight:hover .interactive-card-outline {
+    opacity: 0.6;
+  }
+  
+  .interactive-card-spotlight:hover .interactive-card-spotlight {
+    opacity: 1;
+  }
+}
+
+/* Focus states for all variants */
+.interactive-card-base:focus-visible {
+  box-shadow: 
+    0 0 0 2px var(--background),
+    0 0 0 4px var(--accent);
+}
+
+/* Active states for all variants */
+.interactive-card-base:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .interactive-card-base,
+  .interactive-card-outline,
+  .interactive-card-spotlight {
+    transition: none;
+    animation: none;
+  }
+  
+  .interactive-card-base:hover {
+    transform: none;
+  }
+  
+  .interactive-card-base:active {
+    transform: scale(0.98);
+  }
+}
