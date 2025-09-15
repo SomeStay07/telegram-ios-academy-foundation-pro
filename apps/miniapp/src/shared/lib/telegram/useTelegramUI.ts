@@ -140,6 +140,40 @@ export function useTelegramUI() {
       root.style.setProperty(`--tg-theme-${key.replace(/_/g, '-')}`, value)
     })
 
+    // Update Tailwind CSS variables
+    if (themeParams.bg_color) {
+      root.style.setProperty('--background', themeParams.bg_color)
+      root.style.setProperty('--card', themeParams.bg_color)
+    }
+    if (themeParams.text_color) {
+      root.style.setProperty('--foreground', themeParams.text_color)
+      root.style.setProperty('--card-foreground', themeParams.text_color)
+    }
+    if (themeParams.hint_color) {
+      root.style.setProperty('--muted-foreground', themeParams.hint_color)
+    }
+    if (themeParams.button_color) {
+      root.style.setProperty('--primary', themeParams.button_color)
+    }
+    if (themeParams.button_text_color) {
+      root.style.setProperty('--primary-foreground', themeParams.button_text_color)
+    }
+    if (themeParams.secondary_bg_color) {
+      root.style.setProperty('--muted', themeParams.secondary_bg_color)
+    }
+
+    // Detect dark theme and apply appropriate class
+    const isDark = themeParams.bg_color && 
+      parseInt(themeParams.bg_color.replace('#', ''), 16) < 0x808080
+    
+    if (isDark) {
+      root.setAttribute('data-theme', 'dark')
+      root.classList.add('dark')
+    } else {
+      root.removeAttribute('data-theme')
+      root.classList.remove('dark')
+    }
+
     // Handle viewport changes
     const handleViewportChange = () => {
       root.style.setProperty('--tg-vph', `${webApp.viewportStableHeight}px`)

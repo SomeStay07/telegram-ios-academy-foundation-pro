@@ -40,7 +40,13 @@ export function TabBar() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 safe-bottom z-50">
+    <nav 
+      className="fixed bottom-0 left-0 right-0 safe-bottom z-50 border-t"
+      style={{ 
+        backgroundColor: 'var(--card)', 
+        borderColor: 'var(--border)' 
+      }}
+    >
       <div className="max-w-md mx-auto flex">
         {tabs.map(({ path, label, icon: Icon }) => {
           const isActive = currentPath.startsWith(path)
@@ -54,20 +60,20 @@ export function TabBar() {
               aria-current={isActive ? 'page' : undefined}
             >
               <Icon 
-                className={cn(
-                  'w-6 h-6 mb-1 transition-colors',
-                  isActive 
-                    ? 'text-blue-600 dark:text-blue-400' 
-                    : 'text-gray-500 dark:text-gray-400'
-                )}
+                className="w-6 h-6 mb-1 transition-colors"
+                style={{
+                  color: isActive 
+                    ? 'var(--primary)' 
+                    : 'var(--muted-foreground)'
+                }}
               />
               <span 
-                className={cn(
-                  'text-xs font-medium transition-colors',
-                  isActive 
-                    ? 'text-blue-600 dark:text-blue-400' 
-                    : 'text-gray-500 dark:text-gray-400'
-                )}
+                className="text-xs font-medium transition-colors"
+                style={{
+                  color: isActive 
+                    ? 'var(--primary)' 
+                    : 'var(--muted-foreground)'
+                }}
               >
                 {label}
               </span>

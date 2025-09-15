@@ -9,7 +9,7 @@ import { ProfilePage } from '../pages/ProfilePage'
 // Root route with TabBar layout
 const rootRoute = createRootRoute({
   component: () => (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       <main className="flex-1 pb-16 safe-bottom">
         <Outlet />
       </main>

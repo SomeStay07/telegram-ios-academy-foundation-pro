@@ -17,9 +17,20 @@
   --tg-theme-button-color: #2481cc;
   --tg-theme-button-text-color: #ffffff;
   --tg-theme-secondary-bg-color: #f1f1f1;
+  
+  /* Tailwind integration */
+  --background: var(--tg-theme-bg-color);
+  --foreground: var(--tg-theme-text-color);
+  --muted: var(--tg-theme-secondary-bg-color);
+  --muted-foreground: var(--tg-theme-hint-color);
+  --primary: var(--tg-theme-button-color);
+  --primary-foreground: var(--tg-theme-button-text-color);
+  --card: var(--tg-theme-bg-color);
+  --card-foreground: var(--tg-theme-text-color);
+  --border: #e5e7eb;
 }
 
-.dark {
+[data-theme="dark"], .dark {
   --tg-theme-bg-color: #212121;
   --tg-theme-text-color: #ffffff;
   --tg-theme-hint-color: #aaaaaa;
@@ -27,12 +38,24 @@
   --tg-theme-button-color: #8cbbf0;
   --tg-theme-button-text-color: #ffffff;
   --tg-theme-secondary-bg-color: #181818;
+  
+  /* Tailwind integration for dark */
+  --background: var(--tg-theme-bg-color);
+  --foreground: var(--tg-theme-text-color);
+  --muted: var(--tg-theme-secondary-bg-color);
+  --muted-foreground: var(--tg-theme-hint-color);
+  --primary: var(--tg-theme-button-color);
+  --primary-foreground: var(--tg-theme-button-text-color);
+  --card: #2a2a2a;
+  --card-foreground: var(--tg-theme-text-color);
+  --border: #404040;
 }
 
 /* Apply Telegram theme colors to body */
 body {
-  background-color: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Safe area utilities */

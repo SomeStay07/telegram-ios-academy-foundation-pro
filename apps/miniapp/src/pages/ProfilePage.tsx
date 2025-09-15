@@ -34,7 +34,10 @@ export function ProfilePage() {
   return (
     <div className="p-4 space-y-6">
       <div className="text-center">
-        <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div 
+          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+          style={{ backgroundColor: 'var(--muted)' }}
+        >
           {user.avatarUrl ? (
             <img 
               src={user.avatarUrl} 
@@ -42,21 +45,21 @@ export function ProfilePage() {
               className="w-full h-full rounded-full object-cover" 
             />
           ) : (
-            <UserIcon className="w-10 h-10 text-gray-400" />
+            <UserIcon className="w-10 h-10" style={{ color: 'var(--muted-foreground)' }} />
           )}
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>
           My Profile
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p style={{ color: 'var(--muted-foreground)' }}>
           Manage your account settings
         </p>
       </div>
 
-      <Card className="p-4">
+      <Card className="p-4" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--foreground)' }}>
               Username
             </label>
             <Input
@@ -67,14 +70,19 @@ export function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--foreground)' }}>
               <LanguagesIcon className="inline w-4 h-4 mr-1" />
               Language
             </label>
             <select
               value={formData.languageCode}
               onChange={(e) => handleInputChange('languageCode', e.target.value)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              className="w-full p-2 border rounded-md"
+              style={{
+                borderColor: 'var(--border)',
+                backgroundColor: 'var(--background)',
+                color: 'var(--foreground)'
+              }}
             >
               <option value="en">English</option>
               <option value="ru">Русский</option>
@@ -82,14 +90,19 @@ export function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--foreground)' }}>
               <PaletteIcon className="inline w-4 h-4 mr-1" />
               Theme
             </label>
             <select
               value={formData.theme}
               onChange={(e) => handleInputChange('theme', e.target.value as any)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              className="w-full p-2 border rounded-md"
+              style={{
+                borderColor: 'var(--border)',
+                backgroundColor: 'var(--background)',
+                color: 'var(--foreground)'
+              }}
             >
               <option value="system">System</option>
               <option value="light">Light</option>
@@ -99,25 +112,40 @@ export function ProfilePage() {
         </div>
       </Card>
 
-      <Card className="p-4">
-        <h3 className="font-medium text-gray-900 dark:text-white mb-3">
+      <Card className="p-4" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+        <h3 className="font-medium mb-3" style={{ color: 'var(--foreground)' }}>
           Progress Overview
         </h3>
         
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-gray-600 dark:text-gray-400">Modules Completed</span>
-            <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">3 of 6</span>
+            <span style={{ color: 'var(--muted-foreground)' }}>Modules Completed</span>
+            <span 
+              className="text-sm px-2 py-1 rounded"
+              style={{ backgroundColor: 'var(--muted)', color: 'var(--primary)' }}
+            >
+              3 of 6
+            </span>
           </div>
           
           <div className="flex items-center justify-between">
-            <span className="text-gray-600 dark:text-gray-400">Interview Attempts</span>
-            <span className="text-sm bg-gray-100 text-gray-800 px-2 py-1 rounded">12</span>
+            <span style={{ color: 'var(--muted-foreground)' }}>Interview Attempts</span>
+            <span 
+              className="text-sm px-2 py-1 rounded"
+              style={{ backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }}
+            >
+              12
+            </span>
           </div>
           
           <div className="flex items-center justify-between">
-            <span className="text-gray-600 dark:text-gray-400">Average Score</span>
-            <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">85%</span>
+            <span style={{ color: 'var(--muted-foreground)' }}>Average Score</span>
+            <span 
+              className="text-sm px-2 py-1 rounded"
+              style={{ backgroundColor: '#f0fdf4', color: '#166534' }}
+            >
+              85%
+            </span>
           </div>
         </div>
       </Card>
