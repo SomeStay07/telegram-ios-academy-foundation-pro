@@ -15,6 +15,13 @@ export function NewProfilePage() {
   const [user, setUser] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Mock stats for progress section
+  const mockStats = {
+    completed: 3,
+    hours: 12,
+    streak: 5
+  }
+
   // Load data on mount
   useEffect(() => {
     getDataSource()
@@ -25,56 +32,15 @@ export function NewProfilePage() {
       })
   }, [])
 
-  // MainButton integration for saving preferences
+  // MainButton integration - hide for profile page
   useEffect(() => {
     const { WebApp } = (window as any)?.Telegram || {}
+    const mainButton = WebApp?.MainButton
     
-    // Mock MainButton for development
-    const isDevelopment = import.meta.env.DEV
-    const mainButton = WebApp?.MainButton || (isDevelopment ? {
-      text: '',
-      show: () => console.log('MainButton.show()'),
-      hide: () => console.log('MainButton.hide()'),
-      enable: () => console.log('MainButton.enable()'),
-      disable: () => console.log('MainButton.disable()'),
-      onClick: (fn: () => void) => {
-        console.log('MainButton.onClick() - will trigger save')
-        if (isDevelopment) {
-          // Auto-trigger save in development after a short delay
-          setTimeout(fn, 100)
-        }
-      },
-      offClick: () => console.log('MainButton.offClick()'),
-    } : null)
-
-    if (!mainButton) return
-
-    const handleSave = async () => {
-      await savePreferences()
-      
-      // Show success feedback
-      if (WebApp?.HapticFeedback) {
-        WebApp.HapticFeedback.impactOccurred('light')
-      }
-    }
-
-    if (dirty) {
-      mainButton.text = 'Save'
-      mainButton.show()
-      mainButton.enable()
-      mainButton.onClick(handleSave)
-    } else {
+    if (mainButton) {
       mainButton.hide()
     }
-    
-    // Cleanup on unmount or dependency change
-    return () => {
-      if (mainButton.offClick) {
-        mainButton.offClick(handleSave)
-      }
-      mainButton.hide()
-    }
-  }, [dirty, savePreferences])
+  }, [])
 
   // BackButton integration - hide on profile root
   useEffect(() => {
@@ -103,24 +69,13 @@ export function NewProfilePage() {
     }
   }
 
-  const handleLanguageChange = (languageCode: string) => {
-    updatePreferences({ languageCode })
-  }
-
-  const handleThemeChange = (theme: 'system' | 'light' | 'dark') => {
-    updatePreferences({ theme })
-  }
-
-  const handleNotificationsToggle = (notificationsEnabled: boolean) => {
-    updatePreferences({ notificationsEnabled })
-  }
-
+  // Handlers for profile actions
   const handleSignOut = () => {
     const { WebApp } = (window as any)?.Telegram || {}
     
     const confirmAction = (confirmed: boolean) => {
       if (confirmed) {
-        signOut()
+        console.log('Sign out requested')
         if (WebApp?.HapticFeedback) {
           WebApp.HapticFeedback.impactOccurred('medium')
         }
@@ -140,11 +95,7 @@ export function NewProfilePage() {
     
     const confirmAction = (confirmed: boolean) => {
       if (confirmed) {
-        updatePreferences({
-          languageCode: profile?.user.language_code || 'en',
-          theme: 'system',
-          notificationsEnabled: true,
-        })
+        console.log('Reset settings requested')
         if (WebApp?.HapticFeedback) {
           WebApp.HapticFeedback.impactOccurred('medium')
         }
@@ -183,18 +134,13 @@ export function NewProfilePage() {
             </h1>
             <div className="flex items-center gap-2 mt-1 min-w-0">
               <Badge variant="outline" className="text-xs flex-shrink-0">
-                {preferences.languageCode.toUpperCase()}
+                EN
               </Badge>
-              {dirty && (
-                <Badge variant="secondary" className="text-xs flex-shrink-0">
-                  Unsaved Changes
-                </Badge>
-              )}
             </div>
           </div>
         </div>
         <p className="text-xs text-muted-foreground line-clamp-2">
-          {profile ? 'Data synced from Telegram' : 'Using mock profile data'}
+          {user ? 'Data synced from Telegram' : 'Using mock profile data'}
         </p>
       </div>
 
@@ -211,147 +157,24 @@ export function NewProfilePage() {
           className="mb-3"
         />
 
-        {/* User Details */}
-        {profile && (
-          <Card className="bg-card text-card-foreground border-border rounded-2xl p-4 sm:p-5">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <User className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Full Name</p>
-                    <p className="text-sm text-foreground truncate">
-                      {[profile.user.first_name, profile.user.last_name].filter(Boolean).join(' ') || 'Not specified'}
-                    </p>
-                  </div>
-                </div>
-              </div>
+        {/* Progress Section */}
+        <EnhancedProgressSection
+          coursesCompleted={mockStats.completed}
+          totalCourses={6}
+          timeSpent={mockStats.hours}
+          currentStreak={mockStats.streak}
+          weeklyStreak={[1, 1, 0, 1, 1, 1, 0]} // Mon-Sun pattern
+        />
 
-              {profile.user.username && (
-                <div className="flex items-center justify-between border-t border-border pt-4">
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <span className="w-4 h-4 text-muted-foreground flex-shrink-0 text-sm font-bold">@</span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Username</p>
-                      <p className="text-sm text-foreground truncate">{profile.user.username}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-center justify-between border-t border-border pt-4">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <Hash className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">User ID</p>
-                    <p className="text-sm text-foreground font-mono break-all">{profile.user.id}</p>
-                  </div>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleCopyId(profile.user.id)}
-                  className="ml-2 flex-shrink-0"
-                >
-                  <Copy className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        {/* Preferences */}
-        <Card className="bg-card text-card-foreground border-border rounded-2xl p-4 sm:p-5 space-y-3">
-          <div className="flex items-center gap-3 mb-4">
-            <Smartphone className="w-5 h-5 text-muted-foreground" />
-            <h3 className="text-lg font-semibold text-foreground">Preferences</h3>
-          </div>
-          
+        {/* Settings placeholder */}
+        <Card className="bg-card text-card-foreground border-border rounded-2xl p-4 sm:p-5">
           <div className="space-y-4">
-            <div className="flex items-center justify-between min-w-0">
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <Languages className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-foreground">Language</p>
-                  <p className="text-xs text-muted-foreground line-clamp-2">App interface language</p>
-                </div>
-              </div>
-              <select
-                value={preferences.languageCode}
-                onChange={(e) => handleLanguageChange(e.target.value)}
-                className="ml-3 px-3 py-2 text-sm bg-background border border-border rounded-xl text-foreground flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="en">🇺🇸 EN</option>
-                <option value="ru">🇷🇺 RU</option>
-              </select>
-            </div>
-
-            <div className="border-t border-border pt-4">
-              <div className="flex items-center justify-between min-w-0">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <Palette className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground">Theme</p>
-                    <p className="text-xs text-muted-foreground line-clamp-2">Follow Telegram or set custom</p>
-                  </div>
-                </div>
-                
-                <div className="ml-3 flex bg-muted rounded-xl p-1 flex-shrink-0">
-                  {['system', 'light', 'dark'].map((themeOption) => (
-                    <button
-                      key={themeOption}
-                      onClick={() => handleThemeChange(themeOption as any)}
-                      className={`px-3 py-1 text-xs font-medium rounded-lg transition-colors duration-150 ${
-                        preferences.theme === themeOption
-                          ? 'bg-background text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {themeOption === 'system' && '🔄'}
-                      {themeOption === 'light' && '☀️'}
-                      {themeOption === 'dark' && '🌙'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-border pt-4">
-              <div className="flex items-center justify-between min-w-0">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <Bell className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground">Notifications</p>
-                    <p className="text-xs text-muted-foreground line-clamp-2">Course updates and reminders</p>
-                  </div>
-                </div>
-                <Button
-                  variant={preferences.notificationsEnabled ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleNotificationsToggle(!preferences.notificationsEnabled)}
-                  className="ml-3 flex-shrink-0 min-w-[60px]"
-                >
-                  {preferences.notificationsEnabled ? 'On' : 'Off'}
-                </Button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-4 pt-4 border-t border-border">
-            <p className="text-xs text-muted-foreground text-center line-clamp-2">
-              Changes will be saved when you tap the Save button
+            <h3 className="text-lg font-semibold text-foreground">Settings & Preferences</h3>
+            <p className="text-sm text-muted-foreground">
+              Theme, language, notifications and other preferences will be available here.
             </p>
           </div>
         </Card>
-
-        {/* Progress Section */}
-        <EnhancedProgressSection
-          coursesCompleted={profile?.stats.completed || 0}
-          totalCourses={6}
-          timeSpent={profile?.stats.hours || 0}
-          currentStreak={profile?.stats.streak || 0}
-          weeklyStreak={[1, 1, 0, 1, 1, 1, 0]} // Mon-Sun pattern - this could come from activity data
-        />
 
         {/* Danger Zone */}
         <DangerZoneSection
