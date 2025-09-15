@@ -23,6 +23,8 @@ export * from './Badge'
 export * from './StatCard'
 export * from './ProgressRing'
 export * from './AchievementBadge'
+export * from './CircularProgress'
+export * from './StreakCounter'
 
 // Content Components  
 export * from './CodeBlock'

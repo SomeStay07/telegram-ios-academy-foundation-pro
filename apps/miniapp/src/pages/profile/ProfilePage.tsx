@@ -7,7 +7,8 @@ import { useAppStore } from '../../shared/model/store'
 
 import { AccountSection } from './sections/AccountSection'
 import { PreferencesSection } from './sections/PreferencesSection'
-import { ProgressSection } from './sections/ProgressSection'
+import { SkillsProgressSection } from './sections/SkillsProgressSection'
+import { ActivityStatsSection } from './sections/ActivityStatsSection'
 import { DangerZoneSection } from './sections/DangerZoneSection'
 
 interface ProfilePreferences {
@@ -265,11 +266,20 @@ export function ProfilePage() {
           onNotificationsToggle={handleNotificationsToggle}
         />
 
-        <ProgressSection
+        <SkillsProgressSection
           coursesCompleted={3}
           totalCourses={6}
+        />
+
+        <ActivityStatsSection
           interviewsAttempted={12}
           averageScore={85}
+          currentStreak={7}
+          bestStreak={14}
+          totalStudyTime={1680}
+          weeklyXP={420}
+          monthlyXP={1580}
+          achievements={12}
         />
 
         <DangerZoneSection
