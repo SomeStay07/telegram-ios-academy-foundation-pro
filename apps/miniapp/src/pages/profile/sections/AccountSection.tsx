@@ -24,7 +24,7 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
   }
 
   return (
-    <CardSurface interactive className="p-4 sm:p-5">
+    <CardSurface interactive className="p-4 sm:p-5 transition-all duration-200">
       <div className="flex items-start gap-4">
         {/* Avatar with premium indicator */}
         <div className="relative flex-shrink-0">
@@ -36,8 +36,8 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
             className="ring-1 ring-border"
           />
           {user.isPremium && (
-            <div className="absolute -top-1 -right-1 bg-primary rounded-full p-1">
-              <Crown className="w-3 h-3 text-primary-foreground" />
+            <div className="absolute -top-1 -right-1 premium-indicator rounded-full p-1">
+              <Crown className="w-3 h-3 text-white" />
             </div>
           )}
         </div>
@@ -46,7 +46,7 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <h2 className="text-lg font-semibold text-foreground truncate">
+              <h2 className="card-section-header text-lg font-semibold text-foreground truncate">
                 {user.fullName}
               </h2>
               <div className="flex items-center gap-2 mt-1">
@@ -80,7 +80,7 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
       <div className="mt-4 pt-4 border-t border-border space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <User className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <User className="card-icon w-4 h-4 text-muted-foreground flex-shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Full Name</p>
               <p className="text-sm text-foreground truncate">{user.fullName}</p>
@@ -102,7 +102,7 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <Hash className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <Hash className="card-icon w-4 h-4 text-muted-foreground flex-shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">User ID</p>
               <p className="text-sm text-foreground font-mono break-all">{user.id}</p>

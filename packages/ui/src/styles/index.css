@@ -9,6 +9,114 @@
   direction: ltr;
 }
 
+/* CardSurface elevation effects with enhanced visual interest */
+.card-surface-base {
+  box-shadow: var(--elev-1, 
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.08)
+  );
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, 
+    var(--card) 0%, 
+    color-mix(in oklab, var(--card) 98%, var(--foreground)) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle inner glow for depth */
+.card-surface-base::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    color-mix(in oklab, var(--primary) 20%, transparent) 50%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+.card-surface-interactive:active {
+  transform: translateY(1px) scale(0.998);
+  box-shadow: var(--elev-2, 
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1)
+  );
+}
+
+.card-surface-interactive:focus-visible {
+  outline: none;
+  box-shadow: var(--elev-2, 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1)
+  ), 0 0 0 2px var(--primary);
+}
+
+/* Responsive hover support - only hover devices */
+@media (hover: hover) {
+  .card-surface-interactive:hover {
+    box-shadow: var(--elev-2, 
+      0 8px 25px rgba(0, 0, 0, 0.15),
+      0 3px 10px rgba(0, 0, 0, 0.1)
+    );
+    transform: translateY(-2px) scale(1.002);
+    border-color: color-mix(in oklab, var(--border) 70%, var(--primary));
+  }
+  
+  .card-surface-interactive:hover::before {
+    opacity: 1;
+    background: linear-gradient(90deg, 
+      transparent 0%,
+      color-mix(in oklab, var(--primary) 40%, transparent) 50%,
+      transparent 100%
+    );
+  }
+}
+
+/* Icon enhancements for cards */
+.card-icon {
+  background: linear-gradient(135deg, 
+    var(--primary) 0%, 
+    color-mix(in oklab, var(--primary) 80%, var(--foreground)) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 2px color-mix(in oklab, var(--primary) 20%, transparent));
+}
+
+/* Enhanced card sections */
+.card-section-header {
+  position: relative;
+}
+
+.card-section-header::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+  border-radius: 1px;
+}
+
+/* Premium indicator glow */
+.premium-indicator {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  animation: premium-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes premium-glow {
+  from { box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
+  to { box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); }
+}
+
 /* Logical CSS Properties for Components */
 
 /* Button */
