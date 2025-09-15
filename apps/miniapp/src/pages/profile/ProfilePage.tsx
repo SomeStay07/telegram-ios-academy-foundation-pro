@@ -220,9 +220,12 @@ export function ProfilePage() {
   const displayUser = user || {
     id: 999999999,
     username: undefined,
+    firstName: 'Telegram',
+    lastName: 'User',
     fullName: 'Telegram User',
     languageCode: 'en',
     avatarUrl: undefined,
+    isPremium: false,
   }
 
   return (
