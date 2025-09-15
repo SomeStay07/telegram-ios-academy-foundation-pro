@@ -12,6 +12,12 @@ async function checkDuplicates() {
   // Check all JSON content files
   const contentFiles = await glob('content/**/*.json')
   
+  // Handle case where glob returns undefined or null
+  if (!contentFiles || !Array.isArray(contentFiles)) {
+    console.log('⚠️ No content files found in content/ directory')
+    process.exit(0)
+  }
+  
   for (const file of contentFiles) {
     try {
       const content = fs.readFileSync(file, 'utf8')
