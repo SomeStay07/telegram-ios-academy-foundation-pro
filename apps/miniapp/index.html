@@ -5,6 +5,22 @@
   <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
   <title>MiniApp</title>
   <style>
+    /* Telegram theme defaults for local development */
+    :root {
+      --tg-theme-bg-color: #0b0d10;
+      --tg-theme-text-color: #e6e7e9;
+      --tg-theme-button-color: #3b82f6;
+      --tg-theme-button-text-color: #ffffff;
+      --tg-theme-link-color: #60a5fa;
+      --tg-color-scheme: dark;
+      
+      /* Design system fallbacks */
+      --background: var(--tg-theme-bg-color);
+      --foreground: var(--tg-theme-text-color);
+      --primary: var(--tg-theme-button-color);
+      --accent: var(--tg-theme-link-color);
+    }
+    
     /* Prevent white flash by applying Telegram theme immediately */
     html { 
       background: var(--tg-theme-bg-color, #000); 

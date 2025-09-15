@@ -39,6 +39,10 @@ class TelegramDataSource implements IDataSource {
     const wa = (window as any).Telegram?.WebApp;
     const u = wa?.initDataUnsafe?.user ?? {};
     
+    // Debug: log what we get from Telegram
+    console.log('TelegramDataSource - Raw user data:', u);
+    console.log('TelegramDataSource - photo_url:', u.photo_url);
+    
     // TODO: здесь только клиентское отображение. Для сервера — верификация initData по докам TG.
     return { 
       user: {
