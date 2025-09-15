@@ -5,7 +5,8 @@ import { UserIcon, LanguagesIcon, PaletteIcon } from 'lucide-react'
 
 export function ProfilePage() {
   const store = useAppStore()
-  const { user = {}, updateProfile } = store || {}
+  const user = store?.user || {}
+  const updateProfile = store?.updateProfile
   const [formData, setFormData] = useState({
     username: user.username || '',
     languageCode: user.languageCode || 'en',

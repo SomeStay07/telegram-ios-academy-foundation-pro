@@ -4,7 +4,8 @@ import { PlayIcon } from 'lucide-react'
 
 export function RoadmapPage() {
   const store = useAppStore()
-  const { modules = [], continueModule } = store || {}
+  const modules = store?.modules || []
+  const continueModule = store?.continueModule
   
   const incompleteModule = modules.find(m => m.progress > 0 && m.progress < 100)
 

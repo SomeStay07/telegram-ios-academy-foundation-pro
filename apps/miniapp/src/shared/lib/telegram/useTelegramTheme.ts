@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 export function useTelegramTheme() {
   useEffect(() => {
-    const { WebApp } = (window as any).Telegram;
+    const { WebApp } = (window as any)?.Telegram || {};
     
     const apply = () => {
       if (!WebApp) return;

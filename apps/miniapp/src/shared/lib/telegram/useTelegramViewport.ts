@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 export function useTelegramViewport() {
   useEffect(() => {
-    const { WebApp } = (window as any).Telegram;
+    const { WebApp } = (window as any)?.Telegram || {};
     
     const setVph = () => {
       const h = WebApp?.viewportStableHeight || window.innerHeight;
