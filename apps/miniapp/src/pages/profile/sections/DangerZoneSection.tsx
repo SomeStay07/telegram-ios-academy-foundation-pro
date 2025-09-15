@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp, LogOut, RotateCcw } from 'lucide-react'
-import { CardSurface, Button, Separator } from '@telegram-ios-academy/ui'
+import { InteractiveCard, Button, Separator } from '@telegram-ios-academy/ui'
 
 interface DangerZoneSectionProps {
   onSignOut: () => void
@@ -35,7 +35,7 @@ export function DangerZoneSection({ onSignOut, onResetSettings }: DangerZoneSect
   }
 
   return (
-    <CardSurface className="overflow-hidden">
+    <InteractiveCard variant="glow" interactive={false} className="overflow-hidden">
       <button
         onClick={handleToggle}
         className="w-full p-4 sm:p-5 flex items-center justify-between hover:bg-muted/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 min-w-0"
@@ -93,6 +93,6 @@ export function DangerZoneSection({ onSignOut, onResetSettings }: DangerZoneSect
           </div>
         </div>
       )}
-    </CardSurface>
+    </InteractiveCard>
   )
 }

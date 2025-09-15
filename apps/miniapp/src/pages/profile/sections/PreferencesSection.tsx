@@ -1,5 +1,5 @@
 import { Languages, Palette, Bell, Smartphone } from 'lucide-react'
-import { CardSurface, Button } from '@telegram-ios-academy/ui'
+import { InteractiveCard, Button } from '@telegram-ios-academy/ui'
 
 interface PreferencesSectionProps {
   languageCode: string
@@ -44,7 +44,7 @@ export function PreferencesSection({
   }
 
   return (
-    <CardSurface className="p-4 sm:p-5 space-y-3">
+    <InteractiveCard variant="lift" className="p-4 sm:p-5 space-y-3">
       <div className="flex items-center gap-3 mb-4">
         <Smartphone className="w-5 h-5 text-muted-foreground" />
         <h3 className="text-lg font-semibold text-foreground">Preferences</h3>
@@ -126,6 +126,6 @@ export function PreferencesSection({
           Changes will be saved automatically when you modify settings
         </p>
       </div>
-    </CardSurface>
+    </InteractiveCard>
   )
 }

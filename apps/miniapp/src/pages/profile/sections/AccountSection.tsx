@@ -1,5 +1,5 @@
 import { Copy, Edit, User, Hash, Crown } from 'lucide-react'
-import { CardSurface, Avatar, Button, Badge } from '@telegram-ios-academy/ui'
+import { InteractiveCard, Avatar, Button, Badge } from '@telegram-ios-academy/ui'
 import { TelegramUser } from '../../../shared/lib/telegram/useTelegramUser'
 
 interface AccountSectionProps {
@@ -9,6 +9,8 @@ interface AccountSectionProps {
 }
 
 export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) {
+  console.log('AccountSection rendering with user:', user?.fullName)
+  
   // Helper to get avatar initials from first_name + last_name
   const getInitials = () => {
     if (user.firstName && user.lastName) {
@@ -24,7 +26,7 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
   }
 
   return (
-    <CardSurface interactive className="p-4 sm:p-5 transition-all duration-200">
+    <InteractiveCard variant="spotlight" className="p-4 sm:p-5">
       <div className="flex items-start gap-4">
         {/* Avatar with premium indicator */}
         <div className="relative flex-shrink-0">
@@ -118,6 +120,6 @@ export function AccountSection({ user, onCopyId, onEdit }: AccountSectionProps) 
           </Button>
         </div>
       </div>
-    </CardSurface>
+    </InteractiveCard>
   )
 }
