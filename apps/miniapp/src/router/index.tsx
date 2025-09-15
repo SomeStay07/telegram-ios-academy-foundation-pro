@@ -5,17 +5,27 @@ import { Outlet } from '@tanstack/react-router'
 import { RoadmapPage } from '../pages/RoadmapPage'
 import { InterviewPage } from '../pages/InterviewPage'
 import { ProfilePage } from '../pages/ProfilePage'
+import { useTelegramTheme } from '../shared/lib/telegram/useTelegramTheme'
+import { useTelegramViewport } from '../shared/lib/telegram/useTelegramViewport'
 
-// Root route with TabBar layout
-const rootRoute = createRootRoute({
-  component: () => (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
-      <main className="flex-1 pb-16 safe-bottom">
+// Root component with Telegram integration
+function RootComponent() {
+  useTelegramTheme()
+  useTelegramViewport()
+  
+  return (
+    <div className="min-h-[calc(var(--tg-vph,100svh))] bg-background text-foreground flex flex-col">
+      <main className="flex-1 pb-[calc(env(safe-area-inset-bottom)+64px)]">
         <Outlet />
       </main>
       <TabBar />
     </div>
-  ),
+  )
+}
+
+// Root route with TabBar layout
+const rootRoute = createRootRoute({
+  component: RootComponent,
 })
 
 // Index route - redirect to roadmap

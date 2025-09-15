@@ -32,12 +32,9 @@ export function ProfilePage() {
   }
 
   return (
-    <div className="p-4 space-y-6">
-      <div className="text-center">
-        <div 
-          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
-          style={{ backgroundColor: 'var(--muted)' }}
-        >
+    <main className="mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24">
+      <div className="text-center mb-6">
+        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-muted">
           {user.avatarUrl ? (
             <img 
               src={user.avatarUrl} 
@@ -45,44 +42,40 @@ export function ProfilePage() {
               className="w-full h-full rounded-full object-cover" 
             />
           ) : (
-            <UserIcon className="w-10 h-10" style={{ color: 'var(--muted-foreground)' }} />
+            <UserIcon className="w-10 h-10 text-muted-foreground" />
           )}
         </div>
-        <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>
+        <h1 className="text-2xl font-bold mb-2 text-foreground">
           My Profile
         </h1>
-        <p style={{ color: 'var(--muted-foreground)' }}>
+        <p className="text-muted-foreground">
           Manage your account settings
         </p>
       </div>
 
-      <Card className="p-4" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+      <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4 mb-6">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--foreground)' }}>
+            <label className="block text-sm font-medium mb-2 text-foreground">
               Username
             </label>
             <Input
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
               placeholder="Enter your username"
+              className="border-border bg-background text-foreground"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--foreground)' }}>
+            <label className="block text-sm font-medium mb-2 text-foreground">
               <LanguagesIcon className="inline w-4 h-4 mr-1" />
               Language
             </label>
             <select
               value={formData.languageCode}
               onChange={(e) => handleInputChange('languageCode', e.target.value)}
-              className="w-full p-2 border rounded-md"
-              style={{
-                borderColor: 'var(--border)',
-                backgroundColor: 'var(--background)',
-                color: 'var(--foreground)'
-              }}
+              className="w-full p-2 border border-border rounded-md bg-background text-foreground"
             >
               <option value="en">English</option>
               <option value="ru">Русский</option>
@@ -90,19 +83,14 @@ export function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--foreground)' }}>
+            <label className="block text-sm font-medium mb-2 text-foreground">
               <PaletteIcon className="inline w-4 h-4 mr-1" />
               Theme
             </label>
             <select
               value={formData.theme}
               onChange={(e) => handleInputChange('theme', e.target.value as any)}
-              className="w-full p-2 border rounded-md"
-              style={{
-                borderColor: 'var(--border)',
-                backgroundColor: 'var(--background)',
-                color: 'var(--foreground)'
-              }}
+              className="w-full p-2 border border-border rounded-md bg-background text-foreground"
             >
               <option value="system">System</option>
               <option value="light">Light</option>
@@ -112,38 +100,29 @@ export function ProfilePage() {
         </div>
       </Card>
 
-      <Card className="p-4" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-        <h3 className="font-medium mb-3" style={{ color: 'var(--foreground)' }}>
+      <Card className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-4 mb-6">
+        <h3 className="font-medium mb-3 text-card-foreground">
           Progress Overview
         </h3>
         
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span style={{ color: 'var(--muted-foreground)' }}>Modules Completed</span>
-            <span 
-              className="text-sm px-2 py-1 rounded"
-              style={{ backgroundColor: 'var(--muted)', color: 'var(--primary)' }}
-            >
+            <span className="text-muted-foreground">Modules Completed</span>
+            <span className="text-sm px-2 py-1 rounded bg-muted text-primary">
               3 of 6
             </span>
           </div>
           
           <div className="flex items-center justify-between">
-            <span style={{ color: 'var(--muted-foreground)' }}>Interview Attempts</span>
-            <span 
-              className="text-sm px-2 py-1 rounded"
-              style={{ backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }}
-            >
+            <span className="text-muted-foreground">Interview Attempts</span>
+            <span className="text-sm px-2 py-1 rounded bg-muted text-muted-foreground">
               12
             </span>
           </div>
           
           <div className="flex items-center justify-between">
-            <span style={{ color: 'var(--muted-foreground)' }}>Average Score</span>
-            <span 
-              className="text-sm px-2 py-1 rounded"
-              style={{ backgroundColor: '#f0fdf4', color: '#166534' }}
-            >
+            <span className="text-muted-foreground">Average Score</span>
+            <span className="text-sm px-2 py-1 rounded bg-green-50 text-green-700">
               85%
             </span>
           </div>
@@ -151,10 +130,10 @@ export function ProfilePage() {
       </Card>
 
       {hasChanges && (
-        <Button onClick={handleSave} className="w-full">
+        <Button onClick={handleSave} className="w-full bg-primary text-primary-foreground">
           Save Changes
         </Button>
       )}
-    </div>
+    </main>
   )
 }

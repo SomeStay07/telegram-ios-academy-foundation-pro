@@ -1,1 +1,72 @@
 /* Global styles for UI components */
+
+/* Telegram WebApp theme integration with shadcn/ui tokens */
+:root {
+  /* Map Telegram CSS vars to shadcn tokens */
+  --background: var(--tg-theme-bg-color, hsl(0 0% 100%));
+  --foreground: var(--tg-theme-text-color, hsl(0 0% 10%));
+
+  --card: var(--tg-theme-secondary-bg-color, hsl(0 0% 100%));
+  --card-foreground: var(--tg-theme-text-color, hsl(0 0% 10%));
+
+  --muted: var(--tg-theme-secondary-bg-color, hsl(0 0% 96%));
+  --muted-foreground: var(--tg-theme-hint-color, hsl(0 0% 45%));
+
+  --border: color-mix(in oklab, var(--foreground) 12%, var(--background));
+  --primary: var(--tg-theme-button-color, hsl(222 47% 50%));
+  --primary-foreground: var(--tg-theme-button-text-color, hsl(0 0% 100%));
+
+  /* Additional shadcn tokens */
+  --popover: var(--card);
+  --popover-foreground: var(--card-foreground);
+  --secondary: var(--muted);
+  --secondary-foreground: var(--muted-foreground);
+  --accent: var(--muted);
+  --accent-foreground: var(--muted-foreground);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --ring: var(--primary);
+  --radius: 0.5rem;
+
+  color-scheme: var(--tg-color-scheme, light);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.dark {
+  --background: var(--tg-theme-bg-color, hsl(0 0% 13%));
+  --foreground: var(--tg-theme-text-color, hsl(0 0% 95%));
+
+  --card: var(--tg-theme-secondary-bg-color, hsl(0 0% 17%));
+  --card-foreground: var(--tg-theme-text-color, hsl(0 0% 95%));
+
+  --muted: var(--tg-theme-secondary-bg-color, hsl(0 0% 15%));
+  --muted-foreground: var(--tg-theme-hint-color, hsl(0 0% 63%));
+
+  --border: color-mix(in oklab, var(--foreground) 15%, var(--background));
+  --primary: var(--tg-theme-button-color, hsl(210 90% 70%));
+  --primary-foreground: var(--tg-theme-button-text-color, hsl(0 0% 100%));
+
+  --popover: var(--card);
+  --popover-foreground: var(--card-foreground);
+  --secondary: var(--muted);
+  --secondary-foreground: var(--muted-foreground);
+  --accent: var(--muted);
+  --accent-foreground: var(--muted-foreground);
+  --destructive: hsl(0 63% 31%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --ring: var(--primary);
+
+  color-scheme: var(--tg-color-scheme, dark);
+}
+
+/* Apply Telegram theme colors to body */
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Link color from Telegram */
+a {
+  color: var(--tg-theme-link-color, hsl(215 90% 56%));
+}

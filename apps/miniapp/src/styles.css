@@ -8,54 +8,76 @@
   --tg-safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Telegram theme CSS variables */
+/* Telegram WebApp theme integration with shadcn/ui tokens */
 :root {
-  --tg-theme-bg-color: #ffffff;
-  --tg-theme-text-color: #000000;
-  --tg-theme-hint-color: #999999;
-  --tg-theme-link-color: #2481cc;
-  --tg-theme-button-color: #2481cc;
-  --tg-theme-button-text-color: #ffffff;
-  --tg-theme-secondary-bg-color: #f1f1f1;
-  
-  /* Tailwind integration */
-  --background: var(--tg-theme-bg-color);
-  --foreground: var(--tg-theme-text-color);
-  --muted: var(--tg-theme-secondary-bg-color);
-  --muted-foreground: var(--tg-theme-hint-color);
-  --primary: var(--tg-theme-button-color);
-  --primary-foreground: var(--tg-theme-button-text-color);
-  --card: var(--tg-theme-bg-color);
-  --card-foreground: var(--tg-theme-text-color);
-  --border: #e5e7eb;
+  /* Map Telegram CSS vars to shadcn tokens */
+  --background: var(--tg-theme-bg-color, hsl(0 0% 100%));
+  --foreground: var(--tg-theme-text-color, hsl(0 0% 10%));
+
+  --card: var(--tg-theme-secondary-bg-color, hsl(0 0% 100%));
+  --card-foreground: var(--tg-theme-text-color, hsl(0 0% 10%));
+
+  --muted: var(--tg-theme-secondary-bg-color, hsl(0 0% 96%));
+  --muted-foreground: var(--tg-theme-hint-color, hsl(0 0% 45%));
+
+  --border: color-mix(in oklab, var(--foreground) 12%, var(--background));
+  --primary: var(--tg-theme-button-color, hsl(222 47% 50%));
+  --primary-foreground: var(--tg-theme-button-text-color, hsl(0 0% 100%));
+
+  /* Additional shadcn tokens */
+  --popover: var(--card);
+  --popover-foreground: var(--card-foreground);
+  --secondary: var(--muted);
+  --secondary-foreground: var(--muted-foreground);
+  --accent: var(--muted);
+  --accent-foreground: var(--muted-foreground);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --ring: var(--primary);
+  --radius: 0.5rem;
+
+  color-scheme: var(--tg-color-scheme, light);
+  background: var(--background);
+  color: var(--foreground);
 }
 
-[data-theme="dark"], .dark {
-  --tg-theme-bg-color: #212121;
-  --tg-theme-text-color: #ffffff;
-  --tg-theme-hint-color: #aaaaaa;
-  --tg-theme-link-color: #8cbbf0;
-  --tg-theme-button-color: #8cbbf0;
-  --tg-theme-button-text-color: #ffffff;
-  --tg-theme-secondary-bg-color: #181818;
-  
-  /* Tailwind integration for dark */
-  --background: var(--tg-theme-bg-color);
-  --foreground: var(--tg-theme-text-color);
-  --muted: var(--tg-theme-secondary-bg-color);
-  --muted-foreground: var(--tg-theme-hint-color);
-  --primary: var(--tg-theme-button-color);
-  --primary-foreground: var(--tg-theme-button-text-color);
-  --card: #2a2a2a;
-  --card-foreground: var(--tg-theme-text-color);
-  --border: #404040;
+.dark {
+  --background: var(--tg-theme-bg-color, hsl(0 0% 13%));
+  --foreground: var(--tg-theme-text-color, hsl(0 0% 95%));
+
+  --card: var(--tg-theme-secondary-bg-color, hsl(0 0% 17%));
+  --card-foreground: var(--tg-theme-text-color, hsl(0 0% 95%));
+
+  --muted: var(--tg-theme-secondary-bg-color, hsl(0 0% 15%));
+  --muted-foreground: var(--tg-theme-hint-color, hsl(0 0% 63%));
+
+  --border: color-mix(in oklab, var(--foreground) 15%, var(--background));
+  --primary: var(--tg-theme-button-color, hsl(210 90% 70%));
+  --primary-foreground: var(--tg-theme-button-text-color, hsl(0 0% 100%));
+
+  --popover: var(--card);
+  --popover-foreground: var(--card-foreground);
+  --secondary: var(--muted);
+  --secondary-foreground: var(--muted-foreground);
+  --accent: var(--muted);
+  --accent-foreground: var(--muted-foreground);
+  --destructive: hsl(0 63% 31%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --ring: var(--primary);
+
+  color-scheme: var(--tg-color-scheme, dark);
 }
 
 /* Apply Telegram theme colors to body */
 body {
-  background-color: var(--background);
+  background: var(--background);
   color: var(--foreground);
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Link color from Telegram */
+a {
+  color: var(--tg-theme-link-color, hsl(215 90% 56%));
 }
 
 /* Safe area utilities */

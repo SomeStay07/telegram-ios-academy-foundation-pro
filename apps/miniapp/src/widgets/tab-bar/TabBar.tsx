@@ -29,8 +29,9 @@ export function TabBar() {
 
   const handleTabClick = (path: string) => {
     // Haptic feedback on tab selection
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-      window.Telegram.WebApp.HapticFeedback.selectionChanged()
+    const webApp = (window as any).Telegram?.WebApp
+    if (webApp?.HapticFeedback) {
+      webApp.HapticFeedback.selectionChanged()
     }
     
     // Scroll to top if clicking on active tab
@@ -40,13 +41,7 @@ export function TabBar() {
   }
 
   return (
-    <nav 
-      className="fixed bottom-0 left-0 right-0 safe-bottom z-50 border-t"
-      style={{ 
-        backgroundColor: 'var(--card)', 
-        borderColor: 'var(--border)' 
-      }}
-    >
+    <nav className="sticky bottom-0 inset-x-0 bg-background/95 supports-[backdrop-filter]:bg-background/60 backdrop-blur border-t border-border pb-[env(safe-area-inset-bottom)] z-50">
       <div className="max-w-md mx-auto flex">
         {tabs.map(({ path, label, icon: Icon }) => {
           const isActive = currentPath.startsWith(path)
@@ -60,20 +55,16 @@ export function TabBar() {
               aria-current={isActive ? 'page' : undefined}
             >
               <Icon 
-                className="w-6 h-6 mb-1 transition-colors"
-                style={{
-                  color: isActive 
-                    ? 'var(--primary)' 
-                    : 'var(--muted-foreground)'
-                }}
+                className={cn(
+                  "w-6 h-6 mb-1 transition-colors",
+                  isActive ? "text-primary" : "text-muted-foreground"
+                )}
               />
               <span 
-                className="text-xs font-medium transition-colors"
-                style={{
-                  color: isActive 
-                    ? 'var(--primary)' 
-                    : 'var(--muted-foreground)'
-                }}
+                className={cn(
+                  "text-xs font-medium transition-colors",
+                  isActive ? "text-primary" : "text-muted-foreground"
+                )}
               >
                 {label}
               </span>
