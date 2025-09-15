@@ -56,12 +56,31 @@ export function ProfilePage() {
   // MainButton integration
   useEffect(() => {
     const { WebApp } = (window as any)?.Telegram || {}
-    if (!WebApp?.MainButton) return
+    
+    // Mock MainButton for development
+    const isDevelopment = import.meta.env.DEV
+    const mainButton = WebApp?.MainButton || (isDevelopment ? {
+      text: '',
+      show: () => console.log('MainButton.show()'),
+      hide: () => console.log('MainButton.hide()'),
+      enable: () => console.log('MainButton.enable()'),
+      disable: () => console.log('MainButton.disable()'),
+      onClick: (fn: () => void) => {
+        console.log('MainButton.onClick() - simulating click')
+        if (isDevelopment) {
+          // Auto-trigger save in development after 2 seconds
+          setTimeout(fn, 100)
+        }
+      },
+      offClick: () => console.log('MainButton.offClick()'),
+    } : null)
+
+    if (!mainButton) return
 
     if (hasUnsavedChanges) {
-      WebApp.MainButton.text = 'Save'
-      WebApp.MainButton.show()
-      WebApp.MainButton.enable()
+      mainButton.text = 'Save'
+      mainButton.show()
+      mainButton.enable()
       
       const handleSave = () => {
         // Save preferences
@@ -69,17 +88,25 @@ export function ProfilePage() {
         setInitialPreferences(preferences)
         
         // Show success feedback
-        WebApp.HapticFeedback?.impactOccurred?.('light')
-        WebApp.showAlert('Settings saved successfully!')
+        if (WebApp?.HapticFeedback) {
+          WebApp.HapticFeedback.impactOccurred('light')
+        }
+        
+        if (WebApp?.showAlert) {
+          WebApp.showAlert('Settings saved successfully!')
+        } else if (isDevelopment) {
+          console.log('Settings saved successfully!')
+          alert('Settings saved successfully!')
+        }
       }
 
-      WebApp.MainButton.onClick(handleSave)
+      mainButton.onClick(handleSave)
       
       return () => {
-        WebApp.MainButton.offClick(handleSave)
+        mainButton.offClick(handleSave)
       }
     } else {
-      WebApp.MainButton.hide()
+      mainButton.hide()
     }
   }, [hasUnsavedChanges, preferences, store])
 
@@ -87,8 +114,18 @@ export function ProfilePage() {
   const handleCopyId = (id: number) => {
     navigator.clipboard.writeText(id.toString())
     const { WebApp } = (window as any)?.Telegram || {}
-    WebApp?.HapticFeedback?.impactOccurred?.('light')
-    WebApp?.showAlert('User ID copied to clipboard!')
+    const isDevelopment = import.meta.env.DEV
+    
+    if (WebApp?.HapticFeedback) {
+      WebApp.HapticFeedback.impactOccurred('light')
+    }
+    
+    if (WebApp?.showAlert) {
+      WebApp.showAlert('User ID copied to clipboard!')
+    } else if (isDevelopment) {
+      console.log('User ID copied to clipboard!')
+      alert('User ID copied to clipboard!')
+    }
   }
 
   const handleLanguageChange = (languageCode: string) => {
@@ -105,17 +142,30 @@ export function ProfilePage() {
 
   const handleSignOut = () => {
     const { WebApp } = (window as any)?.Telegram || {}
-    WebApp?.showConfirm('Are you sure you want to sign out?', (confirmed: boolean) => {
+    const isDevelopment = import.meta.env.DEV
+    
+    const confirmAction = (confirmed: boolean) => {
       if (confirmed) {
         store?.signOut?.()
-        WebApp?.HapticFeedback?.impactOccurred?.('medium')
+        if (WebApp?.HapticFeedback) {
+          WebApp.HapticFeedback.impactOccurred('medium')
+        }
       }
-    })
+    }
+    
+    if (WebApp?.showConfirm) {
+      WebApp.showConfirm('Are you sure you want to sign out?', confirmAction)
+    } else if (isDevelopment) {
+      const confirmed = confirm('Are you sure you want to sign out?')
+      confirmAction(confirmed)
+    }
   }
 
   const handleResetSettings = () => {
     const { WebApp } = (window as any)?.Telegram || {}
-    WebApp?.showConfirm('Reset all settings to defaults?', (confirmed: boolean) => {
+    const isDevelopment = import.meta.env.DEV
+    
+    const confirmAction = (confirmed: boolean) => {
       if (confirmed) {
         const defaultPrefs = {
           languageCode: user?.languageCode || 'en',
@@ -123,9 +173,18 @@ export function ProfilePage() {
           notificationsEnabled: true,
         }
         setPreferences(defaultPrefs)
-        WebApp?.HapticFeedback?.impactOccurred?.('medium')
+        if (WebApp?.HapticFeedback) {
+          WebApp.HapticFeedback.impactOccurred('medium')
+        }
       }
-    })
+    }
+    
+    if (WebApp?.showConfirm) {
+      WebApp.showConfirm('Reset all settings to defaults?', confirmAction)
+    } else if (isDevelopment) {
+      const confirmed = confirm('Reset all settings to defaults?')
+      confirmAction(confirmed)
+    }
   }
 
   if (!user) {
