@@ -4,7 +4,7 @@ import { Outlet } from '@tanstack/react-router'
 import { AppShell } from '../app/AppShell'
 import { RoadmapPage } from '../pages/RoadmapPage'
 import { InterviewPage } from '../pages/InterviewPage'
-import { ProfilePage } from '../pages/ProfilePage'
+import { ProfilePage } from '../pages/profile/ProfilePage'
 
 // Root component with AppShell
 function RootComponent() {
