@@ -3,7 +3,8 @@ import { useAppStore } from '../shared/model/store'
 import { PlayIcon } from 'lucide-react'
 
 export function RoadmapPage() {
-  const { modules, continueModule } = useAppStore()
+  const store = useAppStore()
+  const { modules = [], continueModule } = store || {}
   
   const incompleteModule = modules.find(m => m.progress > 0 && m.progress < 100)
 
@@ -31,7 +32,7 @@ export function RoadmapPage() {
           <p className="mb-3 text-card-foreground">
             {incompleteModule.title}
           </p>
-          <Button onClick={continueModule} className="w-full bg-primary text-primary-foreground">
+          <Button onClick={() => continueModule?.()} className="w-full bg-primary text-primary-foreground">
             <PlayIcon className="w-4 h-4 mr-2" />
             Continue Learning
           </Button>

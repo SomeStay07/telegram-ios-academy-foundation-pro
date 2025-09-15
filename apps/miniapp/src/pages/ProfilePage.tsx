@@ -4,7 +4,8 @@ import { useAppStore } from '../shared/model/store'
 import { UserIcon, LanguagesIcon, PaletteIcon } from 'lucide-react'
 
 export function ProfilePage() {
-  const { user, updateProfile } = useAppStore()
+  const store = useAppStore()
+  const { user = {}, updateProfile } = store || {}
   const [formData, setFormData] = useState({
     username: user.username || '',
     languageCode: user.languageCode || 'en',
@@ -19,15 +20,16 @@ export function ProfilePage() {
   }
 
   const handleSave = () => {
-    updateProfile({
+    updateProfile?.({
       username: formData.username,
       languageCode: formData.languageCode,
     })
     setHasChanges(false)
     
     // Show success feedback
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-      window.Telegram.WebApp.HapticFeedback.impactOccurred('light')
+    const webApp = (window as any)?.Telegram?.WebApp
+    if (webApp?.HapticFeedback) {
+      webApp.HapticFeedback.impactOccurred('light')
     }
   }
 

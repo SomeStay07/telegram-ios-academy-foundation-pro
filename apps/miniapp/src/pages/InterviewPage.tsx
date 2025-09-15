@@ -27,17 +27,24 @@ const categories = [
 ]
 
 export function InterviewPage() {
-  const { selectedCategory, currentAttempt, setCategory, startAttempt, resumeAttempt } = useAppStore()
+  const store = useAppStore()
+  const { 
+    selectedCategory, 
+    currentAttempt = { status: 'idle' }, 
+    setCategory, 
+    startAttempt, 
+    resumeAttempt 
+  } = store || {}
 
   const handleCategorySelect = (categoryId: string) => {
-    setCategory(categoryId)
+    setCategory?.(categoryId)
   }
 
   const handleStartInterview = () => {
     if (currentAttempt.status === 'in_progress') {
-      resumeAttempt()
+      resumeAttempt?.()
     } else {
-      startAttempt()
+      startAttempt?.()
     }
   }
 

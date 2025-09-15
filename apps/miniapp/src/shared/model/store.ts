@@ -46,11 +46,19 @@ type AppStore = UserSlice & RoadmapSlice & InterviewSlice
 
 // Initialize user from Telegram WebApp
 const initUser = (): User => {
-  const webAppUser = window.Telegram?.WebApp?.initDataUnsafe?.user
-  return {
-    username: webAppUser?.username,
-    languageCode: webAppUser?.language_code || 'en',
-    avatarUrl: undefined,
+  try {
+    const webAppUser = (window as any)?.Telegram?.WebApp?.initDataUnsafe?.user
+    return {
+      username: webAppUser?.username || '',
+      languageCode: webAppUser?.language_code || 'en',
+      avatarUrl: undefined,
+    }
+  } catch (error) {
+    return {
+      username: '',
+      languageCode: 'en',
+      avatarUrl: undefined,
+    }
   }
 }
 
