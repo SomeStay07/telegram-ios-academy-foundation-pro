@@ -4,6 +4,7 @@ export * from './Heading'
 export * from './Link'
 export * from './Icon'
 export * from './Divider'
+export * from './Separator'
 
 // Layout Components
 export * from './Stack'
@@ -14,16 +15,34 @@ export * from './Input'
 
 // Container Components
 export * from './Card'
+export * from './CardSurface'
+export * from './InteractiveCard'
 export * from './Avatar'
 export * from './Badge'
+
+// Statistics & Gamification Components
+export * from './StatCard'
+export * from './ProgressRing'
+export * from './AchievementBadge'
+export * from './CircularProgress'
+export * from './StreakCounter'
+export * from './ProgressSummaryCard'
+export * from './ActivityListCard'
 
 // Content Components  
 export * from './CodeBlock'
 export * from './Markdown'
 
+// Profile Components
+export * from './profile/AccountCard'
+export * from './profile/ProfileHeroCard'
+
+// Navigation Components
+export { Tabs } from './Tabs'
+export { BottomNavigation } from './BottomNavigation'
+
 // Legacy Components (migrated to separate files)
 export { Modal } from './Modal'
-export { Tabs } from './Tabs'
 export { QuizItem } from './QuizItem'
 export { WorkedExampleStepper } from './WorkedExampleStepper'
 export { Progress } from './Progress'

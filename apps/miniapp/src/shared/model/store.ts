@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { getDataSource, type ProfileData, type TGUser } from '../data/source'
 
 // User slice types
 interface User {
@@ -26,6 +27,28 @@ interface RoadmapSlice {
   setModules: (modules: Module[]) => void
 }
 
+// Profile slice types
+interface ProfilePreferences {
+  languageCode: string
+  theme: 'system' | 'light' | 'dark'
+  notificationsEnabled: boolean
+}
+
+interface ProfileSlice {
+  profile: ProfileData | null
+  activity: Array<{ id: string; title: string; subtitle: string; at: string }>
+  preferences: ProfilePreferences
+  dirty: boolean
+  loading: boolean
+  
+  // Actions
+  loadProfile: () => Promise<void>
+  loadActivity: () => Promise<void>
+  updatePreferences: (updates: Partial<ProfilePreferences>) => void
+  savePreferences: () => Promise<void>
+  signOut: () => void
+}
+
 // Interview slice types
 interface InterviewAttempt {
   attemptId?: string
@@ -42,7 +65,7 @@ interface InterviewSlice {
 }
 
 // Combined store type
-type AppStore = UserSlice & RoadmapSlice & InterviewSlice
+type AppStore = UserSlice & RoadmapSlice & ProfileSlice & InterviewSlice
 
 // Initialize user from Telegram WebApp
 const initUser = (): User => {
@@ -93,6 +116,103 @@ export const useAppStore = create<AppStore>()(
       },
       setModules: (modules) =>
         set({ modules }, false, 'setModules'),
+
+      // Profile slice
+      profile: null,
+      activity: [],
+      preferences: {
+        languageCode: 'en',
+        theme: 'system',
+        notificationsEnabled: true,
+      },
+      dirty: false,
+      loading: false,
+
+      loadProfile: async () => {
+        set({ loading: true }, false, 'profile:loadStart')
+        try {
+          const dataSource = getDataSource()
+          const profile = await dataSource.getProfile()
+          
+          set(
+            (state) => ({
+              profile,
+              preferences: {
+                ...state.preferences,
+                languageCode: profile.user.language_code || 'en',
+              },
+              loading: false,
+            }),
+            false,
+            'profile:loadSuccess'
+          )
+        } catch (error) {
+          console.error('Failed to load profile:', error)
+          set({ loading: false }, false, 'profile:loadError')
+        }
+      },
+
+      loadActivity: async () => {
+        try {
+          const dataSource = getDataSource()
+          const activity = await dataSource.getActivity()
+          set({ activity }, false, 'profile:activityLoaded')
+        } catch (error) {
+          console.error('Failed to load activity:', error)
+        }
+      },
+
+      updatePreferences: (updates) =>
+        set(
+          (state) => ({
+            preferences: { ...state.preferences, ...updates },
+            dirty: true,
+          }),
+          false,
+          'profile:updatePreferences'
+        ),
+
+      savePreferences: async () => {
+        try {
+          // TODO: Save to backend when available
+          console.log('Saving preferences:', get().preferences)
+          
+          // Simulate API call
+          await new Promise(resolve => setTimeout(resolve, 500))
+          
+          set({ dirty: false }, false, 'profile:savePreferences')
+          
+          // Show success feedback
+          const { WebApp } = (window as any)?.Telegram || {}
+          if (WebApp?.showAlert) {
+            WebApp.showAlert('Settings saved successfully!')
+          } else if (import.meta.env.DEV) {
+            console.log('Settings saved successfully!')
+          }
+        } catch (error) {
+          console.error('Failed to save preferences:', error)
+        }
+      },
+
+      signOut: () => {
+        set(
+          {
+            profile: null,
+            activity: [],
+            preferences: {
+              languageCode: 'en',
+              theme: 'system',
+              notificationsEnabled: true,
+            },
+            dirty: false,
+          },
+          false,
+          'profile:signOut'
+        )
+        
+        // Navigate to main or show sign out feedback
+        console.log('User signed out')
+      },
 
       // Interview slice
       selectedCategory: undefined,
