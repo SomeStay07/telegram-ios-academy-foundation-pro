@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, Badge, Button, ProfileHeroCard } from '@telegram-ios-academy/ui'
 import { EnhancedProfileStatsSection } from './sections/EnhancedProfileStatsSection'
 import { EnhancedProfileSettingsSection } from './sections/EnhancedProfileSettingsSection'
@@ -8,12 +8,13 @@ import { ThemeToggle, useTheme } from '../../components/ThemeToggle'
 import { useTelegramTheme, getStoredTheme, type ThemeMode } from '../../shared/lib/telegram/useTelegramTheme'
 import { useTelegramViewport } from '../../shared/lib/telegram/useTelegramViewport'
 import { getDataSource } from '../../shared/data/source'
+import { Sparkles, Sun, Palette, Star } from 'lucide-react'
 
-export function NewProfilePage() {
+export function LightThemeProfilePage() {
   // Initialize Telegram integrations
   useTelegramTheme()
   useTelegramViewport()
-  const { isLight } = useTheme()
+  const { isLight, resolvedTheme } = useTheme()
 
   const [user, setUser] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
@@ -23,7 +24,7 @@ export function NewProfilePage() {
     notifications: true
   })
 
-  // Enhanced mock stats
+  // Enhanced mock stats with light theme emphasis
   const mockStats = {
     completed: 3,
     hours: 12,
@@ -41,7 +42,7 @@ export function NewProfilePage() {
       })
   }, [])
 
-  // MainButton integration - hide for profile page
+  // MainButton integration
   useEffect(() => {
     const { WebApp } = (window as any)?.Telegram || {}
     const mainButton = WebApp?.MainButton
@@ -51,7 +52,7 @@ export function NewProfilePage() {
     }
   }, [])
 
-  // BackButton integration - hide on profile root
+  // BackButton integration
   useEffect(() => {
     const { WebApp } = (window as any)?.Telegram || {}
     const backButton = WebApp?.BackButton
@@ -61,7 +62,7 @@ export function NewProfilePage() {
     }
   }, [])
 
-  // Handlers
+  // Enhanced handlers
   const handleCopyId = async (id?: number) => {
     if (!id) return
     await navigator.clipboard.writeText(String(id))
@@ -72,13 +73,12 @@ export function NewProfilePage() {
     }
     
     if (WebApp?.showAlert) {
-      WebApp.showAlert('User ID copied to clipboard!')
+      WebApp.showAlert('✨ User ID copied to clipboard!')
     } else if (import.meta.env.DEV) {
-      console.log('User ID copied to clipboard!')
+      console.log('✨ User ID copied to clipboard!')
     }
   }
 
-  // Handlers for profile actions
   const handleSignOut = () => {
     const { WebApp } = (window as any)?.Telegram || {}
     
@@ -145,60 +145,97 @@ export function NewProfilePage() {
   }
 
   return (
-    <main className={`mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24 min-h-[calc(var(--tg-vph,100svh))] transition-all duration-500 ${
+    <main className={`mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24 min-h-[calc(var(--tg-vph,100svh))] transition-all duration-700 ${
       isLight 
-        ? 'bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20' 
+        ? 'light-theme-bg' 
         : 'bg-background'
-    } text-foreground`}>
-      {/* Enhanced Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-4 mb-2 min-w-0">
+    } text-foreground relative overflow-hidden`}>
+      
+      {/* Background decorative elements for light theme */}
+      {isLight && (
+        <div className="absolute inset-0 light-floating-particles" aria-hidden="true" />
+      )}
+      
+      {/* Enhanced Header with light theme styling */}
+      <div className="relative mb-6">
+        <div className={`flex items-center gap-4 mb-2 min-w-0 ${
+          isLight ? 'light-glass-card' : ''
+        } ${isLight ? 'p-4 rounded-2xl' : ''} transition-all duration-500`}>
           <div className="flex-1 min-w-0">
-            <h1 className={`text-2xl font-bold truncate transition-all duration-300 ${
-              isLight 
-                ? 'text-gray-900 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent' 
-                : 'text-foreground'
-            }`}>
-              Profile
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              <div className={`p-2 rounded-xl transition-all duration-300 ${
+                isLight 
+                  ? 'bg-gradient-to-br from-blue-500/10 to-purple-500/10 light-glow-effect' 
+                  : 'bg-muted/20'
+              }`}>
+                {isLight ? (
+                  <Sun className="w-6 h-6 text-blue-600" />
+                ) : (
+                  <Palette className="w-6 h-6 text-primary" />
+                )}
+              </div>
+              <h1 className={`text-3xl font-bold truncate transition-all duration-300 ${
+                isLight 
+                  ? 'light-text-gradient' 
+                  : 'text-foreground'
+              }`}>
+                Profile
+              </h1>
+              {isLight && (
+                <Sparkles className="w-5 h-5 text-amber-500 animate-pulse" />
+              )}
+            </div>
+            
             <div className="flex items-center gap-2 mt-1 min-w-0">
               <Badge variant="outline" className={`text-xs flex-shrink-0 transition-all duration-300 ${
                 isLight 
-                  ? 'bg-white/80 text-blue-600 border-blue-200' 
+                  ? 'light-badge' 
                   : ''
               }`}>
                 EN
               </Badge>
               <ThemeToggle size="sm" />
+              {isLight && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 rounded-full">
+                  <Star className="w-3 h-3 text-amber-600" />
+                  <span className="text-xs font-medium text-amber-700">Light Mode</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
+        
         <p className={`text-xs line-clamp-2 transition-colors duration-300 ${
+          isLight ? 'px-4' : ''
+        } ${
           isLight 
-            ? 'text-gray-600' 
+            ? 'light-text-secondary' 
             : 'text-muted-foreground'
         }`}>
           {user ? 'Data synced from Telegram' : 'Using mock profile data'}
-          {isLight && ' ☀️ Light Theme Active'}
+          {isLight && ' ☀️ Enhanced Light Theme Experience'}
         </p>
       </div>
 
-      {/* Content */}
-      <div className="space-y-6">
-        {/* Hero Card with enhanced features */}
-        <ProfileHeroCard 
-          user={{
-            ...user,
-            first_name: user?.first_name || 'Timur',
-            last_name: user?.last_name || 'C.',
-            username: user?.username || 'somestay07',
-            photo_url: user?.photo_url,
-            is_premium: true, // Mock premium status
-            language_code: preferences.language
-          }}
-          stats={mockStats}
-          onCopyId={handleCopyId}
-        />
+      {/* Enhanced Content with light theme styling */}
+      <div className="space-y-6 relative">
+        {/* Hero Card with light theme enhancements */}
+        <div className={isLight ? 'light-hero-card p-1 rounded-2xl' : ''}>
+          <ProfileHeroCard 
+            user={{
+              ...user,
+              first_name: user?.first_name || 'Timur',
+              last_name: user?.last_name || 'C.',
+              username: user?.username || 'somestay07',
+              photo_url: user?.photo_url,
+              is_premium: true,
+              language_code: preferences.language
+            }}
+            stats={mockStats}
+            onCopyId={handleCopyId}
+            className={isLight ? 'light-interactive' : ''}
+          />
+        </div>
 
         {/* Enhanced Statistics Section */}
         <EnhancedProfileStatsSection
@@ -220,6 +257,30 @@ export function NewProfilePage() {
           onSignOut={handleSignOut}
           onResetSettings={handleResetSettings}
         />
+        
+        {/* Light theme footer */}
+        {isLight && (
+          <div className="light-glass-card rounded-2xl p-6 text-center space-y-3">
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-semibold light-text-gradient">
+                Premium Light Experience
+              </span>
+            </div>
+            <p className="text-sm light-text-secondary">
+              Enjoying the enhanced light theme? Share your feedback!
+            </p>
+            <div className="flex justify-center">
+              <div className="flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   )

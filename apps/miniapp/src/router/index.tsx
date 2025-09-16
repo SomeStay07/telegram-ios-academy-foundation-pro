@@ -4,7 +4,7 @@ import { Outlet } from '@tanstack/react-router'
 import { AppShell } from '../app/AppShell'
 import { RoadmapPage } from '../pages/RoadmapPage'
 import { InterviewPage } from '../pages/InterviewPage'
-import { NewProfilePage } from '../pages/profile/NewProfilePage'
+import { LightThemeProfilePage } from '../pages/profile/LightThemeProfilePage'
 
 // Root component with AppShell
 function RootComponent() {
@@ -64,7 +64,7 @@ const interviewRoute = createRoute({
 const profileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/profile',
-  component: NewProfilePage,
+  component: LightThemeProfilePage,
 })
 
 // Create the route tree

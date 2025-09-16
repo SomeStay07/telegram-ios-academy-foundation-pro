@@ -1,5 +1,7 @@
+import React, { useState, useEffect, useRef } from 'react'
 import { Badge } from '@telegram-ios-academy/ui'
-import { BookOpen, Clock, Trophy, Calendar } from 'lucide-react'
+import { BookOpen, Clock, Trophy, Calendar, TrendingUp, Target, Award, Flame } from 'lucide-react'
+import { AnimatedCounter } from '../../../components/AnimatedCounter'
 
 interface ProfileStatsSectionProps {
   stats: {
@@ -16,39 +18,92 @@ export function ProfileStatsSection({
   totalCourses = 6,
   weeklyStreak = [1, 1, 0, 1, 1, 1, 0]
 }: ProfileStatsSectionProps) {
+  const [isVisible, setIsVisible] = useState(false)
+  const [hoveredStat, setHoveredStat] = useState<string | null>(null)
+  const [progressAnimated, setProgressAnimated] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  
   const overallProgress = Math.min(100, Math.max(0, Math.round((stats.completed / totalCourses) * 100)))
+  
+  // Intersection Observer для анимаций при скролле
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          setTimeout(() => setProgressAnimated(true), 500)
+        }
+      },
+      { threshold: 0.3 }
+    )
+    
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+    
+    return () => observer.disconnect()
+  }, [])
 
-  const getActivityIcon = (day: number, active: number) => {
+  const getActivityIcon = (day: number, active: number, dayIndex: number) => {
+    const isToday = dayIndex === 6 // Assuming Sunday is today for demo
+    
     if (active) {
       return (
-        <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-semibold shadow-sm">
-          {day}
+        <div className={`group relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white flex items-center justify-center text-xs font-semibold shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl ${
+          isToday ? 'ring-2 ring-primary/50 ring-offset-2 ring-offset-background animate-pulse' : ''
+        }`}>
+          <div className="relative z-10">{day}</div>
+          {active && (
+            <Flame className={`absolute inset-0 m-auto w-4 h-4 text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+              isToday ? 'animate-bounce' : ''
+            }`} />
+          )}
+          
+          {/* Success ripple effect */}
+          <div className="absolute inset-0 rounded-xl bg-green-400/30 opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-300" />
         </div>
       );
     }
     
-    // Inactive day with gray breathing border animation
+    // Enhanced inactive day
     return (
-      <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-slate-50/20">
-        <div 
-          className="absolute inset-0 rounded-xl"
-          style={{ 
-            animation: 'border-breathing-calm 3s ease-in-out infinite',
-            border: '2px solid rgba(100, 116, 139, 0.25)'
-          }}
-        />
-        <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-slate-400/60">
-          ·
+      <div className="group relative w-10 h-10 rounded-xl overflow-hidden bg-muted/30 border-2 border-muted/50 transition-all duration-300 hover:border-muted hover:bg-muted/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-muted-foreground/10 to-transparent" />
+        <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-muted-foreground/60 group-hover:text-muted-foreground transition-colors">
+          <div className={`w-2 h-2 rounded-full bg-muted-foreground/30 group-hover:bg-muted-foreground/50 transition-colors ${
+            isToday ? 'animate-pulse' : ''
+          }`} />
         </div>
       </div>
     );
   };
+  
+  const getStatColor = (statType: string) => {
+    switch (statType) {
+      case 'completed': return 'from-blue-500 to-blue-600'
+      case 'hours': return 'from-purple-500 to-purple-600'
+      case 'streak': return 'from-orange-500 to-orange-600'
+      default: return 'from-gray-500 to-gray-600'
+    }
+  }
 
   return (
-    <div className="space-y-6">
+    <div ref={sectionRef} className={`space-y-6 transition-all duration-1000 ${
+      isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
+    }`}>
       {/* Enhanced Statistics Grid */}
       <div className="space-y-4">
-        <h3 className="font-display text-lg font-semibold text-content-primary leading-tight">Статистика обучения</h3>
+        <div className="flex items-center gap-3">
+          <TrendingUp className={`w-5 h-5 text-primary transition-all duration-500 ${
+            isVisible ? 'rotate-0 scale-100' : 'rotate-45 scale-0'
+          }`} />
+          <h3 className="font-display text-lg font-semibold text-content-primary leading-tight">
+            Статистика обучения
+          </h3>
+          <div className={`h-0.5 flex-1 bg-gradient-to-r from-primary/50 to-transparent rounded-full transition-all duration-1000 delay-300 ${
+            isVisible ? 'scale-x-100' : 'scale-x-0'
+          } origin-left`} />
+        </div>
         
         <div className="grid grid-cols-1 gap-4">
           {/* Course Progress */}

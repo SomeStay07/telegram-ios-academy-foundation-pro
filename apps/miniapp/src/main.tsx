@@ -6,6 +6,9 @@ import { initThemeSync } from './lib/tmaTheme'
 import '@telegram-ios-academy/ui/dist/tokens.css'
 import '@telegram-ios-academy/ui/dist/styles/index.css'
 import './styles.css'
+import './styles/profile-animations.css'
+import './styles/light-theme-enhancements.css'
+import './styles/theme-fix.css'
 
 // Lazy import analytics and web vitals
 import('./lib/web-vitals').catch(console.error)

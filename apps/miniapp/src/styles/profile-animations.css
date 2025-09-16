@@ -1,0 +1,280 @@
+/* Enhanced Profile Animations and Responsive Design */
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Animation utility classes */
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.slide-in-from-left-4 {
+  animation: fadeInLeft 0.5s ease-out;
+}
+
+.slide-in-from-right-4 {
+  animation: fadeInRight 0.5s ease-out;
+}
+
+.slide-in-from-bottom-4 {
+  animation: slideInFromBottom 0.5s ease-out;
+}
+
+.slide-in-from-bottom-2 {
+  animation: slideInFromBottom 0.3s ease-out;
+}
+
+.scale-102 {
+  transform: scale(1.02);
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+  .profile-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .profile-hero-card {
+    padding: 1rem;
+  }
+  
+  .profile-weekly-activity {
+    padding: 1rem;
+  }
+  
+  .profile-weekly-activity .day-indicator {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-hero-avatar {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .profile-stat-card {
+    padding: 0.75rem;
+  }
+  
+  .profile-stat-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .profile-interactive-element {
+    min-height: 44px;
+    padding: 0.75rem;
+  }
+  
+  .profile-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Remove hover effects on touch devices */
+  .profile-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .profile-card {
+    border: 2px solid currentColor;
+  }
+  
+  .profile-gradient-text {
+    background: none;
+    color: currentColor;
+  }
+  
+  .profile-subtle-border {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .profile-hero-card::before,
+  .profile-avatar-ring,
+  .profile-floating-particles {
+    animation: none !important;
+  }
+}
+
+/* Dark mode specific improvements */
+@media (prefers-color-scheme: dark) {
+  .profile-glass-effect {
+    backdrop-filter: blur(20px);
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  .profile-text-shadow {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Light mode specific improvements */
+@media (prefers-color-scheme: light) {
+  .profile-glass-effect {
+    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  
+  .profile-text-shadow {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Enhanced light theme gradients */
+  .profile-hero-light {
+    background: linear-gradient(135deg,
+      rgba(0, 122, 255, 0.1) 0%,
+      rgba(88, 86, 214, 0.08) 30%,
+      rgba(255, 45, 85, 0.06) 60%,
+      rgba(52, 199, 89, 0.05) 100%);
+  }
+  
+  /* Light theme card backgrounds */
+  .profile-card-light {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.1),
+      0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+  
+  .profile-card-light:hover {
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(0, 122, 255, 0.2);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      0 16px 32px rgba(0, 122, 255, 0.1);
+  }
+  
+  /* Light theme skeleton */
+  .profile-skeleton {
+    background: linear-gradient(90deg, 
+      rgba(0, 0, 0, 0.06) 0%, 
+      rgba(0, 0, 0, 0.02) 50%, 
+      rgba(0, 0, 0, 0.06) 100%);
+  }
+}
+
+/* Focus visible improvements for accessibility */
+.profile-focusable:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* Loading states */
+.profile-skeleton {
+  background: linear-gradient(90deg, 
+    hsl(var(--muted)) 0%, 
+    hsl(var(--muted) / 0.8) 50%, 
+    hsl(var(--muted)) 100%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Print styles */
+@media print {
+  .profile-animated-element,
+  .profile-interactive-element {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .profile-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}

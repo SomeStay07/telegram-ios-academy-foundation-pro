@@ -1,4 +1,4 @@
-/* Спокойный премиум-градиент из TG токенов (адаптивен к light/dark) */
+/* Enhanced premium градиент с поддержкой светлой темы */
 .profile-hero::before {
   content: "";
   position: absolute;
@@ -6,21 +6,70 @@
   z-index: 0;
   pointer-events: none;
   background: linear-gradient(135deg,
-    color-mix(in oklab, var(--tg-theme-button-color) 20%, var(--background)) 0%,
-    color-mix(in oklab, var(--tg-theme-link-color) 18%, var(--background)) 60%,
-    color-mix(in oklab, var(--tg-theme-button-color) 12%, var(--background)) 100%);
-  opacity: 0.95;
+    color-mix(in oklab, var(--tg-theme-button-color, #007AFF) 25%, var(--background, #ffffff)) 0%,
+    color-mix(in oklab, var(--tg-theme-link-color, #007AFF) 22%, var(--background, #ffffff)) 30%,
+    color-mix(in oklab, var(--tg-theme-button-color, #007AFF) 20%, var(--background, #ffffff)) 60%,
+    color-mix(in oklab, var(--tg-theme-link-color, #007AFF) 15%, var(--background, #ffffff)) 100%);
+  opacity: 0.98;
   border-radius: inherit;
+  transition: all 0.5s ease;
 }
 
-/* лёгкий верхний блик для объёма */
+.profile-hero:hover::before {
+  background: linear-gradient(135deg,
+    color-mix(in oklab, var(--tg-theme-button-color, #007AFF) 35%, var(--background, #ffffff)) 0%,
+    color-mix(in oklab, var(--tg-theme-link-color, #007AFF) 30%, var(--background, #ffffff)) 30%,
+    color-mix(in oklab, var(--tg-theme-button-color, #007AFF) 28%, var(--background, #ffffff)) 60%,
+    color-mix(in oklab, var(--tg-theme-link-color, #007AFF) 25%, var(--background, #ffffff)) 100%);
+  transform: scale(1.02);
+}
+
+/* Специальная светлая тема */
+@media (prefers-color-scheme: light) {
+  .profile-hero::before {
+    background: linear-gradient(135deg,
+      rgba(0, 122, 255, 0.08) 0%,
+      rgba(88, 86, 214, 0.08) 30%,
+      rgba(255, 45, 85, 0.06) 60%,
+      rgba(52, 199, 89, 0.06) 100%);
+    opacity: 1;
+  }
+  
+  .profile-hero:hover::before {
+    background: linear-gradient(135deg,
+      rgba(0, 122, 255, 0.12) 0%,
+      rgba(88, 86, 214, 0.12) 30%,
+      rgba(255, 45, 85, 0.10) 60%,
+      rgba(52, 199, 89, 0.08) 100%);
+  }
+}
+
+/* Telegram светлая тема */
+:root[data-theme="light"] .profile-hero::before,
+.profile-hero[data-light-theme="true"]::before {
+  background: linear-gradient(135deg,
+    rgba(0, 122, 255, 0.08) 0%,
+    rgba(88, 86, 214, 0.08) 30%,
+    rgba(255, 45, 85, 0.06) 60%,
+    rgba(52, 199, 89, 0.06) 100%);
+  opacity: 1;
+}
+
+/* Enhanced блик с анимацией */
 .profile-hero_glow {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(120% 60% at 50% -10%,
-    rgba(255, 255, 255, 0.10), transparent 60%);
+  background: radial-gradient(140% 80% at 50% -15%,
+    rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05) 40%, transparent 70%);
+  transition: all 0.7s ease;
+}
+
+.profile-hero:hover .profile-hero_glow {
+  background: radial-gradient(160% 100% at 50% -20%,
+    rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.10) 40%, transparent 70%);
+  transform: scale(1.1);
 }
 
 /* Контент поверх градиентов */
@@ -42,49 +91,405 @@
   }
 }
 
-/* Reduced motion — выключаем динамику фона */
+/* Enhanced animations для motion preference */
 @media (prefers-reduced-motion: no-preference) {
   .profile-hero::before {
-    background-size: 160% 160%;
-    animation: hero-pan 16s ease-in-out infinite alternate;
+    background-size: 200% 200%;
+    animation: hero-pan 20s ease-in-out infinite alternate;
+  }
+  
+  .profile-hero:hover::before {
+    animation: hero-pan-fast 8s ease-in-out infinite alternate;
   }
   
   @keyframes hero-pan {
-    to {
-      background-position: 100% 100%;
-    }
+    0% { background-position: 0% 0%; }
+    25% { background-position: 100% 0%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+  
+  @keyframes hero-pan-fast {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
   }
 }
 
-/* Градиентное кольцо вокруг аватара (conic) */
+/* Enhanced анимированное кольцо аватара */
 .avatar-ring {
   --sz: 72px;
-  --pad: 2px;
+  --pad: 2.5px;
   width: var(--sz);
   height: var(--sz);
   border-radius: 9999px;
   padding: var(--pad);
-  background: conic-gradient(from 220deg,
-    color-mix(in oklab, var(--tg-theme-button-color) 55%, transparent),
-    color-mix(in oklab, var(--tg-theme-link-color) 45%, transparent));
+  background: conic-gradient(from 0deg,
+    color-mix(in oklab, var(--tg-theme-button-color) 70%, transparent) 0%,
+    color-mix(in oklab, var(--tg-theme-link-color) 60%, transparent) 25%,
+    color-mix(in oklab, var(--tg-theme-button-color) 65%, transparent) 50%,
+    color-mix(in oklab, var(--tg-theme-link-color) 55%, transparent) 75%,
+    color-mix(in oklab, var(--tg-theme-button-color) 70%, transparent) 100%);
+  transition: all 0.5s ease;
+  position: relative;
 }
 
-/* Текст не должен вылезать */
+@media (prefers-reduced-motion: no-preference) {
+  .avatar-ring {
+    animation: ring-rotate 8s linear infinite;
+  }
+  
+  .avatar-ring:hover {
+    animation: ring-rotate-fast 4s linear infinite;
+  }
+  
+  @keyframes ring-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  @keyframes ring-rotate-fast {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}
+
+/* Text truncation и responsive улучшения */
 .profile-hero .truncate {
   min-width: 0;
+  max-width: 100%;
 }
 
-/* Белый текст для читаемости на градиенте */
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .avatar-ring {
+    --sz: 60px;
+  }
+  
+  .profile-hero {
+    padding: 1rem !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .profile-hero,
+  .profile-hero * {
+    text-shadow: 0 0 0 black, 0 0 0 black, 0 0 0 black, 0 0 0 black !important;
+    outline: 1px solid white;
+  }
+}
+
+/* Enhanced читаемость текста с поддержкой светлой темы */
 .profile-hero,
 .profile-hero * {
   color: white !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 8px rgba(0, 0, 0, 0.2);
+  transition: text-shadow 0.3s ease;
 }
 
-/* Более заметная тень при hover для лучшей читаемости */
-@media (hover: hover) and (pointer: fine) {
+.profile-hero:hover,
+.profile-hero:hover * {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Светлая тема - темный текст */
+@media (prefers-color-scheme: light) {
+  .profile-hero,
+  .profile-hero * {
+    color: #1d1d1f !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.6);
+  }
+  
   .profile-hero:hover,
   .profile-hero:hover * {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    color: #1d1d1f !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9), 0 0 8px rgba(255, 255, 255, 0.7), 0 0 12px rgba(0, 122, 255, 0.2);
+  }
+}
+
+/* Telegram светлая тема */
+:root[data-theme="light"] .profile-hero,
+:root[data-theme="light"] .profile-hero *,
+.profile-hero[data-light-theme="true"],
+.profile-hero[data-light-theme="true"] * {
+  color: #1d1d1f !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.6);
+}
+
+/* Text glow effect */
+.text-shadow-glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 2px 6px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Additional animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+    opacity: 0.3;
+  }
+  50% { 
+    transform: translateY(-20px) rotate(180deg); 
+    opacity: 0.8;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+/* Pulse effect for premium elements */
+.animate-premium-pulse {
+  animation: premium-pulse 2s ease-in-out infinite;
+}
+
+@keyframes premium-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 0 8px rgba(255, 215, 0, 0);
+    transform: scale(1.05);
+  }
+}
+
+/* Новые анимации для shape пузырьков */
+@keyframes bubble-float {
+  0% { 
+    transform: translateY(0) scale(0.8) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.9;
+    transform: translateY(-8px) scale(1) rotate(90deg);
+  }
+  50% { 
+    opacity: 1;
+    transform: translateY(-15px) scale(1.1) rotate(180deg);
+  }
+  75% {
+    opacity: 0.8;
+    transform: translateY(-25px) scale(0.9) rotate(270deg);
+  }
+  100% { 
+    transform: translateY(-35px) scale(0.6) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes bubble-drift {
+  0% { 
+    transform: translateX(0) translateY(0) scale(0.7);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.8;
+    transform: translateX(5px) translateY(-12px) scale(1);
+  }
+  70% {
+    opacity: 0.6;
+    transform: translateX(-3px) translateY(-20px) scale(1.05);
+  }
+  100% { 
+    transform: translateX(8px) translateY(-30px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes bubble-sparkle {
+  0% { 
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.2) rotate(72deg);
+  }
+  40% {
+    opacity: 0.8;
+    transform: scale(0.8) rotate(144deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1) rotate(216deg);
+  }
+  80% {
+    opacity: 0.6;
+    transform: scale(0.9) rotate(288deg);
+  }
+  100% { 
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes bubble {
+  0% { 
+    transform: translateY(0) scale(0);
+    opacity: 0;
+  }
+  50% { 
+    opacity: 0.8;
+    transform: translateY(-10px) scale(1);
+  }
+  100% { 
+    transform: translateY(-20px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.4), 0 0 40px rgba(245, 158, 11, 0.2);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(250, 204, 21, 0.6), 0 0 50px rgba(245, 158, 11, 0.3);
+  }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit {
+  0% { 
+    transform: translate(-50%, -50%) rotate(0deg) translateX(35px) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% { 
+    transform: translate(-50%, -50%) rotate(360deg) translateX(35px) rotate(-360deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes shimmer-premium {
+  0% { 
+    transform: skewX(-12deg) translateX(-200%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% { 
+    transform: skewX(-12deg) translateX(200%);
+    opacity: 0;
+  }
+}
+
+@keyframes crown-sparkle {
+  0%, 100% {
+    transform: skewX(-12deg) translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: skewX(-12deg) translateX(100%);
+    opacity: 0.8;
+  }
+}
+
+@keyframes sparkle-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(2);
+    opacity: 0.6;
+  }
+}
+
+/* CSS классы для анимаций */
+.animate-bubble {
+  animation: bubble 2s ease-in-out infinite;
+}
+
+.animate-bubble-float {
+  animation: bubble-float 4s ease-in-out infinite;
+}
+
+.animate-bubble-drift {
+  animation: bubble-drift 3s ease-in-out infinite;
+}
+
+.animate-bubble-sparkle {
+  animation: bubble-sparkle 2s ease-in-out infinite;
+}
+
+.animate-crown-sparkle {
+  animation: crown-sparkle 3s ease-in-out infinite;
+}
+
+.animate-sparkle-glow {
+  animation: sparkle-glow 2s ease-in-out infinite;
+}
+
+
+.animate-wiggle {
+  animation: wiggle 0.8s ease-in-out;
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 3s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 15s linear infinite;
+}
+
+.animate-orbit {
+  animation: orbit 8s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer-premium 2s ease-in-out infinite;
+}
+
+/* Улучшенная анимация пузырьков */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .profile-hero::before,
+  .avatar-ring,
+  .animate-float,
+  .animate-premium-pulse,
+  .animate-bubble,
+  .animate-wiggle,
+  .animate-pulse-gentle,
+  .animate-spin-slow,
+  .animate-orbit,
+  .animate-shimmer {
+    animation: none !important;
+  }
+  
+  .profile-hero {
+    transition: none !important;
   }
 }
