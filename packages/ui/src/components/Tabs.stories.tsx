@@ -39,7 +39,7 @@ const sampleTabs = [
     id: 'home',
     label: 'Home',
     content: (
-      <div className="p-4 bg-muted/30 rounded-lg">
+      <div className="p-4 bg-muted rounded-lg">
         <h3 className="text-lg font-semibold mb-2">Home Content</h3>
         <p className="text-muted-foreground">
           Welcome to the home tab! This is where you'll find the main content and overview.
@@ -51,7 +51,7 @@ const sampleTabs = [
     id: 'profile', 
     label: 'Profile',
     content: (
-      <div className="p-4 bg-muted/30 rounded-lg">
+      <div className="p-4 bg-muted rounded-lg">
         <h3 className="text-lg font-semibold mb-2">Profile Settings</h3>
         <p className="text-muted-foreground">
           Manage your profile information, preferences, and account settings here.
@@ -63,7 +63,7 @@ const sampleTabs = [
     id: 'settings',
     label: 'Settings', 
     content: (
-      <div className="p-4 bg-muted/30 rounded-lg">
+      <div className="p-4 bg-muted rounded-lg">
         <h3 className="text-lg font-semibold mb-2">Application Settings</h3>
         <p className="text-muted-foreground">
           Configure app preferences, notifications, and other system settings.
@@ -79,7 +79,7 @@ const tabsWithIcons = [
     label: 'Home',
     icon: <Home className="w-4 h-4" />,
     content: (
-      <div className="p-4 bg-muted/30 rounded-lg">
+      <div className="p-4 bg-muted rounded-lg">
         <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
           <Home className="w-5 h-5" />
           Home Dashboard
@@ -95,7 +95,7 @@ const tabsWithIcons = [
     label: 'Search',
     icon: <Search className="w-4 h-4" />,
     content: (
-      <div className="p-4 bg-muted/30 rounded-lg">
+      <div className="p-4 bg-muted rounded-lg">
         <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
           <Search className="w-5 h-5" />
           Search & Discovery
@@ -111,7 +111,7 @@ const tabsWithIcons = [
     label: 'Profile',
     icon: <User className="w-4 h-4" />,
     content: (
-      <div className="p-4 bg-muted/30 rounded-lg">
+      <div className="p-4 bg-muted rounded-lg">
         <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
           <User className="w-5 h-5" />
           User Profile
@@ -128,7 +128,7 @@ const tabsWithIcons = [
     icon: <Bell className="w-4 h-4" />,
     disabled: true,
     content: (
-      <div className="p-4 bg-muted/30 rounded-lg">
+      <div className="p-4 bg-muted rounded-lg">
         <h3 className="text-lg font-semibold mb-2">Notifications</h3>
         <p className="text-muted-foreground">This tab is disabled.</p>
       </div>
@@ -215,7 +215,7 @@ export const MobileFriendly: Story = {
         label: 'Saved',
         icon: <Heart className="w-4 h-4" />,
         content: (
-          <div className="p-4 bg-muted/30 rounded-lg text-center">
+          <div className="p-4 bg-muted rounded-lg text-center">
             <Heart className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
             <h4 className="font-semibold mb-1">No saved items</h4>
             <p className="text-sm text-muted-foreground">Items you save will appear here.</p>

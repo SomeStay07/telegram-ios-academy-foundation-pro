@@ -72,8 +72,8 @@
 }
 
 /* Fix button text and icons */
-.light .bg-muted\\/50 button,
-.light .bg-muted\\/50 button svg {
+.light .bg-muted button,
+.light .bg-muted button svg {
   color: var(--text-primary) !important;
 }
 
@@ -97,26 +97,26 @@
 }
 
 /* Fix ThemeToggle component specifically */
-.light .flex.bg-muted\\/50 {
+.light .flex.bg-muted {
   background-color: var(--bg-muted) !important;
   border: 1px solid var(--border-primary);
 }
 
-.light .flex.bg-muted\\/50 button {
+.light .flex.bg-muted button {
   color: var(--text-primary) !important;
 }
 
-.light .flex.bg-muted\\/50 button svg {
+.light .flex.bg-muted button svg {
   color: var(--icon-primary) !important;
 }
 
-.light .flex.bg-muted\\/50 button.bg-background {
+.light .flex.bg-muted button.bg-background {
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 
-.light .flex.bg-muted\\/50 button.bg-background svg {
+.light .flex.bg-muted button.bg-background svg {
   color: var(--icon-accent) !important;
 }
 

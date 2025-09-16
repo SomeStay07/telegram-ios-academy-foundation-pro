@@ -41,7 +41,7 @@ export const Progress: React.FC<ProgressProps> = ({
         </div>
       )}
       <div 
-        className="relative overflow-hidden rounded-full bg-muted/50 border border-border h-2.5"
+        className="relative overflow-hidden rounded-full bg-muted border border-border h-2.5"
         role="progressbar"
         aria-valuenow={pct}
         aria-valuemin={0}

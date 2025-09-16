@@ -24,12 +24,12 @@ export interface ActivityListCardProps {
 
 const ActivitySkeleton = () => (
   <div className="flex items-start gap-3 py-3">
-    <div className="w-5 h-5 bg-muted/50 rounded-full flex-shrink-0 animate-pulse" />
+    <div className="w-5 h-5 bg-muted rounded-full flex-shrink-0 animate-pulse" />
     <div className="flex-1 min-w-0 space-y-2">
-      <div className="h-4 bg-muted/50 rounded animate-pulse" style={{ width: '60%' }} />
-      <div className="h-3 bg-muted/50 rounded animate-pulse" style={{ width: '40%' }} />
+      <div className="h-4 bg-muted rounded animate-pulse" style={{ width: '60%' }} />
+      <div className="h-3 bg-muted rounded animate-pulse" style={{ width: '40%' }} />
     </div>
-    <div className="h-3 bg-muted/50 rounded animate-pulse" style={{ width: '48px' }} />
+    <div className="h-3 bg-muted rounded animate-pulse" style={{ width: '48px' }} />
   </div>
 )
 

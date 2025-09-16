@@ -12,14 +12,22 @@ const meta: Meta = {
 This page showcases all the design tokens used throughout the Telegram iOS Academy UI library. 
 Design tokens ensure consistency across all components and make theming possible.
 
+## New Shadcn/UI Integration
+
+The design system now integrates with Shadcn/UI and uses modern CSS custom properties that automatically adapt to:
+- **Light/Dark Themes**: Seamless switching between themes
+- **Telegram Integration**: Respects user's Telegram theme preferences  
+- **Apple HIG Principles**: Follows iOS design guidelines
+- **Accessibility**: WCAG AA compliant color contrasts
+
 ## Token Categories
 
-- **Colors**: Surface, content, border, and interactive colors
-- **Typography**: Font families, sizes, weights, and line heights  
-- **Spacing**: Consistent spacing scale for margins, padding, and gaps
-- **Radius**: Border radius values for different component types
-- **Shadows**: Elevation shadows for depth and hierarchy
-- **Motion**: Animation durations and easing functions
+- **Colors**: Surface, content, border, and interactive colors with automatic theme adaptation
+- **Typography**: SF Pro font family with iOS-style hierarchy
+- **Spacing**: Apple's 8pt grid system for consistent layouts
+- **Radius**: iOS-style border radius values
+- **Shadows**: Subtle depth indicators following Apple HIG
+- **Motion**: iOS-style animation timing and easing
         `,
       },
     },
@@ -124,6 +132,21 @@ export const Colors: Story = {
           <ColorToken name="Primary Hover" value="var(--ds-interactive-primary-hover)" description="Primary hover state" />
           <ColorToken name="Secondary" value="var(--ds-interactive-secondary)" description="Secondary actions" />
           <ColorToken name="Danger" value="var(--ds-interactive-danger)" description="Destructive actions" />
+        </div>
+        
+        <div>
+          <h3 style={{ marginBottom: 'var(--ds-spacing-3)', fontSize: 'var(--ds-typography-size-lg)', fontWeight: 'var(--ds-typography-weight-medium)' }}>Semantic</h3>
+          <ColorToken name="Success" value="var(--ds-content-success)" description="Success states" />
+          <ColorToken name="Warning" value="var(--ds-content-warning)" description="Warning states" />
+          <ColorToken name="Error" value="var(--ds-content-error)" description="Error states" />
+          <ColorToken name="Info" value="var(--ds-content-info)" description="Informational states" />
+        </div>
+        
+        <div>
+          <h3 style={{ marginBottom: 'var(--ds-spacing-3)', fontSize: 'var(--ds-typography-size-lg)', fontWeight: 'var(--ds-typography-weight-medium)' }}>Brand</h3>
+          <ColorToken name="Brand" value="var(--ds-content-brand)" description="Brand accent color" />
+          <ColorToken name="Brand Subtle" value="var(--ds-surface-brand-subtle)" description="Brand background" />
+          <ColorToken name="Accent" value="var(--ds-content-accent)" description="Secondary brand color" />
         </div>
         
         <div>
@@ -323,4 +346,120 @@ export const Motion: Story = {
       </div>
     </div>
   ),
+};
+
+// New Shadcn/UI Integration Demo
+export const ShadcnIntegration: Story = {
+  render: () => (
+    <div style={{ padding: 'var(--ds-spacing-6)' }}>
+      <h2 style={{ marginBottom: 'var(--ds-spacing-4)', fontSize: 'var(--ds-typography-size-xl)', fontWeight: 'var(--ds-typography-weight-semibold)' }}>
+        Shadcn/UI Integration
+      </h2>
+      
+      <div style={{ marginBottom: 'var(--ds-spacing-8)' }}>
+        <p style={{ color: 'var(--ds-content-secondary)', marginBottom: 'var(--ds-spacing-4)' }}>
+          The design system now uses Shadcn/UI components as primitives, combined with class-variance-authority 
+          for component variants and Radix UI for accessible interactions.
+        </p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--ds-spacing-6)' }}>
+        {/* Component Variants Demo */}
+        <div style={{
+          padding: 'var(--ds-spacing-4)',
+          backgroundColor: 'var(--ds-surface-secondary)',
+          borderRadius: 'var(--ds-radius-lg)',
+          border: '1px solid var(--ds-border-subtle)'
+        }}>
+          <h3 style={{ marginBottom: 'var(--ds-spacing-3)', fontSize: 'var(--ds-typography-size-lg)', fontWeight: 'var(--ds-typography-weight-medium)' }}>
+            Component Variants
+          </h3>
+          <p style={{ color: 'var(--ds-content-secondary)', fontSize: 'var(--ds-typography-size-sm)', marginBottom: 'var(--ds-spacing-3)' }}>
+            Using class-variance-authority for type-safe component variants
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+            <code style={{ 
+              padding: 'var(--ds-spacing-2)', 
+              backgroundColor: 'var(--ds-surface-tertiary)', 
+              borderRadius: 'var(--ds-radius-sm)',
+              fontSize: 'var(--ds-typography-size-xs)'
+            }}>
+              variant: "default" | "primary" | "secondary"
+            </code>
+            <code style={{ 
+              padding: 'var(--ds-spacing-2)', 
+              backgroundColor: 'var(--ds-surface-tertiary)', 
+              borderRadius: 'var(--ds-radius-sm)',
+              fontSize: 'var(--ds-typography-size-xs)'
+            }}>
+              size: "sm" | "md" | "lg"
+            </code>
+          </div>
+        </div>
+
+        {/* Accessibility Features */}
+        <div style={{
+          padding: 'var(--ds-spacing-4)',
+          backgroundColor: 'var(--ds-surface-secondary)',
+          borderRadius: 'var(--ds-radius-lg)',
+          border: '1px solid var(--ds-border-subtle)'
+        }}>
+          <h3 style={{ marginBottom: 'var(--ds-spacing-3)', fontSize: 'var(--ds-typography-size-lg)', fontWeight: 'var(--ds-typography-weight-medium)' }}>
+            Radix UI Primitives
+          </h3>
+          <p style={{ color: 'var(--ds-content-secondary)', fontSize: 'var(--ds-typography-size-sm)', marginBottom: 'var(--ds-spacing-3)' }}>
+            Built-in accessibility with ARIA attributes and keyboard navigation
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>
+            <span style={{ fontSize: 'var(--ds-typography-size-sm)' }}>✓ Focus management</span>
+            <span style={{ fontSize: 'var(--ds-typography-size-sm)' }}>✓ Keyboard navigation</span>
+            <span style={{ fontSize: 'var(--ds-typography-size-sm)' }}>✓ Screen reader support</span>
+            <span style={{ fontSize: 'var(--ds-typography-size-sm)' }}>✓ WCAG compliance</span>
+          </div>
+        </div>
+
+        {/* Theme Integration */}
+        <div style={{
+          padding: 'var(--ds-spacing-4)',
+          backgroundColor: 'var(--ds-surface-secondary)',
+          borderRadius: 'var(--ds-radius-lg)',
+          border: '1px solid var(--ds-border-subtle)'
+        }}>
+          <h3 style={{ marginBottom: 'var(--ds-spacing-3)', fontSize: 'var(--ds-typography-size-lg)', fontWeight: 'var(--ds-typography-weight-medium)' }}>
+            Telegram Theme Integration
+          </h3>
+          <p style={{ color: 'var(--ds-content-secondary)', fontSize: 'var(--ds-typography-size-sm)', marginBottom: 'var(--ds-spacing-3)' }}>
+            Automatic theme synchronization with Telegram WebApp
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>
+            <span style={{ fontSize: 'var(--ds-typography-size-sm)' }}>🌙 Auto dark/light switching</span>
+            <span style={{ fontSize: 'var(--ds-typography-size-sm)' }}>🎨 Telegram color mapping</span>
+            <span style={{ fontSize: 'var(--ds-typography-size-sm)' }}>📱 Native feel on Telegram</span>
+            <span style={{ fontSize: 'var(--ds-typography-size-sm)' }}>⚡ Real-time theme updates</span>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 'var(--ds-spacing-8)', padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-surface-brand-subtle)', borderRadius: 'var(--ds-radius-lg)' }}>
+        <h4 style={{ marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-typography-size-md)', fontWeight: 'var(--ds-typography-weight-medium)' }}>
+          🏆 Best Practices Applied
+        </h4>
+        <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', color: 'var(--ds-content-secondary)' }}>
+          <li>Apple Human Interface Guidelines compliance</li>
+          <li>SF Symbols-style icon system with 6900+ icons</li>
+          <li>Telegram WebApp API integration for native feel</li>
+          <li>Type-safe component variants with TypeScript</li>
+          <li>Accessible components following WCAG AA standards</li>
+          <li>Performance optimized with tree-shaking and lazy loading</li>
+        </ul>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Overview of the new Shadcn/UI integration, showing how modern component primitives enhance the iOS Academy design system.',
+      },
+    },
+  },
 };

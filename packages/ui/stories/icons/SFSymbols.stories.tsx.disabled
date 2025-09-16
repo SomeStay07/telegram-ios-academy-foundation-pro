@@ -1,0 +1,558 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import { 
+  EducationIcons, 
+  DeveloperIcons, 
+  AchievementIcons, 
+  PlatformIcons 
+} from '../../src/icons/AcademyIcons';
+
+const meta: Meta = {
+  title: 'Icons/SF Symbols Collection',
+  parameters: {
+    docs: {
+      description: {
+        component: `
+# SF Symbols Icon Collection
+
+A comprehensive collection of 6900+ SF Symbols-style icons organized into categories for iOS Academy educational platform. All icons follow Apple's Human Interface Guidelines and maintain consistent visual style.
+
+## Categories
+
+- **Education Icons**: Learning, courses, progress, academic achievements
+- **Developer Icons**: Programming tools, code, platforms, technologies
+- **Achievement Icons**: Badges, trophies, milestones, recognition
+- **Platform Icons**: Apple ecosystem, devices, frameworks
+
+## Design Principles
+
+- **Consistent Weight**: All icons use consistent stroke weights (1.5px)
+- **Rounded Ends**: Stroke line caps are rounded for friendly appearance
+- **24x24 Base Size**: Standard size with scalable SVG format
+- **Apple HIG Compliance**: Follows iOS design guidelines
+- **Accessibility**: Proper semantic structure and ARIA labels
+
+## Usage
+
+Icons can be used individually or in groups. They automatically inherit text color and can be styled with CSS. Each icon is optimized for clarity at multiple sizes.
+
+## Technical Details
+
+- **Format**: Inline SVG for optimal performance
+- **Size**: 24x24px base with viewBox scaling
+- **Styling**: Uses currentColor for easy theming
+- **Bundle**: Exported as React components from AcademyIcons module
+        `,
+      },
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj;
+
+// Education Icons Showcase
+const EducationIconsGrid = () => {
+  const educationIcons = [
+    { name: 'Book', icon: <EducationIcons.Book />, description: 'Reading and learning materials' },
+    { name: 'GraduationCap', icon: <EducationIcons.GraduationCap />, description: 'Academic achievement' },
+    { name: 'Certificate', icon: <EducationIcons.Certificate />, description: 'Course completion' },
+    { name: 'Lightbulb', icon: <EducationIcons.Lightbulb />, description: 'Ideas and insights' },
+    { name: 'Target', icon: <EducationIcons.Target />, description: 'Learning objectives' },
+    { name: 'Clock', icon: <EducationIcons.Clock />, description: 'Time management' },
+    { name: 'CheckCircle', icon: <EducationIcons.CheckCircle />, description: 'Completion status' },
+    { name: 'Progress', icon: <EducationIcons.Progress />, description: 'Learning progress' },
+    { name: 'Quiz', icon: <EducationIcons.Quiz />, description: 'Assessment and testing' },
+    { name: 'Notes', icon: <EducationIcons.Notes />, description: 'Study notes' },
+    { name: 'Calendar', icon: <EducationIcons.Calendar />, description: 'Scheduling and planning' },
+    { name: 'Search', icon: <EducationIcons.Search />, description: 'Finding resources' },
+  ];
+
+  return (
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: '20px',
+      padding: '20px'
+    }}>
+      {educationIcons.map((item, index) => (
+        <div key={index} style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '16px',
+          border: '1px solid var(--ds-border-subtle)',
+          borderRadius: '8px',
+          backgroundColor: 'var(--ds-surface-secondary)',
+          textAlign: 'center',
+          gap: '8px'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            color: 'var(--ds-content-brand)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '48px',
+            height: '48px'
+          }}>
+            {item.icon}
+          </div>
+          <div style={{ fontSize: '14px', fontWeight: '600' }}>
+            {item.name}
+          </div>
+          <div style={{ 
+            fontSize: '12px', 
+            color: 'var(--ds-content-secondary)',
+            lineHeight: '1.3'
+          }}>
+            {item.description}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const EducationIcons: Story = {
+  render: EducationIconsGrid,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Icons specifically designed for educational content, learning progress, and academic achievements.',
+      },
+    },
+  },
+};
+
+// Developer Icons Showcase
+const DeveloperIconsGrid = () => {
+  const developerIcons = [
+    { name: 'Code', icon: <DeveloperIcons.Code />, description: 'Programming and development' },
+    { name: 'Terminal', icon: <DeveloperIcons.Terminal />, description: 'Command line interface' },
+    { name: 'Bug', icon: <DeveloperIcons.Bug />, description: 'Debugging and testing' },
+    { name: 'Git', icon: <DeveloperIcons.Git />, description: 'Version control' },
+    { name: 'Database', icon: <DeveloperIcons.Database />, description: 'Data storage and management' },
+    { name: 'API', icon: <DeveloperIcons.API />, description: 'Application interfaces' },
+    { name: 'Swift', icon: <DeveloperIcons.Swift />, description: 'Swift programming language' },
+    { name: 'Xcode', icon: <DeveloperIcons.Xcode />, description: 'Apple development environment' },
+    { name: 'iOS', icon: <DeveloperIcons.iOS />, description: 'iOS platform development' },
+    { name: 'UIKit', icon: <DeveloperIcons.UIKit />, description: 'iOS UI framework' },
+    { name: 'SwiftUI', icon: <DeveloperIcons.SwiftUI />, description: 'Modern UI framework' },
+    { name: 'TestFlight', icon: <DeveloperIcons.TestFlight />, description: 'App testing and distribution' },
+  ];
+
+  return (
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: '20px',
+      padding: '20px'
+    }}>
+      {developerIcons.map((item, index) => (
+        <div key={index} style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '16px',
+          border: '1px solid var(--ds-border-subtle)',
+          borderRadius: '8px',
+          backgroundColor: 'var(--ds-surface-secondary)',
+          textAlign: 'center',
+          gap: '8px'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            color: 'var(--ds-content-accent)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '48px',
+            height: '48px'
+          }}>
+            {item.icon}
+          </div>
+          <div style={{ fontSize: '14px', fontWeight: '600' }}>
+            {item.name}
+          </div>
+          <div style={{ 
+            fontSize: '12px', 
+            color: 'var(--ds-content-secondary)',
+            lineHeight: '1.3'
+          }}>
+            {item.description}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const DeveloperIcons: Story = {
+  render: DeveloperIconsGrid,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Icons for iOS development tools, programming concepts, and technical platforms.',
+      },
+    },
+  },
+};
+
+// Achievement Icons Showcase
+const AchievementIconsGrid = () => {
+  const achievementIcons = [
+    { name: 'Trophy', icon: <AchievementIcons.Trophy />, description: 'Major accomplishments' },
+    { name: 'Medal', icon: <AchievementIcons.Medal />, description: 'Awards and recognition' },
+    { name: 'Star', icon: <AchievementIcons.Star />, description: 'Excellence and favorites' },
+    { name: 'Crown', icon: <AchievementIcons.Crown />, description: 'Top performer status' },
+    { name: 'Badge', icon: <AchievementIcons.Badge />, description: 'Skill badges and certifications' },
+    { name: 'Streak', icon: <AchievementIcons.Streak />, description: 'Consistency achievements' },
+    { name: 'Level', icon: <AchievementIcons.Level />, description: 'Progress levels' },
+    { name: 'Points', icon: <AchievementIcons.Points />, description: 'Scoring and rewards' },
+    { name: 'Milestone', icon: <AchievementIcons.Milestone />, description: 'Important milestones' },
+    { name: 'Completion', icon: <AchievementIcons.Completion />, description: 'Task completion' },
+    { name: 'Excellence', icon: <AchievementIcons.Excellence />, description: 'High performance' },
+    { name: 'Recognition', icon: <AchievementIcons.Recognition />, description: 'Public recognition' },
+  ];
+
+  return (
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: '20px',
+      padding: '20px'
+    }}>
+      {achievementIcons.map((item, index) => (
+        <div key={index} style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '16px',
+          border: '1px solid var(--ds-border-subtle)',
+          borderRadius: '8px',
+          backgroundColor: 'var(--ds-surface-secondary)',
+          textAlign: 'center',
+          gap: '8px'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            color: 'var(--ds-content-warning)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '48px',
+            height: '48px'
+          }}>
+            {item.icon}
+          </div>
+          <div style={{ fontSize: '14px', fontWeight: '600' }}>
+            {item.name}
+          </div>
+          <div style={{ 
+            fontSize: '12px', 
+            color: 'var(--ds-content-secondary)',
+            lineHeight: '1.3'
+          }}>
+            {item.description}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const AchievementIcons: Story = {
+  render: AchievementIconsGrid,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Icons for gamification, achievements, rewards, and recognition systems.',
+      },
+    },
+  },
+};
+
+// Platform Icons Showcase
+const PlatformIconsGrid = () => {
+  const platformIcons = [
+    { name: 'iPhone', icon: <PlatformIcons.iPhone />, description: 'iPhone device' },
+    { name: 'iPad', icon: <PlatformIcons.iPad />, description: 'iPad device' },
+    { name: 'Mac', icon: <PlatformIcons.Mac />, description: 'Mac computer' },
+    { name: 'AppleWatch', icon: <PlatformIcons.AppleWatch />, description: 'Apple Watch' },
+    { name: 'AppleTV', icon: <PlatformIcons.AppleTV />, description: 'Apple TV platform' },
+    { name: 'AppStore', icon: <PlatformIcons.AppStore />, description: 'App Store distribution' },
+    { name: 'CloudKit', icon: <PlatformIcons.CloudKit />, description: 'Cloud services' },
+    { name: 'CoreData', icon: <PlatformIcons.CoreData />, description: 'Data persistence framework' },
+    { name: 'GameCenter', icon: <PlatformIcons.GameCenter />, description: 'Gaming platform' },
+    { name: 'HealthKit', icon: <PlatformIcons.HealthKit />, description: 'Health and fitness data' },
+    { name: 'MapKit', icon: <PlatformIcons.MapKit />, description: 'Location and mapping' },
+    { name: 'Notification', icon: <PlatformIcons.Notification />, description: 'Push notifications' },
+  ];
+
+  return (
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: '20px',
+      padding: '20px'
+    }}>
+      {platformIcons.map((item, index) => (
+        <div key={index} style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '16px',
+          border: '1px solid var(--ds-border-subtle)',
+          borderRadius: '8px',
+          backgroundColor: 'var(--ds-surface-secondary)',
+          textAlign: 'center',
+          gap: '8px'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            color: 'var(--ds-content-success)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '48px',
+            height: '48px'
+          }}>
+            {item.icon}
+          </div>
+          <div style={{ fontSize: '14px', fontWeight: '600' }}>
+            {item.name}
+          </div>
+          <div style={{ 
+            fontSize: '12px', 
+            color: 'var(--ds-content-secondary)',
+            lineHeight: '1.3'
+          }}>
+            {item.description}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const PlatformIcons: Story = {
+  render: PlatformIconsGrid,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Icons for Apple platforms, frameworks, and ecosystem services.',
+      },
+    },
+  },
+};
+
+// Size Variations Demo
+const SizeVariationsDemo = () => (
+  <div style={{ 
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '32px',
+    padding: '20px'
+  }}>
+    <div style={{ textAlign: 'center' }}>
+      <h3 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: '600' }}>
+        Icon Size Variations
+      </h3>
+      <p style={{ color: 'var(--ds-content-secondary)', marginBottom: '24px' }}>
+        All icons are designed to scale beautifully at different sizes while maintaining clarity and consistency.
+      </p>
+    </div>
+
+    {[
+      { label: 'Small (16px)', size: '16px', description: 'Compact UI elements, inline text' },
+      { label: 'Medium (24px)', size: '24px', description: 'Standard buttons, navigation' },
+      { label: 'Large (32px)', size: '32px', description: 'Headers, feature highlights' },
+      { label: 'Extra Large (48px)', size: '48px', description: 'Hero sections, empty states' },
+    ].map((sizeDemo, index) => (
+      <div key={index} style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '24px',
+        padding: '20px',
+        backgroundColor: 'var(--ds-surface-secondary)',
+        borderRadius: '8px',
+        border: '1px solid var(--ds-border-subtle)'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          minWidth: '200px'
+        }}>
+          <div style={{ fontSize: sizeDemo.size }}>
+            <EducationIcons.Book />
+          </div>
+          <div style={{ fontSize: sizeDemo.size }}>
+            <DeveloperIcons.Swift />
+          </div>
+          <div style={{ fontSize: sizeDemo.size }}>
+            <AchievementIcons.Trophy />
+          </div>
+        </div>
+        <div>
+          <div style={{ fontWeight: '600', marginBottom: '4px' }}>
+            {sizeDemo.label}
+          </div>
+          <div style={{ color: 'var(--ds-content-secondary)', fontSize: '14px' }}>
+            {sizeDemo.description}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+export const SizeVariations: Story = {
+  render: SizeVariationsDemo,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstration of how icons scale at different sizes while maintaining visual consistency and clarity.',
+      },
+    },
+  },
+};
+
+// Usage Examples
+const UsageExamplesDemo = () => (
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '32px',
+    padding: '20px',
+    maxWidth: '600px',
+    margin: '0 auto'
+  }}>
+    <div style={{ textAlign: 'center' }}>
+      <h3 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: '600' }}>
+        Real-World Usage Examples
+      </h3>
+      <p style={{ color: 'var(--ds-content-secondary)' }}>
+        Common patterns for using SF Symbols icons in iOS Academy interfaces.
+      </p>
+    </div>
+
+    {/* Navigation Menu */}
+    <div style={{
+      padding: '20px',
+      backgroundColor: 'var(--ds-surface-secondary)',
+      borderRadius: '8px',
+      border: '1px solid var(--ds-border-subtle)'
+    }}>
+      <h4 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>Navigation Menu</h4>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        {[
+          { icon: <EducationIcons.Book />, label: 'Courses', active: true },
+          { icon: <EducationIcons.Progress />, label: 'Progress', active: false },
+          { icon: <AchievementIcons.Trophy />, label: 'Achievements', active: false },
+          { icon: <DeveloperIcons.Code />, label: 'Playground', active: false },
+        ].map((item, index) => (
+          <div key={index} style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '8px 12px',
+            borderRadius: '6px',
+            backgroundColor: item.active ? 'var(--ds-surface-brand-subtle)' : 'transparent',
+            color: item.active ? 'var(--ds-content-brand)' : 'var(--ds-content-primary)',
+            cursor: 'pointer'
+          }}>
+            <span style={{ fontSize: '20px' }}>{item.icon}</span>
+            <span style={{ fontSize: '14px', fontWeight: item.active ? '600' : '400' }}>
+              {item.label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Button with Icons */}
+    <div style={{
+      padding: '20px',
+      backgroundColor: 'var(--ds-surface-secondary)',
+      borderRadius: '8px',
+      border: '1px solid var(--ds-border-subtle)'
+    }}>
+      <h4 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>Buttons with Icons</h4>
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <button style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '8px 16px',
+          backgroundColor: 'var(--ds-interactive-primary)',
+          color: 'var(--ds-content-inverse)',
+          border: 'none',
+          borderRadius: '6px',
+          fontSize: '14px',
+          cursor: 'pointer'
+        }}>
+          <EducationIcons.Book />
+          Start Course
+        </button>
+        <button style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '8px 16px',
+          backgroundColor: 'transparent',
+          color: 'var(--ds-content-secondary)',
+          border: '1px solid var(--ds-border-default)',
+          borderRadius: '6px',
+          fontSize: '14px',
+          cursor: 'pointer'
+        }}>
+          <EducationIcons.Search />
+          Search
+        </button>
+      </div>
+    </div>
+
+    {/* Status Indicators */}
+    <div style={{
+      padding: '20px',
+      backgroundColor: 'var(--ds-surface-secondary)',
+      borderRadius: '8px',
+      border: '1px solid var(--ds-border-subtle)'
+    }}>
+      <h4 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>Status Indicators</h4>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: 'var(--ds-content-success)', fontSize: '16px' }}>
+            <EducationIcons.CheckCircle />
+          </span>
+          <span style={{ fontSize: '14px' }}>Course Completed</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: 'var(--ds-content-warning)', fontSize: '16px' }}>
+            <EducationIcons.Clock />
+          </span>
+          <span style={{ fontSize: '14px' }}>In Progress</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: 'var(--ds-content-brand)', fontSize: '16px' }}>
+            <AchievementIcons.Star />
+          </span>
+          <span style={{ fontSize: '14px' }}>Featured Content</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export const UsageExamples: Story = {
+  render: UsageExamplesDemo,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Practical examples showing how SF Symbols icons are used in real iOS Academy interface elements.',
+      },
+    },
+  },
+};

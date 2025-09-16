@@ -41,7 +41,7 @@ export const RANKS: RankInfo[] = [
     maxXP: 2999,
     color: '#34C759',
     gradient: 'linear-gradient(135deg, #34C759 0%, #30D158 100%)',
-    icon: '🔍',
+    icon: '🧭',
     description: 'Exploring the iOS ecosystem',
     benefits: ['Intermediate challenges', 'Code reviews', 'Community access']
   },
@@ -55,7 +55,7 @@ export const RANKS: RankInfo[] = [
     maxXP: 6999,
     color: '#007AFF',
     gradient: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)',
-    icon: '👨‍💻',
+    icon: '📱',
     description: 'Building real iOS applications',
     benefits: ['Advanced challenges', 'Mock interviews', 'Portfolio reviews']
   },
@@ -67,7 +67,7 @@ export const RANKS: RankInfo[] = [
     maxXP: 9999,
     color: '#FF9500',
     gradient: 'linear-gradient(135deg, #FF9500 0%, #FFCC02 100%)',
-    icon: '⚡',
+    icon: '🔥',
     description: 'Swift language expert',
     benefits: ['Expert challenges', 'Mentorship opportunities', 'Beta features']
   },
@@ -81,7 +81,7 @@ export const RANKS: RankInfo[] = [
     maxXP: 17999,
     color: '#AF52DE',
     gradient: 'linear-gradient(135deg, #AF52DE 0%, #BF5AF2 100%)',
-    icon: '🛠️',
+    icon: '⚙️',
     description: 'Senior iOS engineering skills',
     benefits: ['Leadership challenges', 'Team building', 'Technical interviews']
   },
@@ -119,7 +119,7 @@ export const RANKS: RankInfo[] = [
     maxXP: 49999,
     color: '#5856D6',
     gradient: 'linear-gradient(135deg, #5856D6 0%, #7C4DFF 100%)',
-    icon: '🎯',
+    icon: '🚀',
     description: 'Principal-level iOS expertise',
     benefits: ['Cross-team influence', 'Technical strategy', 'Industry recognition']
   },
@@ -133,7 +133,7 @@ export const RANKS: RankInfo[] = [
     maxXP: 99999,
     color: '#FFD60A',
     gradient: 'linear-gradient(135deg, #FFD60A 0%, #FF9500 50%, #FF3B30 100%)',
-    icon: '🏆',
+    icon: '💎',
     description: 'iOS development mastery achieved',
     benefits: ['Exclusive masterclasses', 'Industry partnerships', 'Personal branding']
   },
@@ -147,7 +147,7 @@ export const RANKS: RankInfo[] = [
     maxXP: Infinity,
     color: '#FFFFFF',
     gradient: 'linear-gradient(135deg, #FFD60A 0%, #FF9500 25%, #FF3B30 50%, #AF52DE 75%, #007AFF 100%)',
-    icon: '⭐',
+    icon: '🌟',
     description: 'Legendary status in iOS community',
     benefits: ['Hall of fame', 'Mentorship program', 'Conference speaking', 'Open source contributions']
   }

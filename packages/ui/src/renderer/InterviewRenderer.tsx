@@ -358,14 +358,14 @@ export const InterviewRenderer: React.FC<InterviewRendererProps> = ({
         width: '100%', 
         height: 'var(--ds-spacing-1)', 
         background: 'var(--color-bg-secondary)', 
-        borderRadius: 'var(--ds-spacing-0.5)',
+        borderRadius: 'var(--ds-spacing-0-5)',
         marginBottom: 'var(--ds-spacing-6)'
       }}>
         <div style={{ 
           width: `${((currentProgress.current_question_index + 1) / totalQuestions) * 100}%`,
           height: '100%',
           background: 'var(--color-primary)',
-          borderRadius: 'var(--ds-spacing-0.5)',
+          borderRadius: 'var(--ds-spacing-0-5)',
           transition: 'width var(--ds-motion-duration-fast) ease'
         }} />
       </div>

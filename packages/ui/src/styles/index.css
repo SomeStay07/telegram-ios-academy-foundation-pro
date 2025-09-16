@@ -1,5 +1,4 @@
 /* Profile Component Styles */
-@import '../components/profile/account-card.css';
 
 /* RTL Support for UI Components */
 
@@ -518,4 +517,146 @@
   .interactive-card-base:active {
     transform: scale(0.98);
   }
+}
+
+/* Shimmer Animation for Modern Components */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Telegram WebApp Integration */
+.telegram-app {
+  /* Ensure smooth theme transitions */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  
+  /* Remove default margins and padding for full screen */
+  margin: 0;
+  padding: 0;
+  
+  /* Use system font stack with Telegram's preferences */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  
+  /* Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Telegram theme-aware components */
+.telegram-theme {
+  /* Use Telegram's color scheme variables when available */
+  --background: var(--tg-bg-color, var(--background));
+  --foreground: var(--tg-text-color, var(--foreground));
+  --primary: var(--tg-button-color, var(--primary));
+  --primary-foreground: var(--tg-button-text-color, var(--primary-foreground));
+  --muted: var(--tg-secondary-bg-color, var(--muted));
+  --muted-foreground: var(--tg-hint-color, var(--muted-foreground));
+  --accent: var(--tg-link-color, var(--accent));
+  --card: var(--tg-section-bg-color, var(--card));
+  --destructive: var(--tg-destructive-color, var(--destructive));
+}
+
+/* Telegram light theme optimizations */
+.telegram-light {
+  color-scheme: light;
+}
+
+.telegram-light .card-surface-base::before {
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    color-mix(in oklab, var(--tg-button-color, var(--primary)) 20%, transparent) 50%,
+    transparent 100%
+  );
+}
+
+/* Telegram dark theme optimizations */
+.telegram-dark {
+  color-scheme: dark;
+}
+
+.telegram-dark .card-surface-base::before {
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    color-mix(in oklab, var(--tg-button-color, var(--primary)) 30%, transparent) 50%,
+    transparent 100%
+  );
+}
+
+/* Telegram WebApp viewport handling */
+@supports (height: 100dvh) {
+  .telegram-app {
+    min-height: 100dvh;
+  }
+}
+
+@supports not (height: 100dvh) {
+  .telegram-app {
+    min-height: calc(var(--tg-viewport-height, 100vh));
+  }
+}
+
+/* Telegram-safe area handling for iOS */
+@supports (padding: max(0px)) {
+  .telegram-app {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Telegram WebApp specific button styles */
+.telegram-theme .button-base {
+  background: var(--tg-button-color, var(--primary));
+  color: var(--tg-button-text-color, var(--primary-foreground));
+  border: none;
+  transition: opacity 0.2s ease;
+}
+
+.telegram-theme .button-base:hover {
+  opacity: 0.9;
+}
+
+.telegram-theme .button-base:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+/* Telegram WebApp haptic feedback integration */
+.telegram-interactive {
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.telegram-interactive:active {
+  transform: scale(0.98);
+}
+
+/* iOS Academy specific Telegram adaptations */
+.telegram-theme .profile-hero::before {
+  background: linear-gradient(135deg,
+    color-mix(in oklab, var(--tg-button-color, #007AFF) 25%, var(--tg-bg-color, #ffffff)) 0%,
+    color-mix(in oklab, var(--tg-link-color, #007AFF) 22%, var(--tg-bg-color, #ffffff)) 30%,
+    color-mix(in oklab, var(--tg-button-color, #007AFF) 20%, var(--tg-bg-color, #ffffff)) 60%,
+    color-mix(in oklab, var(--tg-link-color, #007AFF) 15%, var(--tg-bg-color, #ffffff)) 100%);
+}
+
+/* Telegram WebApp scroll optimization */
+.telegram-app {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Telegram WebApp selection styling */
+.telegram-theme ::selection {
+  background: color-mix(in oklab, var(--tg-link-color, var(--accent)) 30%, transparent);
+  color: var(--tg-text-color, var(--foreground));
 }

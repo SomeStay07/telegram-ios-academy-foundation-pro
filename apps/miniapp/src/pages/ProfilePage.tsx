@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAtom } from 'jotai'
 import { getUserData, initializeTelegramWebApp, setTelegramMainButton } from '../lib/telegram'
@@ -8,26 +8,150 @@ import { useHaptics } from '../lib/haptics'
 import { AchievementNotification, useAchievement } from '../components/AchievementNotification'
 import { DraggableStats } from '../components/DraggableStats'
 
+// Animation constants for performance and maintainability
+const ANIMATION_CONSTANTS = {
+  DELAYS: {
+    AVATAR: 0.2,
+    NAME: 0.3,
+    LEVEL_BADGE: 0.4,
+    BADGES_SECTION: 0.5,
+    USERNAME: 0.6,
+    SENIOR: 0.7,
+    XP_SECTION: 0.8,
+    XP_MAIN: 0.9,
+    XP_NEXT: 1.0,
+    PROGRESS: 1.1,
+    XP_RANGE: 1.8,
+    SPARKLE_1: 0,
+    SPARKLE_2: 0.7,
+    SPARKLE_3: 1.4,
+  },
+  DURATIONS: {
+    ENTRANCE: 0.5,
+    CONTAINER: 0.6,
+    SPARKLE: 2,
+    AVATAR_RING: 8,
+    AVATAR_PATTERN: 20,
+    GLOW_CYCLE: 3,
+    BOX_SHADOW_CYCLE: 4,
+    RANK_GLOW: 4,
+  },
+  SPRING: {
+    STIFF: 200,
+    MODERATE: 300,
+    VERY_STIFF: 400,
+    DAMPING: 25,
+  },
+  OPACITY: {
+    GLOW_MIN: 0.2,
+    GLOW_MAX: 0.4,
+    RANK_GLOW_MIN: 0.3,
+    RANK_GLOW_MAX: 0.6,
+  },
+  SCALE: {
+    HOVER: 1.02,
+    HOVER_LARGE: 1.05,
+    HOVER_ICON: 1.15,
+    TAP: 0.98,
+    INITIAL: 0.8,
+    FINAL: 1,
+    GLOW: 1.05,
+  },
+  TRANSFORM: {
+    Y_OFFSET: 20,
+    Y_HOVER: -1,
+    Y_HOVER_LARGE: -2,
+    X_OFFSET: -20,
+    ROTATE: 5,
+    ROTATE_ICON: 10,
+  }
+} as const
+
+// UI Constants
+const UI_CONSTANTS = {
+  XP_LEVEL_DIVISOR: 1000,
+  STAGGER_CHILDREN: 0.1,
+} as const
+
+// Telegram WebApp type definitions for type safety
+interface TelegramWebApp {
+  initData?: string
+  colorScheme?: 'light' | 'dark'
+  themeParams?: Record<string, string>
+}
+
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp?: TelegramWebApp
+    }
+  }
+}
+
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
   const haptics = useHaptics()
   const achievement = useAchievement()
 
-  // Calculate rank-based data
-  const currentRank = getRankByXP(userData.totalXP)
-  const nextRank = getNextRank(userData.totalXP)
-  const rankProgress = getRankProgress(userData.totalXP)
-  const xpToNext = getXPToNextRank(userData.totalXP)
-  const isMaxRank = !nextRank
+  // Memoized rank calculations for performance
+  const rankData = useMemo(() => {
+    const currentRank = getRankByXP(userData.totalXP)
+    const nextRank = getNextRank(userData.totalXP)
+    const rankProgress = getRankProgress(userData.totalXP)
+    const xpToNext = getXPToNextRank(userData.totalXP)
+    const isMaxRank = !nextRank
+    const progressPercentage = rankProgress * 100
+
+    return {
+      currentRank,
+      nextRank,
+      rankProgress,
+      xpToNext,
+      isMaxRank,
+      progressPercentage
+    }
+  }, [userData.totalXP])
+
+  const { currentRank, nextRank, isMaxRank, progressPercentage, xpToNext } = rankData
+
+  // Type-safe Telegram WebApp check
+  const isTelegramWebApp = useMemo(() => {
+    return Boolean(window?.Telegram?.WebApp?.initData)
+  }, [])
+
+  // Memoized event handlers
+  const handleLevelBadgeClick = useCallback(() => {
+    haptics.impact('heavy')
+    achievement.trigger(
+      `Level ${Math.floor(userData.totalXP / UI_CONSTANTS.XP_LEVEL_DIVISOR)} Unlocked! ⚡`,
+      `Dominating with ${userData.totalXP.toLocaleString()} XP`,
+      '⚡'
+    )
+  }, [haptics, achievement, userData.totalXP])
+
+  const handleUsernameClick = useCallback(() => {
+    haptics.buttonPress()
+    achievement.trigger(
+      'Profile ID! 👤',
+      `Username: @${userData.username}`,
+      '🏷️'
+    )
+  }, [haptics, achievement, userData.username])
+
+  const handleRankClick = useCallback(() => {
+    haptics.selection()
+    achievement.trigger(
+      `${currentRank.name} Level! ${currentRank.icon}`,
+      `Elite developer with ${userData.totalXP.toLocaleString()} XP mastered`,
+      currentRank.icon
+    )
+  }, [haptics, achievement, currentRank, userData.totalXP])
 
   useEffect(() => {
     const initialized = initializeTelegramWebApp()
     const user = getUserData()
     
-    // Check if running in Telegram WebApp or locally
-    const isInTelegram = (window as any).Telegram?.WebApp?.initData
-    
-    if (isInTelegram && user) {
+    if (isTelegramWebApp && user) {
       // Use real Telegram data
       setUserData(prev => ({
         ...prev,
@@ -44,7 +168,7 @@ export function ProfilePage() {
         firstName: 'Тимур',
         lastName: 'Цеберда',
         username: 'timurceberda',
-        avatar: 'https://avatars.githubusercontent.com/u/12345678?v=4'
+        avatar: '' // Use default developer icon instead
       }))
     }
 
@@ -56,28 +180,26 @@ export function ProfilePage() {
         onClick: () => console.log('Starting challenge...')
       })
     }
-  }, [currentRank.color])
-
-  const progressPercentage = rankProgress * 100
+  }, [currentRank.color, isTelegramWebApp, setUserData])
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
+        duration: ANIMATION_CONSTANTS.DURATIONS.CONTAINER,
+        staggerChildren: UI_CONSTANTS.STAGGER_CHILDREN
       }
     }
   }
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: ANIMATION_CONSTANTS.TRANSFORM.Y_OFFSET, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.5,
+        duration: ANIMATION_CONSTANTS.DURATIONS.ENTRANCE,
         ease: [0.25, 0.46, 0.45, 0.94]
       }
     }
@@ -105,21 +227,27 @@ export function ProfilePage() {
           }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           onTap={() => haptics.cardTap()}
+          role="button"
+          aria-label="View profile details"
+          tabIndex={0}
         >
           {/* Profile Header with Avatar & Info */}
           <div className="profile-header-premium">
             <motion.div 
               className="avatar-wrapper-enhanced"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER_LARGE }}
               whileTap={{ scale: 0.95 }}
               onTap={() => haptics.cardTap()}
+              role="button"
+              aria-label="View avatar"
+              tabIndex={0}
             >
               {/* Enhanced Avatar or Beautiful Icon */}
               <motion.div 
                 className="avatar-container-enhanced"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                transition={{ delay: ANIMATION_CONSTANTS.DELAYS.AVATAR, type: "spring", stiffness: ANIMATION_CONSTANTS.SPRING.STIFF }}
               >
                 {userData.avatar && userData.avatar !== 'https://avatars.githubusercontent.com/u/12345678?v=4' ? (
                   <motion.img 
@@ -131,7 +259,7 @@ export function ProfilePage() {
                   /* Elegant Grey Developer Icon */
                   <motion.div 
                     className="avatar-icon-grey"
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
                     {/* Subtle pattern background */}
@@ -181,7 +309,7 @@ export function ProfilePage() {
                 style={{ background: currentRank.gradient }}
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+                transition={{ delay: ANIMATION_CONSTANTS.DELAYS.LEVEL_BADGE, type: "spring", stiffness: ANIMATION_CONSTANTS.SPRING.STIFF }}
                 whileHover={{ scale: 1.2, rotate: 12, y: -1 }}
                 whileTap={{ scale: 0.85 }}
                 onTap={() => {
@@ -209,7 +337,7 @@ export function ProfilePage() {
                     rotate: [0, 180, 360],
                     opacity: [0, 1, 0]
                   }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0 }}
+                  transition={{ duration: ANIMATION_CONSTANTS.DURATIONS.SPARKLE, repeat: Infinity, delay: ANIMATION_CONSTANTS.DELAYS.SPARKLE_1 }}
                 >
                   ✨
                 </motion.div>
@@ -220,7 +348,7 @@ export function ProfilePage() {
                     rotate: [0, -180, -360],
                     opacity: [0, 1, 0]
                   }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.7 }}
+                  transition={{ duration: ANIMATION_CONSTANTS.DURATIONS.SPARKLE, repeat: Infinity, delay: ANIMATION_CONSTANTS.DELAYS.SPARKLE_2 }}
                 >
                   ✨
                 </motion.div>
@@ -231,7 +359,7 @@ export function ProfilePage() {
                     rotate: [0, 90, 180],
                     opacity: [0, 1, 0]
                   }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 1.4 }}
+                  transition={{ duration: ANIMATION_CONSTANTS.DURATIONS.SPARKLE, repeat: Infinity, delay: ANIMATION_CONSTANTS.DELAYS.SPARKLE_3 }}
                 >
                   ✨
                 </motion.div>
@@ -246,7 +374,7 @@ export function ProfilePage() {
                   className="profile-name-clean"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
+                  transition={{ delay: ANIMATION_CONSTANTS.DELAYS.NAME }}
                 >
                   <span className="name-text">{userData.firstName}</span>
                   {userData.lastName && (
@@ -284,17 +412,20 @@ export function ProfilePage() {
                     className="username-badge-unified"
                     initial={{ opacity: 0, x: -20, scale: 0.9 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
-                    transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
+                    transition={{ delay: ANIMATION_CONSTANTS.DELAYS.USERNAME, type: "spring", stiffness: ANIMATION_CONSTANTS.SPRING.STIFF }}
+                    whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER, y: ANIMATION_CONSTANTS.TRANSFORM.Y_HOVER }}
+                    whileTap={{ scale: ANIMATION_CONSTANTS.SCALE.TAP }}
                     onTap={() => {
                       haptics.buttonPress()
                       achievement.trigger(
-                        'Profile ID! 📱',
+                        'Profile ID! 👤',
                         `Username: @${userData.username}`,
                         '🏷️'
                       )
                     }}
+                    role="button"
+                    aria-label={`Username @${userData.username}`}
+                    tabIndex={0}
                   >
                     <motion.span 
                       className="username-symbol-unified"
@@ -321,9 +452,9 @@ export function ProfilePage() {
                     className="senior-engineer-badge-unified"
                     initial={{ y: 20, opacity: 0, scale: 0.8 }}
                     animate={{ y: 0, opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
+                    transition={{ delay: ANIMATION_CONSTANTS.DELAYS.SENIOR, type: "spring", stiffness: ANIMATION_CONSTANTS.SPRING.STIFF }}
+                    whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER, y: ANIMATION_CONSTANTS.TRANSFORM.Y_HOVER }}
+                    whileTap={{ scale: ANIMATION_CONSTANTS.SCALE.TAP }}
                     onTap={() => {
                       haptics.selection()
                       achievement.trigger(
@@ -332,10 +463,13 @@ export function ProfilePage() {
                         currentRank.icon
                       )
                     }}
+                    role="button"
+                    aria-label={`Rank: ${currentRank.name}`}
+                    tabIndex={0}
                   >
                     <motion.div 
                       className="senior-badge-content"
-                      whileHover={{ scale: 1.02 }}
+                      whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER }}
                       transition={{ type: "spring", stiffness: 400 }}
                     >
                       <motion.span 
@@ -368,7 +502,7 @@ export function ProfilePage() {
             className="xp-progress-enhanced"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: ANIMATION_CONSTANTS.DELAYS.XP_SECTION }}
           >
             {/* XP Stats Cards */}
             <div className="xp-stats-grid">
@@ -377,12 +511,12 @@ export function ProfilePage() {
                 className="xp-card-main"
                 initial={{ opacity: 0, scale: 0.9, x: -20 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
-                transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
-                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ delay: ANIMATION_CONSTANTS.DELAYS.XP_MAIN, type: "spring", stiffness: ANIMATION_CONSTANTS.SPRING.STIFF }}
+                whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER, y: ANIMATION_CONSTANTS.TRANSFORM.Y_HOVER_LARGE }}
                 onTap={() => {
                   haptics.cardTap()
                   achievement.trigger(
-                    'XP Master! ⚡',
+                    'XP Master! 💫',
                     `${userData.totalXP.toLocaleString()} experience points achieved`,
                     '⚡'
                   )
@@ -393,14 +527,14 @@ export function ProfilePage() {
                   whileHover={{ scale: 1.15, rotate: 10 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <span className="xp-lightning">⚡</span>
+                  <span className="xp-lightning">💫</span>
                 </motion.div>
                 <div className="xp-main-content">
                   <motion.span 
                     className="xp-value-enhanced"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.1 }}
+                    transition={{ delay: ANIMATION_CONSTANTS.DELAYS.PROGRESS }}
                   >
                     {userData.totalXP.toLocaleString()}
                   </motion.span>
@@ -414,7 +548,7 @@ export function ProfilePage() {
                 initial={{ opacity: 0, scale: 0.9, x: 20 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                whileHover={{ scale: 1.02, y: -2 }}
+                whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER, y: ANIMATION_CONSTANTS.TRANSFORM.Y_HOVER_LARGE }}
                 onTap={() => {
                   haptics.selection()
                   if (!isMaxRank) {
@@ -453,8 +587,13 @@ export function ProfilePage() {
               className="progress-container-enhanced"
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 }}
+              transition={{ delay: ANIMATION_CONSTANTS.DELAYS.PROGRESS }}
               whileHover={{ scale: 1.005 }}
+              role="progressbar"
+              aria-valuenow={Math.round(progressPercentage)}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`Progress to ${isMaxRank ? 'maximum rank' : nextRank.name}: ${Math.round(progressPercentage)}%`}
             >
               <div className={`progress-bar-dynamic rank-${currentRank.id} ${progressPercentage > 80 ? 'near-complete' : ''} ${isMaxRank ? 'max-rank' : ''}`}>
                 {/* Segment markers for visual breaks */}
@@ -669,11 +808,11 @@ export function ProfilePage() {
                 className="flex justify-between items-center mt-3 px-1"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.8 }}
+                transition={{ delay: ANIMATION_CONSTANTS.DELAYS.XP_RANGE }}
               >
                 <motion.div 
                   className="flex items-center gap-2"
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER_LARGE }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <div className="w-2 h-2 rounded-full bg-white/30"></div>
@@ -684,7 +823,7 @@ export function ProfilePage() {
                 
                 <motion.div 
                   className="flex items-center gap-2"
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: ANIMATION_CONSTANTS.SCALE.HOVER_LARGE }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <span className="text-xs text-white/80 font-semibold">
@@ -730,9 +869,9 @@ export function ProfilePage() {
         </motion.div>
         <DraggableStats initialStats={[
           { id: 'streak', icon: '🔥', label: 'Day Streak', value: userData.streak, gradient: true },
-          { id: 'rank', icon: '🏆', label: 'Global Rank', value: `#${userData.globalRank.toLocaleString()}` },
+          { id: 'rank', icon: '🏅', label: 'Global Rank', value: `#${userData.globalRank.toLocaleString()}` },
           { id: 'challenges', icon: '🎯', label: 'Challenges', value: userData.challengesCompleted },
-          { id: 'battles', icon: '⚔️', label: 'Battles Won', value: userData.battlesWon },
+          { id: 'battles', icon: '🥊', label: 'Battles Won', value: userData.battlesWon },
           { id: 'achievements', icon: '🌟', label: 'Achievements', value: userData.achievements },
           { id: 'weekly', icon: '📅', label: 'Weekly XP', value: userData.weeklyXP.toLocaleString() }
         ]} />
@@ -751,7 +890,7 @@ export function ProfilePage() {
             y: -2,
             boxShadow: "0 12px 40px rgba(0, 122, 255, 0.4)"
           }}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: ANIMATION_CONSTANTS.SCALE.TAP }}
           onTap={() => {
             haptics.buttonPress()
             achievement.trigger(

@@ -51,7 +51,7 @@
       },
       "padding": {
         "sm": { "value": "{spacing.2} {spacing.3}" },
-        "md": { "value": "{spacing.2.5} {spacing.4}" },
+        "md": { "value": "{spacing.2-5} {spacing.4}" },
         "lg": { "value": "{spacing.3} {spacing.6}" }
       },
       "radius": { "value": "{radius.md}" },
@@ -195,7 +195,7 @@
         "fg": { "value": "{color.info.fg}" },
         "border": { "value": "{color.info.borderSubtle}" }
       },
-      "padding": { "value": "{spacing.1} {spacing.2.5}" },
+      "padding": { "value": "{spacing.1} {spacing.2-5}" },
       "radius": { "value": "{radius.full}" },
       "fontSize": { "value": "{font.size.xs}" },
       "fontWeight": { "value": "{font.weight.medium}" },
