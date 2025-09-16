@@ -1,17 +1,35 @@
 import { useState, useEffect } from 'react'
-import { 
-  Card, 
-  Avatar, 
-  Badge, 
-  Button, 
-  Input,
-  AchievementIcon,
-  ProgressIcon,
-  LevelIcon,
-  SettingsIcon
-} from '@telegram-ios-academy/ui'
-import { useAppStore } from '../shared/model/store'
-import { LanguagesIcon, PaletteIcon, TrophyIcon, CalendarIcon, ClockIcon } from 'lucide-react'
+import { Card, Avatar } from '@telegram-ios-academy/ui'
+import { Trophy, Code2, BookOpen, Calendar } from 'lucide-react'
+
+// Clean gaming animations
+const gameAnimations = `
+@keyframes magicParticles {
+  0% { transform: translateY(40px) scale(0); opacity: 0; }
+  50% { transform: translateY(-10px) scale(1); opacity: 1; }
+  100% { transform: translateY(-80px) scale(0); opacity: 0; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.8); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+`
 
 interface TelegramUser {
   id?: number
@@ -24,233 +42,210 @@ interface TelegramUser {
 }
 
 export function ProfilePage() {
-  const store = useAppStore()
-  const user = store?.user || {}
-  const updateProfile = store?.updateProfile
-  
   const [telegramUser, setTelegramUser] = useState<TelegramUser>({})
-  const [formData, setFormData] = useState({
-    username: user.username || '',
-    languageCode: user.languageCode || 'en',
-    theme: 'system' as 'system' | 'light' | 'dark',
-  })
-  
-  const [hasChanges, setHasChanges] = useState(false)
 
-  // Get Telegram user data
+  useEffect(() => {
+    const style = document.createElement('style')
+    style.textContent = gameAnimations
+    document.head.appendChild(style)
+    
+    return () => {
+      document.head.removeChild(style)
+    }
+  }, [])
+
   useEffect(() => {
     const webApp = (window as any)?.Telegram?.WebApp
     if (webApp?.initDataUnsafe?.user) {
       const tgUser = webApp.initDataUnsafe.user
-      setTelegramUser(tgUser)
-      
-      // Auto-populate form with Telegram data
-      setFormData(prev => ({
-        ...prev,
-        username: tgUser.username || prev.username,
-        languageCode: tgUser.language_code || prev.languageCode,
-      }))
+      setTelegramUser({
+        ...tgUser,
+        is_premium: true
+      })
+    } else {
+      // Расширенные мок-данные
+      setTelegramUser({
+        id: 123456789,
+        first_name: 'Тимур',
+        last_name: 'Цеберда',
+        username: 'timurceberda', 
+        is_premium: true,
+        photo_url: undefined // будем использовать лаконичную иконку
+      })
     }
   }, [])
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-    setHasChanges(true)
-  }
-
-  const handleSave = () => {
-    updateProfile?.({
-      username: formData.username,
-      languageCode: formData.languageCode,
-    })
-    setHasChanges(false)
-    
-    // Show success feedback
-    const webApp = (window as any)?.Telegram?.WebApp
-    if (webApp?.HapticFeedback) {
-      webApp.HapticFeedback.impactOccurred('light')
-    }
-  }
-
   const displayName = telegramUser.first_name 
     ? `${telegramUser.first_name}${telegramUser.last_name ? ` ${telegramUser.last_name}` : ''}`
-    : telegramUser.username || 'User'
-
-  const joinDate = new Date(2024, 0, 15) // Demo join date
-  const streakDays = 7 // Demo streak
+    : telegramUser.username || 'Разработчик'
 
   return (
-    <div className="space-y-6">
-      {/* Profile Header */}
-      <div className="text-center relative">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-purple-500/10 rounded-3xl -z-10" />
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="container max-w-2xl mx-auto space-y-6">
         
-        <div className="p-6">
-          <Avatar
-            src={telegramUser.photo_url}
-            alt={displayName}
-            fallback={displayName}
-            size="2xl"
-            className="mx-auto mb-4 ring-4 ring-primary/20 shadow-xl"
-            badge={
-              telegramUser.is_premium ? (
-                <Badge variant="warning" size="sm" className="rounded-full">
-                  ⭐
-                </Badge>
-              ) : undefined
-            }
-          />
+        {/* Main Profile Card */}
+        <Card className="group relative bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300">
+          <div className="p-8">
+            
+            {/* Profile Header */}
+            <div className="flex items-center gap-6">
+              
+              {/* Avatar с красивым обрамлением */}
+              <div className="relative">
+                {/* Градиентное обрамление */}
+                <div className="absolute inset-0 rounded-full p-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600">
+                  <div className="bg-white rounded-full w-full h-full"></div>
+                </div>
+                
+                {/* Hover glow effect */}
+                <div 
+                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    animation: 'glow 2s ease-in-out infinite',
+                    background: 'radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%)',
+                    transform: 'scale(1.3)'
+                  }}
+                />
+                
+                {/* Аватар с лаконичной иконкой если нет фото */}
+                <div className="relative z-10">
+                  {telegramUser.photo_url ? (
+                    <Avatar
+                      src={telegramUser.photo_url}
+                      alt={displayName}
+                      fallback={displayName}
+                      size="xl"
+                      className="border-2 border-white"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center border-2 border-white">
+                      <Code2 className="w-8 h-8 text-white" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* User Info */}
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    {displayName}
+                  </h1>
+                  
+                  {/* Премиум Badge */}
+                  {telegramUser.is_premium && (
+                    <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-full">
+                      <Trophy 
+                        className="w-4 h-4 text-amber-600"
+                        style={{ animation: 'bounce 2s ease-in-out infinite' }}
+                      />
+                      <span className="text-sm font-medium text-amber-700">Премиум</span>
+                    </div>
+                  )}
+                </div>
+                
+                {telegramUser.username && (
+                  <p className="text-gray-600 mb-2">@{telegramUser.username}</p>
+                )}
+                
+                <div className="text-sm text-gray-500">
+                  iOS Developer Community Member
+                </div>
+              </div>
+            </div>
+
+            {/* Professional Stats */}
+            <div className="mt-8 pt-6 border-t border-gray-100">
+              <div className="grid grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-900">12</div>
+                  <div className="text-sm text-gray-500">Курсы завершены</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-900">127ч</div>
+                  <div className="text-sm text-gray-500">Время обучения</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-900">23</div>
+                  <div className="text-sm text-gray-500">Дней подряд</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Progress Section */}
+            <div className="mt-6">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-700">Прогресс обучения</span>
+                <span className="text-sm text-gray-500">89%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-1000"
+                  style={{ width: '89%' }}
+                />
+              </div>
+            </div>
+            
+          </div>
           
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-foreground">
-              {displayName}
-            </h1>
+          {/* Subtle hover effect particles */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 bg-blue-400 rounded-full"
+                style={{
+                  left: `${20 + i * 30}%`,
+                  top: `${20 + i * 20}%`,
+                  animation: `sparkle ${2 + i * 0.5}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.3}s`
+                }}
+              />
+            ))}
+          </div>
+        </Card>
+
+        {/* Bio Card */}
+        <Card className="group relative bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <BookOpen className="w-5 h-5 text-blue-600" />
+              <h2 className="text-lg font-semibold text-gray-900">О себе</h2>
+            </div>
             
-            {telegramUser.username && (
-              <p className="text-primary font-medium">
-                @{telegramUser.username}
+            <div className="space-y-4">
+              <p className="text-gray-700 leading-relaxed">
+                iOS разработчик с 3+ годами опыта. Специализируюсь на SwiftUI, UIKit и создании современных мобильных приложений. 
+                Активный участник сообщества разработчиков.
               </p>
-            )}
-            
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <CalendarIcon className="w-4 h-4" />
-                Joined {joinDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+              
+              <div className="flex flex-wrap gap-2">
+                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">Swift</span>
+                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">SwiftUI</span>
+                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">UIKit</span>
+                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">Core Data</span>
               </div>
               
-              <div className="flex items-center gap-1">
-                <ClockIcon className="w-4 h-4" />
-                {streakDays} day streak
+              <div className="pt-4 border-t border-gray-100 flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>Присоединился: Март 2023</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card className="p-4 text-center bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20 border-blue-200 dark:border-blue-800">
-          <LevelIcon className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-          <div className="text-2xl font-bold text-blue-700 dark:text-blue-400">85</div>
-          <div className="text-xs text-blue-600 dark:text-blue-500">Level</div>
-        </Card>
-        
-        <Card className="p-4 text-center bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 border-green-200 dark:border-green-800">
-          <AchievementIcon className="w-8 h-8 mx-auto mb-2 text-green-600" />
-          <div className="text-2xl font-bold text-green-700 dark:text-green-400">12</div>
-          <div className="text-xs text-green-600 dark:text-green-500">Achievements</div>
-        </Card>
-        
-        <Card className="p-4 text-center bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20 border-purple-200 dark:border-purple-800">
-          <ProgressIcon className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-          <div className="text-2xl font-bold text-purple-700 dark:text-purple-400">78%</div>
-          <div className="text-xs text-purple-600 dark:text-purple-500">Progress</div>
-        </Card>
-      </div>
-
-      {/* Learning Progress */}
-      <Card className="p-6 bg-gradient-to-r from-card to-card/50">
-        <div className="flex items-center gap-3 mb-4">
-          <TrophyIcon className="w-6 h-6 text-yellow-600" />
-          <h3 className="text-lg font-semibold">Learning Progress</h3>
-        </div>
-        
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <div className="font-medium">iOS Development</div>
-              <div className="text-sm text-muted-foreground">3 of 6 modules completed</div>
-            </div>
-            <Badge variant="primary" size="lg">
-              50%
-            </Badge>
-          </div>
           
-          <div className="w-full bg-muted rounded-full h-3">
-            <div className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full transition-all duration-500" style={{ width: '50%' }} />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4 mt-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">24</div>
-              <div className="text-sm text-muted-foreground">Lessons completed</div>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">12</div>
-              <div className="text-sm text-muted-foreground">Interview attempts</div>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Settings */}
-      <Card className="p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <SettingsIcon className="w-6 h-6 text-muted-foreground" />
-          <h3 className="text-lg font-semibold">Settings</h3>
-        </div>
-        
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-3 text-foreground">
-              Username
-            </label>
-            <Input
-              value={formData.username}
-              onChange={(e) => handleInputChange('username', e.target.value)}
-              placeholder="Enter your username"
-              className="border-border bg-background text-foreground h-12"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-3 text-foreground">
-              <LanguagesIcon className="inline w-4 h-4 mr-2" />
-              Language
-            </label>
-            <select
-              value={formData.languageCode}
-              onChange={(e) => handleInputChange('languageCode', e.target.value)}
-              className="w-full p-3 border border-border rounded-xl bg-background text-foreground h-12 transition-colors hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary/20"
-            >
-              <option value="en">🇺🇸 English</option>
-              <option value="ru">🇷🇺 Русский</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-3 text-foreground">
-              <PaletteIcon className="inline w-4 h-4 mr-2" />
-              Theme
-            </label>
-            <select
-              value={formData.theme}
-              onChange={(e) => handleInputChange('theme', e.target.value as any)}
-              className="w-full p-3 border border-border rounded-xl bg-background text-foreground h-12 transition-colors hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary/20"
-            >
-              <option value="system">🔄 System</option>
-              <option value="light">☀️ Light</option>
-              <option value="dark">🌙 Dark</option>
-            </select>
-          </div>
-        </div>
-      </Card>
-
-      {/* Telegram Info (Debug) */}
-      {telegramUser.id && (
-        <Card className="p-4 bg-muted/50">
-          <h4 className="text-sm font-medium mb-2 text-muted-foreground">Telegram Info</h4>
-          <div className="text-xs text-muted-foreground space-y-1">
-            <div>ID: {telegramUser.id}</div>
-            <div>Language: {telegramUser.language_code}</div>
-            {telegramUser.is_premium && <div className="text-yellow-600">⭐ Premium User</div>}
-          </div>
+          {/* Hover shimmer effect */}
+          <div 
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%)',
+              animation: 'shimmer 2s ease-in-out infinite'
+            }}
+          />
         </Card>
-      )}
-
-      {/* Note: Save action handled by MainButton hook */}
+        
+      </div>
     </div>
   )
 }
