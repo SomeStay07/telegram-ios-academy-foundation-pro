@@ -1,13 +1,14 @@
 import { Card, Button } from '@telegram-ios-academy/ui'
 import { Settings, Palette, Bell, Languages, Globe, Shield, Smartphone } from 'lucide-react'
+import { ThemeMode, setThemeMode } from '../../../shared/lib/telegram/useTelegramTheme'
 
 interface ProfileSettingsSectionProps {
   preferences?: {
-    theme?: 'system' | 'light' | 'dark'
+    theme?: ThemeMode
     language?: string
     notifications?: boolean
   }
-  onThemeChange?: (theme: 'system' | 'light' | 'dark') => void
+  onThemeChange?: (theme: ThemeMode) => void
   onLanguageChange?: (language: string) => void
   onNotificationsToggle?: (enabled: boolean) => void
 }
@@ -33,7 +34,10 @@ export function ProfileSettingsSection({
           {(['system', 'light', 'dark'] as const).map((theme) => (
             <button
               key={theme}
-              onClick={() => onThemeChange?.(theme)}
+              onClick={() => {
+                setThemeMode(theme)
+                onThemeChange?.(theme)
+              }}
               className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
                 preferences.theme === theme
                   ? 'bg-background text-foreground shadow-sm'

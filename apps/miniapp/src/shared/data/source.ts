@@ -10,11 +10,24 @@ export interface IDataSource {
   getProfile(): Promise<{ user: TGUser }>;
 }
 
-const isTG = !!(window as any).Telegram?.WebApp?.initData;
-const useMocks = import.meta.env.VITE_USE_MOCKS === '1';
-
+// Determine which data source to use: TG vs Mock (no third fallbacks)
 export function getDataSource(): IDataSource {
-  return useMocks ? new MockDS() : (isTG ? new TGDS() : new MockDS());
+  const useMocks = import.meta.env.VITE_USE_MOCKS === 'true'
+  const hasWebApp = !!(window as any).Telegram?.WebApp
+  const hasInitData = !!(window as any).Telegram?.WebApp?.initData
+  
+  // Explicit mocks mode
+  if (useMocks) {
+    return new MockDS()
+  }
+  
+  // TG environment with data
+  if (hasWebApp && hasInitData) {
+    return new TGDS()
+  }
+  
+  // Default to mocks for development
+  return new MockDS()
 }
 
 class TGDS implements IDataSource {

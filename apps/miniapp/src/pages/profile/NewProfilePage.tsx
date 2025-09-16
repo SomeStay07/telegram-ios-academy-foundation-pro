@@ -3,7 +3,7 @@ import { Card, Badge, Button, ProfileHeroCard } from '@telegram-ios-academy/ui'
 import { ProfileStatsSection } from './sections/ProfileStatsSection'
 import { ProfileSettingsSection } from './sections/ProfileSettingsSection'
 import { DangerZoneSection } from './sections/DangerZoneSection'
-import { useTelegramTheme } from '../../shared/lib/telegram/useTelegramTheme'
+import { useTelegramTheme, getStoredTheme, type ThemeMode } from '../../shared/lib/telegram/useTelegramTheme'
 import { useTelegramViewport } from '../../shared/lib/telegram/useTelegramViewport'
 import { getDataSource } from '../../shared/data/source'
 
@@ -15,7 +15,7 @@ export function NewProfilePage() {
   const [user, setUser] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const [preferences, setPreferences] = useState({
-    theme: 'system' as 'system' | 'light' | 'dark',
+    theme: getStoredTheme(),
     language: 'ru',
     notifications: true
   })
@@ -122,7 +122,7 @@ export function NewProfilePage() {
   }
 
   // Settings handlers
-  const handleThemeChange = (theme: 'system' | 'light' | 'dark') => {
+  const handleThemeChange = (theme: ThemeMode) => {
     setPreferences(prev => ({ ...prev, theme }))
     console.log('Theme changed to:', theme)
   }
