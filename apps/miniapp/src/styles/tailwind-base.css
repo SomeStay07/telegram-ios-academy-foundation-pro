@@ -1,0 +1,1934 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables - iOS Design Tokens */
+@layer base {
+  :root {
+    /* iOS 18 System Colors */
+    --ios-blue: 0 122 255;
+    --ios-green: 52 199 89;
+    --ios-orange: 255 149 0;
+    --ios-red: 255 59 48;
+    --ios-purple: 175 82 222;
+    --ios-pink: 255 45 146;
+    --ios-yellow: 255 204 2;
+    --ios-gray: 142 142 147;
+    
+    /* Glassmorphism Variables */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    
+    /* Gaming Gradients */
+    --rank-gradient: linear-gradient(135deg, rgb(0 122 255) 0%, rgb(0 199 255) 100%);
+    --xp-gradient: linear-gradient(90deg, rgb(0 122 255) 0%, rgb(0 199 255) 100%);
+    
+    /* Animation Timings - Apple HIG */
+    --ios-duration: 300ms;
+    --ios-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  /* System Font Stack */
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Dark theme optimizations */
+  body {
+    @apply bg-black text-white;
+    background: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #111111 50%, #0a0a0a 75%, #000000 100%);
+  }
+}
+
+/* Custom Components Layer */
+@layer components {
+  /* Glass Card Component */
+  .glass-card {
+    @apply backdrop-blur-2xl rounded-2xl;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all var(--ios-duration) var(--ios-easing);
+  }
+  
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  
+  /* iOS Button Styles */
+  .btn-ios {
+    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-ios;
+    @apply active:scale-95 hover:shadow-lg;
+  }
+  
+  .btn-ios-primary {
+    @apply btn-ios bg-ios-blue text-white;
+    background: var(--rank-gradient);
+    box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
+  }
+  
+  .btn-ios-primary:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 8px 30px rgba(0, 122, 255, 0.4);
+  }
+  
+  /* Gaming Stats Components */
+  .stat-item-featured {
+    @apply flex items-center gap-3;
+  }
+  
+  .stat-icon {
+    @apply w-12 h-12 rounded-xl backdrop-blur-sm;
+    background: rgba(255, 255, 255, 0.1);
+    @apply flex items-center justify-center text-2xl;
+  }
+  
+  .stat-value-gradient {
+    @apply text-2xl font-bold mb-0.5;
+    background: var(--rank-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .stat-label-ios {
+    @apply text-xs text-white/70 font-medium uppercase tracking-wider;
+  }
+  
+  /* Progress Bar Gaming Style */
+  .progress-bar-ios {
+    @apply h-2 rounded-full overflow-hidden relative;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .progress-fill-gradient {
+    @apply h-full rounded-full transition-all duration-700;
+    background: var(--xp-gradient);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .progress-fill-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progressShine 2s infinite;
+  }
+  
+  /* Rank Badge */
+  .rank-badge-ios {
+    @apply px-3 py-1 rounded-xl text-xs font-semibold uppercase tracking-wide;
+    @apply backdrop-blur-sm;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--glass-bg);
+    animation: rankGlow 3s ease-in-out infinite alternate;
+  }
+  
+  /* Level Badge */
+  .level-badge-ios {
+    @apply w-8 h-8 rounded-full border-2 border-black;
+    @apply flex items-center justify-center text-sm font-bold;
+    @apply shadow-lg;
+    animation: levelPulse 2s ease-in-out infinite;
+  }
+  
+  /* Hero Background */
+  .hero-bg {
+    @apply absolute inset-0 transition-all duration-700;
+    background: radial-gradient(
+      ellipse at center top,
+      rgba(0, 122, 255, 0.15) 0%,
+      rgba(0, 122, 255, 0.05) 40%,
+      transparent 70%
+    );
+    animation: heroGlow 4s ease-in-out infinite alternate;
+  }
+  
+  /* Combined Hero Section Design */
+  .hero-section-combined {
+    @apply relative;
+  }
+  
+  .hero-card-premium {
+    @apply relative z-10 transition-all duration-300;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  
+  .hero-card-premium:hover {
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  
+  .profile-header-premium {
+    @apply flex items-end gap-6;
+  }
+  
+  .avatar-wrapper-enhanced {
+    @apply relative flex-shrink-0;
+    overflow: visible;
+    z-index: 5;
+  }
+  
+  .avatar-container-enhanced {
+    @apply relative w-24 h-24;
+    overflow: visible;
+  }
+  
+  .avatar-xl-enhanced {
+    @apply w-full h-full rounded-3xl shadow-2xl;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  /* Elegant Grey Developer Icon */
+  .avatar-icon-grey {
+    @apply w-full h-full rounded-3xl shadow-xl;
+    @apply relative;
+    background: linear-gradient(135deg, 
+      rgba(100, 100, 100, 0.15) 0%, 
+      rgba(60, 60, 60, 0.1) 50%,
+      rgba(100, 100, 100, 0.15) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+  }
+  
+  .avatar-icon-grey:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Subtle pattern background */
+  .avatar-pattern {
+    @apply absolute inset-0 opacity-20;
+    background: radial-gradient(circle at 30% 30%, 
+      rgba(255, 255, 255, 0.1) 0%, 
+      transparent 50%),
+    radial-gradient(circle at 70% 70%, 
+      rgba(255, 255, 255, 0.05) 0%, 
+      transparent 50%);
+  }
+  
+  /* Developer icon in safe corner */
+  .dev-icon-corner {
+    @apply absolute top-2 left-2 text-lg;
+    @apply w-8 h-8 rounded-lg flex items-center justify-center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+  }
+  
+  /* Minimalist code lines */
+  .code-lines {
+    @apply absolute bottom-3 left-3 right-3;
+  }
+  
+  .code-line {
+    @apply h-0.5 rounded-full mb-1;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .line-1 {
+    @apply w-3/4;
+  }
+  
+  .line-2 {
+    @apply w-1/2;
+  }
+  
+  .line-3 {
+    @apply w-2/3;
+  }
+  
+  /* Animated ring around avatar */
+  .avatar-ring {
+    @apply absolute inset-0 rounded-3xl;
+    padding: 2px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask-composite: xor;
+  }
+  
+  .avatar-ring::before {
+    content: '';
+    @apply absolute inset-0 rounded-3xl;
+    background: inherit;
+    filter: blur(2px);
+    opacity: 0.7;
+  }
+  
+  /* Level badge integrated into avatar */
+  .level-badge-inside {
+    @apply absolute bottom-0 right-0 w-8 h-8 rounded-full;
+    @apply flex items-center justify-center text-white font-bold;
+    @apply border-2 border-black cursor-pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(12px);
+    z-index: 10;
+    transform: translate(25%, 25%);
+    box-shadow: 
+      0 4px 16px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 0 0 2px rgba(255, 255, 255, 0.15),
+      0 0 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .level-badge-inside:hover {
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.2),
+      0 0 15px rgba(255, 255, 255, 0.15);
+  }
+  
+  .level-number-inside {
+    @apply text-xs font-bold;
+    text-shadow: 
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 0 4px rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Sparkling particles around level badge */
+  .level-sparkle {
+    @apply absolute text-xs pointer-events-none;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+  }
+  
+  .level-sparkle-1 {
+    top: -8px;
+    right: -4px;
+  }
+  
+  .level-sparkle-2 {
+    bottom: -8px;
+    left: -4px;
+  }
+  
+  .level-sparkle-3 {
+    top: -4px;
+    left: -8px;
+  }
+  
+  .profile-info-full {
+    @apply flex-1 min-w-0 flex flex-col justify-between h-24;
+  }
+  
+  /* Proper Profile Layout */
+  .name-section-proper {
+    @apply mb-0;
+  }
+  
+  @media (max-width: 480px) {
+    .profile-name-full {
+      @apply text-xl;
+    }
+    
+    .profile-username-full {
+      @apply text-xs;
+    }
+    
+    .rank-badge-professional {
+      @apply px-4 py-3;
+    }
+    
+    .rank-content-professional {
+      @apply gap-3;
+    }
+    
+    .rank-title-professional {
+      @apply text-base;
+    }
+    
+    .rank-icon-professional {
+      @apply text-xl;
+    }
+  }
+  
+  .name-and-trophy {
+    @apply flex items-center gap-3 mb-2;
+  }
+
+  /* Profile Rows Layout */
+  .name-and-premium-row {
+    @apply flex items-center justify-between gap-3 mb-2;
+    min-height: 2.5rem;
+  }
+
+  .username-and-senior-row {
+    @apply flex items-center justify-between gap-3 mb-4;
+    min-height: 2rem;
+  }
+
+  /* Enhanced row responsiveness */
+  @media (max-width: 480px) {
+    .name-and-premium-row,
+    .username-and-senior-row {
+      @apply flex-wrap gap-2;
+      min-height: auto;
+    }
+    
+    .name-and-premium-row {
+      @apply mb-3;
+    }
+    
+    .username-and-senior-row {
+      @apply mb-5;
+    }
+    
+    .profile-name-full {
+      @apply flex-1 min-w-0;
+    }
+  }
+
+  /* Premium Name Section - Ultra Elite */
+  .premium-name-section {
+    @apply relative flex items-center gap-4 p-4 rounded-2xl overflow-hidden;
+    @apply backdrop-blur-xl border transition-all duration-500;
+    background: linear-gradient(135deg, 
+      rgba(255, 215, 0, 0.08) 0%,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 193, 7, 0.06) 50%,
+      rgba(255, 255, 255, 0.03) 75%,
+      rgba(255, 215, 0, 0.08) 100%
+    );
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 4px 16px rgba(255, 215, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(255, 215, 0, 0.1);
+    min-height: 4rem;
+  }
+
+  .premium-name-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 215, 0, 0.2) 30%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 215, 0, 0.2) 70%,
+      transparent 100%
+    );
+    transition: left 0.8s ease-in-out;
+  }
+
+  .premium-name-section:hover::before {
+    left: 100%;
+  }
+
+  /* Elite Name with Golden Effects */
+  .elite-name-premium {
+    @apply text-3xl font-bold text-white leading-tight flex-1 relative;
+    background: linear-gradient(135deg,
+      rgba(255, 215, 0, 1) 0%,
+      rgba(255, 223, 127, 1) 25%,
+      rgba(255, 255, 255, 0.95) 50%,
+      rgba(255, 223, 127, 1) 75%,
+      rgba(255, 215, 0, 1) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 
+      0 2px 4px rgba(255, 215, 0, 0.4),
+      0 0 12px rgba(255, 215, 0, 0.2);
+    filter: drop-shadow(0 2px 6px rgba(255, 215, 0, 0.3));
+  }
+
+  .first-name-golden,
+  .last-name-golden {
+    @apply transition-all duration-300;
+  }
+
+  .first-name-golden:hover,
+  .last-name-golden:hover {
+    filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.6));
+  }
+
+  /* Golden Particles */
+  .golden-particles {
+    @apply absolute text-xl;
+    right: -0.5rem;
+    top: -0.5rem;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+    pointer-events: none;
+  }
+
+  /* Ultra Premium Badge */
+  .ultra-premium-badge {
+    @apply relative flex items-center gap-2 px-4 py-2 rounded-xl overflow-hidden;
+    @apply cursor-pointer flex-shrink-0 transition-all duration-300;
+    background: linear-gradient(135deg, 
+      rgba(255, 215, 0, 0.2) 0%,
+      rgba(255, 193, 7, 0.15) 25%,
+      rgba(255, 235, 59, 0.1) 50%,
+      rgba(255, 193, 7, 0.15) 75%,
+      rgba(255, 215, 0, 0.2) 100%
+    );
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 
+      0 4px 16px rgba(255, 215, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    min-width: fit-content;
+  }
+
+  .ultra-premium-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 215, 0, 0.3) 50%, 
+      transparent 100%
+    );
+    transition: left 0.6s ease;
+  }
+
+  .ultra-premium-badge:hover::before {
+    left: 100%;
+  }
+
+  .ultra-premium-content {
+    @apply flex items-center gap-2 relative z-10;
+  }
+
+  .ultra-premium-crown {
+    @apply text-2xl flex-shrink-0;
+    filter: drop-shadow(0 2px 6px rgba(255, 215, 0, 0.6))
+            drop-shadow(0 0 12px rgba(255, 215, 0, 0.4));
+    text-shadow: 0 0 16px rgba(255, 215, 0, 0.8);
+  }
+
+  .ultra-premium-text {
+    @apply text-white font-bold text-lg whitespace-nowrap;
+    background: linear-gradient(135deg,
+      rgba(255, 215, 0, 1) 0%,
+      rgba(255, 235, 59, 0.95) 30%,
+      rgba(255, 215, 0, 0.9) 70%,
+      rgba(255, 255, 255, 1) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(255, 215, 0, 0.5);
+    letter-spacing: 0.5px;
+  }
+
+  .ultra-premium-sparkles {
+    @apply text-lg absolute -top-1 -right-1;
+    filter: drop-shadow(0 1px 4px rgba(255, 215, 0, 0.6));
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+  }
+
+  .ultra-premium-glow {
+    @apply absolute inset-0 rounded-xl;
+    background: radial-gradient(circle at center, 
+      rgba(255, 215, 0, 0.2) 0%, 
+      rgba(255, 215, 0, 0.1) 50%, 
+      transparent 100%
+    );
+    filter: blur(8px);
+    z-index: -1;
+  }
+
+  /* Ensure proper alignment for badges in rows */
+  .name-and-premium-row .premium-elite-badge {
+    @apply ml-auto flex-shrink-0;
+  }
+
+  .username-and-senior-row .senior-engineer-badge {
+    @apply ml-auto flex-shrink-0;
+  }
+
+  /* Compact Premium Badge under Avatar */
+  .compact-premium-badge {
+    @apply relative flex items-center justify-center gap-2 px-3 py-2 mx-4 mt-3;
+    @apply rounded-xl cursor-pointer transition-all duration-300;
+    @apply backdrop-blur-lg border overflow-hidden;
+    background: linear-gradient(135deg, 
+      rgba(255, 215, 0, 0.1) 0%,
+      rgba(255, 193, 7, 0.08) 50%,
+      rgba(255, 215, 0, 0.1) 100%
+    );
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      0 2px 6px rgba(255, 215, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    max-width: 120px;
+    height: 2.5rem;
+  }
+
+  .compact-premium-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 215, 0, 0.2) 50%, 
+      transparent 100%
+    );
+    transition: left 0.5s ease;
+  }
+
+  .compact-premium-badge:hover {
+    background: linear-gradient(135deg, 
+      rgba(255, 215, 0, 0.15) 0%,
+      rgba(255, 193, 7, 0.12) 50%,
+      rgba(255, 215, 0, 0.15) 100%
+    );
+    border-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 
+      0 6px 16px rgba(0, 0, 0, 0.3),
+      0 4px 8px rgba(255, 215, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .compact-premium-badge:hover::before {
+    left: 100%;
+  }
+
+  .compact-premium-content {
+    @apply flex items-center gap-1.5 relative z-10;
+  }
+
+  .compact-crown {
+    @apply text-lg flex-shrink-0;
+    filter: drop-shadow(0 1px 3px rgba(255, 215, 0, 0.5));
+    text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+  }
+
+  .compact-text {
+    @apply text-white font-semibold text-sm whitespace-nowrap;
+    background: linear-gradient(135deg,
+      rgba(255, 215, 0, 1) 0%,
+      rgba(255, 235, 59, 0.9) 50%,
+      rgba(255, 215, 0, 1) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 1px 2px rgba(255, 215, 0, 0.3);
+  }
+
+  .compact-sparkle {
+    @apply text-sm flex-shrink-0;
+    filter: drop-shadow(0 1px 2px rgba(255, 215, 0, 0.4));
+    text-shadow: 0 0 4px rgba(255, 215, 0, 0.6);
+  }
+
+
+  /* Simple Clean Profile Name */
+  .profile-name-clean {
+    @apply text-lg font-bold text-white leading-tight mb-3;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+
+  .name-text {
+    @apply transition-all duration-200;
+  }
+
+  /* Elegant Divider */
+  .elegant-divider {
+    @apply w-full h-px relative;
+    background: linear-gradient(90deg, 
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 20%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0.1) 80%,
+      transparent 100%
+    );
+    box-shadow: 
+      0 0 8px rgba(255, 255, 255, 0.1),
+      0 1px 0 rgba(255, 255, 255, 0.05);
+    transform-origin: left center;
+  }
+
+  .elegant-divider::before {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, 
+      transparent 0%,
+      rgba(59, 130, 246, 0.2) 30%,
+      rgba(139, 69, 19, 0.1) 50%,
+      rgba(59, 130, 246, 0.2) 70%,
+      transparent 100%
+    );
+    filter: blur(1px);
+    opacity: 0.6;
+  }
+
+  /* Unified Badges Section - Enhanced */
+  .unified-badges-section {
+    @apply relative flex items-center gap-3 p-2 rounded-xl overflow-hidden;
+    @apply backdrop-blur-xl border transition-all duration-500;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 25%,
+      rgba(59, 130, 246, 0.03) 50%,
+      rgba(255, 255, 255, 0.02) 75%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 6px 20px rgba(0, 0, 0, 0.25),
+      0 2px 8px rgba(59, 130, 246, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    min-height: 2.5rem;
+  }
+
+  .unified-badges-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.1) 50%, 
+      transparent 100%
+    );
+    transition: left 0.6s ease-in-out;
+  }
+
+  .unified-badges-section:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(59, 130, 246, 0.06) 50%,
+      rgba(255, 255, 255, 0.04) 75%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.35),
+      0 4px 16px rgba(59, 130, 246, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+      0 0 30px rgba(255, 255, 255, 0.08);
+  }
+
+  .unified-badges-section:hover::before {
+    left: 100%;
+  }
+
+  /* Animated background glow */
+  .unified-badges-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.02) 0%,
+      rgba(255, 255, 255, 0.01) 50%,
+      rgba(139, 69, 19, 0.02) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+    filter: blur(1px);
+  }
+
+  .unified-badges-section:hover::after {
+    opacity: 1;
+  }
+
+  /* Username Badge Unified - Enhanced */
+  .username-badge-unified {
+    @apply relative flex items-center justify-center gap-2 px-3 py-2 overflow-hidden;
+    @apply cursor-pointer rounded-xl transition-all duration-300;
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.12) 0%,
+      rgba(37, 99, 235, 0.06) 50%,
+      rgba(59, 130, 246, 0.08) 100%
+    );
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 
+      0 2px 8px rgba(59, 130, 246, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    height: 2.75rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .username-badge-unified::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(59, 130, 246, 0.15) 50%, 
+      transparent 100%
+    );
+    transition: left 0.5s ease;
+  }
+
+  .username-badge-unified:hover {
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.18) 0%,
+      rgba(37, 99, 235, 0.10) 50%,
+      rgba(59, 130, 246, 0.14) 100%
+    );
+    border-color: rgba(59, 130, 246, 0.35);
+    box-shadow: 
+      0 4px 12px rgba(59, 130, 246, 0.2),
+      0 0 20px rgba(59, 130, 246, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .username-badge-unified:hover::before {
+    left: 100%;
+  }
+
+  .username-symbol-unified {
+    @apply text-blue-300 font-bold text-lg flex-shrink-0;
+    text-shadow: 
+      0 1px 3px rgba(59, 130, 246, 0.6),
+      0 0 8px rgba(59, 130, 246, 0.3);
+    filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.4));
+  }
+
+  .username-text-unified {
+    @apply text-white font-medium text-sm truncate;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .username-glow-unified {
+    @apply absolute inset-0 rounded-xl;
+    background: radial-gradient(circle at center, 
+      rgba(59, 130, 246, 0.15) 0%, 
+      rgba(59, 130, 246, 0.05) 50%, 
+      transparent 100%
+    );
+    filter: blur(6px);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+  }
+
+  .username-badge-unified:hover .username-glow-unified {
+    opacity: 1;
+  }
+
+  /* Senior Engineer Badge Unified - Enhanced */
+  .senior-engineer-badge-unified {
+    @apply relative flex items-center gap-2 px-3 py-2 overflow-hidden;
+    @apply cursor-pointer rounded-xl transition-all duration-300;
+    background: linear-gradient(135deg, 
+      rgba(139, 69, 19, 0.12) 0%,
+      rgba(101, 67, 33, 0.06) 50%,
+      rgba(139, 69, 19, 0.08) 100%
+    );
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    box-shadow: 
+      0 2px 8px rgba(139, 69, 19, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    height: 2.75rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .senior-engineer-badge-unified::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(139, 69, 19, 0.15) 50%, 
+      transparent 100%
+    );
+    transition: left 0.5s ease;
+  }
+
+  .senior-engineer-badge-unified:hover {
+    background: linear-gradient(135deg, 
+      rgba(139, 69, 19, 0.18) 0%,
+      rgba(101, 67, 33, 0.10) 50%,
+      rgba(139, 69, 19, 0.14) 100%
+    );
+    border-color: rgba(139, 69, 19, 0.35);
+    box-shadow: 
+      0 4px 12px rgba(139, 69, 19, 0.2),
+      0 0 20px rgba(139, 69, 19, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .senior-engineer-badge-unified:hover::before {
+    left: 100%;
+  }
+
+  .senior-badge-content {
+    @apply flex items-center justify-center gap-2 relative z-10 w-full;
+  }
+
+  .senior-badge-icon {
+    @apply text-lg flex-shrink-0;
+    filter: drop-shadow(0 1px 3px rgba(139, 69, 19, 0.6)) 
+            drop-shadow(0 0 6px rgba(139, 69, 19, 0.3));
+    text-shadow: 0 0 8px rgba(139, 69, 19, 0.4);
+  }
+
+  .senior-badge-text {
+    @apply text-white font-medium text-sm whitespace-nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Enhanced professional glow effect */
+  .rank-glow-effect {
+    @apply absolute inset-0 rounded-xl;
+    background: radial-gradient(circle at center, 
+      rgba(139, 69, 19, 0.15) 0%, 
+      rgba(139, 69, 19, 0.05) 50%, 
+      transparent 100%
+    );
+    filter: blur(6px);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+  }
+
+  .senior-engineer-badge-unified:hover .rank-glow-effect {
+    opacity: 1;
+  }
+
+  /* Responsive adjustments for unified section */
+  @media (max-width: 480px) {
+    .unified-badges-section {
+      @apply flex-col gap-2 p-2;
+      min-height: auto;
+    }
+    
+    .username-badge-unified,
+    .senior-engineer-badge-unified {
+      @apply flex-1 w-full;
+      height: 2.5rem;
+    }
+    
+    .username-text-unified,
+    .senior-badge-text {
+      @apply text-xs;
+    }
+  }
+  
+  .profile-name-full {
+    @apply text-2xl font-bold text-white leading-tight;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .first-name {
+    @apply inline;
+  }
+  
+  .last-name {
+    @apply inline text-white/90;
+  }
+  
+  /* Username Badge */
+  .username-badge {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-xl;
+    @apply backdrop-blur-sm cursor-pointer;
+    @apply relative overflow-hidden;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  .username-badge:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  
+  .username-symbol-badge {
+    @apply text-white/50 text-sm font-semibold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .username-text-badge {
+    @apply text-white/80 text-sm font-medium;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Senior Engineer Badge - Enhanced Design */
+  .senior-engineer-badge {
+    @apply inline-flex items-center gap-3 px-4 py-2 rounded-xl cursor-pointer;
+    @apply relative overflow-hidden;
+    background: linear-gradient(135deg, 
+      rgba(139, 69, 19, 0.15) 0%,   /* Rich brown */
+      rgba(184, 134, 11, 0.12) 50%, /* Golden brown */
+      rgba(217, 119, 6, 0.15) 100%  /* Amber accent */
+    );
+    border: 1px solid rgba(184, 134, 11, 0.25);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 
+      0 2px 8px rgba(184, 134, 11, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 0 20px rgba(184, 134, 11, 0.05);
+  }
+
+  .senior-engineer-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.1), 
+      transparent
+    );
+    transition: left 0.6s ease;
+  }
+
+  .senior-engineer-badge:hover {
+    background: linear-gradient(135deg, 
+      rgba(139, 69, 19, 0.2) 0%,
+      rgba(184, 134, 11, 0.18) 50%,
+      rgba(217, 119, 6, 0.2) 100%
+    );
+    border-color: rgba(184, 134, 11, 0.4);
+    box-shadow: 
+      0 4px 16px rgba(184, 134, 11, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 0 30px rgba(184, 134, 11, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .senior-engineer-badge:hover::before {
+    left: 100%;
+  }
+
+  .senior-badge-content {
+    @apply flex items-center gap-3 relative z-10;
+  }
+
+  .senior-badge-icon {
+    @apply text-yellow-300 text-lg;
+    filter: drop-shadow(0 2px 4px rgba(184, 134, 11, 0.3));
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .senior-badge-text {
+    @apply text-white font-semibold text-sm;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 236, 179, 0.9) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .username-glow {
+    @apply absolute inset-0 rounded-xl;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.1) 0%, 
+      transparent 50%, 
+      rgba(255, 255, 255, 0.1) 100%);
+    opacity: 0.2;
+    z-index: -1;
+  }
+  
+  /* Premium Elite Badge - Luxury Design */
+  .premium-elite-badge {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer;
+    @apply relative overflow-hidden;
+    background: linear-gradient(135deg, 
+      rgba(255, 215, 0, 0.15) 0%,    /* Pure gold */
+      rgba(255, 193, 7, 0.12) 25%,   /* Rich amber */
+      rgba(255, 152, 0, 0.15) 50%,   /* Deep orange gold */
+      rgba(255, 215, 0, 0.18) 75%,   /* Back to gold */
+      rgba(255, 235, 59, 0.15) 100%  /* Light gold highlight */
+    );
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    backdrop-filter: blur(16px);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 
+      0 4px 20px rgba(255, 215, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 0 40px rgba(255, 215, 0, 0.08);
+  }
+
+  .premium-elite-badge::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      transparent,
+      rgba(255, 215, 0, 0.1),
+      transparent,
+      rgba(255, 193, 7, 0.1),
+      transparent
+    );
+    animation: premiumRotate 4s linear infinite;
+    pointer-events: none;
+  }
+
+  .premium-elite-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.2), 
+      transparent
+    );
+    transition: left 0.8s ease;
+  }
+
+  .premium-elite-badge:hover {
+    background: linear-gradient(135deg, 
+      rgba(255, 215, 0, 0.25) 0%,
+      rgba(255, 193, 7, 0.22) 25%,
+      rgba(255, 152, 0, 0.25) 50%,
+      rgba(255, 215, 0, 0.28) 75%,
+      rgba(255, 235, 59, 0.25) 100%
+    );
+    border-color: rgba(255, 215, 0, 0.6);
+    box-shadow: 
+      0 8px 32px rgba(255, 215, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 60px rgba(255, 215, 0, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .premium-elite-badge:hover::after {
+    left: 100%;
+  }
+
+  .premium-badge-content {
+    @apply flex items-center gap-2 relative z-10;
+  }
+
+  .premium-badge-icon {
+    @apply text-lg;
+    filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.4));
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .premium-badge-text {
+    @apply text-sm font-bold;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 235, 59, 0.95) 30%,
+      rgba(255, 215, 0, 0.9) 70%,
+      rgba(255, 255, 255, 1) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(255, 215, 0, 0.5);
+    letter-spacing: 0.5px;
+  }
+
+  .premium-sparkle {
+    @apply text-xs absolute -top-1 -right-1;
+    filter: drop-shadow(0 1px 4px rgba(255, 215, 0, 0.6));
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+  }
+
+  @keyframes premiumRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Professional Rank Badge */
+  .rank-badge-professional {
+    @apply relative inline-flex px-6 py-4 rounded-3xl cursor-pointer;
+    @apply backdrop-blur-2xl overflow-hidden;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: linear-gradient(135deg, 
+      rgba(255,255,255,0.12) 0%, 
+      rgba(255,255,255,0.06) 50%,
+      rgba(255,255,255,0.12) 100%);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  
+  .rank-badge-professional:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 0 30px rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, 
+      rgba(255,255,255,0.18) 0%, 
+      rgba(255,255,255,0.08) 50%,
+      rgba(255,255,255,0.18) 100%);
+  }
+  
+  .rank-content-professional {
+    @apply flex items-center gap-4 relative z-10;
+  }
+  
+  .rank-icon-professional {
+    @apply text-2xl;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  }
+  
+  .rank-text-container {
+    @apply flex flex-col;
+  }
+  
+  .rank-title-professional {
+    @apply text-lg font-bold text-white leading-tight;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+  
+  .rank-subtitle {
+    @apply text-xs text-white/80 font-medium mt-0.5;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+  }
+  
+  .rank-glow-effect {
+    @apply absolute inset-0 rounded-3xl;
+    background: inherit;
+    filter: blur(8px);
+    opacity: 0.3;
+    z-index: -1;
+  }
+  
+  /* Enhanced XP Progress Styling */
+  .xp-progress-enhanced {
+    @apply pt-4 mt-4 space-y-4;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
+  }
+
+  .xp-stats-grid {
+    @apply grid grid-cols-2 gap-3;
+  }
+
+  /* Main XP Card */
+  .xp-card-main {
+    @apply relative p-4 rounded-2xl cursor-pointer;
+    @apply flex items-center gap-3;
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.1) 0%,
+      rgba(147, 51, 234, 0.08) 100%
+    );
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 
+      0 4px 16px rgba(59, 130, 246, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .xp-card-main:hover {
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.15) 0%,
+      rgba(147, 51, 234, 0.12) 100%
+    );
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 
+      0 8px 24px rgba(59, 130, 246, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .xp-icon-container {
+    @apply flex-shrink-0 w-12 h-12 rounded-xl;
+    @apply flex items-center justify-center;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+
+  .xp-lightning {
+    @apply text-xl;
+    filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.5));
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+  }
+
+  .xp-main-content {
+    @apply flex flex-col min-w-0 flex-1;
+  }
+
+  .xp-value-enhanced {
+    @apply text-xl font-bold;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 1) 0%,
+      rgba(59, 130, 246, 0.9) 50%,
+      rgba(147, 51, 234, 0.8) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .xp-label-enhanced {
+    @apply text-xs text-white/70 font-medium;
+    letter-spacing: 0.3px;
+  }
+
+  /* Next Rank Card */
+  .xp-card-next {
+    @apply relative p-4 rounded-2xl cursor-pointer;
+    @apply flex items-center gap-3;
+    background: linear-gradient(135deg, 
+      rgba(168, 85, 247, 0.1) 0%,
+      rgba(236, 72, 153, 0.08) 100%
+    );
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 
+      0 4px 16px rgba(168, 85, 247, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .xp-card-next:hover {
+    background: linear-gradient(135deg, 
+      rgba(168, 85, 247, 0.15) 0%,
+      rgba(236, 72, 153, 0.12) 100%
+    );
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow: 
+      0 8px 24px rgba(168, 85, 247, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .next-rank-icon {
+    @apply flex-shrink-0 w-12 h-12 rounded-xl;
+    @apply flex items-center justify-center text-lg;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    filter: drop-shadow(0 2px 4px rgba(168, 85, 247, 0.3));
+  }
+
+  .next-rank-content {
+    @apply flex flex-col min-w-0 flex-1;
+  }
+
+  .next-rank-xp {
+    @apply text-lg font-bold text-white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .next-rank-label {
+    @apply text-xs text-white/70 font-medium;
+    letter-spacing: 0.3px;
+  }
+
+  .max-rank-text {
+    @apply text-lg font-bold text-yellow-300;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .max-rank-label {
+    @apply text-xs text-yellow-200/80 font-medium;
+    letter-spacing: 0.3px;
+  }
+
+  /* Enhanced Progress Bar */
+  .progress-container-enhanced {
+    @apply relative mt-4;
+  }
+
+  .progress-bar-enhanced {
+    @apply h-4 rounded-full overflow-hidden relative;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.2),
+      0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .progress-fill-enhanced {
+    @apply h-full rounded-full transition-all duration-700;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+      0 0 15px rgba(255, 255, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .progress-fill-enhanced::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: progressShine 2.5s infinite;
+  }
+
+  .progress-glow-enhanced {
+    @apply absolute top-0 left-0 h-full rounded-full;
+    filter: blur(8px);
+    opacity: 0.6;
+  }
+
+  /* Dynamic Progress Bar System */
+  .progress-bar-dynamic {
+    @apply h-5 rounded-full relative overflow-visible;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      inset 0 2px 6px rgba(0, 0, 0, 0.25),
+      0 2px 0 rgba(255, 255, 255, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  /* Jagged inner texture for progress bar background */
+  .progress-bar-dynamic::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(255, 255, 255, 0.02) 3px,
+      rgba(255, 255, 255, 0.02) 6px
+    );
+    opacity: 0.5;
+  }
+
+  /* Notched/segmented edges */
+  .progress-bar-dynamic::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    right: 2px;
+    height: 1px;
+    transform: translateY(-50%);
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.1) 0px,
+      rgba(255, 255, 255, 0.1) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+
+  /* Rank-based styling */
+  .progress-bar-dynamic.rank-1 {
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow: 
+      inset 0 2px 6px rgba(0, 0, 0, 0.25),
+      0 0 8px rgba(59, 130, 246, 0.15);
+  }
+
+  .progress-bar-dynamic.rank-2 {
+    border-color: rgba(139, 69, 19, 0.3);
+    box-shadow: 
+      inset 0 2px 6px rgba(0, 0, 0, 0.25),
+      0 0 12px rgba(139, 69, 19, 0.2);
+  }
+
+  .progress-bar-dynamic.rank-3 {
+    border-color: rgba(255, 215, 0, 0.4);
+    box-shadow: 
+      inset 0 2px 6px rgba(0, 0, 0, 0.25),
+      0 0 16px rgba(255, 215, 0, 0.25);
+  }
+
+  .progress-bar-dynamic.near-complete {
+    animation: nearComplete 2s ease-in-out infinite;
+  }
+
+  .progress-bar-dynamic.max-rank {
+    border-color: rgba(255, 215, 0, 0.6);
+    box-shadow: 
+      inset 0 2px 6px rgba(0, 0, 0, 0.25),
+      0 0 20px rgba(255, 215, 0, 0.4),
+      0 0 40px rgba(255, 215, 0, 0.2);
+  }
+
+  /* Dynamic progress fill with textures */
+  .progress-fill-dynamic {
+    @apply h-full rounded-full transition-all duration-700;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+      0 0 20px rgba(255, 255, 255, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  /* Jagged/segmented texture overlay */
+  .progress-fill-dynamic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 8px,
+      rgba(255, 255, 255, 0.1) 8px,
+      rgba(255, 255, 255, 0.1) 10px,
+      transparent 10px,
+      transparent 18px,
+      rgba(0, 0, 0, 0.05) 18px,
+      rgba(0, 0, 0, 0.05) 20px
+    );
+    mix-blend-mode: overlay;
+  }
+
+  .progress-fill-dynamic::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.4) 50%, 
+      transparent 100%);
+    animation: shimmerDynamic 3s infinite;
+  }
+
+  /* Background particles */
+  .progress-particles {
+    @apply absolute inset-0 rounded-full;
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+
+  /* Dynamic glow */
+  .progress-glow-dynamic {
+    @apply absolute inset-0 h-full rounded-full;
+    filter: blur(6px);
+    opacity: 0.6;
+    z-index: -1;
+  }
+
+  /* Overflow effect for high completion */
+  .progress-overflow {
+    @apply absolute inset-0 rounded-full;
+    filter: blur(8px);
+    z-index: -2;
+  }
+
+  /* Segment markers */
+  .progress-segments {
+    @apply absolute inset-0 pointer-events-none;
+  }
+
+  .segment-marker {
+    @apply absolute w-0.5 h-full bg-white/30 rounded-full;
+    top: 0;
+    transform: translateX(-50%);
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+  }
+
+  /* Energy charging effect */
+  .progress-energy {
+    @apply absolute inset-0 rounded-full;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 30%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.3) 70%,
+      transparent 100%
+    );
+    width: 20%;
+    filter: blur(1px);
+    mix-blend-mode: screen;
+  }
+
+  /* Enhanced fill textures for different ranks */
+  .progress-bar-dynamic.rank-3 .progress-fill-dynamic::before {
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 6px,
+      rgba(255, 215, 0, 0.2) 6px,
+      rgba(255, 215, 0, 0.2) 8px,
+      transparent 8px,
+      transparent 14px,
+      rgba(0, 0, 0, 0.1) 14px,
+      rgba(0, 0, 0, 0.1) 16px
+    );
+  }
+
+  .progress-bar-dynamic.rank-2 .progress-fill-dynamic::before {
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 10px,
+      rgba(139, 69, 19, 0.15) 10px,
+      rgba(139, 69, 19, 0.15) 12px,
+      transparent 12px,
+      transparent 22px,
+      rgba(255, 255, 255, 0.05) 22px,
+      rgba(255, 255, 255, 0.05) 24px
+    );
+  }
+
+  /* Enhanced Progress Label */
+  .progress-label-enhanced {
+    @apply text-center;
+  }
+
+  .max-rank-message {
+    @apply text-center;
+  }
+
+  .legendary-text {
+    @apply text-sm font-bold text-yellow-200;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .progress-info-container {
+    @apply flex flex-col gap-2 items-center;
+  }
+
+  .progress-stats {
+    @apply flex items-center gap-2 text-xs text-white/70;
+  }
+
+  .progress-percentage-text {
+    @apply font-bold text-white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .progress-separator {
+    @apply text-white/40;
+  }
+
+  .xp-remaining {
+    @apply text-white/60;
+  }
+
+  .next-rank-preview {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-lg;
+    @apply backdrop-blur-sm cursor-pointer transition-all duration-200;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .next-rank-preview:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .rank-icon {
+    @apply text-lg;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  }
+
+  .rank-name {
+    @apply text-xs font-medium text-white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  .almost-there {
+    @apply text-xs font-bold text-orange-300 ml-2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .close-text {
+    @apply text-xs font-medium text-blue-300 ml-2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Animations */
+  @keyframes shimmerDynamic {
+    0% { left: -100%; }
+    50% { left: -30%; }
+    100% { left: 100%; }
+  }
+
+  @keyframes nearComplete {
+    0%, 100% { 
+      box-shadow: 
+        inset 0 2px 6px rgba(0, 0, 0, 0.25),
+        0 0 16px rgba(255, 215, 0, 0.3);
+    }
+    50% { 
+      box-shadow: 
+        inset 0 2px 6px rgba(0, 0, 0, 0.25),
+        0 0 24px rgba(255, 215, 0, 0.5),
+        0 0 40px rgba(255, 215, 0, 0.2);
+    }
+  }
+
+  /* XP Remaining text inside progress bar */
+  .progress-xp-remaining {
+    @apply absolute top-0 h-full flex items-center justify-center;
+    @apply pointer-events-none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    z-index: 5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    gap: 4px;
+  }
+
+  .xp-amount {
+    @apply text-xs font-bold text-white;
+    line-height: 1;
+  }
+
+  .xp-label {
+    @apply text-xs font-medium text-white/50;
+    line-height: 1;
+    font-size: 10px;
+  }
+
+  .progress-percentage-badge {
+    @apply absolute -bottom-8 px-2 py-1 rounded-lg text-xs font-bold;
+    @apply text-white;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    transform: translateX(-50%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .progress-percentage-badge::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-bottom-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  /* Premium Progress Bar */
+  .progress-bar-premium {
+    @apply h-3 rounded-full overflow-hidden relative;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .progress-fill-premium {
+    @apply h-full rounded-full transition-all duration-700;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  .progress-fill-premium::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: progressShine 2.5s infinite;
+  }
+  
+  .progress-glow {
+    @apply absolute top-0 left-0 h-full rounded-full;
+    filter: blur(4px);
+    opacity: 0.6;
+  }
+
+  /* Action Cards */
+  .action-card-ios {
+    @apply flex items-center gap-4 p-4 rounded-xl border border-transparent;
+    @apply transition-all duration-200 cursor-pointer relative overflow-hidden;
+  }
+  
+  .action-card-ios::before {
+    @apply absolute inset-0 -translate-x-full w-full h-full transition-transform duration-500;
+    content: '';
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  }
+  
+  .action-card-ios:hover::before {
+    @apply translate-x-full;
+  }
+  
+  .action-card-primary {
+    @apply action-card-ios;
+    background: var(--rank-gradient);
+    box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
+  }
+  
+  .action-card-primary:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 8px 30px rgba(0, 122, 255, 0.4);
+  }
+  
+  .action-card-secondary {
+    @apply action-card-ios;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .action-card-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    @apply -translate-y-0.5;
+  }
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .text-gradient-ios {
+    background: var(--rank-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .shadow-glow-blue {
+    box-shadow: 0 0 20px rgba(0, 122, 255, 0.3);
+  }
+  
+  .shadow-glow-green {
+    box-shadow: 0 0 20px rgba(52, 199, 89, 0.3);
+  }
+  
+  .animate-slide-up {
+    animation: slideInUp 0.8s ease-out both;
+  }
+  
+  .animate-slide-up-delay-1 {
+    animation: slideInUp 0.8s ease-out 0.2s both;
+  }
+  
+  .animate-slide-up-delay-2 {
+    animation: slideInUp 0.8s ease-out 0.4s both;
+  }
+  
+  .animate-slide-up-delay-3 {
+    animation: slideInUp 0.8s ease-out 0.6s both;
+  }
+}
+
+/* Keyframes */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroGlow {
+  0% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+@keyframes levelPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+}
+
+@keyframes levelPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes sparkleRotate {
+  0% { transform: rotate(0deg) scale(0); opacity: 0; }
+  25% { transform: rotate(90deg) scale(1); opacity: 1; }
+  75% { transform: rotate(270deg) scale(1); opacity: 1; }
+  100% { transform: rotate(360deg) scale(0); opacity: 0; }
+}
+
+
+@keyframes rankGlow {
+  0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+  100% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+}
+
+@keyframes progressShine {
+  0% { left: -100%; }
+  50% { left: 0%; }
+  100% { left: 100%; }
+}
+
+/* Responsive Design */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

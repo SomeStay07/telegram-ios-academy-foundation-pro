@@ -1,251 +1,853 @@
-import { useState, useEffect } from 'react'
-import { Card, Avatar } from '@telegram-ios-academy/ui'
-import { Trophy, Code2, BookOpen, Calendar } from 'lucide-react'
-
-// Clean gaming animations
-const gameAnimations = `
-@keyframes magicParticles {
-  0% { transform: translateY(40px) scale(0); opacity: 0; }
-  50% { transform: translateY(-10px) scale(1); opacity: 1; }
-  100% { transform: translateY(-80px) scale(0); opacity: 0; }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
-}
-
-@keyframes glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.8); }
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1) rotate(180deg); }
-}
-`
-
-interface TelegramUser {
-  id?: number
-  first_name?: string
-  last_name?: string
-  username?: string
-  language_code?: string
-  photo_url?: string
-  is_premium?: boolean
-}
+import React, { useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useAtom } from 'jotai'
+import { getUserData, initializeTelegramWebApp, setTelegramMainButton } from '../lib/telegram'
+import { getRankByXP, getNextRank, getRankProgress, getXPToNextRank } from '../lib/rankSystem'
+import { userDataAtom } from '../store/profileAtoms'
+import { useHaptics } from '../lib/haptics'
+import { AchievementNotification, useAchievement } from '../components/AchievementNotification'
+import { DraggableStats } from '../components/DraggableStats'
 
 export function ProfilePage() {
-  const [telegramUser, setTelegramUser] = useState<TelegramUser>({})
+  const [userData, setUserData] = useAtom(userDataAtom)
+  const haptics = useHaptics()
+  const achievement = useAchievement()
+
+  // Calculate rank-based data
+  const currentRank = getRankByXP(userData.totalXP)
+  const nextRank = getNextRank(userData.totalXP)
+  const rankProgress = getRankProgress(userData.totalXP)
+  const xpToNext = getXPToNextRank(userData.totalXP)
+  const isMaxRank = !nextRank
 
   useEffect(() => {
-    const style = document.createElement('style')
-    style.textContent = gameAnimations
-    document.head.appendChild(style)
+    const initialized = initializeTelegramWebApp()
+    const user = getUserData()
     
-    return () => {
-      document.head.removeChild(style)
-    }
-  }, [])
-
-  useEffect(() => {
-    const webApp = (window as any)?.Telegram?.WebApp
-    if (webApp?.initDataUnsafe?.user) {
-      const tgUser = webApp.initDataUnsafe.user
-      setTelegramUser({
-        ...tgUser,
-        is_premium: true
-      })
+    // Check if running in Telegram WebApp or locally
+    const isInTelegram = (window as any).Telegram?.WebApp?.initData
+    
+    if (isInTelegram && user) {
+      // Use real Telegram data
+      setUserData(prev => ({
+        ...prev,
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        avatar: user.avatar
+      }))
     } else {
-      // Расширенные мок-данные
-      setTelegramUser({
-        id: 123456789,
-        first_name: 'Тимур',
-        last_name: 'Цеберда',
-        username: 'timurceberda', 
-        is_premium: true,
-        photo_url: undefined // будем использовать лаконичную иконку
+      // Use enhanced mock data for local development
+      setUserData(prev => ({
+        ...prev,
+        firstName: 'Тимур',
+        lastName: 'Цеберда',
+        username: 'timurceberda',
+        avatar: 'https://avatars.githubusercontent.com/u/12345678?v=4'
+      }))
+    }
+
+    if (initialized) {
+      setTelegramMainButton({
+        text: '🚀 Start Challenge',
+        color: currentRank.color,
+        textColor: '#FFFFFF',
+        onClick: () => console.log('Starting challenge...')
       })
     }
-  }, [])
+  }, [currentRank.color])
 
-  const displayName = telegramUser.first_name 
-    ? `${telegramUser.first_name}${telegramUser.last_name ? ` ${telegramUser.last_name}` : ''}`
-    : telegramUser.username || 'Разработчик'
+  const progressPercentage = rankProgress * 100
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="container max-w-2xl mx-auto space-y-6">
-        
-        {/* Main Profile Card */}
-        <Card className="group relative bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300">
-          <div className="p-8">
-            
-            {/* Profile Header */}
-            <div className="flex items-center gap-6">
-              
-              {/* Avatar с красивым обрамлением */}
-              <div className="relative">
-                {/* Градиентное обрамление */}
-                <div className="absolute inset-0 rounded-full p-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600">
-                  <div className="bg-white rounded-full w-full h-full"></div>
-                </div>
-                
-                {/* Hover glow effect */}
-                <div 
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{
-                    animation: 'glow 2s ease-in-out infinite',
-                    background: 'radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%)',
-                    transform: 'scale(1.3)'
-                  }}
-                />
-                
-                {/* Аватар с лаконичной иконкой если нет фото */}
-                <div className="relative z-10">
-                  {telegramUser.photo_url ? (
-                    <Avatar
-                      src={telegramUser.photo_url}
-                      alt={displayName}
-                      fallback={displayName}
-                      size="xl"
-                      className="border-2 border-white"
+    <motion.div 
+      className="modern-profile"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Combined Hero & Progress Section */}
+      <motion.div 
+        className="hero-section-combined"
+        variants={itemVariants}
+      >
+        <div className={`hero-bg rank-${currentRank.id}`} />
+        <motion.div 
+          className="hero-card-premium glass-card mx-4 my-6 p-6 bg-white/3 border-white/8"
+          whileHover={{ 
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
+            scale: 1.005,
+            y: -2
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          onTap={() => haptics.cardTap()}
+        >
+          {/* Profile Header with Avatar & Info */}
+          <div className="profile-header-premium">
+            <motion.div 
+              className="avatar-wrapper-enhanced"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onTap={() => haptics.cardTap()}
+            >
+              {/* Enhanced Avatar or Beautiful Icon */}
+              <motion.div 
+                className="avatar-container-enhanced"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              >
+                {userData.avatar && userData.avatar !== 'https://avatars.githubusercontent.com/u/12345678?v=4' ? (
+                  <motion.img 
+                    src={userData.avatar} 
+                    alt={`${userData.firstName} ${userData.lastName}`}
+                    className="avatar-xl-enhanced"
+                  />
+                ) : (
+                  /* Elegant Grey Developer Icon */
+                  <motion.div 
+                    className="avatar-icon-grey"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    {/* Subtle pattern background */}
+                    <motion.div 
+                      className="avatar-pattern"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                     />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center border-2 border-white">
-                      <Code2 className="w-8 h-8 text-white" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* User Info */}
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    {displayName}
-                  </h1>
-                  
-                  {/* Премиум Badge */}
-                  {telegramUser.is_premium && (
-                    <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-full">
-                      <Trophy 
-                        className="w-4 h-4 text-amber-600"
-                        style={{ animation: 'bounce 2s ease-in-out infinite' }}
-                      />
-                      <span className="text-sm font-medium text-amber-700">Премиум</span>
-                    </div>
-                  )}
-                </div>
-                
-                {telegramUser.username && (
-                  <p className="text-gray-600 mb-2">@{telegramUser.username}</p>
+                    
+                    {/* Clean developer icon in corner */}
+                    <motion.div 
+                      className="dev-icon-corner"
+                      whileHover={{ scale: 1.1, rotate: 10 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
+                      💻
+                    </motion.div>
+                    
+                    {/* Minimalist code lines */}
+                    <motion.div 
+                      className="code-lines"
+                      initial={{ opacity: 0.6 }}
+                      animate={{ opacity: [0.6, 0.8, 0.6] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      <div className="code-line line-1" />
+                      <div className="code-line line-2" />
+                      <div className="code-line line-3" />
+                    </motion.div>
+                  </motion.div>
                 )}
                 
-                <div className="text-sm text-gray-500">
-                  iOS Developer Community Member
-                </div>
-              </div>
-            </div>
-
-            {/* Professional Stats */}
-            <div className="mt-8 pt-6 border-t border-gray-100">
-              <div className="grid grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-gray-900">12</div>
-                  <div className="text-sm text-gray-500">Курсы завершены</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-gray-900">127ч</div>
-                  <div className="text-sm text-gray-500">Время обучения</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-semibold text-gray-900">23</div>
-                  <div className="text-sm text-gray-500">Дней подряд</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Progress Section */}
-            <div className="mt-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Прогресс обучения</span>
-                <span className="text-sm text-gray-500">89%</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-1000"
-                  style={{ width: '89%' }}
-                />
-              </div>
-            </div>
-            
-          </div>
-          
-          {/* Subtle hover effect particles */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-1 bg-blue-400 rounded-full"
-                style={{
-                  left: `${20 + i * 30}%`,
-                  top: `${20 + i * 20}%`,
-                  animation: `sparkle ${2 + i * 0.5}s ease-in-out infinite`,
-                  animationDelay: `${i * 0.3}s`
+                {/* Animated ring around avatar - only for real photos */}
+                {userData.avatar && userData.avatar !== 'https://avatars.githubusercontent.com/u/12345678?v=4' && (
+                  <motion.div 
+                    className="avatar-ring"
+                    style={{ background: `conic-gradient(from 0deg, ${currentRank.gradient}, transparent)` }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  />
+                )}
+              </motion.div>
+              
+              {/* Enhanced level badge inside avatar */}
+              <motion.div 
+                className="level-badge-inside" 
+                style={{ background: currentRank.gradient }}
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+                whileHover={{ scale: 1.2, rotate: 12, y: -1 }}
+                whileTap={{ scale: 0.85 }}
+                onTap={() => {
+                  haptics.impact('heavy')
+                  achievement.trigger(
+                    `Level ${Math.floor(userData.totalXP / 1000)} Unlocked! ⚡`,
+                    `Dominating with ${userData.totalXP.toLocaleString()} XP`,
+                    '⚡'
+                  )
                 }}
-              />
-            ))}
-          </div>
-        </Card>
-
-        {/* Bio Card */}
-        <Card className="group relative bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300">
-          <div className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <BookOpen className="w-5 h-5 text-blue-600" />
-              <h2 className="text-lg font-semibold text-gray-900">О себе</h2>
-            </div>
+              >
+                <motion.span 
+                  className="level-number-inside"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  {Math.floor(userData.totalXP / 1000)}
+                </motion.span>
+                
+                {/* Sparkling particles */}
+                <motion.div 
+                  className="level-sparkle level-sparkle-1"
+                  animate={{ 
+                    scale: [0, 1, 0],
+                    rotate: [0, 180, 360],
+                    opacity: [0, 1, 0]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0 }}
+                >
+                  ✨
+                </motion.div>
+                <motion.div 
+                  className="level-sparkle level-sparkle-2"
+                  animate={{ 
+                    scale: [0, 1, 0],
+                    rotate: [0, -180, -360],
+                    opacity: [0, 1, 0]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.7 }}
+                >
+                  ✨
+                </motion.div>
+                <motion.div 
+                  className="level-sparkle level-sparkle-3"
+                  animate={{ 
+                    scale: [0, 1, 0],
+                    rotate: [0, 90, 180],
+                    opacity: [0, 1, 0]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.4 }}
+                >
+                  ✨
+                </motion.div>
+              </motion.div>
+            </motion.div>
             
-            <div className="space-y-4">
-              <p className="text-gray-700 leading-relaxed">
-                iOS разработчик с 3+ годами опыта. Специализируюсь на SwiftUI, UIKit и создании современных мобильных приложений. 
-                Активный участник сообщества разработчиков.
-              </p>
-              
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">Swift</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">SwiftUI</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">UIKit</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">Core Data</span>
-              </div>
-              
-              <div className="pt-4 border-t border-gray-100 flex items-center gap-4 text-sm text-gray-500">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>Присоединился: Март 2023</span>
-                </div>
+            <div className="profile-info-full">
+              {/* Profile Name Section */}
+              <div className="name-section-proper">
+                {/* Simple Clean Name */}
+                <motion.h1 
+                  className="profile-name-clean"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <span className="name-text">{userData.firstName}</span>
+                  {userData.lastName && (
+                    <span className="name-text"> {userData.lastName}</span>
+                  )}
+                </motion.h1>
+                
+                {/* Username + Senior Engineer Unified Section */}
+                <motion.div 
+                  className="unified-badges-section"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ 
+                    opacity: 1, 
+                    y: 0,
+                    boxShadow: [
+                      "0 6px 20px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(59, 130, 246, 0.1)",
+                      "0 8px 24px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(59, 130, 246, 0.15)",
+                      "0 6px 20px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(59, 130, 246, 0.1)"
+                    ]
+                  }}
+                  transition={{ 
+                    delay: 0.5, 
+                    type: "spring", 
+                    stiffness: 200,
+                    boxShadow: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                  whileHover={{ 
+                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                    scale: 1.02,
+                    y: -2
+                  }}
+                >
+                  {/* Username Badge */}
+                  <motion.div 
+                    className="username-badge-unified"
+                    initial={{ opacity: 0, x: -20, scale: 0.9 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
+                    onTap={() => {
+                      haptics.buttonPress()
+                      achievement.trigger(
+                        'Profile ID! 📱',
+                        `Username: @${userData.username}`,
+                        '🏷️'
+                      )
+                    }}
+                  >
+                    <motion.span 
+                      className="username-symbol-unified"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      @
+                    </motion.span>
+                    <span className="username-text-unified">{userData.username}</span>
+                    
+                    {/* Username badge glow */}
+                    <motion.div 
+                      className="username-glow-unified"
+                      animate={{ 
+                        opacity: [0.2, 0.4, 0.2],
+                        scale: [1, 1.02, 1]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    />
+                  </motion.div>
+
+                  {/* Senior Engineer Badge */}
+                  <motion.div 
+                    className="senior-engineer-badge-unified"
+                    initial={{ y: 20, opacity: 0, scale: 0.8 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
+                    onTap={() => {
+                      haptics.selection()
+                      achievement.trigger(
+                        `${currentRank.name} Level! ${currentRank.icon}`,
+                        `Elite developer with ${userData.totalXP.toLocaleString()} XP mastered`,
+                        currentRank.icon
+                      )
+                    }}
+                  >
+                    <motion.div 
+                      className="senior-badge-content"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
+                      <motion.span 
+                        className="senior-badge-icon"
+                        whileHover={{ scale: 1.15, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        {currentRank.icon}
+                      </motion.span>
+                      <span className="senior-badge-text">{currentRank.name}</span>
+                    </motion.div>
+                    
+                    {/* Professional glow effect */}
+                    <motion.div 
+                      className="rank-glow-effect"
+                      animate={{ 
+                        opacity: [0.3, 0.6, 0.3],
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                    />
+                  </motion.div>
+                </motion.div>
               </div>
             </div>
           </div>
-          
-          {/* Hover shimmer effect */}
-          <div 
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%)',
-              animation: 'shimmer 2s ease-in-out infinite'
+
+          {/* Enhanced XP Progress Section */}
+          <motion.div 
+            className="xp-progress-enhanced"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            {/* XP Stats Cards */}
+            <div className="xp-stats-grid">
+              {/* Current XP Card */}
+              <motion.div 
+                className="xp-card-main"
+                initial={{ opacity: 0, scale: 0.9, x: -20 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
+                whileHover={{ scale: 1.02, y: -2 }}
+                onTap={() => {
+                  haptics.cardTap()
+                  achievement.trigger(
+                    'XP Master! ⚡',
+                    `${userData.totalXP.toLocaleString()} experience points achieved`,
+                    '⚡'
+                  )
+                }}
+              >
+                <motion.div 
+                  className="xp-icon-container"
+                  whileHover={{ scale: 1.15, rotate: 10 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <span className="xp-lightning">⚡</span>
+                </motion.div>
+                <div className="xp-main-content">
+                  <motion.span 
+                    className="xp-value-enhanced"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.1 }}
+                  >
+                    {userData.totalXP.toLocaleString()}
+                  </motion.span>
+                  <span className="xp-label-enhanced">Experience Points</span>
+                </div>
+              </motion.div>
+
+              {/* Next Rank Card */}
+              <motion.div 
+                className="xp-card-next"
+                initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                transition={{ delay: 1, type: "spring", stiffness: 200 }}
+                whileHover={{ scale: 1.02, y: -2 }}
+                onTap={() => {
+                  haptics.selection()
+                  if (!isMaxRank) {
+                    achievement.trigger(
+                      `Next: ${nextRank.name} ${nextRank.icon}`,
+                      `${xpToNext.toLocaleString()} XP remaining to advance`,
+                      nextRank.icon
+                    )
+                  }
+                }}
+              >
+                <motion.div 
+                  className="next-rank-icon"
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                >
+                  {!isMaxRank ? nextRank.icon : '👑'}
+                </motion.div>
+                <div className="next-rank-content">
+                  {!isMaxRank ? (
+                    <>
+                      <span className="next-rank-xp">{xpToNext.toLocaleString()}</span>
+                      <span className="next-rank-label">to {nextRank.name}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="max-rank-text">Max Level</span>
+                      <span className="max-rank-label">Elite Status</span>
+                    </>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Dynamic Progress Bar */}
+            <motion.div 
+              className="progress-container-enhanced"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1 }}
+              whileHover={{ scale: 1.005 }}
+            >
+              <div className={`progress-bar-dynamic rank-${currentRank.id} ${progressPercentage > 80 ? 'near-complete' : ''} ${isMaxRank ? 'max-rank' : ''}`}>
+                {/* Segment markers for visual breaks */}
+                <div className="progress-segments">
+                  {[25, 50, 75].map((segment, index) => (
+                    <motion.div
+                      key={segment}
+                      className="segment-marker"
+                      style={{ left: `${segment}%` }}
+                      animate={{
+                        opacity: progressPercentage > segment ? [0.3, 0.8, 0.3] : 0.2,
+                        scale: progressPercentage > segment ? [1, 1.2, 1] : 1
+                      }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: progressPercentage > segment ? Infinity : 0,
+                        delay: index * 0.2 
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Background particles for high-level users */}
+                {currentRank.id >= 3 && (
+                  <motion.div 
+                    className="progress-particles"
+                    animate={{ 
+                      background: [
+                        `radial-gradient(circle at 20% 50%, ${currentRank.gradient.split(',')[0]} 0%, transparent 50%)`,
+                        `radial-gradient(circle at 80% 50%, ${currentRank.gradient.split(',')[1] || currentRank.gradient.split(',')[0]} 0%, transparent 50%)`,
+                        `radial-gradient(circle at 20% 50%, ${currentRank.gradient.split(',')[0]} 0%, transparent 50%)`
+                      ]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                )}
+
+                {/* Charging effect for high levels */}
+                {currentRank.id >= 2 && progressPercentage > 60 && (
+                  <motion.div 
+                    className="progress-energy"
+                    animate={{
+                      opacity: [0.2, 0.6, 0.2],
+                      transform: ['translateX(-100%)', 'translateX(400%)', 'translateX(-100%)']
+                    }}
+                    transition={{ 
+                      duration: 4, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                  />
+                )}
+                
+                <motion.div 
+                  className="progress-fill-dynamic" 
+                  style={{ background: currentRank.gradient }}
+                  initial={{ width: 0 }}
+                  animate={{ 
+                    width: `${progressPercentage}%`,
+                    boxShadow: progressPercentage > 50 ? [
+                      `0 0 20px ${currentRank.gradient.includes('rgb') ? currentRank.gradient.match(/rgb\([^)]+\)/)?.[0] : 'rgba(59, 130, 246, 0.4)'}`,
+                      `0 0 40px ${currentRank.gradient.includes('rgb') ? currentRank.gradient.match(/rgb\([^)]+\)/)?.[0] : 'rgba(59, 130, 246, 0.6)'}`,
+                      `0 0 20px ${currentRank.gradient.includes('rgb') ? currentRank.gradient.match(/rgb\([^)]+\)/)?.[0] : 'rgba(59, 130, 246, 0.4)'}`
+                    ] : undefined
+                  }}
+                  transition={{ 
+                    delay: 1.2, 
+                    duration: 1.8, 
+                    ease: "easeOut",
+                    boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                  onAnimationComplete={() => haptics.levelUp()}
+                />
+                
+                {/* Dynamic glow effect */}
+                <motion.div 
+                  className="progress-glow-dynamic"
+                  style={{ background: currentRank.gradient }}
+                  initial={{ width: 0, opacity: 0 }}
+                  animate={{ 
+                    width: `${progressPercentage}%`, 
+                    opacity: progressPercentage > 30 ? 0.8 : 0.4,
+                    filter: `blur(${Math.min(progressPercentage / 10, 6)}px)`
+                  }}
+                  transition={{ delay: 1.4, duration: 1.5, ease: "easeOut" }}
+                />
+                
+                {/* Overflow effect for nearly complete progress */}
+                {progressPercentage > 85 && (
+                  <motion.div 
+                    className="progress-overflow"
+                    style={{ background: currentRank.gradient }}
+                    animate={{ 
+                      opacity: [0.3, 0.7, 0.3],
+                      scale: [1, 1.02, 1]
+                    }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                )}
+
+                
+                {/* Progress Percentage Badge with Animated Elements */}
+                <motion.div 
+                  className="progress-percentage-badge"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1,
+                    textShadow: [
+                      "0 1px 2px rgba(0, 0, 0, 0.5)",
+                      "0 2px 8px rgba(255, 255, 255, 0.3)",
+                      "0 1px 2px rgba(0, 0, 0, 0.5)"
+                    ]
+                  }}
+                  transition={{ 
+                    delay: 1.6,
+                    textShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                  whileHover={{ 
+                    scale: 1.1,
+                    textShadow: "0 0 15px rgba(255, 255, 255, 0.8)",
+                    boxShadow: "0 4px 20px rgba(255, 255, 255, 0.3)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ left: `${Math.min(progressPercentage, 95)}%` }}
+                >
+                  {Math.round(progressPercentage)}%
+                  
+                  {/* Animated Sparkles around percentage */}
+                  <motion.div
+                    className="absolute -top-3 -left-2 text-xs"
+                    animate={{
+                      scale: [0, 1, 0],
+                      rotate: [0, 180, 360],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: 0
+                    }}
+                  >
+                    ✨
+                  </motion.div>
+                  
+                  <motion.div
+                    className="absolute -top-2 -right-2 text-xs"
+                    animate={{
+                      scale: [0, 1, 0],
+                      rotate: [0, -180, -360],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: 0.7
+                    }}
+                  >
+                    ⭐
+                  </motion.div>
+                  
+                  <motion.div
+                    className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 text-xs"
+                    animate={{
+                      scale: [0, 1, 0],
+                      y: [0, -3, 0],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      delay: 1.2
+                    }}
+                  >
+                    💫
+                  </motion.div>
+                  
+                  {/* Floating dots */}
+                  <motion.div
+                    className="absolute -left-4 top-1/2 w-1 h-1 bg-white/60 rounded-full"
+                    animate={{
+                      x: [0, -8, 0],
+                      opacity: [0.3, 1, 0.3],
+                      scale: [0.8, 1.2, 0.8]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                  
+                  <motion.div
+                    className="absolute -right-4 top-1/2 w-1 h-1 bg-white/60 rounded-full"
+                    animate={{
+                      x: [0, 8, 0],
+                      opacity: [0.3, 1, 0.3],
+                      scale: [0.8, 1.2, 0.8]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: 1.5,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </motion.div>
+              </div>
+              
+              {/* XP Range Indicators */}
+              <motion.div 
+                className="flex justify-between items-center mt-3 px-1"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.8 }}
+              >
+                <motion.div 
+                  className="flex items-center gap-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <div className="w-2 h-2 rounded-full bg-white/30"></div>
+                  <span className="text-xs text-white/60 font-medium">
+                    {currentRank.minXP.toLocaleString()} XP
+                  </span>
+                </motion.div>
+                
+                <motion.div 
+                  className="flex items-center gap-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="text-xs text-white/80 font-semibold">
+                    {!isMaxRank ? nextRank.minXP.toLocaleString() : userData.totalXP.toLocaleString()} XP
+                  </span>
+                  <div className="w-2 h-2 rounded-full" style={{ background: currentRank.gradient }}></div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+            
+          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {/* Elegant Divider */}
+      <motion.div 
+        className="px-4 py-2"
+        variants={itemVariants}
+      >
+        <motion.div 
+          className="elegant-divider"
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
+        />
+      </motion.div>
+
+      {/* Comprehensive Stats Section */}
+      <motion.div 
+        className="px-4 py-2"
+        variants={itemVariants}
+      >
+        <motion.div 
+          className="mb-4"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <h3 className="text-sm text-white/70 font-medium mb-2">
+            📊 Performance Stats
+          </h3>
+          <p className="text-xs text-white/50">Drag to reorder • Tap for details</p>
+        </motion.div>
+        <DraggableStats initialStats={[
+          { id: 'streak', icon: '🔥', label: 'Day Streak', value: userData.streak, gradient: true },
+          { id: 'rank', icon: '🏆', label: 'Global Rank', value: `#${userData.globalRank.toLocaleString()}` },
+          { id: 'challenges', icon: '🎯', label: 'Challenges', value: userData.challengesCompleted },
+          { id: 'battles', icon: '⚔️', label: 'Battles Won', value: userData.battlesWon },
+          { id: 'achievements', icon: '🌟', label: 'Achievements', value: userData.achievements },
+          { id: 'weekly', icon: '📅', label: 'Weekly XP', value: userData.weeklyXP.toLocaleString() }
+        ]} />
+      </motion.div>
+
+
+      {/* Quick Actions - Tailwind Hybrid */}
+      <motion.div 
+        className="px-4 pb-10 grid grid-cols-1 gap-3"
+        variants={itemVariants}
+      >
+        <motion.div 
+          className="action-card-primary"
+          whileHover={{ 
+            scale: 1.02, 
+            y: -2,
+            boxShadow: "0 12px 40px rgba(0, 122, 255, 0.4)"
+          }}
+          whileTap={{ scale: 0.98 }}
+          onTap={() => {
+            haptics.buttonPress()
+            achievement.trigger(
+              'Challenge Started! 🚀',
+              'Good luck with your coding challenge!',
+              '🎯'
+            )
+            console.log('Starting challenge...')
+          }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <motion.div 
+            className="text-2xl w-8 text-center"
+            whileHover={{ scale: 1.2, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 400 }}
+          >
+            🚀
+          </motion.div>
+          <div className="text-base font-semibold text-white flex-1">Start Challenge</div>
+        </motion.div>
+        <motion.div 
+          className="grid grid-cols-2 gap-3"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.1
+              }
+            }
+          }}
+        >
+          <motion.div 
+            className="action-card-secondary"
+            variants={{
+              hidden: { opacity: 0, x: -20 },
+              visible: { opacity: 1, x: 0 }
             }}
-          />
-        </Card>
-        
-      </div>
-    </div>
+            whileHover={{ 
+              scale: 1.05, 
+              y: -2,
+              backgroundColor: "rgba(255, 255, 255, 0.08)"
+            }}
+            whileTap={{ scale: 0.95 }}
+            onTap={() => {
+              haptics.buttonPress()
+              achievement.trigger(
+                'Battle Mode! ⚔️',
+                'May the code be with you!',
+                '⚔️'
+              )
+              console.log('Opening battle...')
+            }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <motion.div 
+              className="text-xl w-6 text-center"
+              whileHover={{ scale: 1.2, rotate: -5 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              ⚔️
+            </motion.div>
+            <div className="text-sm font-semibold text-white flex-1">Battle</div>
+          </motion.div>
+          <motion.div 
+            className="action-card-secondary"
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 }
+            }}
+            whileHover={{ 
+              scale: 1.05, 
+              y: -2,
+              backgroundColor: "rgba(255, 255, 255, 0.08)"
+            }}
+            whileTap={{ scale: 0.95 }}
+            onTap={() => {
+              haptics.buttonPress()
+              console.log('Opening leaderboard...')
+            }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <motion.div 
+              className="text-xl w-6 text-center"
+              whileHover={{ scale: 1.2, rotate: 5 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              📊
+            </motion.div>
+            <div className="text-sm font-semibold text-white flex-1">Leaderboard</div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+      
+      {/* Achievement Notifications */}
+      <AchievementNotification />
+    </motion.div>
   )
 }

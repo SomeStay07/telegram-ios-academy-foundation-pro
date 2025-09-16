@@ -1,14 +1,16 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { lazyImport } from './utils/lazyImport'
-import { applyTelegramTheme, watchTelegramTheme } from './utils/telegram-theme'
+import { initTelegramTheme, isTelegramWebApp } from '@telegram-ios-academy/ui'
 import { initThemeSync } from './lib/tmaTheme'
 import '@telegram-ios-academy/ui/dist/tokens.css'
 import '@telegram-ios-academy/ui/dist/styles/index.css'
+import './styles/tailwind-base.css'
 import './styles.css'
 import './styles/profile-animations.css'
 import './styles/light-theme-enhancements.css'
 import './styles/theme-fix.css'
+import './styles/modern-profile.css'
 
 // Lazy import analytics and web vitals
 import('./lib/web-vitals').catch(console.error)
@@ -49,16 +51,11 @@ async function initTmaRouting(router: any) {
   tg.ready?.()
   tg.expand?.()
   
-  // Apply Telegram theme on startup
-  applyTelegramTheme()
+  // Initialize Telegram theme integration
+  initTelegramTheme()
   
   // Initialize design system theme sync
   initThemeSync(tg)
-  
-  // Watch for theme changes
-  watchTelegramTheme((newTheme) => {
-    console.log('🎨 Theme updated:', newTheme)
-  })
   
   const setBack = () => {
     const idx = (router.history as any).state.index ?? 0
