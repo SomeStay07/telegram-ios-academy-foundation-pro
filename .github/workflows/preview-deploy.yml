@@ -1,0 +1,190 @@
+name: Preview Deployment
+
+on:
+  push:
+    branches: [develop, main]
+  
+  # Allow manual deployment from any branch
+  workflow_dispatch:
+    inputs:
+      services:
+        description: 'Services to deploy (api,miniapp,bot or all)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - api
+          - miniapp  
+          - bot
+          - all
+
+jobs:
+  preview-deploy:
+    name: Deploy Preview Environment
+    runs-on: ubuntu-latest
+    
+    # Only run on push to develop/main OR manual trigger with secrets
+    if: |
+      (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main')) ||
+      (github.event_name == 'workflow_dispatch' && secrets.RAILWAY_TOKEN != '')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+          
+      - name: Install Railway CLI
+        run: |
+          curl -fsSL https://railway.app/install.sh | sh
+          echo "$HOME/.railway/bin" >> $GITHUB_PATH
+          
+      - name: Setup Railway authentication
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "⚠️ RAILWAY_TOKEN not set, skipping preview deployment"
+            exit 0
+          fi
+          railway login
+          
+      - name: Get branch name
+        id: branch
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          CLEAN_BRANCH_NAME=$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9-]/-/g')
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "clean_branch_name=$CLEAN_BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+      - name: Create/Update API Preview Service
+        if: (github.event.inputs.services == 'api' || github.event.inputs.services == 'all' || github.event_name == 'push') && env.RAILWAY_TOKEN != ''
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          SERVICE_NAME="api-preview-${{ steps.branch.outputs.clean_branch_name }}"
+          
+          # Create service if it doesn't exist
+          railway service create "$SERVICE_NAME" || true
+          railway service "$SERVICE_NAME"
+          
+          # Set environment variables
+          railway variables set \
+            NODE_ENV=preview \
+            PORT=3000 \
+            API_PUBLIC_ORIGIN="https://$SERVICE_NAME.up.railway.app" \
+            ALLOWED_ORIGINS="*" \
+            CSP_REPORT_ONLY="1"
+            
+          # Deploy
+          cd apps/api
+          railway up --detach
+          
+          echo "🔧 API Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Create/Update MiniApp Preview Service  
+        if: (github.event.inputs.services == 'miniapp' || github.event.inputs.services == 'all' || github.event_name == 'push') && env.RAILWAY_TOKEN != ''
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          SERVICE_NAME="miniapp-preview-${{ steps.branch.outputs.clean_branch_name }}"
+          API_SERVICE_NAME="api-preview-${{ steps.branch.outputs.clean_branch_name }}"
+          
+          # Create service if it doesn't exist
+          railway service create "$SERVICE_NAME" || true
+          railway service "$SERVICE_NAME"
+          
+          # Set environment variables
+          railway variables set \
+            NODE_ENV=preview \
+            PORT=5173 \
+            VITE_API_URL="https://$API_SERVICE_NAME.up.railway.app"
+            
+          # Deploy
+          cd apps/miniapp
+          railway up --detach
+          
+          echo "📱 MiniApp Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Create/Update Bot Preview Service
+        if: (github.event.inputs.services == 'bot' || github.event.inputs.services == 'all' || github.event_name == 'push') && env.RAILWAY_TOKEN != ''
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          SERVICE_NAME="bot-preview-${{ steps.branch.outputs.clean_branch_name }}"
+          API_SERVICE_NAME="api-preview-${{ steps.branch.outputs.clean_branch_name }}"
+          MINIAPP_SERVICE_NAME="miniapp-preview-${{ steps.branch.outputs.clean_branch_name }}"
+          
+          # Create service if it doesn't exist  
+          railway service create "$SERVICE_NAME" || true
+          railway service "$SERVICE_NAME"
+          
+          # Set environment variables
+          railway variables set \
+            NODE_ENV=preview \
+            PORT=3001 \
+            API_URL="https://$API_SERVICE_NAME.up.railway.app" \
+            MINIAPP_URL="https://$MINIAPP_SERVICE_NAME.up.railway.app"
+            
+          # Deploy
+          cd apps/bot
+          railway up --detach
+          
+          echo "🤖 Bot Preview: https://$SERVICE_NAME.up.railway.app" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Log deployment summary
+        if: github.event_name == 'push' && env.RAILWAY_TOKEN != ''
+        run: |
+          echo "## 🚀 Preview Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "Branch: ${{ steps.branch.outputs.branch_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "Clean branch name: ${{ steps.branch.outputs.clean_branch_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "Preview URLs available in service logs above." >> $GITHUB_STEP_SUMMARY
+
+  cleanup-preview:
+    name: Cleanup Preview Environment (Manual Only)
+    runs-on: ubuntu-latest
+    # Only run via manual workflow dispatch, no automatic cleanup
+    if: false
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Install Railway CLI
+        run: |
+          curl -fsSL https://railway.app/install.sh | sh
+          echo "$HOME/.railway/bin" >> $GITHUB_PATH
+          
+      - name: Setup Railway authentication
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "⚠️ RAILWAY_TOKEN not set, skipping preview deployment"
+            exit 0
+          fi
+          railway login
+          
+      - name: Get branch name
+        id: branch
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          CLEAN_BRANCH_NAME=$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9-]/-/g')
+          echo "clean_branch_name=$CLEAN_BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+      - name: Cleanup preview services
+        run: |
+          # Delete all preview services for this branch
+          railway service delete "api-preview-${{ steps.branch.outputs.clean_branch_name }}" --yes || true
+          railway service delete "miniapp-preview-${{ steps.branch.outputs.clean_branch_name }}" --yes || true  
+          railway service delete "bot-preview-${{ steps.branch.outputs.clean_branch_name }}" --yes || true
+          
+          echo "🧹 Cleaned up preview services for branch: ${{ steps.branch.outputs.clean_branch_name }}"

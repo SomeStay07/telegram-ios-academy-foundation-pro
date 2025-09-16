@@ -10,6 +10,7 @@ export const EnvSchema = z.object({
   ALLOWED_ORIGINS: z.string().min(1),
   CSP_REPORT_ONLY: z.string().default('1'),
   API_PUBLIC_ORIGIN: z.string().url().optional(),
+  METRICS_TOKEN: z.string().min(1, 'METRICS_TOKEN is required for securing /metrics endpoint'),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

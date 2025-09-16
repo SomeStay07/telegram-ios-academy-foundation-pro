@@ -1,0 +1,521 @@
+/* Profile Component Styles */
+@import '../components/profile/account-card.css';
+
+/* RTL Support for UI Components */
+
+/* Global RTL utilities */
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+/* CardSurface elevation effects with enhanced visual interest */
+.card-surface-base {
+  box-shadow: var(--elev-1, 
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.08)
+  );
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, 
+    var(--card) 0%, 
+    color-mix(in oklab, var(--card) 98%, var(--foreground)) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle inner glow for depth */
+.card-surface-base::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    color-mix(in oklab, var(--primary) 20%, transparent) 50%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+.card-surface-interactive:active {
+  transform: translateY(1px) scale(0.998);
+  box-shadow: var(--elev-2, 
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1)
+  );
+}
+
+.card-surface-interactive:focus-visible {
+  outline: none;
+  box-shadow: var(--elev-2, 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1)
+  ), 0 0 0 2px var(--primary);
+}
+
+/* Responsive hover support - only hover devices */
+@media (hover: hover) {
+  .card-surface-interactive:hover {
+    box-shadow: var(--elev-2, 
+      0 8px 25px rgba(0, 0, 0, 0.15),
+      0 3px 10px rgba(0, 0, 0, 0.1)
+    );
+    transform: translateY(-2px) scale(1.002);
+    border-color: color-mix(in oklab, var(--border) 70%, var(--primary));
+  }
+  
+  .card-surface-interactive:hover::before {
+    opacity: 1;
+    background: linear-gradient(90deg, 
+      transparent 0%,
+      color-mix(in oklab, var(--primary) 40%, transparent) 50%,
+      transparent 100%
+    );
+  }
+}
+
+/* Icon enhancements for cards */
+.card-icon {
+  background: linear-gradient(135deg, 
+    var(--primary) 0%, 
+    color-mix(in oklab, var(--primary) 80%, var(--foreground)) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 2px color-mix(in oklab, var(--primary) 20%, transparent));
+}
+
+/* Enhanced card sections */
+.card-section-header {
+  position: relative;
+}
+
+.card-section-header::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+  border-radius: 1px;
+}
+
+/* Premium indicator glow */
+.premium-indicator {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  animation: premium-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes premium-glow {
+  from { box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
+  to { box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); }
+}
+
+/* Logical CSS Properties for Components */
+
+/* Button */
+.button-base {
+  /* Use logical properties instead of physical */
+  padding-inline: var(--button-padding-x);
+  padding-block: var(--button-padding-y);
+  margin-inline: var(--button-margin-x);
+  margin-block: var(--button-margin-y);
+  border-inline-start: var(--button-border-start);
+  border-inline-end: var(--button-border-end);
+}
+
+/* Input */
+.input-base {
+  padding-inline: var(--input-padding-x);
+  padding-block: var(--input-padding-y);
+  text-align: start; /* Uses direction context */
+}
+
+/* Modal */
+.modal-content {
+  /* Ensure proper direction inheritance */
+  direction: inherit;
+}
+
+/* Link with external icon */
+.link-external {
+  /* Icon positioning for RTL */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.link-external[dir="rtl"] .external-icon {
+  transform: scaleX(-1); /* Flip icon in RTL */
+}
+
+/* Text content alignment */
+.text-start {
+  text-align: start;
+}
+
+.text-end {
+  text-align: end;
+}
+
+/* Flex utilities for RTL */
+.flex-start {
+  justify-content: flex-start;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+/* RTL-aware spacing */
+.space-inline-start {
+  margin-inline-start: var(--space-2);
+}
+
+.space-inline-end {
+  margin-inline-end: var(--space-2);
+}
+
+/* Tabs component RTL support */
+.tabs-list {
+  /* Use logical properties for tab navigation */
+  border-block-end: 2px solid var(--ds-border-default);
+}
+
+.tab-item {
+  border-block-end: 2px solid transparent;
+  padding-inline: var(--ds-space-3);
+  padding-block: var(--ds-space-2);
+}
+
+.tab-item[aria-selected="true"] {
+  border-block-end-color: var(--ds-border-accent);
+}
+
+/* Code block RTL support */
+.code-block {
+  /* Code should always be LTR regardless of document direction */
+  direction: ltr;
+  text-align: start;
+}
+
+/* Form elements RTL support */
+.form-field {
+  text-align: start;
+}
+
+.form-label {
+  display: block;
+  text-align: start;
+  margin-block-end: var(--ds-space-1);
+}
+
+/* Navigation elements */
+.nav-item {
+  padding-inline: var(--ds-space-2);
+  padding-block: var(--ds-space-1);
+}
+
+/* RTL-aware animations */
+@keyframes slideInStart {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInEnd {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+[dir="rtl"] .slide-in-start {
+  animation: slideInEnd 0.3s ease-out;
+}
+
+[dir="ltr"] .slide-in-start {
+  animation: slideInStart 0.3s ease-out;
+}
+
+/* Tooltip positioning for RTL */
+.tooltip {
+  direction: inherit;
+}
+
+/* Ensure icons and symbols maintain proper orientation */
+.icon-arrow-left[dir="rtl"] {
+  transform: scaleX(-1);
+}
+
+.icon-arrow-right[dir="rtl"] {
+  transform: scaleX(-1);
+}
+
+/* Breadcrumb separator for RTL */
+.breadcrumb-separator[dir="rtl"] {
+  transform: scaleX(-1);
+}
+
+/* Progress indicators */
+.progress-bar {
+  direction: ltr; /* Progress always goes left-to-right visually */
+}
+
+/* Stepper component */
+.stepper-item {
+  text-align: start;
+}
+
+.stepper-connector {
+  /* Use logical properties for connecting lines */
+  border-inline-start: 1px solid var(--ds-border-default);
+  margin-inline-start: calc(var(--stepper-indicator-size) / 2);
+  margin-block: var(--ds-space-1);
+}
+
+/* Media queries for RTL support in specific locales */
+:lang(ar), :lang(he), :lang(fa), :lang(ur) {
+  direction: rtl;
+}
+
+/* Ensure critical UI elements maintain usability in RTL */
+.focus-visible {
+  outline: 2px solid var(--ds-border-focus);
+  outline-offset: 2px;
+}
+
+/* Learning Progress Animations */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes pulse-number {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fire-glow {
+  0%, 100% {
+    background: radial-gradient(circle, rgba(255, 165, 0, 0.3) 0%, transparent 70%);
+  }
+  50% {
+    background: radial-gradient(circle, rgba(255, 69, 0, 0.4) 0%, transparent 70%);
+  }
+}
+
+@keyframes ice-shimmer {
+  0%, 100% {
+    background: linear-gradient(45deg, rgba(59, 130, 246, 0.1) 0%, transparent 50%, rgba(147, 197, 253, 0.1) 100%);
+  }
+  50% {
+    background: linear-gradient(45deg, rgba(147, 197, 253, 0.2) 0%, transparent 50%, rgba(59, 130, 246, 0.2) 100%);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 1s ease-in-out infinite;
+}
+
+.animate-pulse-number {
+  animation: pulse-number 1.5s ease-in-out infinite;
+}
+
+.animate-fire-glow {
+  animation: fire-glow 3s ease-in-out infinite;
+}
+
+.animate-ice-shimmer {
+  animation: ice-shimmer 2s ease-in-out infinite;
+}
+
+/* Progress Circle Enhancements */
+.progress-circle-track {
+  stroke: currentColor;
+  opacity: 0.1;
+}
+
+.progress-circle-fill {
+  stroke: currentColor;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease-out, stroke 0.3s ease;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+/* Skill Level Indicators */
+.skill-beginner {
+  --skill-color: #10b981;
+}
+
+.skill-intermediate {
+  --skill-color: #f59e0b;
+}
+
+.skill-advanced {
+  --skill-color: #ef4444;
+}
+
+.skill-expert {
+  --skill-color: #8b5cf6;
+}
+
+/* Activity Timeline */
+.activity-accent {
+  background-image: var(--accent-gradient);
+}
+
+/* InteractiveCard Component Styles */
+
+/* Base interactive card styles */
+.interactive-card-base {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Gradient outline overlay - hidden by default */
+.interactive-card-outline {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.interactive-card-outline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card);
+  border-radius: inherit;
+  z-index: 2;
+}
+
+/* Spotlight effect overlay */
+.interactive-card-spotlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    color-mix(in oklab, var(--accent) 8%, transparent),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Lift variant hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .interactive-card-lift:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 
+      0 8px 25px color-mix(in oklab, var(--foreground) 15%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--accent) 20%, transparent);
+  }
+  
+  .interactive-card-lift:hover .interactive-card-outline {
+    opacity: 0.7;
+  }
+}
+
+/* Glow variant hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .interactive-card-glow:hover {
+    box-shadow: 
+      0 4px 20px color-mix(in oklab, var(--accent) 25%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--accent) 30%, transparent);
+  }
+  
+  .interactive-card-glow:hover .interactive-card-outline {
+    opacity: 0.8;
+  }
+}
+
+/* Spotlight variant hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .interactive-card-spotlight:hover {
+    border-color: color-mix(in oklab, var(--border) 70%, var(--accent));
+  }
+  
+  .interactive-card-spotlight:hover .interactive-card-outline {
+    opacity: 0.6;
+  }
+  
+  .interactive-card-spotlight:hover .interactive-card-spotlight {
+    opacity: 1;
+  }
+}
+
+/* Focus states for all variants */
+.interactive-card-base:focus-visible {
+  box-shadow: 
+    0 0 0 2px var(--background),
+    0 0 0 4px var(--accent);
+}
+
+/* Active states for all variants */
+.interactive-card-base:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .interactive-card-base,
+  .interactive-card-outline,
+  .interactive-card-spotlight {
+    transition: none;
+    animation: none;
+  }
+  
+  .interactive-card-base:hover {
+    transform: none;
+  }
+  
+  .interactive-card-base:active {
+    transform: scale(0.98);
+  }
+}

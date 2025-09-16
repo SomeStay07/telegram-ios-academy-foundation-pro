@@ -8,6 +8,7 @@ import { writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join } from 'path'
 import { parseEnv } from './config/env'
 import { PrismaService } from './prisma/prisma.service'
+import { GlobalExceptionFilter } from './filters/global-exception.filter'
 
 async function bootstrap() {
   const env = parseEnv(process.env)
@@ -56,7 +57,12 @@ async function bootstrap() {
     referrerPolicy: { policy: 'no-referrer' }
   }))
   
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }))
+  app.useGlobalFilters(new GlobalExceptionFilter())
 
   // Strict CORS configuration
   app.enableCors({
@@ -93,10 +99,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api/docs', app, document)
 
-  // Health check endpoint for Railway
+  // OpenAPI JSON endpoint for Schemathesis
   const httpAdapter = app.getHttpAdapter()
-  httpAdapter.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() })
+  httpAdapter.get('/api/openapi.json', (req, res) => {
+    res.json(document)
   })
   
   // Temporary debug endpoint to check Redis URL

@@ -1,5 +1,19 @@
-providers = ["node"]
+[variables]
+NIXPACKS_NO_DEFAULT_CACHE_DIRECTORIES = "1"
+NIXPACKS_NO_DEFAULT_PROVIDERS = "1"
+
 [phases.setup]
-nixPkgs = ["nodejs_20", "pnpm"]
+nixPkgs = ["nodejs_20"]
+
 [phases.install]
-cmds = ["pnpm i --frozen-lockfile || pnpm i"]
+cmds = [
+  "corepack enable",
+  "corepack prepare pnpm@9.0.0 --activate", 
+  "pnpm i --frozen-lockfile || pnpm i"
+]
+
+[phases.build]
+cmds = ["pnpm build --filter=@telegram-ios-academy/miniapp"]
+
+[start]
+cmd = "cd apps/miniapp && pnpm start"

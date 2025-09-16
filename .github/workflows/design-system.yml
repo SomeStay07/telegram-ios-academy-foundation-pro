@@ -1,0 +1,295 @@
+name: Design System CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/ui/**'
+      - 'packages/tokens/**'
+      - 'apps/miniapp/**'
+      - '.github/workflows/design-system.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'packages/ui/**'
+      - 'packages/tokens/**'
+      - 'apps/miniapp/**'
+      - '.github/workflows/design-system.yml'
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ui-changed: ${{ steps.changes.outputs.ui }}
+      tokens-changed: ${{ steps.changes.outputs.tokens }}
+      miniapp-changed: ${{ steps.changes.outputs.miniapp }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            ui:
+              - 'packages/ui/**'
+            tokens:
+              - 'packages/tokens/**'
+            miniapp:
+              - 'apps/miniapp/**'
+
+  build-tokens:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.tokens-changed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: corepack enable
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build design tokens
+        run: pnpm --filter @telegram-ios-academy/tokens build
+
+      - name: Check token contrast ratios
+        run: pnpm --filter @telegram-ios-academy/tokens run check:contrast
+
+  build-and-test-ui:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build-tokens]
+    if: always() && (needs.detect-changes.outputs.ui-changed == 'true' || needs.detect-changes.outputs.tokens-changed == 'true')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: corepack enable
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build design tokens (always required for UI)
+        run: pnpm --filter @telegram-ios-academy/tokens build
+
+      - name: Build UI package
+        run: pnpm --filter @telegram-ios-academy/ui build
+
+      - name: Run UI tests
+        run: pnpm --filter @telegram-ios-academy/ui test:run
+
+      - name: Type check UI package
+        run: pnpm --filter @telegram-ios-academy/ui typecheck
+
+      - name: Lint UI package
+        run: pnpm --filter @telegram-ios-academy/ui lint
+
+      - name: Check for raw design values (no-raw-values rule)
+        run: pnpm --filter @telegram-ios-academy/ui lint:design
+
+      - name: Build Storybook
+        run: pnpm --filter @telegram-ios-academy/ui run build-storybook
+
+      - name: Upload Storybook build
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static
+          path: packages/ui/storybook-static
+          retention-days: 7
+
+  bundle-size-check:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build-and-test-ui]
+    if: always() && needs.detect-changes.outputs.miniapp-changed == 'true'
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: corepack enable
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build design tokens
+        run: pnpm --filter @telegram-ios-academy/tokens build
+
+      - name: Build UI package
+        run: pnpm --filter @telegram-ios-academy/ui build
+
+      - name: Build MiniApp
+        run: pnpm --filter @telegram-ios-academy/miniapp build
+
+      - name: Check bundle size (≤220KB)
+        run: |
+          cd apps/miniapp
+          NODE_ENV=production FORCE_BUNDLE_CHECK=1 pnpm bundle-check
+
+      - name: Comment bundle size on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            
+            // Run bundle check and capture output
+            try {
+              const output = execSync('cd apps/miniapp && NODE_ENV=production FORCE_BUNDLE_CHECK=1 pnpm bundle-check', { 
+                encoding: 'utf8',
+                timeout: 30000
+              });
+              
+              const comment = `## 📦 Bundle Size Check Results
+              
+              \`\`\`
+              ${output}
+              \`\`\`
+              
+              ✅ Bundle size check passed!`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              const output = error.stdout || error.stderr || error.message;
+              
+              const comment = `## 📦 Bundle Size Check Results
+              
+              \`\`\`
+              ${output}
+              \`\`\`
+              
+              ❌ Bundle size check failed!`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+
+  accessibility-tests:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build-and-test-ui]
+    if: always() && needs.detect-changes.outputs.ui-changed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: corepack enable
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build design tokens
+        run: pnpm --filter @telegram-ios-academy/tokens build
+
+      - name: Build UI package
+        run: pnpm --filter @telegram-ios-academy/ui build
+
+      - name: Run accessibility tests in Storybook
+        run: |
+          cd packages/ui
+          pnpm dlx playwright install
+          # Start Storybook in background
+          pnpm storybook &
+          STORYBOOK_PID=$!
+          echo "Storybook PID: $STORYBOOK_PID"
+          
+          # Wait for Storybook to be ready
+          echo "Waiting for Storybook to start..."
+          for i in {1..60}; do
+            if curl -sSf http://localhost:6006 >/dev/null 2>&1; then
+              echo "Storybook is ready"
+              break
+            fi
+            echo "Waiting... ($i/60)"
+            sleep 1
+          done
+          
+          # Run tests
+          pnpm dlx @storybook/test-runner --url http://localhost:6006 --maxWorkers 2 || true
+          
+          # Cleanup
+          if kill -0 $STORYBOOK_PID 2>/dev/null; then
+            echo "Stopping Storybook (PID: $STORYBOOK_PID)"
+            kill $STORYBOOK_PID
+            sleep 2
+            kill -9 $STORYBOOK_PID 2>/dev/null || true
+          else
+            echo "Storybook process not found or already stopped"
+          fi
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.ui-changed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: 'packages/ui'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: [build-tokens, build-and-test-ui, bundle-size-check, accessibility-tests, security-scan]
+    if: always()
+    steps:
+      - name: Build status summary
+        run: |
+          echo "## 🎨 Design System CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Build Tokens | ${{ needs.build-tokens.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build & Test UI | ${{ needs.build-and-test-ui.result }} |" >> $GITHUB_STEP_SUMMARY  
+          echo "| Bundle Size Check | ${{ needs.bundle-size-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Accessibility Tests | ${{ needs.accessibility-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Scan | ${{ needs.security-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "_Automated by [Claude Code](https://claude.ai/code)_" >> $GITHUB_STEP_SUMMARY

@@ -9,6 +9,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
+    "@types/minimatch": "^6.0.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {

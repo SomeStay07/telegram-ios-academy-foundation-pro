@@ -1,17 +1,22 @@
 [phases.setup]
 nixPkgs = ['nodejs_20']
 
+[variables]
+NIXPACKS_NODE_VERSION = "20"
+
 [phases.install]
 cmds = [
   'corepack enable',
   'corepack prepare pnpm@9.0.0 --activate',
-  'pnpm install'
+  'pnpm install --frozen-lockfile'
 ]
 
 [phases.build]
 cmds = [
-  'pnpm build'
+  'pnpm --filter @telegram-ios-academy/tokens build',
+  'pnpm --filter @telegram-ios-academy/ui build',
+  'pnpm --filter @telegram-ios-academy/miniapp build'
 ]
 
 [start]
-cmd = 'pnpm start'
+cmd = 'pnpm --filter @telegram-ios-academy/miniapp start'
