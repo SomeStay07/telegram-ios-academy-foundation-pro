@@ -1,0 +1,267 @@
+/* Modern Container Queries Implementation - 2024 Best Practices */
+
+/* === PROFILE LAYOUT CONTAINER QUERIES === */
+
+/* Profile Info Section */
+.profile-info-full {
+  container-type: inline-size;
+  width: 100%;
+  flex: 1;
+}
+
+/* Name and Username Line Container */
+.name-username-line {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-container-sm);
+  overflow: visible;
+  padding: var(--space-container-xs);
+}
+
+/* Container breakpoint: Stack to row layout */
+@container (min-width: 300px) {
+  .name-username-line {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-container-md);
+  }
+}
+
+@container (min-width: 400px) {
+  .name-username-line {
+    gap: var(--space-container-lg);
+  }
+}
+
+/* Compact Profile Card Container */
+.compact-profile-card {
+  container-type: inline-size;
+  width: 100%;
+  overflow: visible;
+  padding: var(--space-container-xs);
+}
+
+@container (min-width: 350px) {
+  .compact-profile-card {
+    padding: var(--space-container-sm);
+  }
+}
+
+/* === XP PROGRESS SECTION CONTAINER QUERIES === */
+
+.xp-progress-enhanced {
+  container-type: inline-size;
+  width: 100%;
+  padding: var(--space-container-md) 0;
+}
+
+.xp-stats-grid {
+  container-type: inline-size;
+  display: grid;
+  gap: var(--space-container-md);
+  
+  /* Mobile first: single column */
+  grid-template-columns: 1fr;
+  margin: var(--space-container-sm) 0;
+}
+
+/* Container breakpoints for XP grid */
+@container (min-width: 400px) {
+  .xp-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-container-lg);
+  }
+}
+
+@container (min-width: 600px) {
+  .xp-stats-grid {
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-container-xl);
+  }
+}
+
+/* XP Cards Container Queries */
+.xp-card-main,
+.xp-card-next {
+  container-type: inline-size;
+  padding: var(--space-container-md);
+  border-radius: clamp(0.75rem, 2cqw, 1.25rem);
+  margin: var(--space-container-xs);
+}
+
+@container (min-width: 200px) {
+  .xp-card-main,
+  .xp-card-next {
+    padding: var(--space-container-lg);
+    margin: var(--space-container-sm);
+  }
+}
+
+@container (min-width: 300px) {
+  .xp-card-main,
+  .xp-card-next {
+    padding: var(--space-container-xl);
+    border-radius: clamp(1rem, 3cqw, 1.5rem);
+  }
+}
+
+/* === ADAPTIVE COMPONENTS === */
+
+/* Username Badge with Container Queries */
+.username-badge-modern {
+  container-type: inline-size;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  
+  /* Base mobile sizing */
+  padding: var(--space-container-xs) var(--space-container-sm);
+  margin: var(--space-container-xs);
+  border-radius: clamp(0.5rem, 1.5cqw, 0.75rem);
+  font-size: var(--text-container-sm);
+}
+
+@container (min-width: 150px) {
+  .username-badge-modern {
+    padding: var(--space-container-sm) var(--space-container-md);
+    font-size: var(--text-container-base);
+  }
+}
+
+@container (min-width: 200px) {
+  .username-badge-modern {
+    padding: var(--space-container-md) var(--space-container-lg);
+    border-radius: clamp(0.75rem, 2cqw, 1rem);
+    font-size: var(--text-container-lg);
+  }
+}
+
+/* Level Badge Container Queries */
+.level-badge-inside {
+  container-type: inline-size;
+  
+  /* Base size */
+  width: clamp(24px, 6cqw, 36px);
+  height: clamp(24px, 6cqw, 36px);
+  margin: var(--space-container-xs);
+}
+
+@container (min-width: 80px) {
+  .level-badge-inside {
+    width: clamp(28px, 7cqw, 42px);
+    height: clamp(28px, 7cqw, 42px);
+  }
+}
+
+@container (min-width: 120px) {
+  .level-badge-inside {
+    width: clamp(32px, 8cqw, 48px);
+    height: clamp(32px, 8cqw, 48px);
+  }
+}
+
+/* === LAYOUT OPTIMIZATION === */
+
+/* Hero Section Combined with Smart Container Logic */
+.hero-section-combined {
+  container-type: inline-size;
+  
+  /* Base layout */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-container-md);
+}
+
+@container (min-width: 768px) {
+  .hero-section-combined {
+    /* Better spacing for larger containers */
+    gap: var(--space-container-xl);
+    padding: var(--space-container-xl);
+  }
+}
+
+/* Profile Header Layout Adaptation */
+@container (min-width: 500px) {
+  .profile-header-premium {
+    /* Change to horizontal layout */
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+  
+  .profile-info-full {
+    margin-left: var(--space-container-lg);
+  }
+}
+
+@container (min-width: 650px) {
+  .profile-header-premium {
+    gap: var(--space-container-2xl) !important;
+  }
+  
+  .avatar-wrapper-enhanced {
+    /* Larger avatar for spacious layouts */
+    width: clamp(120px, 18cqw, 140px) !important;
+    height: clamp(120px, 18cqw, 140px) !important;
+  }
+}
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+
+/* Use CSS containment for isolated components */
+.username-badge-modern,
+.level-badge-inside,
+.xp-card-main,
+.xp-card-next {
+  contain: layout style paint;
+}
+
+/* Optimize container query recalculations */
+.hero-section-combined,
+.profile-header-premium,
+.xp-progress-enhanced {
+  contain: layout;
+}
+
+/* === FALLBACKS FOR OLDER BROWSERS === */
+
+/* Media query fallbacks for browsers without container query support */
+@supports not (container-type: inline-size) {
+  .name-username-line {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  @media (min-width: 500px) {
+    .profile-header-premium {
+      flex-direction: row !important;
+    }
+  }
+  
+  @media (min-width: 400px) {
+    .xp-stats-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+/* === ACCESSIBILITY ENHANCEMENTS === */
+
+/* Ensure proper focus management with container queries */
+@container (min-width: 400px) {
+  .username-badge-modern:focus,
+  .level-badge-inside:focus {
+    outline-offset: 4px;
+  }
+}
+
+/* Reduce animations on small containers to prevent performance issues */
+@container (max-width: 300px) {
+  .username-badge-modern,
+  .level-badge-inside {
+    transition-duration: 0.2s;
+  }
+}

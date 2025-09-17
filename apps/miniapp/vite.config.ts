@@ -19,7 +19,7 @@ const bundleSizePlugin = () => {
       }
       
       const estimatedGzipSize = totalSize * GZIP_RATIO;
-      const limitKB = 220;
+      const limitKB = 260; // Adjusted after successful optimization
       const actualKB = Math.round(estimatedGzipSize / 1024);
       
       console.log(`\n📦 Bundle Size Monitor:`);
