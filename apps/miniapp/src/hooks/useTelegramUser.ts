@@ -62,6 +62,14 @@ export function useTelegramUser(): TelegramUserData {
   })
 
   useEffect(() => {
+    console.log('🔍 Telegram WebApp check:', {
+      telegramExists: !!window?.Telegram,
+      webAppExists: !!window?.Telegram?.WebApp,
+      initDataExists: !!window?.Telegram?.WebApp?.initDataUnsafe,
+      userExists: !!window?.Telegram?.WebApp?.initDataUnsafe?.user,
+      version: window?.Telegram?.WebApp?.version
+    })
+
     const webApp = window?.Telegram?.WebApp
     const telegramUser = webApp?.initDataUnsafe?.user
 
@@ -94,29 +102,52 @@ export function useTelegramUser(): TelegramUserData {
         isPremium: telegramUser.is_premium
       })
     } else {
-      // Fallback for development or missing data
-      const isDevelopment = import.meta.env.DEV || process.env.NODE_ENV === 'development'
-      
-      if (isDevelopment) {
-        // Provide development fallback after short delay
-        const timer = setTimeout(() => {
+      // Try again after delay in case Telegram WebApp is still loading
+      const timer = setTimeout(() => {
+        const webAppRetry = window?.Telegram?.WebApp
+        const telegramUserRetry = webAppRetry?.initDataUnsafe?.user
+        
+        if (telegramUserRetry) {
+          // Real Telegram user data found on retry
+          const fullName = [telegramUserRetry.first_name, telegramUserRetry.last_name]
+            .filter(Boolean)
+            .join(' ') || telegramUserRetry.username || 'User'
+
           setUser({
-            id: 123456789,
-            username: 'developer',
-            firstName: 'Local',
+            id: telegramUserRetry.id,
+            username: telegramUserRetry.username,
+            firstName: telegramUserRetry.first_name,
+            lastName: telegramUserRetry.last_name,
+            fullName,
+            languageCode: telegramUserRetry.language_code || 'en',
+            avatarUrl: telegramUserRetry.photo_url,
+            isPremium: telegramUserRetry.is_premium || false,
+            isAvailable: true
+          })
+
+          console.log('✅ Telegram user loaded on retry:', {
+            id: telegramUserRetry.id,
+            name: fullName,
+            username: telegramUserRetry.username
+          })
+        } else {
+          // Final fallback - show generic user
+          console.log('❌ No Telegram user data available, using fallback')
+          setUser({
+            id: Date.now(),
+            username: 'user',
+            firstName: 'iOS',
             lastName: 'Developer',
-            fullName: 'Local Developer',
+            fullName: 'iOS Developer',
             languageCode: 'en',
             avatarUrl: undefined,
             isPremium: false,
-            isAvailable: true // Available in dev mode
+            isAvailable: true // Show UI with fallback data
           })
-        }, 100)
+        }
+      }, 500) // Wait 500ms for Telegram WebApp to load
 
-        return () => clearTimeout(timer)
-      } else {
-        console.log('❌ No Telegram user data available')
-      }
+      return () => clearTimeout(timer)
     }
   }, [])
 
