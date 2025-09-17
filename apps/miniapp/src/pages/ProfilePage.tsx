@@ -117,21 +117,39 @@ export function ProfilePage() {
 
   // Update user data with Telegram information
   useEffect(() => {
+    console.log('🔍 ProfilePage useEffect triggered:', {
+      telegramUser: {
+        isAvailable: telegramUser.isAvailable,
+        firstName: telegramUser.firstName,
+        lastName: telegramUser.lastName,
+        username: telegramUser.username
+      }
+    })
+    
     if (telegramUser.isAvailable) {
-      setUserData(prev => ({
-        ...prev,
+      const newUserData = {
+        ...userData,
         id: telegramUser.id,
         firstName: telegramUser.firstName,
         lastName: telegramUser.lastName,
         username: telegramUser.username,
         avatar: getAvatarUrl(telegramUser)
-      }))
+      }
+      
+      console.log('🔄 Updating profile data:', {
+        before: { firstName: userData.firstName, lastName: userData.lastName, username: userData.username },
+        after: { firstName: newUserData.firstName, lastName: newUserData.lastName, username: newUserData.username }
+      })
+      
+      setUserData(newUserData)
       
       console.log('🔄 Updated profile with Telegram data:', {
         name: getFullName(telegramUser),
         username: getDisplayUsername(telegramUser),
         isPremium: telegramUser.isPremium
       })
+    } else {
+      console.log('⚠️ Telegram user not available, using mock data')
     }
   }, [telegramUser, setUserData])
 

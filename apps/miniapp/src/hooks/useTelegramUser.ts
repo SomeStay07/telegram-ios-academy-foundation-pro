@@ -48,27 +48,13 @@ export interface ProcessedTelegramUser {
 }
 
 export function useTelegramUser(): ProcessedTelegramUser {
-  const [telegramUser, setTelegramUser] = useState<ProcessedTelegramUser>({
-    id: 0,
-    firstName: 'Name',
-    lastName: 'Username', 
-    username: 'developer',
-    avatar: '',
-    isPremium: false,
-    languageCode: 'en',
-    isAvailable: false
-  })
-
-  useEffect(() => {
-    const webApp = window.Telegram?.WebApp
-    
-    // Check for development override via URL params
+  const [telegramUser, setTelegramUser] = useState<ProcessedTelegramUser>(() => {
+    // Проверяем параметры URL сразу при инициализации
     const urlParams = new URLSearchParams(window.location.search)
     const testTelegram = urlParams.get('test_telegram') === 'true'
     
     if (testTelegram) {
-      // Fake Telegram data for testing
-      const fakeUser: ProcessedTelegramUser = {
+      return {
         id: 12345678,
         firstName: 'Тимур',
         lastName: 'Цебердаев',
@@ -78,18 +64,31 @@ export function useTelegramUser(): ProcessedTelegramUser {
         languageCode: 'ru',
         isAvailable: true
       }
-      
-      setTelegramUser(fakeUser)
-      
-      console.log('🧪 Test Telegram user data loaded:', {
-        id: fakeUser.id,
-        name: `${fakeUser.firstName} ${fakeUser.lastName}`,
-        username: fakeUser.username,
-        isPremium: fakeUser.isPremium,
-        hasAvatar: !!fakeUser.avatar
-      })
+    }
+    
+    return {
+      id: 0,
+      firstName: 'Name',
+      lastName: 'Username', 
+      username: 'developer',
+      avatar: '',
+      isPremium: false,
+      languageCode: 'en',
+      isAvailable: false
+    }
+  })
+
+  useEffect(() => {
+    // Если уже инициализированы с test_telegram, не нужно ничего делать
+    const urlParams = new URLSearchParams(window.location.search)
+    const testTelegram = urlParams.get('test_telegram') === 'true'
+    
+    if (testTelegram) {
+      console.log('🧪 Test mode already initialized via useState')
       return
     }
+    
+    const webApp = window.Telegram?.WebApp
     
     if (webApp?.initDataUnsafe?.user) {
       const user = webApp.initDataUnsafe.user
@@ -117,12 +116,6 @@ export function useTelegramUser(): ProcessedTelegramUser {
       })
     } else {
       console.log('📱 Running outside Telegram WebApp - using mock data')
-      
-      // Fallback для разработки
-      setTelegramUser(prev => ({
-        ...prev,
-        isAvailable: false
-      }))
     }
   }, [])
 
