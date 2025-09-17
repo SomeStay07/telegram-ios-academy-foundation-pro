@@ -1,0 +1,64 @@
+/* StatsSummary Component Styles */
+.summaryCard {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-gaming);
+  min-height: var(--touch-target-comfortable);
+}
+
+.summaryCard:hover {
+  transform: scale(1.02);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: var(--shadow-glow-primary);
+}
+
+.summaryContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.summaryIcon {
+  font-size: var(--text-3xl);
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summaryText {
+  flex: 1;
+  min-width: 0;
+}
+
+.summaryTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-1) 0;
+  font-family: var(--font-gaming);
+  line-height: var(--leading-tight);
+}
+
+.summaryDescription {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .summaryIcon {
+    animation: none !important;
+  }
+  
+  .summaryCard:hover {
+    transform: none;
+  }
+}

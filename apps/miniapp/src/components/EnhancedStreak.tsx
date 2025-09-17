@@ -162,16 +162,17 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
               {day.completed && (
                 <motion.div
                   className="completion-indicator"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
                   transition={{ 
                     delay: 0.1 * index + 0.7,
                     type: "spring",
-                    stiffness: 400
+                    stiffness: 400,
+                    damping: 10
                   }}
                   aria-hidden="true"
                 >
-                  ✓
+                  <span className="check-icon">✨</span>
                 </motion.div>
               )}
               

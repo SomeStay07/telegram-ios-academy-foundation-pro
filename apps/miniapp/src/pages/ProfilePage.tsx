@@ -10,7 +10,7 @@ import { AchievementNotification, useAchievement } from '../components/Achieveme
 import { DraggableStats } from '../components/DraggableStats'
 import { ProfileHero } from '../components/profile/ProfileHero'
 import { EnhancedStreak } from '../components/EnhancedStreak'
-import { EnhancedStats } from '../components/EnhancedStats'
+import { EnhancedStats } from '../components/stats'
 
 // Animation constants for performance and maintainability
 const ANIMATION_CONSTANTS = {
@@ -231,23 +231,10 @@ export function ProfilePage() {
 
       {/* Show content - always display, either with real Telegram data or fallback */}
       {(telegramUser.isAvailable || telegramUser.id > 0) && (
-        <>
-          {/* Elegant Divider Section */}
-          <motion.div 
-            className="px-4 py-2"
-            variants={itemVariants}
-          >
-            <motion.div 
-              className="elegant-divider"
-              initial={{ scaleX: 0, opacity: 0 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
-            />
-          </motion.div>
-
+        <div className="enhanced-sections-container">
           {/* Enhanced Streak Section */}
           <motion.div 
-            className="enhanced-streak-section mb-8"
+            className="enhanced-streak-section"
             variants={itemVariants}
           >
             <EnhancedStreak 
@@ -258,7 +245,7 @@ export function ProfilePage() {
 
           {/* Enhanced Statistics Section */}
           <motion.div 
-            className="enhanced-stats-section mb-8"
+            className="enhanced-stats-section"
             variants={itemVariants}
           >
             <EnhancedStats userData={userData} />
@@ -363,7 +350,7 @@ export function ProfilePage() {
               </div>
             </div>
           </motion.div>
-        </>
+        </div>
       )}
       
 
