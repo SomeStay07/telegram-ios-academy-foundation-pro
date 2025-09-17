@@ -24,38 +24,52 @@
     crossorigin="anonymous"
   ></script>
   
-  <!-- Alternative CDN for Telegram WebApp -->
+  <!-- Enhanced Telegram WebApp Integration -->
   <script>
-    // If first script fails, try alternative loading
-    setTimeout(() => {
-      if (!window.Telegram && !(window as any).TelegramWebApp) {
-        console.log('🔄 Trying alternative Telegram WebApp loading...')
+    // Wait for Telegram WebApp to load and initialize
+    function initializeTelegramWebApp() {
+      return new Promise((resolve) => {
+        // Check multiple times for Telegram WebApp availability
+        let attempts = 0
+        const maxAttempts = 10
         
-        // Create mock Telegram object for WebView environments
-        if ((window as any).TelegramWebviewProxy) {
-          console.log('🔧 Creating mock Telegram WebApp for WebView')
-          window.Telegram = {
-            WebApp: {
-              ready: () => console.log('📱 Mock WebApp ready'),
-              expand: () => console.log('📱 Mock WebApp expand'),
-              initData: '',
-              initDataUnsafe: {
-                user: {
-                  id: 999888777,
-                  first_name: 'Telegram',
-                  last_name: 'Desktop User',
-                  username: 'tg_desktop',
-                  language_code: 'en'
-                }
-              },
-              platform: 'web',
-              version: '7.0'
-            }
+        const checkTelegram = () => {
+          attempts++
+          console.log(`🔍 Checking for Telegram WebApp (attempt ${attempts})`)
+          
+          if (window.Telegram?.WebApp) {
+            console.log('✅ Telegram WebApp found!')
+            const webApp = window.Telegram.WebApp
+            
+            // Initialize WebApp
+            webApp.ready()
+            webApp.expand()
+            
+            console.log('📱 Telegram WebApp Data:', {
+              initData: webApp.initData,
+              initDataUnsafe: webApp.initDataUnsafe,
+              user: webApp.initDataUnsafe?.user,
+              platform: webApp.platform,
+              version: webApp.version,
+              colorScheme: webApp.colorScheme
+            })
+            
+            resolve(webApp)
+          } else if (attempts < maxAttempts) {
+            setTimeout(checkTelegram, 500)
+          } else {
+            console.log('❌ Telegram WebApp not available after multiple attempts')
+            console.log('🔍 Available window properties:', Object.keys(window).filter(k => k.toLowerCase().includes('telegram')))
+            resolve(null)
           }
-          console.log('✅ Mock Telegram WebApp created for Desktop')
         }
-      }
-    }, 1000)
+        
+        checkTelegram()
+      })
+    }
+    
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', initializeTelegramWebApp)
   </script>
   
   <!-- Fallback Script Loader -->
