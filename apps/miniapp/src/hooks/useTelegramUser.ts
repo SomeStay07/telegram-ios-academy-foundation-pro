@@ -99,6 +99,16 @@ export function useTelegramUser(): ProcessedTelegramUser {
         console.log('❌ No user data in initDataUnsafe')
         console.log('🔍 initDataUnsafe contents:', tg.initDataUnsafe)
         console.log('🔍 Raw initData:', tg.initData)
+        console.log('🔍 Raw initData length:', tg.initData?.length || 0)
+        
+        // Проверяем, есть ли хотя бы initData
+        if (tg.initData && tg.initData.length > 0) {
+          console.log('⚠️ InitData exists but no user object - user may need to authorize bot')
+          console.log('💡 User needs to start the bot first: /start in bot chat')
+        } else {
+          console.log('❌ No initData at all - not opened from Telegram WebApp')
+        }
+        
         return false
       }
 

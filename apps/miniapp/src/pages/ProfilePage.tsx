@@ -229,155 +229,233 @@ export function ProfilePage() {
       initial="hidden"
       animate="visible"
     >
-      <ProfileHero 
-        userData={userData}
-        currentRank={currentRank}
-        nextRank={nextRank}
-        progressPercentage={progressPercentage}
-        isMaxRank={isMaxRank}
-        animationConstants={ANIMATION_CONSTANTS}
-      />
-
-
-      {/* Elegant Divider Section */}
-      <motion.div 
-        className="px-4 py-2"
-        variants={itemVariants}
-      >
-        <motion.div 
-          className="elegant-divider"
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
+      {/* Проверяем есть ли реальные данные пользователя */}
+      {telegramUser.isAvailable && telegramUser.id > 0 ? (
+        <ProfileHero 
+          userData={userData}
+          currentRank={currentRank}
+          nextRank={nextRank}
+          progressPercentage={progressPercentage}
+          isMaxRank={isMaxRank}
+          animationConstants={ANIMATION_CONSTANTS}
         />
-      </motion.div>
-
-      {/* Comprehensive Stats Section */}
-      <motion.div 
-        className="draggable-stats-container"
-        variants={itemVariants}
-      >
+      ) : (
+        // Показываем сообщение об авторизации
         <motion.div 
-          className="mb-4"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
+          className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          <h3 className="text-sm text-white/70 font-medium mb-2">
-            📊 Performance Stats
-          </h3>
-          <p className="text-xs text-white/50">Drag to reorder • Tap for details</p>
-        </motion.div>
-        <DraggableStats initialStats={[
-          { id: 'streak', icon: '🔥', label: 'Day Streak', value: userData.streak, gradient: true },
-          { id: 'rank', icon: '🏅', label: 'Global Rank', value: `#${userData.globalRank.toLocaleString()}` },
-          { id: 'challenges', icon: '🎯', label: 'Challenges', value: userData.challengesCompleted },
-          { id: 'battles', icon: '🥊', label: 'Battles Won', value: userData.battlesWon },
-          { id: 'achievements', icon: '🌟', label: 'Achievements', value: userData.achievements },
-          { id: 'weekly', icon: '📅', label: 'Weekly XP', value: userData.weeklyXP.toLocaleString() }
-        ]} />
-      </motion.div>
-
-
-      {/* Quick Actions - Responsive */}
-      <motion.div 
-        className="actions-section-responsive"
-        variants={itemVariants}
-      >
-        <div className="actions-grid">
           <motion.div 
-            className="action-card-primary"
-            whileHover={{ 
-              scale: 1.02, 
-              y: -2,
-              boxShadow: "0 12px 40px rgba(0, 122, 255, 0.4)"
+            className="text-6xl mb-6"
+            animate={{ 
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0]
             }}
-            whileTap={{ scale: ANIMATION_CONSTANTS.SCALE.TAP }}
-            onTap={() => {
-              haptics.buttonPress()
-              achievement.trigger(
-                'Challenge Started! 🚀',
-                'Good luck with your coding challenge!',
-                '🎯'
-              )
-              console.log('Starting challenge...')
+            transition={{ 
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
             }}
-            transition={{ type: "spring", stiffness: 300 }}
           >
-            <motion.div 
-              className="action-icon-responsive"
-              whileHover={{ scale: 1.2, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              🚀
-            </motion.div>
-            <div className="action-text-responsive">Start Challenge</div>
+            🔐
           </motion.div>
           
-          <div className="secondary-actions-row">
+          <motion.h2 
+            className="text-2xl font-bold text-white mb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Authorization Required
+          </motion.h2>
+          
+          <motion.p 
+            className="text-white/70 mb-6 max-w-md leading-relaxed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            To access your profile, please start the bot first by sending <strong>/start</strong> in the bot chat, then reopen this app.
+          </motion.p>
+          
+          <motion.div 
+            className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4 mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.7 }}
+          >
+            <p className="text-blue-200 text-sm">
+              💡 <strong>Steps:</strong><br/>
+              1. Go back to bot chat<br/>
+              2. Send /start command<br/>
+              3. Return to this app
+            </p>
+          </motion.div>
+          
+          <motion.button
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9 }}
+            onClick={() => {
+              if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.close()
+              }
+            }}
+          >
+            Go to Bot Chat
+          </motion.button>
+        </motion.div>
+      )}
+
+
+      {/* Показываем остальной контент только если авторизованы */}
+      {telegramUser.isAvailable && telegramUser.id > 0 && (
+        <>
+          {/* Elegant Divider Section */}
+          <motion.div 
+            className="px-4 py-2"
+            variants={itemVariants}
+          >
             <motion.div 
-              className="action-card-secondary"
-              variants={{
-                hidden: { opacity: 0, x: -20 },
-                visible: { opacity: 1, x: 0 }
-              }}
-              whileHover={{ 
-                scale: 1.05, 
-                y: -2,
-                backgroundColor: "rgba(255, 255, 255, 0.08)"
-              }}
-              whileTap={{ scale: 0.95 }}
-              onTap={() => {
-                haptics.buttonPress()
-                achievement.trigger(
-                  'Battle Mode! ⚔️',
-                  'May the code be with you!',
-                  '⚔️'
-                )
-                console.log('Opening battle...')
-              }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <motion.div 
-                className="action-icon-responsive"
-                whileHover={{ scale: 1.2, rotate: -5 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                ⚔️
-              </motion.div>
-              <div className="action-text-responsive">Battle</div>
-            </motion.div>
-            
+              className="elegant-divider"
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
+            />
+          </motion.div>
+
+          {/* Comprehensive Stats Section */}
+          <motion.div 
+            className="draggable-stats-container"
+            variants={itemVariants}
+          >
             <motion.div 
-              className="action-card-secondary"
-              variants={{
-                hidden: { opacity: 0, x: 20 },
-                visible: { opacity: 1, x: 0 }
-              }}
-              whileHover={{ 
-                scale: 1.05, 
-                y: -2,
-                backgroundColor: "rgba(255, 255, 255, 0.08)"
-              }}
-              whileTap={{ scale: 0.95 }}
-              onTap={() => {
-                haptics.buttonPress()
-                console.log('Opening leaderboard...')
-              }}
-              transition={{ type: "spring", stiffness: 300 }}
+              className="mb-4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
             >
-              <motion.div 
-                className="action-icon-responsive"
-                whileHover={{ scale: 1.2, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                📊
-              </motion.div>
-              <div className="action-text-responsive">Leaderboard</div>
+              <h3 className="text-sm text-white/70 font-medium mb-2">
+                📊 Performance Stats
+              </h3>
+              <p className="text-xs text-white/50">Drag to reorder • Tap for details</p>
             </motion.div>
-          </div>
-        </div>
-      </motion.div>
+            <DraggableStats initialStats={[
+              { id: 'streak', icon: '🔥', label: 'Day Streak', value: userData.streak, gradient: true },
+              { id: 'rank', icon: '🏅', label: 'Global Rank', value: `#${userData.globalRank.toLocaleString()}` },
+              { id: 'challenges', icon: '🎯', label: 'Challenges', value: userData.challengesCompleted },
+              { id: 'battles', icon: '🥊', label: 'Battles Won', value: userData.battlesWon },
+              { id: 'achievements', icon: '🌟', label: 'Achievements', value: userData.achievements },
+              { id: 'weekly', icon: '📅', label: 'Weekly XP', value: userData.weeklyXP.toLocaleString() }
+            ]} />
+          </motion.div>
+
+          {/* Quick Actions - Responsive */}
+          <motion.div 
+            className="actions-section-responsive"
+            variants={itemVariants}
+          >
+            <div className="actions-grid">
+              <motion.div 
+                className="action-card-primary"
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -2,
+                  boxShadow: "0 12px 40px rgba(0, 122, 255, 0.4)"
+                }}
+                whileTap={{ scale: ANIMATION_CONSTANTS.SCALE.TAP }}
+                onTap={() => {
+                  haptics.buttonPress()
+                  achievement.trigger(
+                    'Challenge Started! 🚀',
+                    'Good luck with your coding challenge!',
+                    '🎯'
+                  )
+                  console.log('Starting challenge...')
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <motion.div 
+                  className="action-icon-responsive"
+                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  🚀
+                </motion.div>
+                <div className="action-text-responsive">Start Challenge</div>
+              </motion.div>
+              
+              <div className="secondary-actions-row">
+                <motion.div 
+                  className="action-card-secondary"
+                  variants={{
+                    hidden: { opacity: 0, x: -20 },
+                    visible: { opacity: 1, x: 0 }
+                  }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -2,
+                    backgroundColor: "rgba(255, 255, 255, 0.08)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  onTap={() => {
+                    haptics.buttonPress()
+                    achievement.trigger(
+                      'Battle Mode! ⚔️',
+                      'May the code be with you!',
+                      '⚔️'
+                    )
+                    console.log('Opening battle...')
+                  }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <motion.div 
+                    className="action-icon-responsive"
+                    whileHover={{ scale: 1.2, rotate: -5 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    ⚔️
+                  </motion.div>
+                  <div className="action-text-responsive">Battle</div>
+                </motion.div>
+                
+                <motion.div 
+                  className="action-card-secondary"
+                  variants={{
+                    hidden: { opacity: 0, x: 20 },
+                    visible: { opacity: 1, x: 0 }
+                  }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -2,
+                    backgroundColor: "rgba(255, 255, 255, 0.08)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  onTap={() => {
+                    haptics.buttonPress()
+                    console.log('Opening leaderboard...')
+                  }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <motion.div 
+                    className="action-icon-responsive"
+                    whileHover={{ scale: 1.2, rotate: 5 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    📊
+                  </motion.div>
+                  <div className="action-text-responsive">Leaderboard</div>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
       
 
       {/* Achievement Notifications */}
