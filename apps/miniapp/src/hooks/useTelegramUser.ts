@@ -62,6 +62,35 @@ export function useTelegramUser(): ProcessedTelegramUser {
   useEffect(() => {
     const webApp = window.Telegram?.WebApp
     
+    // Check for development override via URL params
+    const urlParams = new URLSearchParams(window.location.search)
+    const testTelegram = urlParams.get('test_telegram') === 'true'
+    
+    if (testTelegram) {
+      // Fake Telegram data for testing
+      const fakeUser: ProcessedTelegramUser = {
+        id: 12345678,
+        firstName: 'Тимур',
+        lastName: 'Цебердаев',
+        username: 'timur_dev',
+        avatar: '',
+        isPremium: true,
+        languageCode: 'ru',
+        isAvailable: true
+      }
+      
+      setTelegramUser(fakeUser)
+      
+      console.log('🧪 Test Telegram user data loaded:', {
+        id: fakeUser.id,
+        name: `${fakeUser.firstName} ${fakeUser.lastName}`,
+        username: fakeUser.username,
+        isPremium: fakeUser.isPremium,
+        hasAvatar: !!fakeUser.avatar
+      })
+      return
+    }
+    
     if (webApp?.initDataUnsafe?.user) {
       const user = webApp.initDataUnsafe.user
       
