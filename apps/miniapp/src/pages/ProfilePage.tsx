@@ -5,6 +5,7 @@ import { getUserData, initializeTelegramWebApp, setTelegramMainButton } from '..
 import { getRankByXP, getNextRank, getRankProgress, getXPToNextRank } from '../lib/rankSystem'
 import { userDataAtom } from '../store/profileAtoms'
 import { useHaptics } from '../lib/haptics'
+import { useTelegramUser, getAvatarUrl, getFullName, getDisplayUsername } from '../hooks/useTelegramUser'
 import { AchievementNotification, useAchievement } from '../components/AchievementNotification'
 import { DraggableStats } from '../components/DraggableStats'
 import { ProfileHero } from '../components/profile/ProfileHero'
@@ -91,6 +92,7 @@ declare global {
 
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
+  const telegramUser = useTelegramUser()
   const haptics = useHaptics()
   const achievement = useAchievement()
 
@@ -112,6 +114,26 @@ export function ProfilePage() {
       progressPercentage
     }
   }, [userData.totalXP])
+
+  // Update user data with Telegram information
+  useEffect(() => {
+    if (telegramUser.isAvailable) {
+      setUserData(prev => ({
+        ...prev,
+        id: telegramUser.id,
+        firstName: telegramUser.firstName,
+        lastName: telegramUser.lastName,
+        username: telegramUser.username,
+        avatar: getAvatarUrl(telegramUser)
+      }))
+      
+      console.log('🔄 Updated profile with Telegram data:', {
+        name: getFullName(telegramUser),
+        username: getDisplayUsername(telegramUser),
+        isPremium: telegramUser.isPremium
+      })
+    }
+  }, [telegramUser, setUserData])
 
   const { currentRank, nextRank, isMaxRank, progressPercentage, xpToNext } = rankData
 
