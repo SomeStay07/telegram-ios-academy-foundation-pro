@@ -175,18 +175,26 @@ export function useTelegramUser(): ProcessedTelegramUser {
         url: window.location.href
       })
       
-      // Если мы внутри Telegram, но данных нет - показываем специальное сообщение
-      if (isInTelegram) {
-        console.log('⚠️ App is running in Telegram but user data is not available')
+      // Проверяем WebView Proxy (Telegram Desktop)
+      const hasWebViewProxy = !!(window as any).TelegramWebviewProxy
+      
+      if (isInTelegram || hasWebViewProxy) {
+        console.log('⚠️ App is running in Telegram context but WebApp API is not available')
+        console.log('🔍 This usually means:')
+        console.log('  1. URL not registered as Web App in BotFather')
+        console.log('  2. Using WebView instead of proper WebApp')
+        console.log('  3. Telegram Desktop limitations')
+        
+        // Для Telegram Desktop WebView используем fallback данные
         setTelegramUser({
-          id: 0,
+          id: 999888777,
           firstName: 'Telegram',
-          lastName: 'User',
-          username: 'tg_user',
+          lastName: 'Desktop User',
+          username: 'tg_desktop',
           avatar: '',
           isPremium: false,
           languageCode: 'en',
-          isAvailable: false
+          isAvailable: true // Считаем доступным для WebView
         })
       } else {
         // Обычный браузер - предлагаем тестовый режим
