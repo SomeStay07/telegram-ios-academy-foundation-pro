@@ -24,62 +24,146 @@
     crossorigin="anonymous"
   ></script>
   
-  <!-- Emergency Telegram WebApp Diagnostics -->
+  <!-- Visual Debug Panel for Telegram WebApp -->
   <script>
+    // Create debug panel on screen
+    function createDebugPanel() {
+      const panel = document.createElement('div')
+      panel.id = 'telegram-debug-panel'
+      panel.style.cssText = `
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.9);
+        color: #00ff00;
+        font-family: monospace;
+        font-size: 12px;
+        padding: 10px;
+        z-index: 9999;
+        border: 2px solid #00ff00;
+        border-radius: 8px;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+      `
+      document.body.appendChild(panel)
+      return panel
+    }
+
+    // Add log to panel and console
+    function debugLog(message, data = null) {
+      console.log(message, data)
+      const panel = document.getElementById('telegram-debug-panel') || createDebugPanel()
+      const timestamp = new Date().toLocaleTimeString()
+      panel.textContent += `[${timestamp}] ${message}\n`
+      if (data) {
+        panel.textContent += `${JSON.stringify(data, null, 2)}\n`
+      }
+      panel.textContent += '\n'
+      panel.scrollTop = panel.scrollHeight
+    }
+
+    // Send debug data to our server
+    function sendDebugToServer(debugData) {
+      try {
+        fetch('/debug-telegram', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(debugData)
+        }).catch(err => debugLog('Failed to send debug data:', err.message))
+      } catch (err) {
+        debugLog('Error sending debug data:', err.message)
+      }
+    }
+
     // EMERGENCY DEBUG: Show all Telegram data immediately
     function emergencyTelegramDiagnostics() {
-      console.log('🚨 EMERGENCY TELEGRAM DIAGNOSTICS 🚨')
-      console.log('URL:', window.location.href)
-      console.log('User Agent:', navigator.userAgent)
-      console.log('Referrer:', document.referrer)
+      const debugData = {
+        timestamp: new Date().toISOString(),
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        referrer: document.referrer,
+        telegram: null,
+        webApp: null,
+        user: null,
+        errors: []
+      }
+
+      debugLog('🚨 EMERGENCY TELEGRAM DIAGNOSTICS 🚨')
+      debugLog('URL: ' + window.location.href)
+      debugLog('User Agent: ' + navigator.userAgent)
+      debugLog('Referrer: ' + document.referrer)
       
       // Check if Telegram object exists
       if (window.Telegram) {
-        console.log('✅ window.Telegram EXISTS')
+        debugLog('✅ window.Telegram EXISTS')
+        debugData.telegram = 'exists'
         
         if (window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp
-          console.log('✅ window.Telegram.WebApp EXISTS')
+          debugLog('✅ window.Telegram.WebApp EXISTS')
           
-          // Log ALL WebApp properties
-          console.log('📱 FULL WebApp Object:', webApp)
-          console.log('📱 WebApp Keys:', Object.keys(webApp))
-          
-          // Specific critical properties
-          console.log('🔑 CRITICAL DATA:')
-          console.log('  - initData:', webApp.initData)
-          console.log('  - initData length:', webApp.initData?.length || 0)
-          console.log('  - initDataUnsafe:', webApp.initDataUnsafe)
-          console.log('  - user:', webApp.initDataUnsafe?.user)
-          console.log('  - platform:', webApp.platform)
-          console.log('  - version:', webApp.version)
-          console.log('  - isExpanded:', webApp.isExpanded)
-          
-          if (webApp.initDataUnsafe?.user) {
-            console.log('👤 USER DATA FOUND:', webApp.initDataUnsafe.user)
-          } else {
-            console.log('❌ NO USER DATA IN initDataUnsafe')
-          }
-          
-          // Try to initialize
+          // Collect WebApp data safely
           try {
-            webApp.ready()
-            webApp.expand()
-            console.log('✅ WebApp initialized successfully')
+            debugData.webApp = {
+              keys: Object.keys(webApp),
+              initData: webApp.initData || 'empty',
+              initDataLength: webApp.initData?.length || 0,
+              initDataUnsafe: webApp.initDataUnsafe || 'empty',
+              platform: webApp.platform || 'unknown',
+              version: webApp.version || 'unknown',
+              isExpanded: webApp.isExpanded,
+              colorScheme: webApp.colorScheme
+            }
+            
+            debugLog('📱 WebApp Keys: ' + Object.keys(webApp).join(', '))
+            debugLog('🔑 initData length: ' + (webApp.initData?.length || 0))
+            debugLog('🔑 platform: ' + (webApp.platform || 'unknown'))
+            debugLog('🔑 version: ' + (webApp.version || 'unknown'))
+            
+            if (webApp.initDataUnsafe?.user) {
+              debugData.user = webApp.initDataUnsafe.user
+              debugLog('👤 USER DATA FOUND:', webApp.initDataUnsafe.user)
+            } else {
+              debugLog('❌ NO USER DATA IN initDataUnsafe')
+              debugData.user = 'missing'
+            }
+            
+            // Try to initialize
+            try {
+              webApp.ready()
+              webApp.expand()
+              debugLog('✅ WebApp initialized successfully')
+            } catch (error) {
+              debugLog('❌ WebApp initialization failed: ' + error.message)
+              debugData.errors.push('init_failed: ' + error.message)
+            }
+            
           } catch (error) {
-            console.error('❌ WebApp initialization failed:', error)
+            debugLog('❌ Error accessing WebApp properties: ' + error.message)
+            debugData.errors.push('webapp_access_error: ' + error.message)
           }
           
         } else {
-          console.log('❌ window.Telegram.WebApp MISSING')
+          debugLog('❌ window.Telegram.WebApp MISSING')
+          debugData.webApp = 'missing'
         }
       } else {
-        console.log('❌ window.Telegram MISSING - NOT IN TELEGRAM')
+        debugLog('❌ window.Telegram MISSING - NOT IN TELEGRAM')
+        debugData.telegram = 'missing'
       }
       
       // Check query parameters for debug
       const urlParams = new URLSearchParams(window.location.search)
-      console.log('🔍 URL Parameters:', Object.fromEntries(urlParams))
+      const params = Object.fromEntries(urlParams)
+      debugData.urlParams = params
+      debugLog('🔍 URL Parameters:', params)
+
+      // Send to server for debugging
+      sendDebugToServer(debugData)
+      
+      debugLog('📤 Debug data sent to server for analysis')
     }
     
     // Run diagnostics immediately
@@ -92,6 +176,36 @@
     
     // Also on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', emergencyTelegramDiagnostics)
+
+    // Add copy to clipboard functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const panel = document.getElementById('telegram-debug-panel')
+        if (panel) {
+          const copyBtn = document.createElement('button')
+          copyBtn.textContent = 'Copy Debug Info'
+          copyBtn.style.cssText = `
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #00ff00;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 10px;
+          `
+          copyBtn.onclick = () => {
+            navigator.clipboard.writeText(panel.textContent).then(() => {
+              copyBtn.textContent = 'Copied!'
+              setTimeout(() => copyBtn.textContent = 'Copy Debug Info', 2000)
+            })
+          }
+          panel.appendChild(copyBtn)
+        }
+      }, 3000)
+    })
   </script>
   
   <title>iOS Academy Pro</title>

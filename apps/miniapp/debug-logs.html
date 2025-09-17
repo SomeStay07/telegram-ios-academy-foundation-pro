@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Debug Logs</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      background: #1a1a1a;
+      color: #00ff00;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header {
+      background: #333;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .log-entry {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .timestamp {
+      color: #ffff00;
+      font-weight: bold;
+    }
+    .user-data {
+      color: #00ffff;
+      background: #0a2a2a;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .error {
+      color: #ff4444;
+      background: #2a0a0a;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .success {
+      color: #44ff44;
+    }
+    .warning {
+      color: #ffaa44;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .refresh-btn {
+      background: #00ff00;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      margin: 10px 5px;
+    }
+    .copy-btn {
+      background: #0088ff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚨 Telegram WebApp Debug Logs 🚨</h1>
+      <p>Real-time debugging information from Telegram WebApp integration</p>
+      <button class="refresh-btn" onclick="location.reload()">🔄 Refresh Page</button>
+      <button class="refresh-btn" onclick="clearLogs()">🗑️ Clear Logs</button>
+    </div>
+    
+    <div id="logs-container">
+      <div class="log-entry">
+        <div class="timestamp">Waiting for debug data...</div>
+        <p>Open the Telegram WebApp to see debug information appear here in real-time.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let debugLogs = [];
+
+    function addLog(logData) {
+      debugLogs.unshift(logData);
+      if (debugLogs.length > 50) debugLogs.pop(); // Keep last 50 logs
+      renderLogs();
+    }
+
+    function renderLogs() {
+      const container = document.getElementById('logs-container');
+      if (debugLogs.length === 0) return;
+
+      container.innerHTML = debugLogs.map((log, index) => `
+        <div class="log-entry">
+          <div class="timestamp">
+            ${new Date(log.timestamp).toLocaleString()}
+            <button class="copy-btn" onclick="copyLog(${index})">Copy</button>
+          </div>
+          
+          <div><strong>URL:</strong> ${log.url}</div>
+          <div><strong>User Agent:</strong> ${log.userAgent}</div>
+          <div><strong>Referrer:</strong> ${log.referrer || 'None'}</div>
+          
+          <div class="${log.telegram === 'exists' ? 'success' : 'error'}">
+            <strong>Telegram Object:</strong> ${log.telegram || 'Not found'}
+          </div>
+          
+          <div class="${log.webApp && log.webApp !== 'missing' ? 'success' : 'error'}">
+            <strong>WebApp Object:</strong> ${typeof log.webApp === 'object' ? 'Found' : (log.webApp || 'Missing')}
+          </div>
+          
+          ${log.webApp && typeof log.webApp === 'object' ? `
+            <div class="user-data">
+              <strong>WebApp Details:</strong>
+              <pre>${JSON.stringify(log.webApp, null, 2)}</pre>
+            </div>
+          ` : ''}
+          
+          <div class="${log.user && log.user !== 'missing' ? 'success' : 'error'}">
+            <strong>User Data:</strong> ${log.user && log.user !== 'missing' ? 'Found' : 'Missing'}
+          </div>
+          
+          ${log.user && typeof log.user === 'object' ? `
+            <div class="user-data">
+              <strong>🎉 REAL USER DATA FOUND:</strong>
+              <pre>${JSON.stringify(log.user, null, 2)}</pre>
+            </div>
+          ` : ''}
+          
+          ${log.urlParams && Object.keys(log.urlParams).length > 0 ? `
+            <div>
+              <strong>URL Parameters:</strong>
+              <pre>${JSON.stringify(log.urlParams, null, 2)}</pre>
+            </div>
+          ` : ''}
+          
+          ${log.errors && log.errors.length > 0 ? `
+            <div class="error">
+              <strong>Errors:</strong>
+              <pre>${log.errors.join('\n')}</pre>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function copyLog(index) {
+      const log = debugLogs[index];
+      const text = JSON.stringify(log, null, 2);
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Log copied to clipboard!');
+      });
+    }
+
+    function clearLogs() {
+      debugLogs = [];
+      renderLogs();
+      document.getElementById('logs-container').innerHTML = `
+        <div class="log-entry">
+          <div class="timestamp">Logs cleared</div>
+          <p>Open the Telegram WebApp to see new debug information.</p>
+        </div>
+      `;
+    }
+
+    // Simulate receiving logs (replace with real WebSocket or polling)
+    function pollForLogs() {
+      // In real implementation, this would fetch from server
+      console.log('Polling for debug logs...');
+    }
+
+    // Poll every 5 seconds for new logs
+    setInterval(pollForLogs, 5000);
+
+    // For demo - you can manually add test data
+    window.addTestLog = function() {
+      addLog({
+        timestamp: new Date().toISOString(),
+        url: 'https://miniapp-production-9217.up.railway.app',
+        userAgent: 'Telegram WebApp Test',
+        referrer: 'https://web.telegram.org',
+        telegram: 'exists',
+        webApp: {
+          keys: ['initData', 'initDataUnsafe', 'platform', 'version'],
+          initData: 'test_data_string',
+          initDataLength: 50,
+          platform: 'tdesktop',
+          version: '7.2'
+        },
+        user: {
+          id: 123456789,
+          first_name: 'Test',
+          last_name: 'User',
+          username: 'testuser'
+        },
+        urlParams: {},
+        errors: []
+      });
+    };
+  </script>
+</body>
+</html>

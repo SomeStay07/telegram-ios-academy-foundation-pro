@@ -81,6 +81,24 @@ app.post('/csp-report', express.json(), (req, res) => {
   res.json({ status: 'received' });
 });
 
+// Telegram debug data endpoint
+app.post('/debug-telegram', express.json(), (req, res) => {
+  console.log('🚨 TELEGRAM DEBUG DATA RECEIVED 🚨');
+  console.log('==========================================');
+  console.log('Timestamp:', req.body.timestamp);
+  console.log('URL:', req.body.url);
+  console.log('User Agent:', req.body.userAgent);
+  console.log('Referrer:', req.body.referrer);
+  console.log('Telegram Object:', req.body.telegram);
+  console.log('WebApp Object:', req.body.webApp);
+  console.log('User Data:', req.body.user);
+  console.log('URL Parameters:', req.body.urlParams);
+  console.log('Errors:', req.body.errors);
+  console.log('==========================================');
+  
+  res.json({ status: 'debug-received', timestamp: new Date().toISOString() });
+});
+
 // Serve static files from dist directory
 const distPath = join(__dirname, 'dist');
 app.use(express.static(distPath, {
