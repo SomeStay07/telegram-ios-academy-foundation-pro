@@ -115,39 +115,25 @@ export function ProfilePage() {
     }
   }, [userData.totalXP])
 
-  // Update user data with REAL Telegram information ONLY
+  // Update user data with Telegram information
   useEffect(() => {
-    console.log('🔍 ProfilePage checking for REAL Telegram data:', {
-      isAvailable: telegramUser.isAvailable,
-      id: telegramUser.id,
-      firstName: telegramUser.firstName,
-      lastName: telegramUser.lastName,
-      username: telegramUser.username,
-      hasRawData: !!telegramUser.rawInitData
-    })
-    
-    if (telegramUser.isAvailable && telegramUser.id > 0 && telegramUser.firstName) {
-      console.log('✅ Found REAL Telegram user data, updating profile...')
-      
+    if (telegramUser.isAvailable && telegramUser.id > 0) {
       const newUserData = {
         ...userData,
         id: telegramUser.id,
-        firstName: telegramUser.firstName,
-        lastName: telegramUser.lastName,
-        username: telegramUser.username,
+        firstName: telegramUser.firstName || '',
+        lastName: telegramUser.lastName || '',
+        username: telegramUser.username || '',
         avatar: getAvatarUrl(telegramUser)
       }
       
       setUserData(newUserData)
       
-      console.log('🎉 Profile updated with REAL Telegram data:', {
+      console.log('✅ Profile updated with Telegram data:', {
         name: getFullName(telegramUser),
         username: telegramUser.username ? `@${telegramUser.username}` : 'No username',
-        isPremium: telegramUser.isPremium,
-        rawDataSize: telegramUser.rawInitData.length
+        isPremium: telegramUser.isPremium
       })
-    } else {
-      console.log('❌ No real Telegram data available - profile shows empty state')
     }
   }, [telegramUser, setUserData, userData])
 
@@ -186,15 +172,14 @@ export function ProfilePage() {
     )
   }, [haptics, achievement, currentRank, userData.totalXP])
 
-  // Telegram Main Button initialization (only when we have real data)
+  // Telegram Main Button initialization
   useEffect(() => {
     if (telegramUser.isAvailable && telegramUser.id > 0) {
-      console.log('🎯 Setting up Telegram Main Button for real user')
       setTelegramMainButton({
         text: '🚀 Start Challenge',
         color: currentRank.color,
         textColor: '#FFFFFF',
-        onClick: () => console.log('Starting challenge for real user:', telegramUser.firstName)
+        onClick: () => console.log('Starting challenge for user:', telegramUser.firstName)
       })
     }
   }, [telegramUser, currentRank.color])
@@ -229,102 +214,19 @@ export function ProfilePage() {
       initial="hidden"
       animate="visible"
     >
-      {/* Проверяем есть ли реальные данные пользователя */}
-      {telegramUser.isAvailable && telegramUser.id > 0 ? (
-        <ProfileHero 
-          userData={userData}
-          currentRank={currentRank}
-          nextRank={nextRank}
-          progressPercentage={progressPercentage}
-          isMaxRank={isMaxRank}
-          animationConstants={ANIMATION_CONSTANTS}
-        />
-      ) : (
-        // Показываем сообщение об авторизации с автоматической попыткой
-        <motion.div 
-          className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.div 
-            className="text-6xl mb-6"
-            animate={{ 
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0]
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            🚀
-          </motion.div>
-          
-          <motion.h2 
-            className="text-2xl font-bold text-white mb-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            Автоматическая авторизация...
-          </motion.h2>
-          
-          <motion.p 
-            className="text-white/70 mb-6 max-w-md leading-relaxed"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            Приложение автоматически отправляет команду <strong>/start</strong> боту для авторизации.
-          </motion.p>
-          
-          <motion.div 
-            className="bg-green-500/20 border border-green-500/30 rounded-lg p-4 mb-6"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.7 }}
-          >
-            <p className="text-green-200 text-sm">
-              ⚡ <strong>Автоматический процесс:</strong><br/>
-              1. Отправка /start команды<br/>
-              2. Получение данных пользователя<br/>
-              3. Перезагрузка приложения
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            className="flex items-center gap-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
-          >
-            <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
-            <span className="text-white/70">Загрузка данных...</span>
-          </motion.div>
-          
-          <motion.button
-            className="mt-6 bg-gray-500/50 hover:bg-gray-500/70 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            onClick={() => {
-              if (window.Telegram?.WebApp) {
-                window.Telegram.WebApp.close()
-              }
-            }}
-          >
-            Вернуться к боту
-          </motion.button>
-        </motion.div>
-      )}
+      {/* Always show ProfileHero - fallback data is handled in useTelegramUser */}
+      <ProfileHero 
+        userData={userData}
+        currentRank={currentRank}
+        nextRank={nextRank}
+        progressPercentage={progressPercentage}
+        isMaxRank={isMaxRank}
+        animationConstants={ANIMATION_CONSTANTS}
+      />
 
 
-      {/* Показываем остальной контент только если авторизованы */}
-      {telegramUser.isAvailable && telegramUser.id > 0 && (
+      {/* Show content when user data is available */}
+      {telegramUser.isAvailable && (
         <>
           {/* Elegant Divider Section */}
           <motion.div 

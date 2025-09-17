@@ -1,221 +1,145 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 
-// 🎯 ОФИЦИАЛЬНЫЕ типы Telegram WebApp API (2025)
-interface TelegramWebAppUser {
+// Clean TypeScript definitions based on official Telegram WebApp API
+interface TelegramUser {
   id: number
-  is_bot?: boolean
-  first_name: string
-  last_name?: string
   username?: string
+  first_name?: string
+  last_name?: string
   language_code?: string
   is_premium?: boolean
   photo_url?: string
 }
 
-interface TelegramWebAppInitDataUnsafe {
-  user?: TelegramWebAppUser
-  auth_date?: number
-  query_id?: string
-  hash?: string
-}
-
 interface TelegramWebApp {
-  initData: string  // RAW данные для валидации
-  initDataUnsafe: TelegramWebAppInitDataUnsafe  // Распарсенные данные (небезопасные)
-  version: string
-  platform: string
-  colorScheme: 'light' | 'dark'
-  themeParams: Record<string, string>
-  isExpanded: boolean
-  viewportHeight: number
-  viewportStableHeight: number
-  ready(): void
-  expand(): void
-  close(): void
-  showAlert(message: string): void
-  sendData?(data: string): void  // Для автоматической авторизации
+  initData?: string
+  initDataUnsafe?: {
+    user?: TelegramUser
+    start_param?: string
+    auth_date?: number
+    hash?: string
+  }
+  version?: string
+  platform?: string
+  colorScheme?: 'light' | 'dark'
+  themeParams?: Record<string, string>
+  ready?: () => void
+  expand?: () => void
+  close?: () => void
 }
 
 declare global {
   interface Window {
     Telegram?: {
-      WebApp: TelegramWebApp
+      WebApp?: TelegramWebApp
     }
   }
 }
 
-export interface ProcessedTelegramUser {
+export interface TelegramUserData {
   id: number
-  firstName: string
-  lastName: string
-  username: string
-  avatar: string
-  isPremium: boolean
+  username?: string
+  firstName?: string
+  lastName?: string
+  fullName: string
   languageCode: string
+  avatarUrl?: string
+  isPremium?: boolean
   isAvailable: boolean
-  rawInitData: string  // Для валидации на бэкенде
 }
 
-export function useTelegramUser(): ProcessedTelegramUser {
-  const [telegramUser, setTelegramUser] = useState<ProcessedTelegramUser>({
+export function useTelegramUser(): TelegramUserData {
+  const [user, setUser] = useState<TelegramUserData>({
     id: 0,
-    firstName: '',
-    lastName: '',
-    username: '',
-    avatar: '',
-    isPremium: false,
+    username: undefined,
+    firstName: undefined,
+    lastName: undefined,
+    fullName: '',
     languageCode: 'en',
-    isAvailable: false,
-    rawInitData: ''
+    avatarUrl: undefined,
+    isPremium: false,
+    isAvailable: false
   })
 
   useEffect(() => {
-    console.log('🚀 Starting REAL Telegram WebApp integration...')
-    
-    const loadRealTelegramData = () => {
-      // Проверяем доступность Telegram WebApp
-      if (!window.Telegram?.WebApp) {
-        console.log('❌ window.Telegram.WebApp not found')
-        console.log('🔍 Available objects:', Object.keys(window).filter(k => k.toLowerCase().includes('telegram')))
-        return false
-      }
+    const webApp = window?.Telegram?.WebApp
+    const telegramUser = webApp?.initDataUnsafe?.user
 
-      const tg = window.Telegram.WebApp
-      
-      // Инициализируем WebApp
-      tg.ready()
-      tg.expand()
-      
-      console.log('📱 Telegram WebApp initialized:', {
-        version: tg.version,
-        platform: tg.platform,
-        colorScheme: tg.colorScheme,
-        hasInitData: !!tg.initData,
-        initDataLength: tg.initData?.length || 0,
-        hasUser: !!tg.initDataUnsafe?.user
+    if (telegramUser) {
+      // Real Telegram user data found
+      const fullName = [telegramUser.first_name, telegramUser.last_name]
+        .filter(Boolean)
+        .join(' ') || telegramUser.username || 'User'
+
+      setUser({
+        id: telegramUser.id,
+        username: telegramUser.username,
+        firstName: telegramUser.first_name,
+        lastName: telegramUser.last_name,
+        fullName,
+        languageCode: telegramUser.language_code || 'en',
+        avatarUrl: telegramUser.photo_url,
+        isPremium: telegramUser.is_premium || false,
+        isAvailable: true
       })
 
-      // Проверяем наличие пользователя
-      if (!tg.initDataUnsafe?.user) {
-        console.log('❌ No user data in initDataUnsafe')
-        console.log('🔍 initDataUnsafe contents:', tg.initDataUnsafe)
-        console.log('🔍 Raw initData:', tg.initData)
-        console.log('🔍 Raw initData length:', tg.initData?.length || 0)
-        
-        // Проверяем, есть ли хотя бы initData
-        if (tg.initData && tg.initData.length > 0) {
-          console.log('⚠️ InitData exists but no user object - triggering automatic authorization')
-          
-          // 🚀 АВТОМАТИЧЕСКАЯ АВТОРИЗАЦИЯ
-          if (tg.sendData) {
-            console.log('🔄 Attempting automatic bot authorization via sendData...')
-            try {
-              tg.sendData('/start')
-              console.log('✅ Sent /start command automatically')
-              
-              // Перезагружаем через 2 секунды
-              setTimeout(() => {
-                console.log('🔄 Reloading app after automatic authorization...')
-                window.location.reload()
-              }, 2000)
-              
-            } catch (error) {
-              console.log('❌ sendData failed:', error)
-              console.log('💡 User needs to manually start the bot: /start in bot chat')
-            }
-          } else {
-            console.log('❌ sendData not available - manual authorization required')
-            console.log('💡 User needs to start the bot first: /start in bot chat')
-          }
-        } else {
-          console.log('❌ No initData at all - not opened from Telegram WebApp')
-        }
-        
-        return false
-      }
-
-      const user = tg.initDataUnsafe.user
+      // Initialize Telegram WebApp
+      if (webApp?.ready) webApp.ready()
+      if (webApp?.expand) webApp.expand()
       
-      console.log('✅ REAL user data found:', {
-        id: user.id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        username: user.username,
-        language_code: user.language_code,
-        is_premium: user.is_premium,
-        photo_url: user.photo_url
+      console.log('✅ Telegram user loaded:', {
+        id: telegramUser.id,
+        name: fullName,
+        username: telegramUser.username,
+        isPremium: telegramUser.is_premium
       })
-
-      // Создаём обработанные данные пользователя
-      const processedUser: ProcessedTelegramUser = {
-        id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name || '',
-        username: user.username || '',
-        avatar: user.photo_url || '',
-        isPremium: user.is_premium || false,
-        languageCode: user.language_code || 'en',
-        isAvailable: true,
-        rawInitData: tg.initData
-      }
-
-      setTelegramUser(processedUser)
+    } else {
+      // Fallback for development or missing data
+      const isDevelopment = import.meta.env.DEV || process.env.NODE_ENV === 'development'
       
-      console.log('🎉 REAL Telegram user loaded successfully:', {
-        name: `${processedUser.firstName} ${processedUser.lastName}`.trim(),
-        username: processedUser.username ? `@${processedUser.username}` : 'No username',
-        isPremium: processedUser.isPremium,
-        hasAvatar: !!processedUser.avatar,
-        dataSize: processedUser.rawInitData.length
-      })
-      
-      return true
-    }
+      if (isDevelopment) {
+        // Provide development fallback after short delay
+        const timer = setTimeout(() => {
+          setUser({
+            id: 123456789,
+            username: 'developer',
+            firstName: 'Local',
+            lastName: 'Developer',
+            fullName: 'Local Developer',
+            languageCode: 'en',
+            avatarUrl: undefined,
+            isPremium: false,
+            isAvailable: true // Available in dev mode
+          })
+        }, 100)
 
-    // Пробуем загрузить данные сразу
-    const success = loadRealTelegramData()
-    
-    if (!success) {
-      // Если не получилось, пробуем ещё несколько раз
-      const retryIntervals = [100, 300, 500, 1000, 2000]
-      const timeouts = retryIntervals.map((delay, index) => 
-        setTimeout(() => {
-          console.log(`🔄 Retry attempt ${index + 1}/${retryIntervals.length}`)
-          loadRealTelegramData()
-        }, delay)
-      )
-      
-      return () => {
-        timeouts.forEach(clearTimeout)
+        return () => clearTimeout(timer)
+      } else {
+        console.log('❌ No Telegram user data available')
       }
     }
   }, [])
 
-  return telegramUser
+  return user
 }
 
-// Хелпер для получения аватара с фоллбэком
-export function getAvatarUrl(telegramUser: ProcessedTelegramUser): string {
-  if (telegramUser.avatar) {
-    return telegramUser.avatar
+// Helper functions for Telegram user data
+export function getAvatarUrl(user: TelegramUserData): string {
+  if (user.avatarUrl) {
+    return user.avatarUrl
   }
   
-  // Генерируем инициалы для фоллбэка
-  const initials = `${telegramUser.firstName.charAt(0)}${telegramUser.lastName.charAt(0)}`
+  // Generate initials for fallback
+  const initials = `${user.firstName?.charAt(0) || ''}${user.lastName?.charAt(0) || ''}` || user.username?.charAt(0) || 'U'
   
-  // Используем DiceBear API для генерации аватара по инициалам
+  // Use DiceBear API for avatar generation
   return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(initials)}&backgroundColor=007AFF&textColor=ffffff`
 }
 
-// Хелпер для форматирования полного имени
-export function getFullName(telegramUser: ProcessedTelegramUser): string {
-  if (telegramUser.firstName && telegramUser.lastName) {
-    return `${telegramUser.firstName} ${telegramUser.lastName}`
-  }
-  return telegramUser.firstName || telegramUser.username || 'User'
+export function getFullName(user: TelegramUserData): string {
+  return user.fullName || user.firstName || user.username || 'User'
 }
 
-// Хелпер для форматирования имени пользователя
-export function getDisplayUsername(telegramUser: ProcessedTelegramUser): string {
-  return telegramUser.username ? `@${telegramUser.username}` : `@user${telegramUser.id}`
+export function getDisplayUsername(user: TelegramUserData): string {
+  return user.username ? `@${user.username}` : `User ${user.id}`
 }
