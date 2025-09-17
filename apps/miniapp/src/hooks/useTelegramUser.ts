@@ -131,21 +131,29 @@ export function useTelegramUser(): TelegramUserData {
             username: telegramUserRetry.username
           })
         } else {
-          // Final fallback - show generic user
-          console.log('❌ No Telegram user data available, using fallback')
-          setUser({
-            id: Date.now(),
-            username: 'user',
-            firstName: 'iOS',
-            lastName: 'Developer',
-            fullName: 'iOS Developer',
-            languageCode: 'en',
-            avatarUrl: undefined,
-            isPremium: false,
-            isAvailable: true // Show UI with fallback data
-          })
+          // No fallback for production - wait for real Telegram data
+          const isProduction = import.meta.env.PROD || process.env.NODE_ENV === 'production'
+          
+          if (isProduction) {
+            console.log('❌ No Telegram user data available in production')
+            // Keep isAvailable: false to show loading state
+          } else {
+            // Development fallback only
+            console.log('💻 Development fallback activated')
+            setUser({
+              id: 123456789,
+              username: 'developer',
+              firstName: 'Dev',
+              lastName: 'User',
+              fullName: 'Dev User',
+              languageCode: 'en',
+              avatarUrl: undefined,
+              isPremium: false,
+              isAvailable: true
+            })
+          }
         }
-      }, 500) // Wait 500ms for Telegram WebApp to load
+      }, 1000) // Wait 1000ms for Telegram WebApp to load
 
       return () => clearTimeout(timer)
     }
