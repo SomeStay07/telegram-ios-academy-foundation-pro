@@ -1727,14 +1727,19 @@
   }
 
   .xp-icon-container {
-    @apply flex-shrink-0 w-12 h-12 rounded-xl;
-    @apply flex items-center justify-center;
+    flex-shrink: 0;
+    width: clamp(2rem, 8cqw, 3rem);
+    height: clamp(2rem, 8cqw, 3rem);
+    border-radius: clamp(0.5rem, 2cqw, 0.75rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
     border: 1px solid rgba(59, 130, 246, 0.3);
   }
 
   .xp-lightning {
-    @apply text-xl;
+    font-size: clamp(1rem, 5cqw, 1.25rem);
     filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.5));
     text-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
   }
@@ -1798,8 +1803,14 @@
   }
 
   .next-rank-icon {
-    @apply flex-shrink-0 w-12 h-12 rounded-xl;
-    @apply flex items-center justify-center text-lg;
+    flex-shrink: 0;
+    width: clamp(2rem, 8cqw, 3rem);
+    height: clamp(2rem, 8cqw, 3rem);
+    border-radius: clamp(0.5rem, 2cqw, 0.75rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1rem, 5cqw, 1.125rem);
     background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
     border: 1px solid rgba(168, 85, 247, 0.3);
     filter: drop-shadow(0 2px 4px rgba(168, 85, 247, 0.3));
