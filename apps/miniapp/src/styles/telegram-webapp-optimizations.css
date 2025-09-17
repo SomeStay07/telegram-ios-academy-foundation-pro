@@ -1,0 +1,186 @@
+/* Telegram WebApp Environment Optimizations */
+
+/* Optimize for Telegram WebApp viewport */
+.telegram-app {
+  /* Use Telegram's dynamic viewport height */
+  min-height: 100vh;
+  min-height: var(--tg-viewport-height, 100vh);
+  min-height: 100dvh; /* Dynamic viewport height for modern browsers */
+  
+  /* Prevent content from being hidden behind Telegram UI */
+  padding-bottom: var(--tg-safe-area-inset-bottom, 0px);
+  
+  /* Optimize for Telegram's color scheme switching */
+  color-scheme: var(--tg-color-scheme, dark);
+  background-color: var(--tg-theme-bg-color, #000000);
+  color: var(--tg-theme-text-color, #ffffff);
+}
+
+/* Optimize profile for Telegram's theme system */
+.modern-profile {
+  /* Respect Telegram's dynamic theming */
+  background: var(--tg-theme-bg-color, linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #111111 50%, #0a0a0a 75%, #000000 100%));
+  color: var(--tg-theme-text-color, #ffffff);
+  
+  /* Handle Telegram's header color integration */
+  --header-bg-color: var(--tg-theme-header-bg-color, transparent);
+}
+
+/* Optimize cards for Telegram's theme colors */
+.hero-card-premium {
+  /* Use Telegram's secondary background if available */
+  background: var(--tg-theme-secondary-bg-color, rgba(255, 255, 255, 0.03));
+  border-color: var(--tg-theme-section-separator-color, rgba(255, 255, 255, 0.08));
+}
+
+.action-card-primary {
+  /* Use Telegram's button colors */
+  background: var(--tg-theme-button-color, linear-gradient(135deg, #007AFF 0%, #0056CC 100%));
+  color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+.action-card-secondary {
+  /* Use Telegram's secondary colors */
+  background: var(--tg-theme-secondary-bg-color, rgba(255, 255, 255, 0.05));
+  color: var(--tg-theme-text-color, #ffffff);
+  border-color: var(--tg-theme-section-separator-color, rgba(255, 255, 255, 0.1));
+}
+
+/* Handle Telegram's back button area */
+.modern-profile {
+  /* Leave space for Telegram's back button when present */
+  margin-top: var(--tg-safe-area-inset-top, 0px);
+}
+
+/* Optimize for Telegram's main button integration */
+.actions-section-responsive {
+  /* Add padding when Telegram's MainButton is visible */
+  padding-bottom: calc(2.5rem + var(--tg-main-button-height, 0px));
+}
+
+/* Handle Telegram's status bar on iOS */
+@supports (padding: max(0px)) {
+  .modern-profile {
+    /* Respect iOS status bar and Telegram's UI */
+    padding-top: max(0.5rem, env(safe-area-inset-top), var(--tg-safe-area-inset-top, 0px));
+  }
+}
+
+/* Optimize for Telegram's keyboard handling */
+@media (max-height: 500px) {
+  /* Compact layout when keyboard is open */
+  .hero-card-premium {
+    padding: 0.75rem;
+    margin: 0.25rem;
+  }
+  
+  .xp-progress-enhanced {
+    margin-top: 0.75rem;
+  }
+  
+  .actions-section-responsive {
+    padding-bottom: 1rem;
+  }
+}
+
+/* Handle Telegram's theme switching animation */
+.modern-profile,
+.hero-card-premium,
+.action-card-primary,
+.action-card-secondary {
+  transition: 
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Optimize for Telegram's haptic feedback integration - level badge excluded */
+.username-badge-unified,
+.senior-engineer-badge-unified,
+.action-card-primary,
+.action-card-secondary {
+  /* Enable haptic feedback on supported devices */
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+}
+
+/* Handle Telegram's web app expansion */
+.modern-profile {
+  /* Smooth transition when WebApp expands */
+  transition: min-height 0.3s ease;
+}
+
+/* Optimize text selection for Telegram environment */
+.profile-name-clean,
+.username-text-unified {
+  /* Allow text selection for sharing in Telegram */
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Handle Telegram's share functionality */
+.action-card-primary,
+.action-card-secondary {
+  /* Prepare for potential share button integration */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Optimize for Telegram's biometric authentication - level badge excluded */
+@media (any-pointer: fine) {
+  /* Enhanced interactions when precise pointing available - level badge handles its own transforms */
+}
+
+/* Handle Telegram's close confirmation */
+.modern-profile {
+  /* Prevent accidental navigation away */
+  overscroll-behavior: contain;
+}
+
+/* Optimize for Telegram's QR code scanner integration */
+.action-card-secondary[data-action="qr"] {
+  /* Style QR scanner trigger if present */
+  background: linear-gradient(135deg, rgba(52, 199, 89, 0.2) 0%, rgba(52, 199, 89, 0.1) 100%);
+  border-color: rgba(52, 199, 89, 0.3);
+}
+
+/* Handle Telegram's cloud storage integration */
+.stat-card-draggable {
+  /* Prepare for data sync with Telegram Cloud Storage */
+  position: relative;
+}
+
+.stat-card-draggable::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--tg-theme-link-color, #60a5fa);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card-draggable[data-synced="true"]::after {
+  opacity: 1;
+}
+
+/* Optimize for Telegram's performance requirements */
+.modern-profile * {
+  /* Optimize rendering performance */
+  contain: layout style paint;
+}
+
+/* Handle different Telegram client versions */
+@supports not (color: var(--tg-theme-bg-color)) {
+  /* Fallback for older Telegram clients */
+  .modern-profile {
+    background: linear-gradient(135deg, #000000 0%, #111111 50%, #000000 100%);
+  }
+  
+  .action-card-primary {
+    background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+  }
+}
