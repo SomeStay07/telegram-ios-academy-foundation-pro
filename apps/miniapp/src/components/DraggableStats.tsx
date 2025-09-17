@@ -49,46 +49,75 @@ const SortableStat: React.FC<SortableStatProps> = ({ stat }) => {
     transition,
   }
 
+  // Определяем специальную тему для Total XP
+  const isSpecialStat = stat.id === 'xp'
+
   return (
     <motion.div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className={`glass-card p-4 bg-white/3 cursor-grab active:cursor-grabbing ${
+      className={`premium-stat-card ${isSpecialStat ? 'premium-stat-card-special' : ''} ${
         isDragging ? 'opacity-50 scale-105' : ''
       }`}
-      whileHover={{ scale: 1.02, backgroundColor: 'rgba(255, 255, 255, 0.06)' }}
+      whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onTapStart={() => haptics.selection()}
       transition={{ type: 'spring', stiffness: 400 }}
     >
-      <div className="flex items-center gap-3">
+      {/* Background particles */}
+      <div className="stat-card-particles" />
+      
+      {/* Glow effect for special stats */}
+      {isSpecialStat && <div className="stat-card-glow" />}
+      
+      <div className="flex items-center gap-4">
         <motion.div 
-          className="text-2xl"
-          whileHover={{ scale: 1.1, rotate: 5 }}
+          className={`stat-icon ${isSpecialStat ? 'stat-icon-special' : ''}`}
+          whileHover={{ scale: 1.15, rotate: 8 }}
           transition={{ type: 'spring', stiffness: 300 }}
         >
           {stat.icon}
         </motion.div>
+        
         <div className="flex-1">
-          <div className={`text-lg font-bold text-white mb-0.5 ${
-            stat.gradient ? 'text-gradient-ios' : ''
-          }`}>
+          <motion.div 
+            className={`stat-value ${isSpecialStat ? 'stat-value-special' : ''}`}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
             {stat.value}
-          </div>
-          <div className="text-xs text-white/60 font-medium uppercase tracking-wide">
+          </motion.div>
+          <motion.div 
+            className="stat-label"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
             {stat.label}
-          </div>
+          </motion.div>
         </div>
+        
         <motion.div 
-          className="text-white/30 text-sm"
-          whileHover={{ scale: 1.2 }}
+          className="stat-drag-handle"
+          whileHover={{ scale: 1.3, opacity: 0.8 }}
           transition={{ type: 'spring', stiffness: 400 }}
         >
-          ⋮⋮
+          <div className="drag-dots">
+            <div className="drag-dot"></div>
+            <div className="drag-dot"></div>
+            <div className="drag-dot"></div>
+            <div className="drag-dot"></div>
+            <div className="drag-dot"></div>
+            <div className="drag-dot"></div>
+          </div>
         </motion.div>
       </div>
+      
+      {/* Hover shimmer effect */}
+      <div className="stat-card-shimmer" />
     </motion.div>
   )
 }
@@ -143,14 +172,30 @@ export const DraggableStats: React.FC<DraggableStatsProps> = ({
       transition={{ duration: 0.5, staggerChildren: 0.1 }}
     >
       <motion.div 
-        className="mb-4 px-4"
+        className="mb-6 px-4"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <h3 className="text-sm text-white/70 font-medium uppercase tracking-wide mb-2">
-          📊 Drag to reorder stats
-        </h3>
+        <div className="premium-stats-header">
+          <motion.div 
+            className="stats-header-icon"
+            animate={{ 
+              rotate: [0, 5, -5, 0],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ 
+              duration: 3, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+          >
+            📊
+          </motion.div>
+          <h3 className="stats-header-text">
+            Drag to reorder stats
+          </h3>
+        </div>
       </motion.div>
       
       <DndContext
