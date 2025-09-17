@@ -132,7 +132,9 @@ export function ProfilePage() {
       console.log('✅ Profile updated with Telegram data:', {
         name: getFullName(telegramUser),
         username: telegramUser.username ? `@${telegramUser.username}` : 'No username',
-        isPremium: telegramUser.isPremium
+        isPremium: telegramUser.isPremium,
+        isRealTelegramData: telegramUser.isRealTelegramData,
+        userId: telegramUser.id
       })
     }
   }, [telegramUser, setUserData, userData])
@@ -225,8 +227,8 @@ export function ProfilePage() {
       />
 
 
-      {/* Show content when user data is available */}
-      {telegramUser.isAvailable && (
+      {/* Show content - always display, either with real Telegram data or fallback */}
+      {(telegramUser.isAvailable || telegramUser.id > 0) && (
         <>
           {/* Elegant Divider Section */}
           <motion.div 

@@ -46,6 +46,7 @@ export interface TelegramUserData {
   avatarUrl?: string
   isPremium?: boolean
   isAvailable: boolean
+  isRealTelegramData?: boolean // New field to track if data is from Telegram
 }
 
 export function useTelegramUser(): TelegramUserData {
@@ -58,7 +59,8 @@ export function useTelegramUser(): TelegramUserData {
     languageCode: 'en',
     avatarUrl: undefined,
     isPremium: false,
-    isAvailable: false
+    isAvailable: false,
+    isRealTelegramData: false
   })
 
   useEffect(() => {
@@ -67,13 +69,17 @@ export function useTelegramUser(): TelegramUserData {
       webAppExists: !!window?.Telegram?.WebApp,
       initDataExists: !!window?.Telegram?.WebApp?.initDataUnsafe,
       userExists: !!window?.Telegram?.WebApp?.initDataUnsafe?.user,
-      version: window?.Telegram?.WebApp?.version
+      version: window?.Telegram?.WebApp?.version,
+      initData: window?.Telegram?.WebApp?.initData
     })
 
     const webApp = window?.Telegram?.WebApp
     const telegramUser = webApp?.initDataUnsafe?.user
+    
+    // Check if we have real Telegram data (with initData)
+    const hasRealTelegramData = telegramUser && (webApp?.initData || webApp?.initDataUnsafe?.auth_date)
 
-    if (telegramUser) {
+    if (hasRealTelegramData) {
       // Real Telegram user data found
       const fullName = [telegramUser.first_name, telegramUser.last_name]
         .filter(Boolean)
@@ -88,7 +94,8 @@ export function useTelegramUser(): TelegramUserData {
         languageCode: telegramUser.language_code || 'en',
         avatarUrl: telegramUser.photo_url,
         isPremium: telegramUser.is_premium || false,
-        isAvailable: true
+        isAvailable: true,
+        isRealTelegramData: true
       })
 
       // Initialize Telegram WebApp
@@ -106,8 +113,9 @@ export function useTelegramUser(): TelegramUserData {
       const timer = setTimeout(() => {
         const webAppRetry = window?.Telegram?.WebApp
         const telegramUserRetry = webAppRetry?.initDataUnsafe?.user
+        const hasRealTelegramDataRetry = telegramUserRetry && (webAppRetry?.initData || webAppRetry?.initDataUnsafe?.auth_date)
         
-        if (telegramUserRetry) {
+        if (hasRealTelegramDataRetry) {
           // Real Telegram user data found on retry
           const fullName = [telegramUserRetry.first_name, telegramUserRetry.last_name]
             .filter(Boolean)
@@ -122,7 +130,8 @@ export function useTelegramUser(): TelegramUserData {
             languageCode: telegramUserRetry.language_code || 'en',
             avatarUrl: telegramUserRetry.photo_url,
             isPremium: telegramUserRetry.is_premium || false,
-            isAvailable: true
+            isAvailable: true,
+            isRealTelegramData: true
           })
 
           console.log('✅ Telegram user loaded on retry:', {
@@ -131,12 +140,24 @@ export function useTelegramUser(): TelegramUserData {
             username: telegramUserRetry.username
           })
         } else {
-          // No fallback for production - wait for real Telegram data
+          // Show fallback data in production if no Telegram data is available
           const isProduction = import.meta.env.PROD || process.env.NODE_ENV === 'production'
           
           if (isProduction) {
-            console.log('❌ No Telegram user data available in production')
-            // Keep isAvailable: false to show loading state
+            console.log('⚠️ No Telegram user data available in production, using fallback')
+            // Show fallback data even in production to ensure UI works
+            setUser({
+              id: 999999999,
+              username: 'telegram_user',
+              firstName: 'Telegram',
+              lastName: 'User',
+              fullName: 'Telegram User',
+              languageCode: 'ru',
+              avatarUrl: undefined,
+              isPremium: false,
+              isAvailable: true, // Important: set to true so content shows
+              isRealTelegramData: false
+            })
           } else {
             // Development fallback only
             console.log('💻 Development fallback activated')
@@ -149,7 +170,8 @@ export function useTelegramUser(): TelegramUserData {
               languageCode: 'en',
               avatarUrl: undefined,
               isPremium: false,
-              isAvailable: true
+              isAvailable: true,
+              isRealTelegramData: false
             })
           }
         }
