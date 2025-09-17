@@ -64,6 +64,9 @@ export function useTelegramUser(): TelegramUserData {
   })
 
   useEffect(() => {
+    const webApp = window?.Telegram?.WebApp
+    const telegramUser = webApp?.initDataUnsafe?.user
+    
     console.log('🔍 Telegram WebApp check:', {
       telegramExists: !!window?.Telegram,
       webAppExists: !!window?.Telegram?.WebApp,
@@ -76,9 +79,6 @@ export function useTelegramUser(): TelegramUserData {
       userName: telegramUser?.first_name,
       authDate: webApp?.initDataUnsafe?.auth_date
     })
-
-    const webApp = window?.Telegram?.WebApp
-    const telegramUser = webApp?.initDataUnsafe?.user
     
     // Check if we have any Telegram user data
     // Note: in some cases initData might be empty but user data is still real
