@@ -33,6 +33,7 @@ interface TelegramWebApp {
   expand(): void
   close(): void
   showAlert(message: string): void
+  sendData?(data: string): void  // Для автоматической авторизации
 }
 
 declare global {
@@ -103,8 +104,29 @@ export function useTelegramUser(): ProcessedTelegramUser {
         
         // Проверяем, есть ли хотя бы initData
         if (tg.initData && tg.initData.length > 0) {
-          console.log('⚠️ InitData exists but no user object - user may need to authorize bot')
-          console.log('💡 User needs to start the bot first: /start in bot chat')
+          console.log('⚠️ InitData exists but no user object - triggering automatic authorization')
+          
+          // 🚀 АВТОМАТИЧЕСКАЯ АВТОРИЗАЦИЯ
+          if (tg.sendData) {
+            console.log('🔄 Attempting automatic bot authorization via sendData...')
+            try {
+              tg.sendData('/start')
+              console.log('✅ Sent /start command automatically')
+              
+              // Перезагружаем через 2 секунды
+              setTimeout(() => {
+                console.log('🔄 Reloading app after automatic authorization...')
+                window.location.reload()
+              }, 2000)
+              
+            } catch (error) {
+              console.log('❌ sendData failed:', error)
+              console.log('💡 User needs to manually start the bot: /start in bot chat')
+            }
+          } else {
+            console.log('❌ sendData not available - manual authorization required')
+            console.log('💡 User needs to start the bot first: /start in bot chat')
+          }
         } else {
           console.log('❌ No initData at all - not opened from Telegram WebApp')
         }

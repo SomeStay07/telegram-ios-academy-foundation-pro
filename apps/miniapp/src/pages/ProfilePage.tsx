@@ -240,7 +240,7 @@ export function ProfilePage() {
           animationConstants={ANIMATION_CONSTANTS}
         />
       ) : (
-        // Показываем сообщение об авторизации
+        // Показываем сообщение об авторизации с автоматической попыткой
         <motion.div 
           className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -259,7 +259,7 @@ export function ProfilePage() {
               ease: "easeInOut"
             }}
           >
-            🔐
+            🚀
           </motion.div>
           
           <motion.h2 
@@ -268,7 +268,7 @@ export function ProfilePage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            Authorization Required
+            Автоматическая авторизация...
           </motion.h2>
           
           <motion.p 
@@ -277,37 +277,47 @@ export function ProfilePage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            To access your profile, please start the bot first by sending <strong>/start</strong> in the bot chat, then reopen this app.
+            Приложение автоматически отправляет команду <strong>/start</strong> боту для авторизации.
           </motion.p>
           
           <motion.div 
-            className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4 mb-6"
+            className="bg-green-500/20 border border-green-500/30 rounded-lg p-4 mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.7 }}
           >
-            <p className="text-blue-200 text-sm">
-              💡 <strong>Steps:</strong><br/>
-              1. Go back to bot chat<br/>
-              2. Send /start command<br/>
-              3. Return to this app
+            <p className="text-green-200 text-sm">
+              ⚡ <strong>Автоматический процесс:</strong><br/>
+              1. Отправка /start команды<br/>
+              2. Получение данных пользователя<br/>
+              3. Перезагрузка приложения
             </p>
           </motion.div>
           
+          <motion.div 
+            className="flex items-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9 }}
+          >
+            <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
+            <span className="text-white/70">Загрузка данных...</span>
+          </motion.div>
+          
           <motion.button
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+            className="mt-6 bg-gray-500/50 hover:bg-gray-500/70 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
+            transition={{ delay: 1.2 }}
             onClick={() => {
               if (window.Telegram?.WebApp) {
                 window.Telegram.WebApp.close()
               }
             }}
           >
-            Go to Bot Chat
+            Вернуться к боту
           </motion.button>
         </motion.div>
       )}
