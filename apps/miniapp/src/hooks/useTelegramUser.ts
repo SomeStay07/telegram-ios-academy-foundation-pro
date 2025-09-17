@@ -74,10 +74,16 @@ export function useTelegramUser(): TelegramUserData {
       userExists: !!window?.Telegram?.WebApp?.initDataUnsafe?.user,
       version: window?.Telegram?.WebApp?.version,
       initData: window?.Telegram?.WebApp?.initData,
+      initDataLength: window?.Telegram?.WebApp?.initData?.length || 0,
       hasUser: !!telegramUser,
       userId: telegramUser?.id,
       userName: telegramUser?.first_name,
-      authDate: webApp?.initDataUnsafe?.auth_date
+      authDate: webApp?.initDataUnsafe?.auth_date,
+      platform: webApp?.platform,
+      colorScheme: webApp?.colorScheme,
+      isRunningInTelegram: !!(window?.Telegram?.WebApp?.initData || window?.Telegram?.WebApp?.initDataUnsafe?.auth_date),
+      currentURL: window.location.href,
+      userAgent: navigator.userAgent.includes('Telegram') ? 'Telegram' : 'Browser'
     })
     
     // Check if we have any Telegram user data
