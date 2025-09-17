@@ -88,10 +88,24 @@ export function useTelegramUser(): ProcessedTelegramUser {
       return
     }
     
+    // Подробная диагностика Telegram WebApp
+    console.log('🔍 Telegram WebApp Debug Info:', {
+      hasTelegram: !!window.Telegram,
+      hasWebApp: !!window.Telegram?.WebApp,
+      webApp: window.Telegram?.WebApp,
+      initData: window.Telegram?.WebApp?.initData,
+      initDataUnsafe: window.Telegram?.WebApp?.initDataUnsafe,
+      user: window.Telegram?.WebApp?.initDataUnsafe?.user,
+      userAgent: navigator.userAgent,
+      url: window.location.href
+    })
+    
     const webApp = window.Telegram?.WebApp
     
     if (webApp?.initDataUnsafe?.user) {
       const user = webApp.initDataUnsafe.user
+      
+      console.log('🔗 Raw Telegram user data:', user)
       
       // Обрабатываем данные пользователя
       const processedUser: ProcessedTelegramUser = {
@@ -116,6 +130,50 @@ export function useTelegramUser(): ProcessedTelegramUser {
       })
     } else {
       console.log('📱 Running outside Telegram WebApp - using mock data')
+      console.log('📱 Detailed analysis:', {
+        windowTelegram: window.Telegram,
+        webAppExists: !!window.Telegram?.WebApp,
+        initDataUnsafeExists: !!window.Telegram?.WebApp?.initDataUnsafe,
+        userExists: !!window.Telegram?.WebApp?.initDataUnsafe?.user
+      })
+      
+      // Попробуем подождать немного и проверить снова (для случаев медленной загрузки Telegram)
+      const timeoutId = setTimeout(() => {
+        const laterWebApp = window.Telegram?.WebApp
+        console.log('🔄 Checking Telegram WebApp after delay:', {
+          hasWebApp: !!laterWebApp,
+          hasInitData: !!laterWebApp?.initDataUnsafe,
+          hasUser: !!laterWebApp?.initDataUnsafe?.user,
+          webApp: laterWebApp
+        })
+        
+        if (laterWebApp?.initDataUnsafe?.user) {
+          const user = laterWebApp.initDataUnsafe.user
+          console.log('🔗 Found delayed Telegram user data:', user)
+          
+          const processedUser: ProcessedTelegramUser = {
+            id: user.id,
+            firstName: user.first_name || 'Name',
+            lastName: user.last_name || 'Username',
+            username: user.username || 'developer',
+            avatar: user.photo_url || '',
+            isPremium: user.is_premium || false,
+            languageCode: user.language_code || 'en',
+            isAvailable: true
+          }
+          
+          setTelegramUser(processedUser)
+          
+          console.log('🔗 Delayed Telegram user data loaded:', {
+            id: processedUser.id,
+            name: `${processedUser.firstName} ${processedUser.lastName}`,
+            username: processedUser.username,
+            isPremium: processedUser.isPremium
+          })
+        }
+      }, 1000)
+      
+      return () => clearTimeout(timeoutId)
     }
   }, [])
 
