@@ -128,12 +128,12 @@ interface DraggableStatsProps {
 
 export const DraggableStats: React.FC<DraggableStatsProps> = ({ 
   initialStats = [
-    { id: 'xp', icon: '⚡', label: 'Total XP', value: '15,750', gradient: true },
-    { id: 'streak', icon: '🔥', label: 'Day Streak', value: 7 },
-    { id: 'challenges', icon: '🎯', label: 'Challenges', value: 23 },
-    { id: 'battles', icon: '⚔️', label: 'Battles Won', value: 12 },
-    { id: 'rank', icon: '🏆', label: 'Global Rank', value: '#1,247' },
-    { id: 'achievements', icon: '🌟', label: 'Achievements', value: 8 },
+    { id: 'xp', icon: '◈', label: 'Total XP', value: '255', gradient: true },
+    { id: 'streak', icon: '◉', label: 'Day Streak', value: 7 },
+    { id: 'challenges', icon: '◊', label: 'Challenges', value: 23 },
+    { id: 'battles', icon: '◎', label: 'Battles Won', value: 12 },
+    { id: 'rank', icon: '◇', label: 'Global Rank', value: '#1,247' },
+    { id: 'achievements', icon: '◌', label: 'Achievements', value: 8 },
   ]
 }) => {
   const [stats, setStats] = React.useState(initialStats)

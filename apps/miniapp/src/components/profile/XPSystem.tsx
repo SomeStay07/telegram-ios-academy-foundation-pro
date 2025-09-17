@@ -66,7 +66,7 @@ export const XPSystem: React.FC<XPSystemProps> = ({
           whileHover={{ scale: 1.15, rotate: 10 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
-          <span className="xp-lightning">💫</span>
+          <span className="xp-lightning">◈</span>
         </motion.div>
         <div className="xp-main-content">
           <motion.span 
@@ -103,7 +103,7 @@ export const XPSystem: React.FC<XPSystemProps> = ({
           className="next-rank-icon"
           whileHover={{ scale: 1.1, rotate: -5 }}
         >
-          {!isMaxRank ? nextRank.icon : '👑'}
+          {!isMaxRank ? nextRank.icon : '◈'}
         </motion.div>
         <div className="next-rank-content">
           {!isMaxRank ? (

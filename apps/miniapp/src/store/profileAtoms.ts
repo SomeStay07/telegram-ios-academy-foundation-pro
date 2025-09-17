@@ -24,7 +24,7 @@ export const userDataAtom = atom<UserData>({
   lastName: 'Username',
   username: 'developer',
   avatar: '',
-  totalXP: 15750,
+  totalXP: 255,
   streak: 7,
   challengesCompleted: 23,
   battlesWon: 12,
