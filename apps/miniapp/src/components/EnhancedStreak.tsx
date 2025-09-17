@@ -62,14 +62,16 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
   }
 
   return (
-    <motion.div
+    <motion.section
       className={`enhanced-streak-container ${className}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
+      aria-labelledby="streak-title"
+      role="region"
     >
       {/* Header */}
-      <motion.div 
+      <motion.header 
         className="streak-header"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -87,16 +89,17 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
               repeat: Infinity,
               ease: "easeInOut"
             }}
+            aria-hidden="true"
           >
             🔥
           </motion.div>
           <div>
-            <h3 className="streak-title">Daily Streak</h3>
+            <h2 id="streak-title" className="streak-title">Daily Streak</h2>
             <p className="streak-subtitle">{getStreakMessage()}</p>
           </div>
         </div>
         
-        <motion.div 
+        <motion.button 
           className="streak-counter"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -104,11 +107,13 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
             haptics.impact('medium')
             console.log('Streak tapped:', currentStreak)
           }}
+          aria-label={`Current streak: ${currentStreak} days. Tap for details`}
+          tabIndex={0}
         >
-          <div className="streak-number">{currentStreak}</div>
-          <div className="streak-days-label">days</div>
-        </motion.div>
-      </motion.div>
+          <span className="streak-number" aria-hidden="true">{currentStreak}</span>
+          <span className="streak-days-label">days</span>
+        </motion.button>
+      </motion.header>
 
       {/* 7-Day Calendar Visual */}
       <motion.div 
@@ -116,10 +121,12 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.4, duration: 0.5 }}
+        role="grid"
+        aria-label="7-day streak calendar"
       >
-        <div className="calendar-grid">
+        <div className="calendar-grid" role="row">
           {streakData.map((day, index) => (
-            <motion.div
+            <motion.button
               key={day.date.toISOString()}
               className={`calendar-day ${day.completed ? 'completed' : ''} ${day.isToday ? 'today' : ''} ${day.isFuture ? 'future' : ''}`}
               initial={{ opacity: 0, scale: 0.8 }}
@@ -138,9 +145,18 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
                 haptics.selection()
                 console.log('Day tapped:', day.date.toDateString())
               }}
+              role="gridcell"
+              aria-label={`${day.date.toLocaleDateString('en', { 
+                weekday: 'long', 
+                month: 'short', 
+                day: 'numeric' 
+              })}${day.completed ? ', completed' : ''}${day.isToday ? ', today' : ''}`}
+              aria-pressed={day.completed}
+              disabled={day.isFuture}
+              tabIndex={day.isFuture ? -1 : 0}
             >
-              <div className="day-letter">{getDayAbbr(day.date)}</div>
-              <div className="day-number">{day.date.getDate()}</div>
+              <span className="day-letter" aria-hidden="true">{getDayAbbr(day.date)}</span>
+              <span className="day-number">{day.date.getDate()}</span>
               
               {/* Completion indicator */}
               {day.completed && (
@@ -153,6 +169,7 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
                     type: "spring",
                     stiffness: 400
                   }}
+                  aria-hidden="true"
                 >
                   ✓
                 </motion.div>
@@ -171,9 +188,10 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
+                  aria-hidden="true"
                 />
               )}
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       </motion.div>
@@ -184,10 +202,15 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
+        role="progressbar"
+        aria-valuenow={currentStreak}
+        aria-valuemin={0}
+        aria-valuemax={maxStreak}
+        aria-label={`Streak progress: ${currentStreak} of ${maxStreak} days`}
       >
         <div className="progress-info">
           <span className="progress-label">Progress to {maxStreak} days</span>
-          <span className="progress-percentage">{Math.round(streakPercentage)}%</span>
+          <span className="progress-percentage" aria-live="polite">{Math.round(streakPercentage)}%</span>
         </div>
         
         <div className="progress-bar-container">
@@ -200,6 +223,7 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
               duration: 1.5,
               ease: "easeOut"
             }}
+            aria-hidden="true"
           />
           <motion.div
             className="progress-bar-glow"
@@ -210,6 +234,7 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
               duration: 1.5,
               ease: "easeOut"
             }}
+            aria-hidden="true"
           />
         </div>
       </motion.div>
@@ -221,35 +246,46 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1.5, type: "spring" }}
+          role="list"
+          aria-label="Streak milestone achievements"
         >
           <div className="badge-container">
             {currentStreak >= 7 && (
-              <motion.div 
+              <motion.button 
                 className="streak-badge week-badge"
                 whileHover={{ scale: 1.1, rotate: 5 }}
+                role="listitem"
+                aria-label="Week Champion: 7+ day streak achieved"
+                tabIndex={0}
               >
                 🏃 Week Champion
-              </motion.div>
+              </motion.button>
             )}
             {currentStreak >= 14 && (
-              <motion.div 
+              <motion.button 
                 className="streak-badge biweek-badge"
                 whileHover={{ scale: 1.1, rotate: -5 }}
+                role="listitem"
+                aria-label="Two Week Warrior: 14+ day streak achieved"
+                tabIndex={0}
               >
                 🏆 Two Week Warrior
-              </motion.div>
+              </motion.button>
             )}
             {currentStreak >= 30 && (
-              <motion.div 
+              <motion.button 
                 className="streak-badge month-badge"
                 whileHover={{ scale: 1.1, rotate: 5 }}
+                role="listitem"
+                aria-label="Monthly Master: 30+ day streak achieved"
+                tabIndex={0}
               >
                 👑 Monthly Master
-              </motion.div>
+              </motion.button>
             )}
           </div>
         </motion.div>
       )}
-    </motion.div>
+    </motion.section>
   )
 }

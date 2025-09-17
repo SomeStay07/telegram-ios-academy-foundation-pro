@@ -140,7 +140,7 @@ export const EnhancedStats: React.FC<EnhancedStatsProps> = ({
     index, 
     size = 'medium' 
   }) => (
-    <motion.div
+    <motion.article
       className={`enhanced-stat-card ${size === 'large' ? 'stat-card-large' : 'stat-card-medium'}`}
       initial={{ opacity: 0, y: 20, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -162,6 +162,16 @@ export const EnhancedStats: React.FC<EnhancedStatsProps> = ({
       }}
       style={{
         background: `linear-gradient(135deg, ${stat.bgGradient || 'from-gray-500/20 to-gray-600/20'})`
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`${stat.label}: ${stat.value}${stat.subValue ? `, ${stat.subValue}` : ''}${stat.trend ? `, trending ${stat.trend} by ${stat.trendValue}` : ''}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          haptics.impact('light')
+          console.log('Stat activated via keyboard:', stat.label)
+        }
       }}
     >
       {/* Background glow effect */}
@@ -240,18 +250,20 @@ export const EnhancedStats: React.FC<EnhancedStatsProps> = ({
 
       {/* Shimmer effect on hover */}
       <div className="stat-card-shimmer" />
-    </motion.div>
+    </motion.article>
   )
 
   return (
-    <motion.div
+    <motion.section
       className={`enhanced-stats-container ${className}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
+      aria-labelledby="stats-title"
+      role="region"
     >
       {/* Section Header */}
-      <motion.div
+      <motion.header
         className="stats-section-header"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -269,15 +281,16 @@ export const EnhancedStats: React.FC<EnhancedStatsProps> = ({
               repeat: Infinity,
               ease: "easeInOut"
             }}
+            aria-hidden="true"
           >
             📊
           </motion.div>
           <div>
-            <h3 className="section-title">Performance Analytics</h3>
+            <h2 id="stats-title" className="section-title">Performance Analytics</h2>
             <p className="section-subtitle">Your learning insights at a glance</p>
           </div>
         </div>
-      </motion.div>
+      </motion.header>
 
       {/* Primary Stats Grid */}
       <motion.div
@@ -332,6 +345,6 @@ export const EnhancedStats: React.FC<EnhancedStatsProps> = ({
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.section>
   )
 }

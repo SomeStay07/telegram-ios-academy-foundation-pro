@@ -14,6 +14,7 @@ import './styles/responsive-fixes.css'
 import './styles/touch-optimizations.css'
 import './styles/telegram-webapp-optimizations.css'
 import './styles/pwa-enhancements.css'
+import './styles/design-tokens.css'
 import './styles/modern-profile.css'
 import './styles/enhanced-components.css'
 
