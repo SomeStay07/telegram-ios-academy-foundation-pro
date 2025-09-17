@@ -116,7 +116,7 @@ export function useTelegramUser(): ProcessedTelegramUser {
     }
     
     // Подробная диагностика Telegram WebApp
-    console.log('🔍 Telegram WebApp Debug Info:', {
+    const debugInfo = {
       hasTelegram: !!window.Telegram,
       hasWebApp: !!window.Telegram?.WebApp,
       webApp: window.Telegram?.WebApp,
@@ -125,7 +125,20 @@ export function useTelegramUser(): ProcessedTelegramUser {
       user: window.Telegram?.WebApp?.initDataUnsafe?.user,
       userAgent: navigator.userAgent,
       url: window.location.href
-    })
+    }
+    
+    console.log('🔍 Telegram WebApp Debug Info:', debugInfo)
+    
+    // Временный alert для отладки в Telegram
+    if (window.location.search.includes('debug=true')) {
+      alert('Debug Info: ' + JSON.stringify({
+        hasTelegram: debugInfo.hasTelegram,
+        hasWebApp: debugInfo.hasWebApp,
+        hasInitData: !!debugInfo.initData,
+        hasUser: !!debugInfo.user,
+        userAgent: debugInfo.userAgent.substring(0, 50)
+      }, null, 2))
+    }
     
     const webApp = window.Telegram?.WebApp
     
