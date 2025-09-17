@@ -59,7 +59,7 @@ if (redisUrl) {
 
 const bot = new Bot(token);
 const BOT_USERNAME = process.env.BOT_USERNAME || "your_bot"; 
-const WEBAPP_URL = process.env.WEBAPP_URL || "https://example.com";
+const WEBAPP_URL = process.env.WEBAPP_URL || "https://miniapp-production-9217.up.railway.app";
 
 // Initialize deep-link generator
 const deepLinks = new DeepLinkGenerator(BOT_USERNAME, WEBAPP_URL);
