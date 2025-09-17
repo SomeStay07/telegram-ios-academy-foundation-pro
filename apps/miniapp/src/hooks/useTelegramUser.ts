@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-// Расширенные типы для Telegram WebApp API
-interface TelegramUser {
+// 🎯 ОФИЦИАЛЬНЫЕ типы Telegram WebApp API (2025)
+interface TelegramWebAppUser {
   id: number
   is_bot?: boolean
   first_name: string
@@ -12,26 +12,33 @@ interface TelegramUser {
   photo_url?: string
 }
 
+interface TelegramWebAppInitDataUnsafe {
+  user?: TelegramWebAppUser
+  auth_date?: number
+  query_id?: string
+  hash?: string
+}
+
 interface TelegramWebApp {
-  initData?: string
-  initDataUnsafe?: {
-    user?: TelegramUser
-    auth_date?: number
-    hash?: string
-  }
-  colorScheme?: 'light' | 'dark'
-  themeParams?: Record<string, string>
-  ready?: () => void
-  expand?: () => void
-  close?: () => void
-  showAlert?: (message: string) => void
-  showConfirm?: (message: string, callback?: (confirmed: boolean) => void) => void
+  initData: string  // RAW данные для валидации
+  initDataUnsafe: TelegramWebAppInitDataUnsafe  // Распарсенные данные (небезопасные)
+  version: string
+  platform: string
+  colorScheme: 'light' | 'dark'
+  themeParams: Record<string, string>
+  isExpanded: boolean
+  viewportHeight: number
+  viewportStableHeight: number
+  ready(): void
+  expand(): void
+  close(): void
+  showAlert(message: string): void
 }
 
 declare global {
   interface Window {
     Telegram?: {
-      WebApp?: TelegramWebApp
+      WebApp: TelegramWebApp
     }
   }
 }
@@ -45,6 +52,7 @@ export interface ProcessedTelegramUser {
   isPremium: boolean
   languageCode: string
   isAvailable: boolean
+  rawInitData: string  // Для валидации на бэкенде
 }
 
 export function useTelegramUser(): ProcessedTelegramUser {
@@ -56,71 +64,98 @@ export function useTelegramUser(): ProcessedTelegramUser {
     avatar: '',
     isPremium: false,
     languageCode: 'en',
-    isAvailable: false
+    isAvailable: false,
+    rawInitData: ''
   })
 
   useEffect(() => {
-    // Функция для обработки реальных данных Telegram
-    const processTelegramUser = (user: any) => {
-      console.log('🔗 Processing real Telegram user data:', user)
+    console.log('🚀 Starting REAL Telegram WebApp integration...')
+    
+    const loadRealTelegramData = () => {
+      // Проверяем доступность Telegram WebApp
+      if (!window.Telegram?.WebApp) {
+        console.log('❌ window.Telegram.WebApp not found')
+        console.log('🔍 Available objects:', Object.keys(window).filter(k => k.toLowerCase().includes('telegram')))
+        return false
+      }
+
+      const tg = window.Telegram.WebApp
       
+      // Инициализируем WebApp
+      tg.ready()
+      tg.expand()
+      
+      console.log('📱 Telegram WebApp initialized:', {
+        version: tg.version,
+        platform: tg.platform,
+        colorScheme: tg.colorScheme,
+        hasInitData: !!tg.initData,
+        initDataLength: tg.initData?.length || 0,
+        hasUser: !!tg.initDataUnsafe?.user
+      })
+
+      // Проверяем наличие пользователя
+      if (!tg.initDataUnsafe?.user) {
+        console.log('❌ No user data in initDataUnsafe')
+        console.log('🔍 initDataUnsafe contents:', tg.initDataUnsafe)
+        console.log('🔍 Raw initData:', tg.initData)
+        return false
+      }
+
+      const user = tg.initDataUnsafe.user
+      
+      console.log('✅ REAL user data found:', {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        username: user.username,
+        language_code: user.language_code,
+        is_premium: user.is_premium,
+        photo_url: user.photo_url
+      })
+
+      // Создаём обработанные данные пользователя
       const processedUser: ProcessedTelegramUser = {
         id: user.id,
-        firstName: user.first_name || 'Telegram User',
+        firstName: user.first_name,
         lastName: user.last_name || '',
         username: user.username || '',
         avatar: user.photo_url || '',
         isPremium: user.is_premium || false,
         languageCode: user.language_code || 'en',
-        isAvailable: true
+        isAvailable: true,
+        rawInitData: tg.initData
       }
-      
+
       setTelegramUser(processedUser)
       
-      console.log('✅ Real Telegram user data loaded:', {
-        id: processedUser.id,
-        name: `${processedUser.firstName} ${processedUser.lastName}`,
-        username: processedUser.username,
+      console.log('🎉 REAL Telegram user loaded successfully:', {
+        name: `${processedUser.firstName} ${processedUser.lastName}`.trim(),
+        username: processedUser.username ? `@${processedUser.username}` : 'No username',
         isPremium: processedUser.isPremium,
-        hasAvatar: !!processedUser.avatar
+        hasAvatar: !!processedUser.avatar,
+        dataSize: processedUser.rawInitData.length
       })
-    }
-
-    // Проверяем Telegram WebApp API
-    const checkTelegramWebApp = () => {
-      console.log('🔍 Checking for Telegram WebApp...')
       
-      if (window.Telegram?.WebApp) {
-        const webApp = window.Telegram.WebApp
-        console.log('📱 Telegram WebApp found:', {
-          initData: webApp.initData,
-          platform: webApp.platform,
-          version: webApp.version,
-          user: webApp.initDataUnsafe?.user
-        })
-        
-        if (webApp.initDataUnsafe?.user) {
-          processTelegramUser(webApp.initDataUnsafe.user)
-        } else {
-          console.log('⚠️ Telegram WebApp available but no user data')
-          console.log('🔍 This may mean user hasn\'t authorized the bot')
-        }
-      } else {
-        console.log('❌ Telegram WebApp not available')
-        console.log('💡 Make sure you\'re opening this from a Telegram Bot WebApp')
-      }
+      return true
     }
 
-    // Проверяем сразу
-    checkTelegramWebApp()
+    // Пробуем загрузить данные сразу
+    const success = loadRealTelegramData()
     
-    // Также проверяем через некоторое время (для медленной загрузки)
-    const timeouts = [500, 1000, 2000].map(delay => 
-      setTimeout(checkTelegramWebApp, delay)
-    )
-    
-    return () => {
-      timeouts.forEach(clearTimeout)
+    if (!success) {
+      // Если не получилось, пробуем ещё несколько раз
+      const retryIntervals = [100, 300, 500, 1000, 2000]
+      const timeouts = retryIntervals.map((delay, index) => 
+        setTimeout(() => {
+          console.log(`🔄 Retry attempt ${index + 1}/${retryIntervals.length}`)
+          loadRealTelegramData()
+        }, delay)
+      )
+      
+      return () => {
+        timeouts.forEach(clearTimeout)
+      }
     }
   }, [])
 

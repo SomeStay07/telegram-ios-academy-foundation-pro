@@ -115,18 +115,20 @@ export function ProfilePage() {
     }
   }, [userData.totalXP])
 
-  // Update user data with Telegram information
+  // Update user data with REAL Telegram information ONLY
   useEffect(() => {
-    console.log('🔍 ProfilePage useEffect triggered:', {
-      telegramUser: {
-        isAvailable: telegramUser.isAvailable,
-        firstName: telegramUser.firstName,
-        lastName: telegramUser.lastName,
-        username: telegramUser.username
-      }
+    console.log('🔍 ProfilePage checking for REAL Telegram data:', {
+      isAvailable: telegramUser.isAvailable,
+      id: telegramUser.id,
+      firstName: telegramUser.firstName,
+      lastName: telegramUser.lastName,
+      username: telegramUser.username,
+      hasRawData: !!telegramUser.rawInitData
     })
     
-    if (telegramUser.isAvailable) {
+    if (telegramUser.isAvailable && telegramUser.id > 0 && telegramUser.firstName) {
+      console.log('✅ Found REAL Telegram user data, updating profile...')
+      
       const newUserData = {
         ...userData,
         id: telegramUser.id,
@@ -136,22 +138,18 @@ export function ProfilePage() {
         avatar: getAvatarUrl(telegramUser)
       }
       
-      console.log('🔄 Updating profile data:', {
-        before: { firstName: userData.firstName, lastName: userData.lastName, username: userData.username },
-        after: { firstName: newUserData.firstName, lastName: newUserData.lastName, username: newUserData.username }
-      })
-      
       setUserData(newUserData)
       
-      console.log('🔄 Updated profile with Telegram data:', {
+      console.log('🎉 Profile updated with REAL Telegram data:', {
         name: getFullName(telegramUser),
-        username: getDisplayUsername(telegramUser),
-        isPremium: telegramUser.isPremium
+        username: telegramUser.username ? `@${telegramUser.username}` : 'No username',
+        isPremium: telegramUser.isPremium,
+        rawDataSize: telegramUser.rawInitData.length
       })
     } else {
-      console.log('⚠️ Telegram user not available, using mock data')
+      console.log('❌ No real Telegram data available - profile shows empty state')
     }
-  }, [telegramUser, setUserData])
+  }, [telegramUser, setUserData, userData])
 
   const { currentRank, nextRank, isMaxRank, progressPercentage, xpToNext } = rankData
 
@@ -188,40 +186,18 @@ export function ProfilePage() {
     )
   }, [haptics, achievement, currentRank, userData.totalXP])
 
+  // Telegram Main Button initialization (only when we have real data)
   useEffect(() => {
-    const initialized = initializeTelegramWebApp()
-    const user = getUserData()
-    
-    if (isTelegramWebApp && user) {
-      // Use real Telegram data
-      setUserData(prev => ({
-        ...prev,
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        avatar: user.avatar
-      }))
-    } else {
-      // Use enhanced mock data for local development
-      setUserData(prev => ({
-        ...prev,
-        firstName: 'Тимур',
-        lastName: 'Цеберда',
-        username: 'timurceberda',
-        avatar: '' // Use default developer icon instead
-      }))
-    }
-
-    if (initialized) {
+    if (telegramUser.isAvailable && telegramUser.id > 0) {
+      console.log('🎯 Setting up Telegram Main Button for real user')
       setTelegramMainButton({
         text: '🚀 Start Challenge',
         color: currentRank.color,
         textColor: '#FFFFFF',
-        onClick: () => console.log('Starting challenge...')
+        onClick: () => console.log('Starting challenge for real user:', telegramUser.firstName)
       })
     }
-  }, [currentRank.color, isTelegramWebApp, setUserData])
+  }, [telegramUser, currentRank.color])
 
   const containerVariants = {
     hidden: { opacity: 0 },
