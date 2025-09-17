@@ -17,8 +17,46 @@
   <meta name='telegram-web-app' content='1'/>
   
   <!-- Telegram WebApp Script - CRITICAL for WebApp API -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script 
+    src="https://telegram.org/js/telegram-web-app.js"
+    onload="console.log('✅ Telegram script loaded successfully')"
+    onerror="console.error('❌ Failed to load Telegram script from telegram.org')"
+  ></script>
   
+  <!-- Fallback Script Loader -->
+  <script>
+    // Alternative script loading if first one fails
+    function loadTelegramScript() {
+      return new Promise((resolve, reject) => {
+        if (window.Telegram) {
+          console.log('🔍 Telegram already available')
+          resolve()
+          return
+        }
+        
+        const script = document.createElement('script')
+        script.src = 'https://telegram.org/js/telegram-web-app.js'
+        script.onload = () => {
+          console.log('✅ Fallback Telegram script loaded')
+          resolve()
+        }
+        script.onerror = () => {
+          console.error('❌ Fallback script also failed')
+          reject()
+        }
+        document.head.appendChild(script)
+      })
+    }
+    
+    // Try loading if not available after 500ms
+    setTimeout(() => {
+      if (!window.Telegram) {
+        console.log('🔄 Telegram not found, trying fallback loading...')
+        loadTelegramScript()
+      }
+    }, 500)
+  </script>
+
   <!-- Initialize Telegram WebApp -->
   <script>
     // Immediate check

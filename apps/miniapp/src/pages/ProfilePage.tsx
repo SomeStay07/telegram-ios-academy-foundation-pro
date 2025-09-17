@@ -415,15 +415,29 @@ export function ProfilePage() {
             className="bg-red-500/80 text-white px-3 py-2 rounded-lg text-xs font-mono"
             whileTap={{ scale: 0.95 }}
             onClick={() => {
+              // Проверяем Network
+              const scripts = Array.from(document.scripts).map(s => ({
+                src: s.src,
+                loaded: s.readyState === 'complete' || s.readyState === 'loaded'
+              }))
+              
               const debugInfo = {
                 hasTelegram: !!window.Telegram,
                 hasWebApp: !!window.Telegram?.WebApp,
                 hasInitData: !!window.Telegram?.WebApp?.initData,
                 hasUser: !!window.Telegram?.WebApp?.initDataUnsafe?.user,
                 userAgent: navigator.userAgent.substring(0, 60),
-                telegramUserData: telegramUser
+                telegramUserData: telegramUser,
+                scripts: scripts.filter(s => s.src.includes('telegram')),
+                location: {
+                  host: window.location.host,
+                  protocol: window.location.protocol,
+                  href: window.location.href
+                },
+                isHttps: window.location.protocol === 'https:',
+                windowKeys: Object.keys(window).filter(k => k.toLowerCase().includes('telegram'))
               }
-              alert('🔍 Debug Info:\n' + JSON.stringify(debugInfo, null, 2))
+              alert('🔍 Detailed Debug:\n' + JSON.stringify(debugInfo, null, 2))
             }}
           >
             DEBUG
