@@ -24,40 +24,74 @@
     crossorigin="anonymous"
   ></script>
   
-  <!-- Simplified Telegram WebApp Integration -->
+  <!-- Emergency Telegram WebApp Diagnostics -->
   <script>
-    // Simple initialization that doesn't interfere with React
-    function setupTelegramWebApp() {
-      console.log('🔍 Setting up Telegram WebApp')
+    // EMERGENCY DEBUG: Show all Telegram data immediately
+    function emergencyTelegramDiagnostics() {
+      console.log('🚨 EMERGENCY TELEGRAM DIAGNOSTICS 🚨')
+      console.log('URL:', window.location.href)
+      console.log('User Agent:', navigator.userAgent)
+      console.log('Referrer:', document.referrer)
       
-      if (window.Telegram?.WebApp) {
-        const webApp = window.Telegram.WebApp
-        console.log('✅ Telegram WebApp found, initializing...')
+      // Check if Telegram object exists
+      if (window.Telegram) {
+        console.log('✅ window.Telegram EXISTS')
         
-        try {
-          webApp.ready()
-          webApp.expand()
+        if (window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp
+          console.log('✅ window.Telegram.WebApp EXISTS')
           
-          console.log('📱 Telegram WebApp initialized:', {
-            hasInitData: !!webApp.initData,
-            hasUser: !!webApp.initDataUnsafe?.user,
-            platform: webApp.platform,
-            version: webApp.version,
-            colorScheme: webApp.colorScheme
-          })
-        } catch (error) {
-          console.error('❌ Error initializing Telegram WebApp:', error)
+          // Log ALL WebApp properties
+          console.log('📱 FULL WebApp Object:', webApp)
+          console.log('📱 WebApp Keys:', Object.keys(webApp))
+          
+          // Specific critical properties
+          console.log('🔑 CRITICAL DATA:')
+          console.log('  - initData:', webApp.initData)
+          console.log('  - initData length:', webApp.initData?.length || 0)
+          console.log('  - initDataUnsafe:', webApp.initDataUnsafe)
+          console.log('  - user:', webApp.initDataUnsafe?.user)
+          console.log('  - platform:', webApp.platform)
+          console.log('  - version:', webApp.version)
+          console.log('  - isExpanded:', webApp.isExpanded)
+          
+          if (webApp.initDataUnsafe?.user) {
+            console.log('👤 USER DATA FOUND:', webApp.initDataUnsafe.user)
+          } else {
+            console.log('❌ NO USER DATA IN initDataUnsafe')
+          }
+          
+          // Try to initialize
+          try {
+            webApp.ready()
+            webApp.expand()
+            console.log('✅ WebApp initialized successfully')
+          } catch (error) {
+            console.error('❌ WebApp initialization failed:', error)
+          }
+          
+        } else {
+          console.log('❌ window.Telegram.WebApp MISSING')
         }
       } else {
-        console.log('ℹ️ Telegram WebApp not available - running in browser mode')
+        console.log('❌ window.Telegram MISSING - NOT IN TELEGRAM')
       }
+      
+      // Check query parameters for debug
+      const urlParams = new URLSearchParams(window.location.search)
+      console.log('🔍 URL Parameters:', Object.fromEntries(urlParams))
     }
     
-    // Wait for script to load, then initialize
-    setTimeout(setupTelegramWebApp, 100)
+    // Run diagnostics immediately
+    emergencyTelegramDiagnostics()
     
-    // Also try on DOMContentLoaded as fallback
-    document.addEventListener('DOMContentLoaded', setupTelegramWebApp)
+    // Run again after script loads
+    setTimeout(emergencyTelegramDiagnostics, 500)
+    setTimeout(emergencyTelegramDiagnostics, 1000)
+    setTimeout(emergencyTelegramDiagnostics, 2000)
+    
+    // Also on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', emergencyTelegramDiagnostics)
   </script>
   
   <title>iOS Academy Pro</title>
