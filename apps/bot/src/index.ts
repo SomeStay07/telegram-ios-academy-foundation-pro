@@ -65,8 +65,14 @@ const WEBAPP_URL = process.env.WEBAPP_URL || "https://miniapp-production-9217.up
 const deepLinks = new DeepLinkGenerator(BOT_USERNAME, WEBAPP_URL);
 
 bot.command("start", async (ctx) => { 
+  const userId = ctx.from?.id;
+  const username = ctx.from?.username;
+  const firstName = ctx.from?.first_name;
+  
+  console.log(`🎯 User started bot: ${firstName} (@${username}) [${userId}]`);
+  
   const kb = new InlineKeyboard()
-    .webApp("📱 Открыть Академию", WEBAPP_URL)
+    .webApp("🚀 Открыть Академию", WEBAPP_URL)
     .row()
     .url("📚 Курсы", deepLinks.courseLink('ios-fundamentals'))
     .row()
@@ -75,11 +81,12 @@ bot.command("start", async (ctx) => {
     .url("⏱️ Мок-интервью", deepLinks.interviewLink('swift-fundamentals', 'mock'));
   
   await ctx.reply(
-    "🎉 Добро пожаловать в Telegram iOS Academy!\n\n" +
+    `🎉 Привет, ${firstName}! Добро пожаловать в iOS Academy!\n\n` +
     "🚀 Изучайте iOS разработку с интерактивными уроками\n" +
     "💡 Тренируйтесь на вопросах интервью\n" +
-    "📊 Отслеживайте свой прогресс\n\n" +
-    "Выберите действие:", 
+    "📊 Отслеживайте свой прогресс\n" +
+    "🏆 Соревнуйтесь с другими разработчиками\n\n" +
+    "👆 Нажмите \"🚀 Открыть Академию\" чтобы начать!", 
     { reply_markup: kb }
   );
 });
