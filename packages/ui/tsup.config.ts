@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   entry: ['src/index.ts', 'src/styles/index.css'],
   format: ['esm', 'cjs'],
-  dts: false, // TODO: Fix ref typing issues
+  dts: false, // Disable due to project references issues
   splitting: false,
   sourcemap: true,
   clean: true,

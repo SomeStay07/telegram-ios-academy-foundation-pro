@@ -52,17 +52,44 @@ export function useTelegramUser(): ProcessedTelegramUser {
     // Проверяем параметры URL сразу при инициализации
     const urlParams = new URLSearchParams(window.location.search)
     const testTelegram = urlParams.get('test_telegram') === 'true'
+    const testUser = urlParams.get('test_user') // для разных тестовых пользователей
     
     if (testTelegram) {
-      return {
-        id: 12345678,
-        firstName: 'Тимур',
-        lastName: 'Цебердаев',
-        username: 'timur_dev',
-        avatar: '',
-        isPremium: true,
-        languageCode: 'ru',
-        isAvailable: true
+      // Разные тестовые пользователи
+      if (testUser === 'john') {
+        return {
+          id: 87654321,
+          firstName: 'John',
+          lastName: 'Doe',
+          username: 'john_developer',
+          avatar: '',
+          isPremium: false,
+          languageCode: 'en',
+          isAvailable: true
+        }
+      } else if (testUser === 'anna') {
+        return {
+          id: 11223344,
+          firstName: 'Anna',
+          lastName: 'Smith',
+          username: 'anna_swift',
+          avatar: '',
+          isPremium: true,
+          languageCode: 'en',
+          isAvailable: true
+        }
+      } else {
+        // Дефолтный тестовый пользователь
+        return {
+          id: 12345678,
+          firstName: 'Тимур',
+          lastName: 'Цебердаев',
+          username: 'timur_dev',
+          avatar: '',
+          isPremium: true,
+          languageCode: 'ru',
+          isAvailable: true
+        }
       }
     }
     
@@ -129,13 +156,40 @@ export function useTelegramUser(): ProcessedTelegramUser {
         hasAvatar: !!processedUser.avatar
       })
     } else {
-      console.log('📱 Running outside Telegram WebApp - using mock data')
+      // Проверяем, находимся ли мы в настоящем Telegram WebApp контексте
+      const isInTelegram = !!(window.Telegram?.WebApp?.initData || window.Telegram?.WebApp?.platform)
+      
+      console.log('📱 Running outside Telegram WebApp - using fallback data')
       console.log('📱 Detailed analysis:', {
         windowTelegram: window.Telegram,
         webAppExists: !!window.Telegram?.WebApp,
         initDataUnsafeExists: !!window.Telegram?.WebApp?.initDataUnsafe,
-        userExists: !!window.Telegram?.WebApp?.initDataUnsafe?.user
+        userExists: !!window.Telegram?.WebApp?.initDataUnsafe?.user,
+        initData: window.Telegram?.WebApp?.initData,
+        platform: window.Telegram?.WebApp?.platform,
+        isInTelegram,
+        userAgent: navigator.userAgent,
+        url: window.location.href
       })
+      
+      // Если мы внутри Telegram, но данных нет - показываем специальное сообщение
+      if (isInTelegram) {
+        console.log('⚠️ App is running in Telegram but user data is not available')
+        setTelegramUser({
+          id: 0,
+          firstName: 'Telegram',
+          lastName: 'User',
+          username: 'tg_user',
+          avatar: '',
+          isPremium: false,
+          languageCode: 'en',
+          isAvailable: false
+        })
+      } else {
+        // Обычный браузер - предлагаем тестовый режим
+        console.log('💡 To test with mock Telegram data, add ?test_telegram=true to URL')
+        console.log('💡 Available test users: ?test_telegram=true&test_user=john or anna')
+      }
       
       // Попробуем подождать немного и проверить снова (для случаев медленной загрузки Telegram)
       const timeoutId = setTimeout(() => {

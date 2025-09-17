@@ -861,6 +861,422 @@ interface TabItem {
 
 ---
 
+## 🎯 RESPONSIVE DESIGN TECH STACK 2024-2025
+
+### CSS Container Queries - Революция в адаптивном дизайне
+
+**Что это:** Технология позволяющая стилизовать элементы на основе размера контейнера, а не viewport.
+
+**Браузерная поддержка:** 93% (ноябрь 2024) - поддерживается всеми современными браузерами
+
+**Преимущества:**
+- **Модульность:** Компоненты проектируются изолированно с инкапсулированной адаптивностью
+- **Переиспользование:** Компоненты ведут себя одинаково независимо от контекста использования
+- **Упрощение:** Снижает сложность управления адаптивным дизайном
+- **Производительность:** Исключает необходимость в JavaScript для layout adjustments
+
+```css
+/* Базовое использование Container Queries */
+.card-container {
+  container-type: inline-size;
+}
+
+@container (min-width: 400px) {
+  .card-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Container Query Units - новые единицы измерения */
+.responsive-component {
+  container-type: inline-size;
+  font-size: clamp(1rem, 4cqi, 2rem); /* cqi = container query inline */
+  padding: clamp(0.5rem, 2cqw, 1.5rem); /* cqw = container query width */
+}
+```
+
+### CSS Clamp() - Флюидная типографика и spacing
+
+**Синтаксис:** `clamp(минимум, предпочитаемое_значение, максимум)`
+
+**Лучшие практики для 2024:**
+
+```css
+/* Система флюидной типографики */
+:root {
+  --h1-font-size: clamp(2rem, 4vw, 5rem);
+  --h2-font-size: clamp(1.5rem, 3vw, 4rem);
+  --body-font-size: clamp(1rem, 2.5vw, 1.2rem);
+}
+
+/* Доступная реализация с поддержкой zoom */
+.accessible-text {
+  font-size: clamp(1rem, calc(0.8rem + 0.5vw), 1.2rem);
+  line-height: 1.5;
+}
+
+/* Флюидные отступы */
+.section {
+  padding: clamp(1rem, 5vw, 3rem);
+  margin: clamp(0.5rem, 2vh, 1.5rem) clamp(1rem, 4vw, 2rem);
+}
+```
+
+**Когда использовать:**
+- Заголовки и display текст с большой разницей размеров
+- Hero секции и баннерный текст
+- Элементы с значительным скейлингом
+
+**Когда НЕ использовать:**
+- Основной текст с минимальными различиями размеров
+- UI элементы как кнопки, теги, лейблы
+
+### Telegram Mini Apps - Специфические техники
+
+```css
+/* Safe Area Management для Telegram */
+.app-container {
+  padding-left: max(clamp(0.5rem, 2vw, 1rem), env(safe-area-inset-left));
+  padding-right: max(clamp(0.5rem, 2vw, 1rem), env(safe-area-inset-right));
+  padding-top: max(clamp(0.25rem, 1vh, 0.5rem), env(safe-area-inset-top));
+  padding-bottom: max(clamp(0.5rem, 2vh, 1rem), env(safe-area-inset-bottom));
+}
+
+/* CSS Reset для Telegram Mini Apps */
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+```
+
+**Viewport конфигурация:**
+```html
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no,viewport-fit=cover">
+```
+
+### Современные Viewport Units и относительное масштабирование
+
+```css
+/* Комбинированный подход с viewport units */
+.hero-section {
+  height: clamp(50vh, 60vh, 80vh);
+  padding: clamp(2vh, 4vh, 6vh) clamp(2vw, 4vw, 6vw);
+}
+
+/* Гибридный подход с фиксированными ограничениями */
+.container {
+  width: min(90vw, 1200px);
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+/* Адаптивная типографика для MacBook */
+@media (min-width: 1024px) {
+  .hero-card-premium {
+    margin: clamp(0.5rem, 1vh, 0.75rem) clamp(1rem, 4vw, 2rem) !important;
+    padding: clamp(1rem, 2vw, 1.25rem) !important;
+  }
+}
+```
+
+### Accessibility-первый подход
+
+```css
+/* Поддержка browser zoom функциональности */
+.zoom-friendly {
+  font-size: clamp(1rem, calc(0.8rem + 0.5vw), 1.2rem);
+  line-height: 1.5;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Focus management */
+.interactive-element:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+```
+
+### Стратегия миграции
+
+```css
+/* ДО: Фиксированные размеры */
+.old-approach {
+  font-size: 24px;
+  padding: 16px;
+  margin: 20px;
+}
+
+/* ПОСЛЕ: Флюидный responsive подход */
+.modern-approach {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  padding: clamp(0.75rem, 2vw, 1rem);
+  margin: clamp(1rem, 3vh, 1.25rem);
+}
+
+/* ДО: Media queries подход */
+@media (min-width: 768px) {
+  .card { display: grid; }
+}
+
+/* ПОСЛЕ: Container queries подход */
+.card-container { container-type: inline-size; }
+@container (min-width: 400px) {
+  .card { display: grid; }
+}
+```
+
+### Performance метрики для адаптивного дизайна
+
+**Целевые показатели:**
+- **60fps анимации** на всех поддерживаемых устройствах
+- **Нулевые layout shifts** во время responsive изменений
+- **Мгновенная визуальная обратная связь** для пользовательских взаимодействий
+- **Плавное масштабирование** на всех размерах viewport
+
+**Техники оптимизации:**
+1. Использование `transform` и `opacity` для анимаций
+2. Стратегическое применение `will-change`
+3. Минимизация reflows и repaints
+4. Использование `contain` property для изолированных компонентов
+
+### Практические примеры реализации
+
+#### 1. Container Queries для Profile Card
+```tsx
+// ProfileCard с адаптивным layout
+const ProfileCard: React.FC = () => {
+  return (
+    <div className="profile-container">
+      <motion.div className="profile-card">
+        <div className="profile-content">
+          <div className="avatar-section">{/* Avatar */}</div>
+          <div className="info-section">{/* Info */}</div>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+```
+
+```css
+.profile-container {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.profile-card {
+  padding: clamp(1rem, 3cqw, 2rem);
+  border-radius: clamp(1rem, 2vw, 1.5rem);
+}
+
+@container (min-width: 400px) {
+  .profile-content {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+```
+
+#### 2. Флюидная типографика с Design Tokens
+```css
+:root {
+  /* Fluid typography system */
+  --text-gaming-number: clamp(1.25rem, 4vw, 2rem);
+  --text-gaming-level: clamp(0.9rem, 3vw, 1.1rem);
+  --space-responsive: clamp(0.5rem, 2vw, 1rem);
+}
+
+.gaming-number {
+  font-size: var(--text-gaming-number);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+```
+
+#### 3. XP Progress Bar с Container Queries
+```tsx
+const XPProgressBar: React.FC<XPProgressProps> = ({ current, target, level }) => {
+  const percentage = (current / target) * 100
+  
+  return (
+    <div className="xp-progress-container">
+      <div className="xp-header">
+        <motion.span className="xp-level-badge">Level {level}</motion.span>
+        <span className="xp-values">{current} / {target} XP</span>
+      </div>
+      <div className="xp-bar-track">
+        <motion.div 
+          className="xp-bar-fill"
+          animate={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  )
+}
+```
+
+```css
+.xp-progress-container {
+  container-type: inline-size;
+}
+
+.xp-level-badge {
+  padding: clamp(0.25rem, 1cqw, 0.5rem) clamp(0.5rem, 2cqw, 1rem);
+  font-size: clamp(0.75rem, 2.5cqw, 1rem);
+  border-radius: clamp(0.5rem, 1.5cqw, 0.75rem);
+}
+
+.xp-bar-track {
+  height: clamp(8px, 1.5cqw, 12px);
+}
+
+@container (min-width: 500px) {
+  .xp-bar-track {
+    height: clamp(10px, 2cqw, 16px);
+  }
+}
+```
+
+#### 4. Telegram Safe Area Layout
+```tsx
+const TelegramLayout: React.FC = ({ children }) => {
+  return (
+    <div className="telegram-app-container">
+      <div className="telegram-safe-area">
+        {children}
+      </div>
+    </div>
+  )
+}
+```
+
+```css
+.telegram-safe-area {
+  padding-left: max(clamp(0.5rem, 2vw, 1rem), env(safe-area-inset-left));
+  padding-right: max(clamp(0.5rem, 2vw, 1rem), env(safe-area-inset-right));
+  padding-top: max(clamp(0.25rem, 1vh, 0.5rem), env(safe-area-inset-top));
+  padding-bottom: max(clamp(0.5rem, 2vh, 1rem), env(safe-area-inset-bottom));
+}
+
+@media (min-width: 1024px) {
+  .telegram-safe-area {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-left: max(clamp(1.5rem, 4vw, 2rem), env(safe-area-inset-left));
+    padding-right: max(clamp(1.5rem, 4vw, 2rem), env(safe-area-inset-right));
+  }
+}
+```
+
+#### 5. Haptic-Enhanced кнопки
+```tsx
+const HapticButton: React.FC<HapticButtonProps> = ({ 
+  children, 
+  hapticType = 'medium',
+  onClick
+}) => {
+  const haptics = useHaptics()
+  
+  const handlePress = () => {
+    haptics.impact(hapticType)
+    onClick?.()
+  }
+  
+  return (
+    <motion.button
+      className="haptic-button"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onTapStart={() => haptics.selection()}
+      onClick={handlePress}
+    >
+      {children}
+    </motion.button>
+  )
+}
+```
+
+```css
+.haptic-button {
+  padding: clamp(0.75rem, 3vw, 1rem) clamp(1.5rem, 5vw, 2rem);
+  border-radius: clamp(0.75rem, 3vw, 1rem);
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  min-height: 44px; /* Touch target accessibility */
+  min-width: max(44px, clamp(6rem, 20vw, 10rem));
+}
+```
+
+#### 6. Адаптивная Grid система
+```css
+.card-grid {
+  container-type: inline-size;
+  display: grid;
+  gap: clamp(0.75rem, 2cqw, 1.5rem);
+  grid-template-columns: 1fr;
+}
+
+@container (min-width: 400px) {
+  .card-grid--stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container (min-width: 600px) {
+  .card-grid--stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@container (min-width: 800px) {
+  .card-grid--stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+```
+
+#### 7. Performance-optimized анимации
+```css
+/* GPU-accelerated animations */
+.gpu-optimized {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.level-up-animation {
+  animation: levelUpSequence 2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+@keyframes levelUpSequence {
+  0% { transform: scale(1) rotate(0deg) translate3d(0, 0, 0); }
+  25% { transform: scale(1.2) rotate(-5deg) translate3d(0, -10px, 0); }
+  50% { transform: scale(1.1) rotate(5deg) translate3d(0, -15px, 0); }
+  100% { transform: scale(1) rotate(0deg) translate3d(0, 0, 0); }
+}
+
+/* Cleanup will-change after animation */
+.level-up-animation.animation-complete {
+  will-change: auto;
+}
+```
+
+---
+
 ## 🚀 ROADMAP
 
 ### Phase 1 - Foundation (Q1 2024)
