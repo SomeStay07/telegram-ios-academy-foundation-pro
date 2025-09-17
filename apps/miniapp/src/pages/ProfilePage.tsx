@@ -403,6 +403,32 @@ export function ProfilePage() {
         </div>
       </motion.div>
       
+      {/* Debug Button - только для отладки */}
+      <motion.div 
+        className="fixed bottom-4 left-4 z-50"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+      >
+        <motion.button
+          className="bg-red-500/80 text-white px-3 py-2 rounded-lg text-xs font-mono"
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            const debugInfo = {
+              hasTelegram: !!window.Telegram,
+              hasWebApp: !!window.Telegram?.WebApp,
+              hasInitData: !!window.Telegram?.WebApp?.initData,
+              hasUser: !!window.Telegram?.WebApp?.initDataUnsafe?.user,
+              userAgent: navigator.userAgent.substring(0, 60),
+              telegramUserData: telegramUser
+            }
+            alert('🔍 Debug Info:\n' + JSON.stringify(debugInfo, null, 2))
+          }}
+        >
+          DEBUG
+        </motion.button>
+      </motion.div>
+
       {/* Achievement Notifications */}
       <AchievementNotification />
     </motion.div>

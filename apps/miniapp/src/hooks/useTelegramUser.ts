@@ -129,16 +129,6 @@ export function useTelegramUser(): ProcessedTelegramUser {
     
     console.log('🔍 Telegram WebApp Debug Info:', debugInfo)
     
-    // Временный alert для отладки в Telegram
-    if (window.location.search.includes('debug=true')) {
-      alert('Debug Info: ' + JSON.stringify({
-        hasTelegram: debugInfo.hasTelegram,
-        hasWebApp: debugInfo.hasWebApp,
-        hasInitData: !!debugInfo.initData,
-        hasUser: !!debugInfo.user,
-        userAgent: debugInfo.userAgent.substring(0, 50)
-      }, null, 2))
-    }
     
     const webApp = window.Telegram?.WebApp
     
