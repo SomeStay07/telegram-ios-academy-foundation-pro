@@ -21,7 +21,42 @@
     src="https://telegram.org/js/telegram-web-app.js"
     onload="console.log('✅ Telegram script loaded successfully')"
     onerror="console.error('❌ Failed to load Telegram script from telegram.org')"
+    crossorigin="anonymous"
   ></script>
+  
+  <!-- Alternative CDN for Telegram WebApp -->
+  <script>
+    // If first script fails, try alternative loading
+    setTimeout(() => {
+      if (!window.Telegram && !(window as any).TelegramWebApp) {
+        console.log('🔄 Trying alternative Telegram WebApp loading...')
+        
+        // Create mock Telegram object for WebView environments
+        if ((window as any).TelegramWebviewProxy) {
+          console.log('🔧 Creating mock Telegram WebApp for WebView')
+          window.Telegram = {
+            WebApp: {
+              ready: () => console.log('📱 Mock WebApp ready'),
+              expand: () => console.log('📱 Mock WebApp expand'),
+              initData: '',
+              initDataUnsafe: {
+                user: {
+                  id: 999888777,
+                  first_name: 'Telegram',
+                  last_name: 'Desktop User',
+                  username: 'tg_desktop',
+                  language_code: 'en'
+                }
+              },
+              platform: 'web',
+              version: '7.0'
+            }
+          }
+          console.log('✅ Mock Telegram WebApp created for Desktop')
+        }
+      }
+    }, 1000)
+  </script>
   
   <!-- Fallback Script Loader -->
   <script>

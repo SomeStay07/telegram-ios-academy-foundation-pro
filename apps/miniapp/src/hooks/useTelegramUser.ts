@@ -132,6 +132,7 @@ export function useTelegramUser(): ProcessedTelegramUser {
     
     const webApp = window.Telegram?.WebApp
     
+    // Проверяем есть ли настоящие или mock данные
     if (webApp?.initDataUnsafe?.user) {
       const user = webApp.initDataUnsafe.user
       
