@@ -21,8 +21,13 @@
   
   <!-- Initialize Telegram WebApp -->
   <script>
-    // Initialize Telegram WebApp immediately when script loads
-    window.addEventListener('DOMContentLoaded', () => {
+    // Immediate check
+    console.log('🔍 Initial check - window.Telegram:', window.Telegram)
+    
+    // Check after script loads
+    setTimeout(() => {
+      console.log('🔍 After timeout - window.Telegram:', window.Telegram)
+      
       if (window.Telegram?.WebApp) {
         window.Telegram.WebApp.ready()
         window.Telegram.WebApp.expand()
@@ -35,7 +40,18 @@
         })
       } else {
         console.log('❌ Telegram WebApp not available')
+        console.log('🔍 Debug info:', {
+          hasTelegram: !!window.Telegram,
+          telegramKeys: window.Telegram ? Object.keys(window.Telegram) : 'no telegram',
+          userAgent: navigator.userAgent,
+          url: window.location.href
+        })
       }
+    }, 1000)
+    
+    // Also check on DOMContentLoaded
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('🔍 DOMContentLoaded - window.Telegram:', window.Telegram)
     })
   </script>
   
