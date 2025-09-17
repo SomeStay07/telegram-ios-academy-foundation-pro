@@ -1,0 +1,352 @@
+/* Enhanced Streak Component Styles */
+.enhanced-streak-container {
+  @apply bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-md rounded-2xl p-6 border border-white/10;
+  box-shadow: 
+    0 20px 40px -12px rgba(0, 0, 0, 0.4),
+    0 8px 16px -4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.streak-header {
+  @apply flex items-center justify-between mb-6;
+}
+
+.streak-icon {
+  @apply text-3xl filter drop-shadow-lg;
+}
+
+.streak-title {
+  @apply text-xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent;
+}
+
+.streak-subtitle {
+  @apply text-sm text-white/60 mt-1;
+}
+
+.streak-counter {
+  @apply flex flex-col items-center justify-center bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl p-4 border border-orange-500/30 cursor-pointer transition-all duration-200;
+}
+
+.streak-counter:hover {
+  @apply border-orange-400/50 bg-gradient-to-br from-orange-500/30 to-red-500/30;
+}
+
+.streak-number {
+  @apply text-3xl font-bold text-orange-400;
+}
+
+.streak-days-label {
+  @apply text-xs text-orange-300/80 uppercase tracking-wider;
+}
+
+/* Calendar Grid */
+.streak-calendar {
+  @apply mb-6;
+}
+
+.calendar-grid {
+  @apply grid grid-cols-7 gap-2;
+}
+
+.calendar-day {
+  @apply relative aspect-square bg-slate-800/50 rounded-lg border border-slate-700/50 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 hover:bg-slate-700/50;
+}
+
+.calendar-day.completed {
+  @apply bg-gradient-to-br from-green-500/30 to-emerald-500/30 border-green-400/50;
+}
+
+.calendar-day.today {
+  @apply ring-2 ring-orange-400/60 ring-offset-2 ring-offset-slate-900;
+}
+
+.calendar-day.future {
+  @apply opacity-40 cursor-default;
+}
+
+.day-letter {
+  @apply text-xs text-white/60 font-medium;
+}
+
+.day-number {
+  @apply text-sm font-semibold text-white/80 mt-1;
+}
+
+.completion-indicator {
+  @apply absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-xs text-white font-bold;
+}
+
+.today-pulse {
+  @apply absolute inset-0 bg-orange-400/20 rounded-lg;
+}
+
+/* Progress Bar */
+.streak-progress {
+  @apply mb-4;
+}
+
+.progress-info {
+  @apply flex justify-between items-center mb-2;
+}
+
+.progress-label {
+  @apply text-sm text-white/70;
+}
+
+.progress-percentage {
+  @apply text-sm font-semibold text-orange-400;
+}
+
+.progress-bar-container {
+  @apply relative h-2 bg-slate-700/50 rounded-full overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full bg-gradient-to-r from-orange-500 to-red-500 rounded-full transition-all duration-1000;
+}
+
+.progress-bar-glow {
+  @apply absolute top-0 left-0 h-full bg-gradient-to-r from-orange-400/60 to-red-400/60 rounded-full blur-sm;
+}
+
+/* Streak Badges */
+.streak-badges {
+  @apply mt-4;
+}
+
+.badge-container {
+  @apply flex flex-wrap gap-2;
+}
+
+.streak-badge {
+  @apply px-3 py-1 rounded-full text-xs font-medium cursor-pointer transition-all duration-200;
+}
+
+.week-badge {
+  @apply bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-cyan-300 border border-cyan-500/30;
+}
+
+.biweek-badge {
+  @apply bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-pink-300 border border-pink-500/30;
+}
+
+.month-badge {
+  @apply bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-300 border border-yellow-500/30;
+}
+
+/* Enhanced Stats Component Styles */
+.enhanced-stats-container {
+  @apply space-y-6;
+}
+
+.stats-section-header {
+  @apply px-4 mb-6;
+}
+
+.section-icon {
+  @apply text-2xl;
+}
+
+.section-title {
+  @apply text-lg font-bold text-white;
+}
+
+.section-subtitle {
+  @apply text-sm text-white/60 mt-1;
+}
+
+/* Stats Grid Layout */
+.primary-stats-grid {
+  @apply grid grid-cols-2 gap-4 px-4 mb-6;
+}
+
+.secondary-stats-grid {
+  @apply grid grid-cols-2 gap-3 px-4 mb-6;
+}
+
+/* Enhanced Stat Cards */
+.enhanced-stat-card {
+  @apply relative overflow-hidden rounded-xl border border-white/10 cursor-pointer transition-all duration-300;
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(20px);
+}
+
+.stat-card-large {
+  @apply p-4 min-h-[120px];
+}
+
+.stat-card-medium {
+  @apply p-3 min-h-[100px];
+}
+
+.stat-card-glow {
+  @apply absolute inset-0 opacity-30 pointer-events-none;
+}
+
+.stat-card-content {
+  @apply relative z-10 h-full flex flex-col justify-between;
+}
+
+.stat-header {
+  @apply flex items-start justify-between mb-2;
+}
+
+.stat-icon-enhanced {
+  @apply text-2xl;
+}
+
+.trend-indicator {
+  @apply flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+}
+
+.trend-indicator.up {
+  @apply bg-green-500/20 text-green-400;
+}
+
+.trend-indicator.down {
+  @apply bg-red-500/20 text-red-400;
+}
+
+.trend-indicator.stable {
+  @apply bg-gray-500/20 text-gray-400;
+}
+
+.trend-arrow {
+  @apply text-xs;
+}
+
+.trend-value {
+  @apply font-semibold;
+}
+
+.stat-value-enhanced {
+  @apply text-2xl font-bold mb-1;
+}
+
+.stat-card-large .stat-value-enhanced {
+  @apply text-3xl;
+}
+
+.stat-label-enhanced {
+  @apply text-sm font-medium text-white/80;
+}
+
+.stat-subvalue {
+  @apply text-xs text-white/50 mt-1;
+}
+
+/* Shimmer Effect */
+.stat-card-shimmer {
+  @apply absolute top-0 left-0 w-full h-full opacity-0 transition-opacity duration-300;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+}
+
+.enhanced-stat-card:hover .stat-card-shimmer {
+  @apply opacity-100;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Summary Card */
+.stats-summary-card {
+  @apply bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-xl p-4 border border-indigo-500/30 mx-4 cursor-pointer transition-all duration-300;
+}
+
+.summary-content {
+  @apply flex items-center gap-4;
+}
+
+.summary-icon {
+  @apply text-3xl;
+}
+
+.summary-title {
+  @apply text-lg font-bold text-white mb-1;
+}
+
+.summary-description {
+  @apply text-sm text-white/70 leading-relaxed;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .primary-stats-grid {
+    @apply grid-cols-1 gap-3;
+  }
+  
+  .secondary-stats-grid {
+    @apply grid-cols-2 gap-2;
+  }
+  
+  .stat-card-large {
+    @apply p-3 min-h-[100px];
+  }
+  
+  .stat-card-medium {
+    @apply p-2 min-h-[80px];
+  }
+  
+  .stat-value-enhanced {
+    @apply text-xl;
+  }
+  
+  .stat-card-large .stat-value-enhanced {
+    @apply text-2xl;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .enhanced-streak-container,
+  .enhanced-stat-card {
+    box-shadow: 
+      0 20px 40px -12px rgba(0, 0, 0, 0.6),
+      0 8px 16px -4px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Animation utilities */
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.5s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -15,6 +15,7 @@ import './styles/touch-optimizations.css'
 import './styles/telegram-webapp-optimizations.css'
 import './styles/pwa-enhancements.css'
 import './styles/modern-profile.css'
+import './styles/enhanced-components.css'
 
 // Lazy import analytics and web vitals
 import('./lib/web-vitals').catch(console.error)

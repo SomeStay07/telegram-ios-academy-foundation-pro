@@ -17,21 +17,21 @@ export interface UserData {
   achievements: number
 }
 
-// Primary user data atom
+// Primary user data atom with enhanced demo data
 export const userDataAtom = atom<UserData>({
   id: 1,
   firstName: 'Name',
   lastName: 'Username',
   username: 'developer',
   avatar: '',
-  totalXP: 255,
-  streak: 7,
-  challengesCompleted: 23,
-  battlesWon: 12,
-  globalRank: 1247,
-  weeklyXP: 1250,
-  monthlyXP: 4750,
-  achievements: 8
+  totalXP: 12750,
+  streak: 14,
+  challengesCompleted: 47,
+  battlesWon: 23,
+  globalRank: 892,
+  weeklyXP: 2150,
+  monthlyXP: 8950,
+  achievements: 15
 })
 
 // Derived atoms for computed values

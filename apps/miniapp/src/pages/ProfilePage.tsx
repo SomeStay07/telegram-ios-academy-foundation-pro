@@ -9,6 +9,8 @@ import { useTelegramUser, getAvatarUrl, getFullName, getDisplayUsername } from '
 import { AchievementNotification, useAchievement } from '../components/AchievementNotification'
 import { DraggableStats } from '../components/DraggableStats'
 import { ProfileHero } from '../components/profile/ProfileHero'
+import { EnhancedStreak } from '../components/EnhancedStreak'
+import { EnhancedStats } from '../components/EnhancedStats'
 
 // Animation constants for performance and maintainability
 const ANIMATION_CONSTANTS = {
@@ -243,30 +245,23 @@ export function ProfilePage() {
             />
           </motion.div>
 
-          {/* Comprehensive Stats Section */}
+          {/* Enhanced Streak Section */}
           <motion.div 
-            className="draggable-stats-container"
+            className="enhanced-streak-section mb-8"
             variants={itemVariants}
           >
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h3 className="text-sm text-white/70 font-medium mb-2">
-                📊 Performance Stats
-              </h3>
-              <p className="text-xs text-white/50">Drag to reorder • Tap for details</p>
-            </motion.div>
-            <DraggableStats initialStats={[
-              { id: 'streak', icon: '🔥', label: 'Day Streak', value: userData.streak, gradient: true },
-              { id: 'rank', icon: '🏅', label: 'Global Rank', value: `#${userData.globalRank.toLocaleString()}` },
-              { id: 'challenges', icon: '🎯', label: 'Challenges', value: userData.challengesCompleted },
-              { id: 'battles', icon: '🥊', label: 'Battles Won', value: userData.battlesWon },
-              { id: 'achievements', icon: '🌟', label: 'Achievements', value: userData.achievements },
-              { id: 'weekly', icon: '📅', label: 'Weekly XP', value: userData.weeklyXP.toLocaleString() }
-            ]} />
+            <EnhancedStreak 
+              currentStreak={userData.streak}
+              maxStreak={30}
+            />
+          </motion.div>
+
+          {/* Enhanced Statistics Section */}
+          <motion.div 
+            className="enhanced-stats-section mb-8"
+            variants={itemVariants}
+          >
+            <EnhancedStats userData={userData} />
           </motion.div>
 
           {/* Quick Actions - Responsive */}
