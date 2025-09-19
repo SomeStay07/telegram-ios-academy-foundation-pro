@@ -1,29 +1,48 @@
 import React from 'react'
+import * as AvatarPrimitive from '@radix-ui/react-avatar'
 import { cn } from '../../utils/cn'
+import { cva, type VariantProps } from 'class-variance-authority'
 
-export interface AvatarProps {
+const avatarVariants = cva(
+  'relative inline-flex shrink-0 overflow-hidden transition-all duration-300 hover:scale-105 ring-2 ring-background/20 shadow-lg',
+  {
+    variants: {
+      size: {
+        sm: 'w-8 h-8 text-xs',
+        md: 'w-12 h-12 text-sm',
+        lg: 'w-16 h-16 text-base',
+        xl: 'w-20 h-20 text-lg',
+        '2xl': 'w-24 h-24 text-xl',
+      },
+      variant: {
+        circle: 'rounded-full',
+        rounded: 'rounded-xl',
+      },
+      status: {
+        default: '',
+        premium: 'ring-amber-400/50 shadow-amber-400/25',
+        developer: 'ring-blue-400/50 shadow-blue-400/25',
+        mentor: 'ring-purple-400/50 shadow-purple-400/25',
+        expert: 'ring-green-400/50 shadow-green-400/25',
+      }
+    },
+    defaultVariants: {
+      size: 'md',
+      variant: 'circle',
+      status: 'default',
+    },
+  }
+)
+
+export interface AvatarProps extends VariantProps<typeof avatarVariants> {
   src?: string
   alt?: string
   fallback?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
-  variant?: 'circle' | 'rounded'
   className?: string
   onClick?: () => void
   online?: boolean
   badge?: React.ReactNode
-}
-
-const sizeClasses = {
-  sm: 'w-8 h-8 text-xs',
-  md: 'w-12 h-12 text-sm',
-  lg: 'w-16 h-16 text-base',
-  xl: 'w-20 h-20 text-lg',
-  '2xl': 'w-24 h-24 text-xl'
-}
-
-const radiusClasses = {
-  circle: 'rounded-full',
-  rounded: 'rounded-xl'
+  style?: React.CSSProperties
 }
 
 export function Avatar({
@@ -32,61 +51,41 @@ export function Avatar({
   fallback,
   size = 'md',
   variant = 'circle',
+  status = 'default',
   className,
   onClick,
   online,
   badge,
+  style,
   ...props
 }: AvatarProps) {
-  const [imgError, setImgError] = React.useState(false)
-  
-  const handleImageError = () => {
-    setImgError(true)
-  }
-
-  const showFallback = !src || imgError
   const initials = fallback || alt.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
 
   return (
-    <div
+    <AvatarPrimitive.Root
       className={cn(
-        'relative inline-flex items-center justify-center overflow-hidden bg-muted transition-all duration-200',
-        sizeClasses[size],
-        radiusClasses[variant],
-        onClick && 'cursor-pointer hover:scale-105 active:scale-95',
-        'ring-2 ring-background shadow-lg',
+        avatarVariants({ size, variant, status }),
+        onClick && 'cursor-pointer hover:scale-110 active:scale-95',
         className
       )}
       onClick={onClick}
+      style={style}
       {...props}
     >
-      {!showFallback ? (
-        <img
-          src={src}
-          alt={alt}
-          className="w-full h-full object-cover"
-          onError={handleImageError}
-        />
-      ) : (
-        <span
-          className={cn(
-            'font-semibold text-muted-foreground select-none',
-            size === 'sm' && 'text-xs',
-            size === 'md' && 'text-sm', 
-            size === 'lg' && 'text-base',
-            size === 'xl' && 'text-lg',
-            size === '2xl' && 'text-xl'
-          )}
-        >
-          {initials}
-        </span>
-      )}
+      <AvatarPrimitive.Image
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover transition-all duration-300 hover:brightness-110"
+      />
+      <AvatarPrimitive.Fallback className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 font-semibold text-foreground">
+        {initials || 'U'}
+      </AvatarPrimitive.Fallback>
 
       {/* Online status indicator */}
       {online !== undefined && (
         <div
           className={cn(
-            'absolute bottom-0 right-0 border-2 border-background rounded-full',
+            'absolute bottom-0 right-0 border-2 border-background rounded-full transition-colors',
             online ? 'bg-green-500' : 'bg-gray-400',
             size === 'sm' && 'w-2 h-2',
             size === 'md' && 'w-3 h-3',
@@ -103,7 +102,7 @@ export function Avatar({
           {badge}
         </div>
       )}
-    </div>
+    </AvatarPrimitive.Root>
   )
 }
 

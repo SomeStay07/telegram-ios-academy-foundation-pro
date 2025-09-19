@@ -2,9 +2,8 @@ import React from 'react'
 import { createRouter, createRootRoute, createRoute, redirect } from '@tanstack/react-router'
 import { Outlet } from '@tanstack/react-router'
 import { AppShell } from '../app/AppShell'
-import { RoadmapPage } from '../pages/RoadmapPage'
-import { InterviewPage } from '../pages/InterviewPage'
-import { NewProfilePage } from '../pages/profile/NewProfilePage'
+import { ProfilePage } from '../pages/ProfilePage'
+import { ChallengePage } from '../pages/ChallengePage'
 
 // Root component with AppShell
 function RootComponent() {
@@ -29,13 +28,13 @@ function getDeeplinkTab(): string {
   
   if (startParam?.startsWith('tab=')) {
     const tab = startParam.split('=')[1]
-    if (['roadmap', 'interview', 'profile'].includes(tab)) {
+    if (['challenge', 'profile'].includes(tab)) {
       return `/${tab}`
     }
   }
   
-  // Default to roadmap
-  return '/roadmap'
+  // Default to profile
+  return '/profile'
 }
 
 // Index route - redirect to appropriate tab (with deeplink support)
@@ -49,29 +48,22 @@ const indexRoute = createRoute({
 })
 
 // Tab routes
-const roadmapRoute = createRoute({
+const challengeRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/roadmap',
-  component: RoadmapPage,
-})
-
-const interviewRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/interview',
-  component: InterviewPage,
+  path: '/challenge',
+  component: ChallengePage,
 })
 
 const profileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/profile',
-  component: NewProfilePage,
+  component: ProfilePage,
 })
 
 // Create the route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  roadmapRoute,
-  interviewRoute,
+  challengeRoute,
   profileRoute,
 ])
 

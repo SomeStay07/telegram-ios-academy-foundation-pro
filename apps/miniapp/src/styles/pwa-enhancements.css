@@ -1,0 +1,253 @@
+/* PWA Enhancements for Better Mobile Experience - Inherits from enhanced-components.css adaptive color system */
+
+/* Theme optimization - now handled by adaptive color system in enhanced-components.css */
+
+/* Battery optimization */
+@media (prefers-reduced-data: reduce) {
+  /* Reduce animations and effects for low data mode */
+  .modern-profile * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  /* Hide decorative elements */
+  .level-sparkle,
+  .progress-particles,
+  .avatar-pattern {
+    display: none;
+  }
+}
+
+/* Network optimization */
+@media (prefers-reduced-motion: reduce), (update: slow) {
+  /* Optimize for slow connections */
+  .modern-profile {
+    --animation-duration: 0ms;
+    --transition-duration: 0ms;
+  }
+  
+  .hero-card-premium {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Print styles for sharing */
+@media print {
+  .modern-profile {
+    background: var(--surface-bg) !important;
+    color: var(--text-primary) !important;
+    box-shadow: none !important;
+  }
+  
+  .hero-card-premium {
+    background: var(--surface-bg) !important;
+    border: 2px solid var(--surface-border) !important;
+    box-shadow: none !important;
+  }
+  
+  .action-card-primary,
+  .action-card-secondary {
+    background: var(--surface-card) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--surface-border) !important;
+  }
+  
+  /* Hide interactive elements */
+  .action-card-primary,
+  .action-card-secondary {
+    display: none;
+  }
+}
+
+/* Contrast enhancement for accessibility */
+@media (prefers-contrast: high) {
+  .hero-card-premium {
+    border-width: 2px;
+    border-color: currentColor;
+  }
+  
+  .username-badge-unified,
+  .senior-engineer-badge-unified {
+    border: 2px solid currentColor;
+    background: var(--surface-bg);
+    color: var(--text-primary);
+  }
+  
+  .progress-bar-dynamic {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Screen reader optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .progress-percentage-badge {
+    /* Ensure screen readers can access progress */
+    speak: literal-punctuation;
+  }
+}
+
+/* Orientation change handling */
+@media (orientation: portrait) {
+  .modern-profile {
+    /* Optimize for portrait mode */
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (orientation: landscape) {
+  .modern-profile {
+    /* Optimize for landscape mode */
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .hero-card-premium {
+    margin: 0.5rem auto;
+    max-width: 90%;
+  }
+}
+
+/* Display cutout handling (notches) */
+@supports (padding: max(0px)) {
+  .modern-profile {
+    /* Handle dynamic island and notches */
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+/* Hover capability detection */
+@media (hover: hover) {
+  /* Enable rich interactions for capable devices */
+  .stat-card-draggable:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (hover: none) {
+  /* Optimize for touch-only devices */
+  .stat-card-draggable,
+  .action-card-primary,
+  .action-card-secondary {
+    /* Larger touch targets */
+    min-height: 48px;
+    padding: 0.75rem;
+  }
+}
+
+/* Pointer precision optimization */
+@media (pointer: coarse) {
+  /* Optimize for finger/touch input */
+  .level-badge-inside {
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .action-icon-responsive {
+    min-width: 48px;
+    min-height: 48px;
+  }
+}
+
+@media (pointer: fine) {
+  /* Optimize for precise pointers (mouse, stylus) */
+  .level-badge-inside {
+    min-width: 28px;
+    min-height: 28px;
+  }
+  
+  .action-icon-responsive {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+/* Resolution optimization */
+@media (min-resolution: 2dppx) {
+  /* High DPI display optimizations */
+  .progress-bar-dynamic {
+    border-radius: 6px;
+  }
+  
+  .level-badge-inside {
+    border-width: 0.5px;
+  }
+}
+
+/* Memory optimization for low-end devices */
+@media (max-device-width: 480px) and (max-device-height: 854px) {
+  /* Optimize for budget devices */
+  .modern-profile * {
+    will-change: auto;
+    transform: translateZ(0);
+  }
+  
+  /* Reduce visual complexity */
+  .progress-particles,
+  .progress-energy,
+  .avatar-pattern {
+    display: none;
+  }
+}
+
+/* Bandwidth optimization */
+@media (max-width: 768px) {
+  /* Optimize images and animations for mobile */
+  .avatar-xl-enhanced {
+    image-rendering: optimizeSpeed;
+  }
+  
+  .modern-profile {
+    /* Reduce animation complexity */
+    --animation-complexity: reduced;
+  }
+}
+
+/* Focus management for keyboard navigation */
+.modern-profile :focus-visible {
+  outline: 2px solid var(--tg-theme-link-color, var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip to content functionality */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--tg-theme-button-color, var(--primary));
+  color: var(--tg-theme-button-text-color, var(--white));
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.skip-to-content:focus {
+  top: 6px;
+}
+
+/* Performance monitoring styles */
+.performance-overlay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--text-on-primary);
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.75rem;
+  z-index: 9999;
+  display: none;
+}
+
+/* Development mode performance display */
+@media (max-width: 768px) {
+  .performance-overlay[data-env="development"] {
+    display: block;
+  }
+}

@@ -62,7 +62,7 @@ export async function initWebVitals(): Promise<void> {
     })
 
     webVitalsLoaded = true
-    console.log('📊 Web Vitals initialized')
+    // Web Vitals initialized
   } catch (error) {
     console.error('Failed to load web-vitals:', error)
   }

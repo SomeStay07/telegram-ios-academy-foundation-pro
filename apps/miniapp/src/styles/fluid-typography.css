@@ -1,0 +1,173 @@
+/* Modern Fluid Typography System - Inherits from enhanced-components.css adaptive color system */
+
+:root {
+  /* Design Tokens with Clamp Functions */
+  /* Fluid Typography Scale */
+  --text-xs: clamp(0.7rem, 1.5vw + 0.5rem, 0.75rem);
+  --text-sm: clamp(0.8rem, 2vw + 0.5rem, 0.875rem);
+  --text-base: clamp(0.9rem, 2.5vw + 0.5rem, 1rem);
+  --text-lg: clamp(1rem, 3vw + 0.5rem, 1.125rem);
+  --text-xl: clamp(1.1rem, 3.5vw + 0.5rem, 1.25rem);
+  --text-2xl: clamp(1.25rem, 4vw + 0.5rem, 1.5rem);
+  --text-3xl: clamp(1.5rem, 5vw + 0.5rem, 1.875rem);
+  --text-4xl: clamp(1.75rem, 6vw + 0.5rem, 2.25rem);
+  --text-5xl: clamp(2rem, 8vw + 0.5rem, 3rem);
+  
+  /* Gaming-specific typography */
+  --text-gaming-number: clamp(1.25rem, 4vw + 0.5rem, 2rem);
+  --text-gaming-level: clamp(0.9rem, 3vw + 0.5rem, 1.1rem);
+  --text-gaming-xp: clamp(0.8rem, 2.5vw + 0.5rem, 1rem);
+  --text-gaming-username: clamp(0.75rem, 2.5vw + 0.5rem, 0.9rem);
+  
+  /* Container Query Typography (cqw = container query width) */
+  --text-container-xs: clamp(0.7rem, 2cqw, 0.75rem);
+  --text-container-sm: clamp(0.8rem, 2.5cqw, 0.875rem);
+  --text-container-base: clamp(0.9rem, 3cqw, 1rem);
+  --text-container-lg: clamp(1rem, 3.5cqw, 1.125rem);
+  --text-container-xl: clamp(1.1rem, 4cqw, 1.25rem);
+  
+  /* Fluid spacing system */
+  --space-fluid-xs: clamp(0.25rem, 1vw, 0.5rem);
+  --space-fluid-sm: clamp(0.5rem, 2vw, 0.75rem);
+  --space-fluid-md: clamp(0.75rem, 3vw, 1rem);
+  --space-fluid-lg: clamp(1rem, 4vw, 1.5rem);
+  --space-fluid-xl: clamp(1.5rem, 5vw, 2rem);
+  --space-fluid-2xl: clamp(2rem, 6vw, 3rem);
+  
+  /* Container-based spacing */
+  --space-container-xs: clamp(0.25rem, 1cqw, 0.5rem);
+  --space-container-sm: clamp(0.5rem, 2cqw, 0.75rem);
+  --space-container-md: clamp(0.75rem, 3cqw, 1rem);
+  --space-container-lg: clamp(1rem, 4cqw, 1.5rem);
+  --space-container-xl: clamp(1.5rem, 5cqw, 2rem);
+}
+
+/* === PROFILE-SPECIFIC TYPOGRAPHY === */
+
+/* Profile Name - Hero Typography */
+.profile-name-clean {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  
+  /* Responsive adjustments */
+  margin-bottom: var(--space-fluid-sm);
+}
+
+.name-text {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Username Badge Typography */
+.username-badge-modern {
+  font-size: var(--text-gaming-username);
+  font-weight: 500;
+  line-height: 1;
+  
+  /* Container-based padding */
+  padding: var(--space-container-xs) var(--space-container-sm);
+  border-radius: clamp(0.5rem, 1.5cqw, 0.75rem);
+  margin: var(--space-container-xs);
+}
+
+.username-at-symbol {
+  font-size: 1.1em;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.username-text {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Level Badge Typography - moved to main system */
+
+/* XP Values Typography */
+.xp-values {
+  font-size: var(--text-gaming-xp);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  line-height: 1.2;
+}
+
+.xp-main-number {
+  font-size: var(--text-gaming-number);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, var(--success) 0%, var(--primary-hover) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === ACCESSIBILITY FEATURES === */
+
+/* Support for zoom and reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .name-text {
+    background: none;
+    -webkit-text-fill-color: var(--text-primary);
+    color: var(--text-primary);
+  }
+  
+  .username-badge-modern {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Container Query Typography Optimizations */
+@container (min-width: 400px) {
+  .profile-name-clean {
+    font-size: var(--text-5xl);
+    letter-spacing: -0.025em;
+  }
+  
+  .username-badge-modern {
+    font-size: clamp(0.8rem, 3cqw, 1rem);
+    padding: var(--space-container-sm) var(--space-container-md);
+  }
+}
+
+@container (min-width: 600px) {
+  .profile-name-clean {
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-fluid-md);
+  }
+  
+  /* Level badge sizing handled by main system */
+}
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+
+/* Use contain for isolated typography components - level badge excluded */
+.profile-name-clean,
+.username-badge-modern {
+  contain: layout style paint;
+}
+
+/* Optimize font loading */
+.profile-name-clean {
+  font-display: swap;
+}
+
+/* Prevent layout shifts with font metrics - level badge excluded */
+.xp-main-number {
+  font-feature-settings: "tnum" 1; /* Tabular numbers */
+}

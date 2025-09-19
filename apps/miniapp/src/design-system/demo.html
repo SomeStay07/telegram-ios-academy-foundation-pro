@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Дизайн-Система - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#6366f1',
+                            600: '#5a5fcf',
+                            700: '#4f46e5',
+                            900: '#312e81'
+                        }
+                    },
+                    animation: {
+                        'slide-in': 'slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        'fade-in': 'fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        'shimmer': 'shimmer 2s infinite linear'
+                    },
+                    keyframes: {
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        shimmer: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Кастомные стили для демо */
+        .demo-section {
+            @apply mb-12 p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors duration-200;
+        }
+        
+        .demo-component {
+            @apply p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 transition-colors duration-200;
+        }
+        
+        .demo-grid {
+            @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+        }
+        
+        .section-spacer {
+            @apply mb-10;
+        }
+        
+        .subsection-spacer {
+            @apply mb-8;
+        }
+        
+        .component-group {
+            @apply mb-6;
+        }
+        
+        /* Стили для прогресс-баров */
+        .progress-shimmer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <!-- Header с переключателем темы -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">🎨 Дизайн-Система</h1>
+                <p class="text-sm text-gray-600 dark:text-gray-400">СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ 2025</p>
+            </div>
+            
+            <!-- Theme Toggle -->
+            <button onclick="toggleTheme()" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+                <svg id="theme-icon-light" class="w-5 h-5 dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                </svg>
+                <svg id="theme-icon-dark" class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 py-10">
+        <div class="flex gap-10">
+            <!-- Navigation Sidebar -->
+            <nav class="w-64 flex-shrink-0">
+                <div class="sticky top-24 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+                    <h2 class="font-semibold text-gray-900 dark:text-white mb-6">📚 Навигация</h2>
+                    
+                    <ul class="space-y-3">
+                        <li><a href="#overview" class="nav-link">🎯 Обзор</a></li>
+                        <li><a href="#tokens" class="nav-link">🎨 Токены</a></li>
+                        <li><a href="#actions" class="nav-link">⚡ Действия</a></li>
+                        <li><a href="#forms" class="nav-link">📝 Формы</a></li>
+                        <li><a href="#feedback" class="nav-link">💬 Обратная связь</a></li>
+                        <li><a href="#layout" class="nav-link">🏗️ Макет</a></li>
+                        <li><a href="#css-migration" class="nav-link">🔄 CVA Компоненты</a></li>
+                        <li><a href="#interface" class="nav-link">🧩 Интерфейс</a></li>
+                        <li><a href="#advanced" class="nav-link">🚀 Продвинутые</a></li>
+                        <li><a href="#comparison" class="nav-link">🔄 Сравнение</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="flex-1">
+                <!-- Обзор -->
+                <section id="overview" class="demo-section">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">🎯 Обзор Дизайн-Системы</h2>
+                    <div class="prose dark:prose-invert max-w-none">
+                        <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
+                            Современная дизайн-система основанная на принципах <strong>"СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ"</strong> с полной поддержкой темной темы, accessibility и анимаций.
+                        </p>
+                        
+                        <div class="grid md:grid-cols-2 gap-8 mt-10">
+                            <div class="p-6 bg-indigo-50 dark:bg-indigo-950/30 rounded-xl border border-indigo-200 dark:border-indigo-800">
+                                <h3 class="text-lg font-semibold text-indigo-900 dark:text-indigo-100 mb-2">🎨 Философия</h3>
+                                <p class="text-indigo-700 dark:text-indigo-300">Тонкие анимации, мягкие тени, спокойная палитра цветов</p>
+                            </div>
+                            
+                            <div class="p-6 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                                <h3 class="text-lg font-semibold text-emerald-900 dark:text-emerald-100 mb-2">♿ Accessibility</h3>
+                                <p class="text-emerald-700 dark:text-emerald-300">WCAG 2.1 AA, keyboard navigation, screen readers</p>
+                            </div>
+                            
+                            <div class="p-6 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
+                                <h3 class="text-lg font-semibold text-amber-900 dark:text-amber-100 mb-2">⚡ Технологии</h3>
+                                <p class="text-amber-700 dark:text-amber-300">Tailwind CSS + Headless UI + CVA + TypeScript</p>
+                            </div>
+                            
+                            <div class="p-6 bg-sky-50 dark:bg-sky-950/30 rounded-xl border border-sky-200 dark:border-sky-800">
+                                <h3 class="text-lg font-semibold text-sky-900 dark:text-sky-100 mb-2">🎯 Цель</h3>
+                                <p class="text-sky-700 dark:text-sky-300">Единообразие, производительность, удобство разработки</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Design Tokens -->
+                <section id="tokens" class="demo-section">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">🎨 Дизайн Токены</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        Централизованная система констант для поддержания единообразия дизайна
+                    </p>
+                    
+                    <!-- Цвета -->
+                    <div class="section-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Цветовая палитра</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+                            <div class="space-y-2">
+                                <div class="w-full h-12 bg-indigo-500 rounded-lg shadow-sm"></div>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">Primary 500</p>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="w-full h-12 bg-emerald-500 rounded-lg shadow-sm"></div>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">Success 500</p>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="w-full h-12 bg-amber-500 rounded-lg shadow-sm"></div>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">Warning 500</p>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="w-full h-12 bg-red-500 rounded-lg shadow-sm"></div>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">Danger 500</p>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="w-full h-12 bg-sky-500 rounded-lg shadow-sm"></div>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">Info 500</p>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="w-full h-12 bg-gray-500 rounded-lg shadow-sm"></div>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">Gray 500</p>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="w-full h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg shadow-sm"></div>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">Gradient</p>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="w-full h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg shadow-sm"></div>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">Gold</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Типографика -->
+                    <div class="section-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Типографика</h3>
+                        
+                        <!-- Display Typography -->
+                        <div class="mb-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Display - Крупные заголовки</h4>
+                            <div class="space-y-6">
+                                <div class="border-l-4 border-indigo-500 pl-4">
+                                    <div class="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none text-gray-900 dark:text-gray-100 transition-colors duration-200">Display 2XL</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded mt-2 inline-block">display-2xl</code>
+                                </div>
+                                <div class="border-l-4 border-indigo-400 pl-4">
+                                    <div class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-none text-gray-900 dark:text-gray-100 transition-colors duration-200">Display XL</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded mt-2 inline-block">display-xl</code>
+                                </div>
+                                <div class="border-l-4 border-indigo-300 pl-4">
+                                    <div class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight text-gray-900 dark:text-gray-100 transition-colors duration-200">Display Large</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded mt-2 inline-block">display-lg</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Heading Typography -->
+                        <div class="mb-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Headings - Заголовки секций</h4>
+                            <div class="space-y-4">
+                                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                                    <div class="text-2xl md:text-3xl font-bold leading-tight tracking-tight text-gray-900 dark:text-gray-100 transition-colors duration-200">Heading XL</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">heading-xl</code>
+                                </div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                                    <div class="text-xl md:text-2xl font-bold leading-tight text-gray-900 dark:text-gray-100 transition-colors duration-200">Heading Large</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">heading-lg</code>
+                                </div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                                    <div class="text-lg md:text-xl font-semibold leading-snug text-gray-900 dark:text-gray-100 transition-colors duration-200">Heading Medium</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">heading-md</code>
+                                </div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                                    <div class="text-base md:text-lg font-semibold leading-snug text-gray-900 dark:text-gray-100 transition-colors duration-200">Heading Small</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">heading-sm</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Body Typography -->
+                        <div class="mb-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Body - Основной текст</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="text-lg md:text-xl font-normal leading-relaxed text-gray-900 dark:text-gray-100 transition-colors duration-200">Body XL - Этот текст используется для важных параграфов, которые должны выделяться среди основного контента.</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded mt-2 inline-block">body-xl</code>
+                                </div>
+                                <div>
+                                    <div class="text-base md:text-lg font-normal leading-relaxed text-gray-900 dark:text-gray-100 transition-colors duration-200">Body Large - Увеличенный текст для лучшей читаемости в длинных статьях и описаниях.</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded mt-2 inline-block">body-lg</code>
+                                </div>
+                                <div>
+                                    <div class="text-sm md:text-base font-normal leading-normal text-gray-900 dark:text-gray-100 transition-colors duration-200">Body Medium - Стандартный размер текста для большинства параграфов и описаний.</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded mt-2 inline-block">body-md</code>
+                                </div>
+                                <div>
+                                    <div class="text-xs md:text-sm font-normal leading-normal text-gray-900 dark:text-gray-100 transition-colors duration-200">Body Small - Компактный текст для второстепенной информации.</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded mt-2 inline-block">body-sm</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Color Variants -->
+                        <div class="mb-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Цветовые варианты</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-3">
+                                    <div class="text-base font-normal leading-normal text-gray-900 dark:text-gray-100 transition-colors duration-200">Default - основной цвет</div>
+                                    <div class="text-base font-normal leading-normal text-gray-600 dark:text-gray-400 transition-colors duration-200">Muted - приглушенный текст</div>
+                                    <div class="text-base font-normal leading-normal text-gray-500 dark:text-gray-500 transition-colors duration-200">Subtle - едва заметный текст</div>
+                                    <div class="text-base font-normal leading-normal text-indigo-600 dark:text-indigo-400 transition-colors duration-200">Primary - основной бренд</div>
+                                    <div class="text-base font-normal leading-normal text-gray-700 dark:text-gray-300 transition-colors duration-200">Secondary - вторичный цвет</div>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="text-base font-normal leading-normal text-emerald-600 dark:text-emerald-400 transition-colors duration-200">Success - успех</div>
+                                    <div class="text-base font-normal leading-normal text-amber-600 dark:text-amber-400 transition-colors duration-200">Warning - предупреждение</div>
+                                    <div class="text-base font-normal leading-normal text-red-600 dark:text-red-400 transition-colors duration-200">Danger - опасность</div>
+                                    <div class="text-base font-normal leading-normal text-sky-600 dark:text-sky-400 transition-colors duration-200">Info - информация</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Caption and Labels -->
+                        <div class="mb-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Caption и Labels</h4>
+                            <div class="space-y-4">
+                                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                                    <div class="text-sm font-medium leading-tight text-gray-600 dark:text-gray-400 transition-colors duration-200">Caption Large - подпись</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">caption-lg</code>
+                                </div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                                    <div class="text-xs font-medium leading-tight text-gray-600 dark:text-gray-400 transition-colors duration-200">Caption Medium - метаданные</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">caption-md</code>
+                                </div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                                    <div class="text-base font-medium leading-tight text-gray-900 dark:text-gray-100 transition-colors duration-200">Label Large - крупный лейбл</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">label-lg</code>
+                                </div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                                    <div class="text-sm font-medium leading-tight text-gray-900 dark:text-gray-100 transition-colors duration-200">Label Medium - стандартный лейбл</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">label-md</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Code Typography -->
+                        <div class="mb-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Моноширинный текст</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="text-base font-mono leading-normal text-gray-900 dark:text-gray-100 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded inline">const example = 'inline code';</div>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded ml-2">code-md inline</code>
+                                </div>
+                                <div>
+                                    <pre class="text-sm font-mono leading-normal text-gray-900 dark:text-gray-100 transition-colors duration-200 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto">function greetUser(name) {
+  return `Привет, ${name}! 👋`;
+}
+
+const user = 'Разработчик';
+console.log(greetUser(user));</pre>
+                                    <code class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded mt-2 inline-block">code-sm block</code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Typography Features -->
+                        <div class="mb-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Дополнительные возможности</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-3">
+                                    <h5 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Выравнивание</h5>
+                                    <div class="text-left text-sm text-gray-900 dark:text-gray-100">Текст слева</div>
+                                    <div class="text-center text-sm text-gray-900 dark:text-gray-100">Текст по центру</div>
+                                    <div class="text-right text-sm text-gray-900 dark:text-gray-100">Текст справа</div>
+                                </div>
+                                <div class="space-y-3">
+                                    <h5 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Насыщенность</h5>
+                                    <div class="font-light text-sm text-gray-900 dark:text-gray-100">Font Light</div>
+                                    <div class="font-normal text-sm text-gray-900 dark:text-gray-100">Font Normal</div>
+                                    <div class="font-medium text-sm text-gray-900 dark:text-gray-100">Font Medium</div>
+                                    <div class="font-semibold text-sm text-gray-900 dark:text-gray-100">Font Semibold</div>
+                                    <div class="font-bold text-sm text-gray-900 dark:text-gray-100">Font Bold</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Responsive Typography -->
+                        <div class="mb-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Адаптивная типографика</h4>
+                            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Все размеры автоматически адаптируются к размеру экрана:</p>
+                                <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                                    <li>• <strong>Mobile:</strong> Базовые размеры для читаемости на маленьких экранах</li>
+                                    <li>• <strong>Tablet (md):</strong> Увеличенные размеры для комфортного чтения</li>
+                                    <li>• <strong>Desktop (lg):</strong> Максимальные размеры для лучшей иерархии</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Действия (Actions) -->
+                <section id="actions" class="demo-section">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">⚡ Действия</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        <strong>Цель:</strong> Обеспечить понятные и доступные способы взаимодействия пользователя с интерфейсом
+                    </p>
+                    
+                    <!-- Buttons -->
+                    <div class="section-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Кнопки</h3>
+                        
+                        <!-- Основные варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Основные варианты</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4">
+                                        Primary
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Основное действие</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-gray-100 text-gray-900 border border-gray-200 hover:bg-gray-200 hover:shadow-gray-500/10 focus-visible:ring-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-700 h-10 px-4">
+                                        Secondary
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Вторичное действие</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-transparent text-gray-700 shadow-none hover:bg-gray-100 hover:text-gray-900 focus-visible:ring-gray-500 dark:text-gray-300 dark:hover:bg-gray-800 h-10 px-4">
+                                        Ghost
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Минимальное действие</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Семантические варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Семантические варианты</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-emerald-600 text-white shadow-md hover:bg-emerald-700 hover:shadow-emerald-500/25 focus-visible:ring-emerald-500 h-10 px-4">
+                                        Success
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Успешное действие</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-amber-600 text-white shadow-md hover:bg-amber-700 hover:shadow-amber-500/25 focus-visible:ring-amber-500 h-10 px-4">
+                                        Warning
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Предупреждение</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-red-600 text-white shadow-md hover:bg-red-700 hover:shadow-red-500/25 focus-visible:ring-red-500 h-10 px-4">
+                                        Danger
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Опасное действие</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Новые полезные варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Специальные варианты</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 focus-visible:animate-pulse bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 hover:text-red-800 hover:border-red-300 focus-visible:ring-red-500 dark:bg-red-950 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-900 h-10 px-4">
+                                        Destructive
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Мягкое удаление</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 focus-visible:animate-pulse bg-transparent text-indigo-600 shadow-none underline-offset-4 hover:underline hover:text-indigo-700 focus-visible:ring-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 h-10 px-4">
+                                        Link
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Ссылка-кнопка</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 focus-visible:animate-pulse bg-white text-gray-900 shadow-xl border border-gray-200 hover:shadow-2xl hover:bg-gray-50 focus-visible:ring-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-700 h-10 px-4">
+                                        Floating
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Плавающая кнопка</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 focus-visible:animate-pulse bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md hover:from-amber-600 hover:to-orange-600 hover:shadow-amber-500/25 focus-visible:ring-amber-500 h-10 px-4">
+                                        Gold
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Премиум действие</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Новые градиентные варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Градиентные кнопки</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md hover:from-blue-600 hover:to-indigo-700 hover:shadow-blue-500/25 focus-visible:ring-blue-500 h-10 px-4">
+                                        Градиент Blue
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Синий градиент</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-md hover:from-purple-600 hover:to-pink-700 hover:shadow-purple-500/25 focus-visible:ring-purple-500 h-10 px-4">
+                                        Градиент Purple
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Фиолетовый градиент</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md hover:from-emerald-600 hover:to-teal-700 hover:shadow-emerald-500/25 focus-visible:ring-emerald-500 h-10 px-4">
+                                        Градиент Green
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Зелёный градиент</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Неоновые варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Неоновые кнопки</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-blue-500 text-white shadow-md border-2 border-blue-400 hover:bg-blue-600 hover:shadow-blue-500/50 hover:shadow-lg focus-visible:ring-blue-500 shadow-blue-500/25 h-10 px-4">
+                                        Neon Blue
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Неоновый синий</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-pink-500 text-white shadow-md border-2 border-pink-400 hover:bg-pink-600 hover:shadow-pink-500/50 hover:shadow-lg focus-visible:ring-pink-500 shadow-pink-500/25 h-10 px-4">
+                                        Neon Pink
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Неоновый розовый</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-green-500 text-white shadow-md border-2 border-green-400 hover:bg-green-600 hover:shadow-green-500/50 hover:shadow-lg focus-visible:ring-green-500 shadow-green-500/25 h-10 px-4">
+                                        Neon Green
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Неоновый зелёный</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Social варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Social кнопки</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-sky-500 text-white shadow-md hover:bg-sky-600 hover:shadow-sky-500/25 focus-visible:ring-sky-500 h-10 px-4">
+                                        🐦 Twitter
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Twitter стиль</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-gray-900 text-white shadow-md hover:bg-gray-800 hover:shadow-gray-500/25 focus-visible:ring-gray-500 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200 h-10 px-4">
+                                        🐙 GitHub
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">GitHub стиль</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-indigo-600 text-white shadow-md hover:bg-indigo-700 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4">
+                                        🎮 Discord
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Discord стиль</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Outline варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Цветные Outline</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 border-2 border-indigo-500 bg-transparent text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 focus-visible:ring-indigo-500 dark:text-indigo-400 dark:border-indigo-400 dark:hover:bg-indigo-950 h-10 px-4">
+                                        Primary Outline
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Контурный primary</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 border-2 border-emerald-500 bg-transparent text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:ring-emerald-500 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950 h-10 px-4">
+                                        Success Outline
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Контурный success</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 border-2 border-red-500 bg-transparent text-red-600 hover:bg-red-50 hover:text-red-700 focus-visible:ring-red-500 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-950 h-10 px-4">
+                                        Danger Outline
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Контурный danger</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Soft варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Soft кнопки</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 hover:text-indigo-800 focus-visible:ring-indigo-500 dark:bg-indigo-950 dark:text-indigo-300 dark:border-indigo-800 dark:hover:bg-indigo-900 h-10 px-4">
+                                        Soft Primary
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Мягкий primary</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 hover:text-emerald-800 focus-visible:ring-emerald-500 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900 h-10 px-4">
+                                        Soft Success
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Мягкий success</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 hover:text-amber-800 focus-visible:ring-amber-500 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800 dark:hover:bg-amber-900 h-10 px-4">
+                                        Soft Warning
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Мягкий warning</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Состояния кнопок -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Состояния кнопок</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 cursor-wait animate-pulse h-10 px-4">
+                                        <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                        </svg>
+                                        Loading...
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Загрузка</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 shadow-inner scale-95 transform-none h-10 px-4">
+                                        Pressed
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Нажата</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 ring-2 ring-offset-2 shadow-inner h-10 px-4">
+                                        Active
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Активна</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <button disabled class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4">
+                                        Disabled
+                                    </button>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Отключена</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Размеры -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Размеры</h4>
+                            <div class="flex flex-wrap items-center gap-6">
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-9 px-3">
+                                    Small
+                                </button>
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4">
+                                    Medium
+                                </button>
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-base font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-11 px-6">
+                                    Large
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Состояния -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Состояния</h4>
+                            <div class="flex flex-wrap items-center gap-6">
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden transform-gpu hover:-translate-y-0.5 hover:shadow-lg hover:scale-[1.02] active:translate-y-0 active:scale-100 focus-visible:animate-pulse bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 cursor-wait animate-pulse h-10 px-4">
+                                    <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Loading
+                                </button>
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4" disabled>
+                                    Disabled
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Формы (Forms) -->
+                <section id="forms" class="demo-section">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">📝 Формы</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        <strong>Цель:</strong> Обеспечить удобный и понятный ввод данных с валидацией и состояниями
+                    </p>
+                    
+                    <!-- Input Fields -->
+                    <div class="section-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Поля ввода</h3>
+                        
+                        <div class="demo-grid">
+                            <!-- Default Input -->
+                            <div class="demo-component">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Email</label>
+                                    <div class="relative">
+                                        <input class="w-full px-4 py-3 text-sm font-medium transition-all duration-200 border border-gray-200 rounded-xl bg-white placeholder:text-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:disabled:bg-gray-800 border-gray-200 focus:ring-indigo-500 focus:border-indigo-500 hover:border-gray-300 dark:border-gray-700 dark:focus:border-indigo-400 dark:hover:border-gray-600" type="email" placeholder="example@email.com">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Success State -->
+                            <div class="demo-component">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Email (Success)</label>
+                                    <div class="relative">
+                                        <input class="w-full px-4 py-3 text-sm font-medium transition-all duration-200 border border-gray-200 rounded-xl bg-white placeholder:text-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:disabled:bg-gray-800 border-emerald-200 focus:ring-emerald-500 focus:border-emerald-500 hover:border-emerald-300 dark:border-emerald-800 dark:focus:border-emerald-400" type="email" value="user@example.com">
+                                    </div>
+                                    <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-2">Email подтвержден</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Error State -->
+                            <div class="demo-component">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300 after:content-['*'] after:ml-1 after:text-red-500">Password</label>
+                                    <div class="relative">
+                                        <input class="w-full px-4 py-3 text-sm font-medium transition-all duration-200 border border-gray-200 rounded-xl bg-white placeholder:text-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:disabled:bg-gray-800 border-red-200 focus:ring-red-500 focus:border-red-500 hover:border-red-300 dark:border-red-800 dark:focus:border-red-400" type="password" placeholder="Введите пароль">
+                                    </div>
+                                    <p class="text-sm text-red-600 dark:text-red-400 mt-2">Пароль обязателен</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Input Variants -->
+                        <div class="mt-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Варианты</h4>
+                            <div class="demo-grid">
+                                <div class="demo-component">
+                                    <input class="w-full px-4 py-3 text-sm font-medium transition-all duration-200 border border-gray-200 rounded-xl bg-white placeholder:text-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:disabled:bg-gray-800 bg-gray-50 border-transparent focus:bg-white focus:ring-indigo-500 hover:bg-gray-100 dark:bg-gray-800 dark:focus:bg-gray-900 dark:hover:bg-gray-700" placeholder="Filled variant">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Filled</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <input class="w-full px-4 py-3 text-sm font-medium transition-all duration-200 border border-gray-200 rounded-xl bg-white placeholder:text-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:disabled:bg-gray-800 border-2 border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 hover:border-gray-400 dark:border-gray-600 dark:focus:border-indigo-400 dark:hover:border-gray-500" placeholder="Outline variant">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Outline</p>
+                                </div>
+                                
+                                <div class="demo-component">
+                                    <input class="w-full px-4 py-3 text-sm font-medium transition-all duration-200 border border-gray-200 rounded-xl bg-white placeholder:text-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 dark:disabled:bg-gray-800 border-transparent bg-transparent focus:ring-indigo-500 focus:bg-white focus:border-gray-200 hover:bg-gray-50 dark:focus:bg-gray-900 dark:focus:border-gray-700 dark:hover:bg-gray-800" placeholder="Ghost variant">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Ghost</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Обратная связь (Feedback) -->
+                <section id="feedback" class="demo-section">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">💬 Обратная связь</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        <strong>Цель:</strong> Информировать пользователя о состоянии системы и ходе выполнения задач
+                    </p>
+                    
+                    <!-- Progress Bars -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Индикаторы прогресса</h3>
+                        
+                        <div class="space-y-8">
+                            <!-- Basic Progress -->
+                            <div class="demo-component">
+                                <div class="w-full">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Загрузка файла</span>
+                                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">75%</span>
+                                    </div>
+                                    <div class="relative overflow-hidden transition-all duration-300 bg-gray-100 dark:bg-gray-800 h-3 rounded-full">
+                                        <div class="h-full transition-all duration-500 ease-out relative overflow-hidden bg-indigo-500 dark:bg-indigo-400 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Success Progress -->
+                            <div class="demo-component">
+                                <div class="w-full">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Установка завершена</span>
+                                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">100%</span>
+                                    </div>
+                                    <div class="relative overflow-hidden transition-all duration-300 bg-emerald-100 dark:bg-emerald-900/30 h-3 rounded-full">
+                                        <div class="h-full transition-all duration-500 ease-out relative overflow-hidden bg-emerald-500 dark:bg-emerald-400 rounded-full" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Animated Progress -->
+                            <div class="demo-component">
+                                <div class="w-full">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Синхронизация</span>
+                                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">45%</span>
+                                    </div>
+                                    <div class="relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 h-3 rounded-full">
+                                        <div class="h-full transition-all duration-500 ease-out relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400 rounded-full progress-shimmer" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Different Sizes -->
+                            <div class="demo-component">
+                                <div class="space-y-4">
+                                    <div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Extra Small (1px)</p>
+                                        <div class="relative overflow-hidden transition-all duration-300 bg-gray-100 dark:bg-gray-800 h-1 rounded-full">
+                                            <div class="h-full transition-all duration-500 ease-out relative overflow-hidden bg-indigo-500 dark:bg-indigo-400 rounded-full" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Small (2px)</p>
+                                        <div class="relative overflow-hidden transition-all duration-300 bg-gray-100 dark:bg-gray-800 h-2 rounded-full">
+                                            <div class="h-full transition-all duration-500 ease-out relative overflow-hidden bg-indigo-500 dark:bg-indigo-400 rounded-full" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Large (4px)</p>
+                                        <div class="relative overflow-hidden transition-all duration-300 bg-gray-100 dark:bg-gray-800 h-4 rounded-full">
+                                            <div class="h-full transition-all duration-500 ease-out relative overflow-hidden bg-indigo-500 dark:bg-indigo-400 rounded-full" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Extra Large (6px)</p>
+                                        <div class="relative overflow-hidden transition-all duration-300 bg-gray-100 dark:bg-gray-800 h-6 rounded-full">
+                                            <div class="h-full transition-all duration-500 ease-out relative overflow-hidden bg-indigo-500 dark:bg-indigo-400 rounded-full" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modals -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Модальные окна</h3>
+                        
+                        <div class="demo-grid">
+                            <div class="demo-component">
+                                <button onclick="openModal()" class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4">
+                                    Открыть модал
+                                </button>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Базовый модал</p>
+                            </div>
+                            
+                            <div class="demo-component">
+                                <button onclick="openConfirmModal()" class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-red-600 text-white shadow-md hover:bg-red-700 hover:shadow-red-500/25 focus-visible:ring-red-500 h-10 px-4">
+                                    Подтверждение
+                                </button>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Модал подтверждения</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Макет (Layout) -->
+                <section id="layout" class="demo-section">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">🏗️ Макет</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        <strong>Цель:</strong> Обеспечить структурированное размещение контента с единообразными отступами и группировкой
+                    </p>
+                    
+                    <!-- Cards -->
+                    <div class="section-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Карточки</h3>
+                        
+                        <div class="demo-grid">
+                            <!-- Default Card -->
+                            <div class="bg-white border border-gray-100 rounded-2xl transition-all duration-200 dark:bg-gray-900 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 p-6">
+                                <div class="flex items-center gap-3 mb-4 border-b border-gray-100 pb-4 dark:border-gray-800">
+                                    <div class="flex-shrink-0 text-gray-600 dark:text-gray-400">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">Задача выполнена</h3>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Проект успешно завершен</p>
+                                    </div>
+                                </div>
+                                <div class="text-gray-700 dark:text-gray-300">
+                                    <p>Базовая карточка с заголовком, описанием и иконкой.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Elevated Card -->
+                            <div class="bg-white border border-gray-100 rounded-2xl transition-all duration-200 dark:bg-gray-900 dark:border-gray-800 overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-1 p-6">
+                                <div class="flex items-center gap-3 mb-4 border-b border-gray-100 pb-4 dark:border-gray-800">
+                                    <div class="flex-shrink-0 text-gray-600 dark:text-gray-400">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">Профиль пользователя</h3>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Активен 2 минуты назад</p>
+                                    </div>
+                                </div>
+                                <div class="text-gray-700 dark:text-gray-300">
+                                    <p>Карточка с повышенной тенью для выделения важного контента.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Ghost Card -->
+                            <div class="bg-white border border-gray-100 rounded-2xl transition-all duration-200 dark:bg-gray-900 dark:border-gray-800 overflow-hidden border-transparent shadow-none bg-transparent hover:bg-gray-50 hover:border-gray-100 dark:hover:bg-gray-800/50 dark:hover:border-gray-800 p-6">
+                                <div class="flex items-center gap-3 mb-4 border-none pb-2 mb-2">
+                                    <div class="flex-shrink-0 text-gray-600 dark:text-gray-400">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">Виджет</h3>
+                                    </div>
+                                </div>
+                                <div class="text-gray-700 dark:text-gray-300">
+                                    <p>Минимальная карточка без видимых границ.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CSS Migration (CVA Components) -->
+                <section id="css-migration" class="demo-section">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">🔄 CVA Компоненты (CSS Migration)</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        <strong>Цель:</strong> Новые CVA компоненты, заменяющие CSS классы на современную типизированную архитектуру
+                    </p>
+                    
+                    <!-- ProfileName Component -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">ProfileName (заменяет .profile-name-clean)</h3>
+                        
+                        <div class="demo-grid">
+                            <!-- Default ProfileName -->
+                            <div class="demo-component">
+                                <div id="profile-name-default"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Базовый стиль</p>
+                            </div>
+                            
+                            <!-- Gradient ProfileName -->
+                            <div class="demo-component">
+                                <div id="profile-name-gradient"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Градиентный стиль</p>
+                            </div>
+                            
+                            <!-- Gaming ProfileName -->
+                            <div class="demo-component">
+                                <div id="profile-name-gaming"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Gaming стиль</p>
+                            </div>
+                            
+                            <!-- Different Sizes -->
+                            <div class="demo-component">
+                                <div class="space-y-4">
+                                    <div id="profile-name-small"></div>
+                                    <div id="profile-name-medium"></div>
+                                    <div id="profile-name-large"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Разные размеры</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- UsernameBadge Component -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">UsernameBadge (заменяет .username-badge-modern)</h3>
+                        
+                        <div class="demo-grid">
+                            <!-- Default UsernameBadge -->
+                            <div class="demo-component">
+                                <div id="username-badge-default"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Стандартный стиль</p>
+                            </div>
+                            
+                            <!-- Modern UsernameBadge -->
+                            <div class="demo-component">
+                                <div id="username-badge-modern"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Современный стиль</p>
+                            </div>
+                            
+                            <!-- Telegram UsernameBadge -->
+                            <div class="demo-component">
+                                <div id="username-badge-telegram"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Telegram стиль</p>
+                            </div>
+                            
+                            <!-- Interactive with Copy -->
+                            <div class="demo-component">
+                                <div id="username-badge-interactive"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Интерактивный с копированием</p>
+                            </div>
+                            
+                            <!-- Online Status -->
+                            <div class="demo-component">
+                                <div id="username-badge-online"></div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">С индикатором онлайн</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- LevelBadge Component -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">LevelBadge (заменяет .level-number-inside)</h3>
+                        
+                        <div class="demo-grid">
+                            <!-- Auto Variants -->
+                            <div class="demo-component">
+                                <div class="space-y-4">
+                                    <div id="level-badge-level-5"></div>
+                                    <div id="level-badge-level-25"></div>
+                                    <div id="level-badge-level-50"></div>
+                                    <div id="level-badge-level-85"></div>
+                                    <div id="level-badge-level-99"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Автоматические варианты</p>
+                            </div>
+                            
+                            <!-- Special Variants -->
+                            <div class="demo-component">
+                                <div class="space-y-4">
+                                    <div id="level-badge-gold"></div>
+                                    <div id="level-badge-diamond"></div>
+                                    <div id="level-badge-legendary"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Особые варианты</p>
+                            </div>
+                            
+                            <!-- Different Sizes -->
+                            <div class="demo-component">
+                                <div class="flex items-center gap-4">
+                                    <div id="level-badge-xs"></div>
+                                    <div id="level-badge-sm"></div>
+                                    <div id="level-badge-md"></div>
+                                    <div id="level-badge-lg"></div>
+                                    <div id="level-badge-xl"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Разные размеры</p>
+                            </div>
+                            
+                            <!-- Interactive and Animated -->
+                            <div class="demo-component">
+                                <div class="space-y-4">
+                                    <div id="level-badge-interactive"></div>
+                                    <div id="level-badge-animated"></div>
+                                    <div id="level-badge-glow"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Интерактивные и анимированные</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Migration Information -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Информация о миграции</h3>
+                        
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-semibold text-blue-900 dark:text-blue-200 mb-2">Заменённые CSS классы:</h4>
+                                    <ul class="space-y-1 text-sm text-blue-800 dark:text-blue-300">
+                                        <li><code class="bg-blue-100 dark:bg-blue-800 px-2 py-1 rounded">.profile-name-clean</code> → <code class="bg-green-100 dark:bg-green-800 px-2 py-1 rounded">ProfileName</code></li>
+                                        <li><code class="bg-blue-100 dark:bg-blue-800 px-2 py-1 rounded">.username-badge-modern</code> → <code class="bg-green-100 dark:bg-green-800 px-2 py-1 rounded">UsernameBadge</code></li>
+                                        <li><code class="bg-blue-100 dark:bg-blue-800 px-2 py-1 rounded">.level-number-inside</code> → <code class="bg-green-100 dark:bg-green-800 px-2 py-1 rounded">LevelBadge</code></li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-semibold text-blue-900 dark:text-blue-200 mb-2">Преимущества CVA компонентов:</h4>
+                                    <ul class="space-y-1 text-sm text-blue-800 dark:text-blue-300">
+                                        <li>✅ Полная типизация TypeScript</li>
+                                        <li>✅ Автодополнение в IDE</li>
+                                        <li>✅ Единообразный API</li>
+                                        <li>✅ Лучшая производительность</li>
+                                        <li>✅ Легкость поддержки</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Интерфейсные элементы (Interface) -->
+                <section id="interface" class="demo-section">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">🧩 Интерфейсные элементы</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        <strong>Цель:</strong> Обеспечить дополнительные UI элементы для улучшения пользовательского опыта
+                    </p>
+                    
+                    <!-- Tooltips -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Подсказки (Tooltips)</h3>
+                        
+                        <div class="demo-grid">
+                            <!-- Default Tooltips -->
+                            <div class="demo-component">
+                                <div class="relative inline-block">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4" 
+                                            onmouseover="showTooltip(this, 'Базовая подсказка')" 
+                                            onmouseout="hideTooltip()">
+                                        Наведи на меня
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Базовый tooltip</p>
+                            </div>
+                            
+                            <!-- Success Tooltip -->
+                            <div class="demo-component">
+                                <div class="relative inline-block">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                          onmouseover="showTooltip(this, 'Операция выполнена успешно!', 'success')" 
+                                          onmouseout="hideTooltip()">
+                                        ✅ Успех
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Success tooltip</p>
+                            </div>
+                            
+                            <!-- Warning Tooltip -->
+                            <div class="demo-component">
+                                <div class="relative inline-block">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                                          onmouseover="showTooltip(this, 'Требуется внимание', 'warning')" 
+                                          onmouseout="hideTooltip()">
+                                        ⚠️ Внимание
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Warning tooltip</p>
+                            </div>
+                            
+                            <!-- Info Tooltip -->
+                            <div class="demo-component">
+                                <div class="relative inline-block">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-sky-100 text-sky-600 dark:bg-sky-900/30 dark:text-sky-400"
+                                          onmouseover="showTooltip(this, 'Дополнительная информация', 'info')" 
+                                          onmouseout="hideTooltip()">
+                                        ℹ️ Инфо
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Info tooltip</p>
+                            </div>
+                            
+                            <!-- Danger Tooltip -->
+                            <div class="demo-component">
+                                <div class="relative inline-block">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                                          onmouseover="showTooltip(this, 'Опасная операция!', 'danger')" 
+                                          onmouseout="hideTooltip()">
+                                        🚨 Опасно
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Danger tooltip</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Новые специальные варианты тултипов -->
+                        <div class="mt-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Специальные варианты</h4>
+                            <div class="demo-grid">
+                                <!-- Dark Tooltip -->
+                                <div class="demo-component">
+                                    <div class="relative inline-block">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 bg-gray-100 text-gray-900 border border-gray-200 hover:bg-gray-200 h-10 px-4 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-700" 
+                                                onmouseover="showTooltip(this, 'Тёмная тема тултипа', 'dark')" 
+                                                onmouseout="hideTooltip()">
+                                            🌙 Тёмная тема
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Dark tooltip</p>
+                                </div>
+                                
+                                <!-- Light Tooltip -->
+                                <div class="demo-component">
+                                    <div class="relative inline-block">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-white hover:bg-gray-700 h-10 px-4" 
+                                                onmouseover="showTooltip(this, 'Светлая тема тултипа', 'light')" 
+                                                onmouseout="hideTooltip()">
+                                            ☀️ Светлая тема
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Light tooltip</p>
+                                </div>
+                                
+                                <!-- Telegram Tooltip -->
+                                <div class="demo-component">
+                                    <div class="relative inline-block">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 bg-sky-500 text-white hover:bg-sky-600 h-10 px-4" 
+                                                onmouseover="showTooltip(this, 'В стиле Telegram', 'telegram')" 
+                                                onmouseout="hideTooltip()">
+                                            📱 Telegram
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Telegram tooltip</p>
+                                </div>
+                                
+                                <!-- Minimal Tooltip -->
+                                <div class="demo-component">
+                                    <div class="relative inline-block">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 bg-transparent text-gray-700 hover:bg-gray-100 h-10 px-4 dark:text-gray-300 dark:hover:bg-gray-800" 
+                                                onmouseover="showTooltip(this, 'Минималистичный дизайн', 'minimal')" 
+                                                onmouseout="hideTooltip()">
+                                            ✨ Минимал
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Minimal tooltip</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Новые возможности тултипов -->
+                        <div class="mt-8">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Дополнительные возможности</h4>
+                            <div class="demo-grid">
+                                <!-- Rich Content Tooltip -->
+                                <div class="demo-component">
+                                    <div class="relative inline-block">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 bg-indigo-500 text-white hover:bg-indigo-600 h-10 px-4" 
+                                                onmouseover="showTooltip(this, '<strong>Богатый контент</strong><br/>🎯 Поддержка HTML<br/>📊 Многострочный текст', 'primary', 'top', true)" 
+                                                onmouseout="hideTooltip()">
+                                            📄 Rich Content
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">HTML content</p>
+                                </div>
+                                
+                                <!-- Different Positions -->
+                                <div class="demo-component">
+                                    <div class="relative inline-block">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4" 
+                                                onmouseover="showTooltip(this, 'Появляется снизу', 'success', 'bottom')" 
+                                                onmouseout="hideTooltip()">
+                                            ⬇️ Снизу
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Bottom position</p>
+                                </div>
+                                
+                                <!-- Left Position -->
+                                <div class="demo-component">
+                                    <div class="relative inline-block">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 bg-amber-600 text-white hover:bg-amber-700 h-10 px-4" 
+                                                onmouseover="showTooltip(this, 'Слева от элемента', 'warning', 'left')" 
+                                                onmouseout="hideTooltip()">
+                                            ⬅️ Слева
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Left position</p>
+                                </div>
+                                
+                                <!-- Right Position -->
+                                <div class="demo-component">
+                                    <div class="relative inline-block">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 bg-red-600 text-white hover:bg-red-700 h-10 px-4" 
+                                                onmouseover="showTooltip(this, 'Справа от элемента', 'danger', 'right')" 
+                                                onmouseout="hideTooltip()">
+                                            ➡️ Справа
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Right position</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabs -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Табы (Tabs)</h3>
+                        
+                        <div class="space-y-8">
+                            <!-- Default Tabs -->
+                            <div class="demo-component">
+                                <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Обычные табы</h4>
+                                <div class="flex flex-col transition-all duration-200">
+                                    <div class="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700 pb-2 transition-all duration-200">
+                                        <button class="relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400" onclick="switchTab('default', 0)" id="default-tab-0">
+                                            Общие
+                                        </button>
+                                        <button class="relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600" onclick="switchTab('default', 1)" id="default-tab-1">
+                                            Безопасность
+                                        </button>
+                                        <button class="relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600" onclick="switchTab('default', 2)" id="default-tab-2">
+                                            Уведомления
+                                        </button>
+                                    </div>
+                                    <div class="focus:outline-none transition-all duration-200">
+                                        <div id="default-content-0" class="tab-content">Настройки общих параметров приложения</div>
+                                        <div id="default-content-1" class="tab-content hidden">Настройки безопасности и приватности</div>
+                                        <div id="default-content-2" class="tab-content hidden">Управление уведомлениями</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pills Tabs -->
+                            <div class="demo-component">
+                                <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Табы-пилюли</h4>
+                                <div class="flex flex-col transition-all duration-200">
+                                    <div class="flex gap-2 mb-6 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl transition-all duration-200">
+                                        <button class="relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm" onclick="switchTab('pills', 0)" id="pills-tab-0">
+                                            📊 Аналитика
+                                        </button>
+                                        <button class="relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" onclick="switchTab('pills', 1)" id="pills-tab-1">
+                                            👥 Команда
+                                        </button>
+                                        <button class="relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" onclick="switchTab('pills', 2)" id="pills-tab-2">
+                                            ⚙️ Настройки
+                                        </button>
+                                    </div>
+                                    <div class="focus:outline-none transition-all duration-200">
+                                        <div id="pills-content-0" class="tab-content">Просмотр детальной аналитики и метрик</div>
+                                        <div id="pills-content-1" class="tab-content hidden">Управление участниками команды</div>
+                                        <div id="pills-content-2" class="tab-content hidden">Конфигурация системных параметров</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Code Blocks -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Блоки кода (CodeBlocks)</h3>
+                        
+                        <div class="space-y-8">
+                            <!-- Basic Code Block -->
+                            <div class="demo-component">
+                                <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Базовый блок кода</h4>
+                                <div class="relative rounded-2xl border bg-gray-900 border-gray-800 text-gray-100 font-mono text-sm leading-relaxed overflow-hidden transition-all duration-200">
+                                    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 dark:border-gray-600 bg-gray-800 dark:bg-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex gap-1.5">
+                                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-300 dark:text-gray-400">JavaScript</span>
+                                        </div>
+                                        <button class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-300 hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-800" onclick="copyCode('js-code')">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                                                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                                            </svg>
+                                            Копировать
+                                        </button>
+                                    </div>
+                                    <pre class="block w-full overflow-x-auto whitespace-pre font-mono p-4"><code id="js-code" class="text-inherit">function greetUser(name) {
+  return `Привет, ${name}! 👋`
+}
+
+const user = 'Разработчик'
+console.log(greetUser(user))</code></pre>
+                                </div>
+                            </div>
+                            
+                            <!-- JSON Code Block -->
+                            <div class="demo-component">
+                                <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">JSON конфигурация</h4>
+                                <div class="relative rounded-2xl border bg-[#0d1117] border-[#21262d] text-[#e6edf3] font-mono text-sm leading-relaxed overflow-hidden transition-all duration-200">
+                                    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 dark:border-gray-600 bg-gray-800 dark:bg-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex gap-1.5">
+                                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-300 dark:text-gray-400">package.json</span>
+                                        </div>
+                                        <button class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-300 hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-800" onclick="copyCode('json-code')">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                                                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                                            </svg>
+                                            Копировать
+                                        </button>
+                                    </div>
+                                    <pre class="block w-full overflow-x-auto whitespace-pre font-mono p-4"><code id="json-code" class="text-inherit">{
+  "name": "design-system",
+  "version": "2.0.0",
+  "description": "Современная дизайн-система",
+  "dependencies": {
+    "react": "^18.0.0",
+    "tailwindcss": "^3.4.0",
+    "class-variance-authority": "^0.7.0"
+  }
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quiz Items -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Викторины (Quiz)</h3>
+                        
+                        <div class="space-y-8">
+                            <!-- Basic Quiz -->
+                            <div class="demo-component">
+                                <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Простая викторина</h4>
+                                <div class="w-full transition-all duration-300">
+                                    <div class="bg-white border border-gray-100 rounded-2xl transition-all duration-200 dark:bg-gray-900 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 p-6 w-full">
+                                        <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-6 leading-relaxed text-lg">Что такое CVA (Class Variance Authority)?</h3>
+                                        
+                                        <div class="space-y-3 mb-6">
+                                            <button onclick="selectQuizOption('quiz1', 0, 1)" id="quiz1-option-0" class="w-full p-4 text-left rounded-xl border-2 transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-600 focus:ring-indigo-500 text-gray-900 dark:text-gray-100">
+                                                <div class="flex items-start gap-3">
+                                                    <div class="flex-shrink-0 mt-0.5">
+                                                        <div class="w-4 h-4 border-2 rounded-full border-gray-300 dark:border-gray-600"></div>
+                                                    </div>
+                                                    <div class="flex-1 text-left">
+                                                        <div class="font-medium">CSS фреймворк</div>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                            
+                                            <button onclick="selectQuizOption('quiz1', 1, 1)" id="quiz1-option-1" class="w-full p-4 text-left rounded-xl border-2 transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-600 focus:ring-indigo-500 text-gray-900 dark:text-gray-100">
+                                                <div class="flex items-start gap-3">
+                                                    <div class="flex-shrink-0 mt-0.5">
+                                                        <div class="w-4 h-4 border-2 rounded-full border-gray-300 dark:border-gray-600"></div>
+                                                    </div>
+                                                    <div class="flex-1 text-left">
+                                                        <div class="font-medium">Библиотека для создания вариантов компонентов</div>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                            
+                                            <button onclick="selectQuizOption('quiz1', 2, 1)" id="quiz1-option-2" class="w-full p-4 text-left rounded-xl border-2 transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-600 focus:ring-indigo-500 text-gray-900 dark:text-gray-100">
+                                                <div class="flex items-start gap-3">
+                                                    <div class="flex-shrink-0 mt-0.5">
+                                                        <div class="w-4 h-4 border-2 rounded-full border-gray-300 dark:border-gray-600"></div>
+                                                    </div>
+                                                    <div class="flex-1 text-left">
+                                                        <div class="font-medium">Система управления версиями</div>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        
+                                        <div id="quiz1-result" class="hidden mt-6 p-4 rounded-xl border-l-4 transition-all duration-300 animate-in slide-in-from-bottom-2">
+                                            <div class="flex items-start gap-3">
+                                                <div class="flex-shrink-0 mt-0.5">
+                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"></svg>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="font-semibold mb-1"></div>
+                                                    <div class="text-sm opacity-90">CVA позволяет создавать типизированные варианты компонентов с условной логикой стилей</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Avatars -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Аватары</h3>
+                        
+                        <!-- Размеры -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Размеры</h4>
+                            <div class="flex items-center gap-6 flex-wrap">
+                                <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-gray-100 text-gray-600 font-medium dark:bg-gray-800 dark:text-gray-300 overflow-hidden transition-all duration-200 select-none h-6 w-6 text-xs rounded-full">
+                                    <span class="font-semibold leading-none">XS</span>
+                                </div>
+                                <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-gray-100 text-gray-600 font-medium dark:bg-gray-800 dark:text-gray-300 overflow-hidden transition-all duration-200 select-none h-8 w-8 text-sm rounded-full">
+                                    <span class="font-semibold leading-none">SM</span>
+                                </div>
+                                <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-gray-100 text-gray-600 font-medium dark:bg-gray-800 dark:text-gray-300 overflow-hidden transition-all duration-200 select-none h-10 w-10 text-base rounded-full">
+                                    <span class="font-semibold leading-none">MD</span>
+                                </div>
+                                <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-gray-100 text-gray-600 font-medium dark:bg-gray-800 dark:text-gray-300 overflow-hidden transition-all duration-200 select-none h-12 w-12 text-lg rounded-full">
+                                    <span class="font-semibold leading-none">LG</span>
+                                </div>
+                                <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-gray-100 text-gray-600 font-medium dark:bg-gray-800 dark:text-gray-300 overflow-hidden transition-all duration-200 select-none h-16 w-16 text-xl rounded-full">
+                                    <span class="font-semibold leading-none">XL</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Варианты -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Варианты</h4>
+                            <div class="demo-grid">
+                                <!-- Инициалы -->
+                                <div class="demo-component">
+                                    <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-indigo-100 text-indigo-600 font-medium dark:bg-indigo-900/30 dark:text-indigo-400 overflow-hidden transition-all duration-200 select-none h-12 w-12 text-lg rounded-full">
+                                        <span class="font-semibold leading-none">ИП</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Инициалы</p>
+                                </div>
+                                
+                                <!-- С иконкой -->
+                                <div class="demo-component">
+                                    <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-emerald-100 text-emerald-600 font-medium dark:bg-emerald-900/30 dark:text-emerald-400 overflow-hidden transition-all duration-200 select-none h-12 w-12 text-lg rounded-full">
+                                        <div class="flex items-center justify-center h-full w-full">
+                                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">С иконкой</p>
+                                </div>
+                                
+                                <!-- Со статусом -->
+                                <div class="demo-component">
+                                    <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-gray-100 text-gray-600 font-medium dark:bg-gray-800 dark:text-gray-300 overflow-hidden transition-all duration-200 select-none h-12 w-12 text-lg rounded-full ring-2 ring-white dark:ring-gray-900">
+                                        <span class="font-semibold leading-none">АС</span>
+                                        <div class="absolute rounded-full border-2 border-white dark:border-gray-900 transition-all duration-200 h-3.5 w-3.5 -bottom-0.5 -right-0.5 bg-emerald-500"></div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Со статусом</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Группа аватаров -->
+                        <div class="component-group">
+                            <h4 class="text-md font-medium mb-4 text-gray-700 dark:text-gray-300">Группа</h4>
+                            <div class="demo-component">
+                                <div class="flex -space-x-2">
+                                    <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-indigo-100 text-indigo-600 font-medium dark:bg-indigo-900/30 dark:text-indigo-400 overflow-hidden transition-all duration-200 select-none h-10 w-10 text-base rounded-full ring-2 ring-white dark:ring-gray-900 relative z-10 hover:z-20">
+                                        <span class="font-semibold leading-none">АБ</span>
+                                    </div>
+                                    <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-emerald-100 text-emerald-600 font-medium dark:bg-emerald-900/30 dark:text-emerald-400 overflow-hidden transition-all duration-200 select-none h-10 w-10 text-base rounded-full ring-2 ring-white dark:ring-gray-900 relative z-10 hover:z-20">
+                                        <span class="font-semibold leading-none">ВГ</span>
+                                    </div>
+                                    <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-amber-100 text-amber-600 font-medium dark:bg-amber-900/30 dark:text-amber-400 overflow-hidden transition-all duration-200 select-none h-10 w-10 text-base rounded-full ring-2 ring-white dark:ring-gray-900 relative z-10 hover:z-20">
+                                        <span class="font-semibold leading-none">ДЕ</span>
+                                    </div>
+                                    <div class="relative inline-flex items-center justify-center flex-shrink-0 bg-gray-100 text-gray-600 font-medium dark:bg-gray-800 dark:text-gray-300 overflow-hidden transition-all duration-200 select-none h-10 w-10 text-base rounded-full ring-2 ring-white dark:ring-gray-900 relative z-10 hover:z-20">
+                                        <span class="font-semibold leading-none">+3</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Группа участников</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- StatCards -->
+                    <div class="subsection-spacer">
+                        <h3 class="text-lg font-semibold mb-6 text-gray-900 dark:text-white">Статистические карточки</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <!-- Базовая статкарточка -->
+                            <div class="relative p-6 bg-white border border-gray-100 rounded-2xl transition-all duration-300 ease-out overflow-hidden dark:bg-gray-900 dark:border-gray-800 group cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:border-gray-200 dark:hover:border-gray-700">
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                                
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-shrink-0 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform duration-200">
+                                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400">Пользователи</h3>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                        <span class="text-xs">↗</span>
+                                        <span>+12.5%</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <div class="text-2xl font-bold text-gray-900 dark:text-gray-100 group-hover:scale-105 transition-transform duration-200 origin-left">
+                                        1,234
+                                    </div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">за месяц</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Карточка с акцентом -->
+                            <div class="relative p-6 bg-white border border-gray-100 rounded-2xl transition-all duration-300 ease-out overflow-hidden dark:bg-gray-900 dark:border-gray-800 group cursor-pointer border-l-4 border-l-indigo-500 hover:shadow-lg hover:-translate-y-1 hover:border-gray-200 dark:hover:border-gray-700">
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                                
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-shrink-0 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform duration-200">
+                                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400">Рейтинг</h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <div class="text-2xl font-bold text-gray-900 dark:text-gray-100 group-hover:scale-105 transition-transform duration-200 origin-left" style="color: #6366f1">
+                                        4.8
+                                    </div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">из 5 звезд</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Карточка с градиентом -->
+                            <div class="relative p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border border-gray-100 rounded-2xl transition-all duration-300 ease-out overflow-hidden dark:border-gray-800 group cursor-pointer hover:shadow-lg hover:-translate-y-1">
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                                
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-shrink-0 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform duration-200">
+                                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400">Конверсия</h3>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">
+                                        <span class="text-xs">↘</span>
+                                        <span>-2.1%</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <div class="text-2xl font-bold text-gray-900 dark:text-gray-100 group-hover:scale-105 transition-transform duration-200 origin-left" style="color: #10b981">
+                                        23.4%
+                                    </div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">от посещений</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Сравнение старого и нового -->
+                <section id="comparison" class="demo-section">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">🔄 Сравнение: Старое vs Новое</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">
+                        Демонстрация улучшений в новой дизайн-системе
+                    </p>
+                    
+                    <div class="grid lg:grid-cols-2 gap-10">
+                        <!-- Старый подход -->
+                        <div class="p-6 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-200 dark:border-red-800">
+                            <h3 class="text-lg font-semibold text-red-900 dark:text-red-100 mb-4">❌ Старый подход</h3>
+                            
+                            <div class="space-y-4">
+                                <!-- Старая кнопка -->
+                                <button class="btn btn-primary btn-md">
+                                    Старая кнопка
+                                </button>
+                                
+                                <!-- Старая карточка -->
+                                <section style="background:var(--color-bg); color:var(--color-fg); border:1px solid var(--color-muted); border-radius:16px; padding:16px; box-shadow:var(--shadow)">
+                                    <h2 style="margin-top:0;display:flex;align-items:center;gap:8px">Старая карточка</h2>
+                                    <p>Инлайн стили, CSS переменные</p>
+                                </section>
+                                
+                                <!-- Старый инпут -->
+                                <input style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--color-muted)" placeholder="Старый инпут">
+                            </div>
+                            
+                            <div class="mt-4 text-sm text-red-700 dark:text-red-300">
+                                <ul class="space-y-1">
+                                    <li>• Инлайн стили</li>
+                                    <li>• CSS переменные</li>
+                                    <li>• Нет типизации</li>
+                                    <li>• Отсутствие вариантов</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Новый подход -->
+                        <div class="p-6 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                            <h3 class="text-lg font-semibold text-emerald-900 dark:text-emerald-100 mb-4">✅ Новый подход</h3>
+                            
+                            <div class="space-y-4">
+                                <!-- Новая кнопка -->
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4">
+                                    Новая кнопка
+                                </button>
+                                
+                                <!-- Новая карточка -->
+                                <div class="bg-white border border-gray-100 rounded-2xl transition-all duration-200 dark:bg-gray-900 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 p-6">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Новая карточка</h3>
+                                    <p class="text-gray-700 dark:text-gray-300">CVA + Tailwind + анимации</p>
+                                </div>
+                                
+                                <!-- Новый инпут -->
+                                <input class="w-full px-4 py-3 text-sm font-medium transition-all duration-200 border border-gray-200 rounded-xl bg-white placeholder:text-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 border-gray-200 focus:ring-indigo-500 focus:border-indigo-500 hover:border-gray-300" placeholder="Новый инпут">
+                            </div>
+                            
+                            <div class="mt-4 text-sm text-emerald-700 dark:text-emerald-300">
+                                <ul class="space-y-1">
+                                    <li>• CVA варианты</li>
+                                    <li>• Tailwind классы</li>
+                                    <li>• TypeScript типизация</li>
+                                    <li>• Анимации и состояния</li>
+                                    <li>• Accessibility</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Overlay (скрыт по умолчанию) -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 hidden" style="background: rgba(0,0,0,0.5);">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-left align-middle shadow-xl transition-all animate-slide-in">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+                    <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Пример модала</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Демонстрация работы модального окна</p>
+                </div>
+                <div class="px-6 py-4">
+                    <p class="text-gray-700 dark:text-gray-300">Это пример модального окна, созданного с использованием новой дизайн-системы.</p>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl">
+                    <div class="flex justify-end gap-3">
+                        <button onclick="closeModal()" class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-gray-100 text-gray-900 border border-gray-200 hover:bg-gray-200 hover:shadow-gray-500/10 focus-visible:ring-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-700 h-10 px-4">
+                            Закрыть
+                        </button>
+                        <button onclick="closeModal()" class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-indigo-500 text-white shadow-md hover:bg-indigo-600 hover:shadow-indigo-500/25 focus-visible:ring-indigo-500 h-10 px-4">
+                            Понятно
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal-overlay" class="fixed inset-0 z-50 hidden" style="background: rgba(0,0,0,0.5);">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-left align-middle shadow-xl transition-all animate-slide-in">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+                    <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Подтверждение действия</h3>
+                </div>
+                <div class="px-6 py-4">
+                    <p class="text-gray-600 dark:text-gray-400">Вы уверены, что хотите выполнить это действие? Отменить его будет невозможно.</p>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl">
+                    <div class="flex justify-end gap-3">
+                        <button onclick="closeConfirmModal()" class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-gray-100 text-gray-900 border border-gray-200 hover:bg-gray-200 hover:shadow-gray-500/10 focus-visible:ring-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-700 h-10 px-4">
+                            Отмена
+                        </button>
+                        <button onclick="closeConfirmModal()" class="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 bg-red-600 text-white shadow-md hover:bg-red-700 hover:shadow-red-500/25 focus-visible:ring-red-500 h-10 px-4">
+                            Удалить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Навигационные ссылки */
+        .nav-link {
+            @apply block px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200;
+        }
+        
+        /* Старые CSS классы для демонстрации */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        :root {
+            --color-bg: #ffffff;
+            --color-fg: #111827;
+            --color-muted: #e5e7eb;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark {
+            --color-bg: #1f2937;
+            --color-fg: #f9fafb;
+            --color-muted: #374151;
+        }
+    </style>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark')
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')
+        }
+        
+        // Restore theme preference
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        }
+        
+        // Modal functions
+        function openModal() {
+            document.getElementById('modal-overlay').classList.remove('hidden')
+        }
+        
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.add('hidden')
+        }
+        
+        function openConfirmModal() {
+            document.getElementById('confirm-modal-overlay').classList.remove('hidden')
+        }
+        
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal-overlay').classList.add('hidden')
+        }
+        
+        // Smooth scroll для навигации
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault()
+                const target = document.querySelector(this.getAttribute('href'))
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    })
+                }
+            })
+        })
+        
+        // Tab switching functionality
+        function switchTab(groupId, activeIndex) {
+            // Hide all content in group
+            document.querySelectorAll(`#${groupId}-content-0, #${groupId}-content-1, #${groupId}-content-2`).forEach(content => {
+                content.classList.add('hidden')
+            })
+            
+            // Reset all tab buttons in group
+            document.querySelectorAll(`#${groupId}-tab-0, #${groupId}-tab-1, #${groupId}-tab-2`).forEach(tab => {
+                if (groupId === 'default') {
+                    tab.className = 'relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600'
+                } else {
+                    tab.className = 'relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+                }
+            })
+            
+            // Show active content
+            document.getElementById(`${groupId}-content-${activeIndex}`).classList.remove('hidden')
+            
+            // Style active tab
+            const activeTab = document.getElementById(`${groupId}-tab-${activeIndex}`)
+            if (groupId === 'default') {
+                activeTab.className = 'relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+            } else {
+                activeTab.className = 'relative px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
+            }
+        }
+        
+        // Code copying functionality
+        function copyCode(elementId) {
+            const code = document.getElementById(elementId).textContent
+            navigator.clipboard.writeText(code).then(() => {
+                // Show success feedback
+                const button = event.target.closest('button')
+                const originalText = button.innerHTML
+                button.innerHTML = `
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    Скопировано
+                `
+                setTimeout(() => {
+                    button.innerHTML = originalText
+                }, 2000)
+            })
+        }
+        
+        // Quiz functionality
+        function selectQuizOption(quizId, optionIndex, correctIndex) {
+            // Update option styles
+            const options = document.querySelectorAll(`#${quizId}-option-0, #${quizId}-option-1, #${quizId}-option-2`)
+            options.forEach((option, index) => {
+                const radio = option.querySelector('.w-4.h-4')
+                if (index === optionIndex) {
+                    // Selected option
+                    radio.className = 'w-4 h-4 border-2 rounded-full bg-indigo-500 border-indigo-500 ring-2 ring-indigo-200 dark:ring-indigo-800'
+                } else {
+                    radio.className = 'w-4 h-4 border-2 rounded-full border-gray-300 dark:border-gray-600'
+                }
+            })
+            
+            // Show result
+            const result = document.getElementById(`${quizId}-result`)
+            const isCorrect = optionIndex === correctIndex
+            
+            result.className = `mt-6 p-4 rounded-xl border-l-4 transition-all duration-300 animate-in slide-in-from-bottom-2 ${
+                isCorrect 
+                    ? 'border-l-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-100'
+                    : 'border-l-red-500 bg-red-50 dark:bg-red-950/30 text-red-900 dark:text-red-100'
+            }`
+            
+            const icon = result.querySelector('svg')
+            const title = result.querySelector('.font-semibold')
+            
+            if (isCorrect) {
+                icon.className = 'w-5 h-5 text-emerald-500'
+                icon.innerHTML = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />'
+                title.textContent = 'Правильно!'
+            } else {
+                icon.className = 'w-5 h-5 text-red-500'
+                icon.innerHTML = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />'
+                title.textContent = 'Неправильно'
+            }
+            
+            result.classList.remove('hidden')
+            
+            // Disable all options
+            options.forEach(option => {
+                option.disabled = true
+                option.style.pointerEvents = 'none'
+                option.style.opacity = '0.7'
+            })
+        }
+        
+        // Enhanced Tooltip functionality
+        let currentTooltip = null
+        let tooltipTimeout = null
+        
+        // Tooltip variant styles mapping based on the enhanced Tooltip component
+        const tooltipVariants = {
+            default: 'bg-gray-900 text-gray-100 border-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:border-gray-300',
+            primary: 'bg-indigo-600 text-white border-indigo-500 dark:bg-indigo-500 dark:border-indigo-400',
+            success: 'bg-emerald-600 text-white border-emerald-500 dark:bg-emerald-500 dark:border-emerald-400',
+            warning: 'bg-amber-600 text-white border-amber-500 dark:bg-amber-500 dark:border-amber-400',
+            danger: 'bg-red-600 text-white border-red-500 dark:bg-red-500 dark:border-red-400',
+            info: 'bg-sky-600 text-white border-sky-500 dark:bg-sky-500 dark:border-sky-400',
+            dark: 'bg-gray-800 text-gray-100 border-gray-600 dark:bg-gray-200 dark:text-gray-800 dark:border-gray-400',
+            light: 'bg-white text-gray-900 border-gray-300 shadow-lg dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600',
+            telegram: 'bg-sky-500 text-white border-sky-400 dark:bg-sky-400 dark:border-sky-300',
+            minimal: 'bg-gray-50 text-gray-800 border-gray-200 shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700'
+        }
+        
+        // Arrow variant styles
+        const arrowVariants = {
+            default: 'bg-gray-900 border-gray-700 dark:bg-gray-100 dark:border-gray-300',
+            primary: 'bg-indigo-600 border-indigo-500 dark:bg-indigo-500 dark:border-indigo-400',
+            success: 'bg-emerald-600 border-emerald-500 dark:bg-emerald-500 dark:border-emerald-400',
+            warning: 'bg-amber-600 border-amber-500 dark:bg-amber-500 dark:border-amber-400',
+            danger: 'bg-red-600 border-red-500 dark:bg-red-500 dark:border-red-400',
+            info: 'bg-sky-600 border-sky-500 dark:bg-sky-500 dark:border-sky-400',
+            dark: 'bg-gray-800 border-gray-600 dark:bg-gray-200 dark:border-gray-400',
+            light: 'bg-white border-gray-300 dark:bg-gray-800 dark:border-gray-600',
+            telegram: 'bg-sky-500 border-sky-400 dark:bg-sky-400 dark:border-sky-300',
+            minimal: 'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700'
+        }
+        
+        function showTooltip(element, content, variant = 'default', position = 'top', richContent = false, delay = 200) {
+            // Clear any existing tooltip
+            hideTooltip()
+            
+            tooltipTimeout = setTimeout(() => {
+                // Create tooltip element
+                const tooltip = document.createElement('div')
+                tooltip.className = `absolute z-50 px-3 py-2 text-sm font-medium transition-all duration-200 ease-out rounded-lg shadow-lg pointer-events-none select-none whitespace-nowrap max-w-xs border backdrop-blur-sm transform-gpu opacity-0 scale-95 translate-y-1 ${tooltipVariants[variant] || tooltipVariants.default}`
+                
+                // Set content (with HTML support if richContent is true)
+                if (richContent) {
+                    tooltip.innerHTML = content
+                    tooltip.classList.remove('whitespace-nowrap')
+                    tooltip.classList.add('whitespace-normal', 'max-w-sm')
+                } else {
+                    tooltip.textContent = content
+                }
+                
+                // Add tooltip to document
+                document.body.appendChild(tooltip)
+                
+                // Position tooltip
+                const rect = element.getBoundingClientRect()
+                const tooltipRect = tooltip.getBoundingClientRect()
+                const viewport = {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                }
+                
+                let actualPosition = position
+                let left, top
+                
+                // Calculate position and adjust if needed
+                switch (position) {
+                    case 'top':
+                        left = rect.left + rect.width / 2 - tooltipRect.width / 2
+                        top = rect.top - tooltipRect.height - 8
+                        if (top < 10) {
+                            actualPosition = 'bottom'
+                            top = rect.bottom + 8
+                        }
+                        break
+                    case 'bottom':
+                        left = rect.left + rect.width / 2 - tooltipRect.width / 2
+                        top = rect.bottom + 8
+                        if (top + tooltipRect.height > viewport.height - 10) {
+                            actualPosition = 'top'
+                            top = rect.top - tooltipRect.height - 8
+                        }
+                        break
+                    case 'left':
+                        left = rect.left - tooltipRect.width - 8
+                        top = rect.top + rect.height / 2 - tooltipRect.height / 2
+                        if (left < 10) {
+                            actualPosition = 'right'
+                            left = rect.right + 8
+                        }
+                        break
+                    case 'right':
+                        left = rect.right + 8
+                        top = rect.top + rect.height / 2 - tooltipRect.height / 2
+                        if (left + tooltipRect.width > viewport.width - 10) {
+                            actualPosition = 'left'
+                            left = rect.left - tooltipRect.width - 8
+                        }
+                        break
+                }
+                
+                // Clamp to viewport
+                left = Math.max(10, Math.min(viewport.width - tooltipRect.width - 10, left))
+                top = Math.max(10, Math.min(viewport.height - tooltipRect.height - 10, top))
+                
+                tooltip.style.left = left + 'px'
+                tooltip.style.top = top + 'px'
+                
+                // Create arrow
+                const arrow = document.createElement('div')
+                arrow.className = `absolute w-2 h-2 rotate-45 border ${arrowVariants[variant] || arrowVariants.default}`
+                
+                // Position arrow based on actual position
+                switch (actualPosition) {
+                    case 'top':
+                        arrow.className += ' -bottom-1 left-1/2 -translate-x-1/2 border-t-0 border-l-0'
+                        break
+                    case 'bottom':
+                        arrow.className += ' -top-1 left-1/2 -translate-x-1/2 border-b-0 border-r-0'
+                        break
+                    case 'left':
+                        arrow.className += ' -right-1 top-1/2 -translate-y-1/2 border-l-0 border-b-0'
+                        break
+                    case 'right':
+                        arrow.className += ' -left-1 top-1/2 -translate-y-1/2 border-r-0 border-t-0'
+                        break
+                }
+                
+                tooltip.appendChild(arrow)
+                
+                // Store reference
+                currentTooltip = tooltip
+                
+                // Animate in
+                requestAnimationFrame(() => {
+                    tooltip.classList.remove('opacity-0', 'scale-95', 'translate-y-1')
+                    tooltip.classList.add('opacity-100', 'scale-100', 'translate-y-0')
+                })
+            }, delay)
+        }
+        
+        function hideTooltip() {
+            if (tooltipTimeout) {
+                clearTimeout(tooltipTimeout)
+                tooltipTimeout = null
+            }
+            
+            if (currentTooltip) {
+                // Animate out
+                currentTooltip.classList.remove('opacity-100', 'scale-100', 'translate-y-0')
+                currentTooltip.classList.add('opacity-0', 'scale-95', 'translate-y-1')
+                
+                // Remove after animation
+                setTimeout(() => {
+                    if (currentTooltip && currentTooltip.parentNode) {
+                        currentTooltip.parentNode.removeChild(currentTooltip)
+                    }
+                    currentTooltip = null
+                }, 200)
+            }
+        }
+        
+        // ====================================
+        // CVA Components Demo Rendering
+        // ====================================
+        
+        // Mock CVA utilities
+        const cn = (...classes) => classes.filter(Boolean).join(' ')
+        
+        // Mock ProfileName component rendering
+        function renderProfileName(elementId, { size = 'md', variant = 'default', children = 'Тимур Себерда' }) {
+            const element = document.getElementById(elementId)
+            if (!element) return
+            
+            const sizeClasses = {
+                sm: 'text-2xl md:text-3xl mb-2',
+                md: 'text-3xl md:text-4xl lg:text-5xl mb-3',
+                lg: 'text-4xl md:text-5xl lg:text-6xl mb-4',
+                xl: 'text-5xl md:text-6xl lg:text-7xl mb-4'
+            }
+            
+            const variantClasses = {
+                default: '',
+                gradient: 'bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent',
+                gaming: 'bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent'
+            }
+            
+            const classes = cn(
+                'font-bold leading-tight tracking-tight transition-all duration-200 text-white drop-shadow-sm',
+                sizeClasses[size],
+                variantClasses[variant]
+            )
+            
+            element.innerHTML = `<h1 class="${classes}">${children}</h1>`
+        }
+        
+        // Mock UsernameBadge component rendering
+        function renderUsernameBadge(elementId, { 
+            variant = 'default', 
+            size = 'md',
+            username = 'timurceberda',
+            showAtSymbol = true,
+            online = false,
+            interactive = false,
+            copyOnClick = false
+        }) {
+            const element = document.getElementById(elementId)
+            if (!element) return
+            
+            const sizeClasses = {
+                xs: 'px-2 py-1 text-xs rounded-lg',
+                sm: 'px-3 py-1.5 text-xs rounded-xl',
+                md: 'px-3 py-2 text-sm rounded-xl',
+                lg: 'px-4 py-2.5 text-base rounded-xl',
+                xl: 'px-5 py-3 text-lg rounded-2xl'
+            }
+            
+            const variantClasses = {
+                default: 'bg-white/10 text-white/90 border border-white/20 backdrop-blur-sm',
+                modern: 'bg-gradient-to-r from-white/15 to-white/5 text-white border border-white/25 backdrop-blur-md shadow-lg shadow-black/20',
+                telegram: 'bg-sky-500/20 text-sky-200 border border-sky-400/30 backdrop-blur-sm',
+                gaming: 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-200 border border-indigo-400/30 backdrop-blur-sm'
+            }
+            
+            const baseClasses = 'inline-flex items-center gap-1 font-medium transition-all duration-200 rounded-xl select-none'
+            const interactiveClasses = interactive ? 'cursor-pointer hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-white/10' : ''
+            const onlineClasses = online ? 'relative before:absolute before:w-2 before:h-2 before:bg-emerald-400 before:rounded-full before:-top-1 before:-right-1 before:ring-2 before:ring-white/50' : ''
+            
+            const classes = cn(baseClasses, sizeClasses[size], variantClasses[variant], interactiveClasses, onlineClasses)
+            
+            const atSymbol = showAtSymbol ? '<span class="opacity-80 font-semibold">@</span>' : ''
+            const usernameText = `<span class="font-mono tabular-nums whitespace-nowrap">${username}</span>`
+            
+            const clickHandler = copyOnClick ? `onclick="navigator.clipboard.writeText('${username}').then(() => alert('Скопировано: @${username}'))"` : ''
+            
+            element.innerHTML = `
+                <span class="${classes}" ${clickHandler} ${copyOnClick ? 'title="Нажмите, чтобы скопировать"' : ''}>
+                    ${atSymbol}
+                    ${usernameText}
+                </span>
+            `
+        }
+        
+        // Mock LevelBadge component rendering
+        function renderLevelBadge(elementId, {
+            level = 1,
+            variant,
+            size = 'md',
+            maxLevel = 100,
+            showLabel = false,
+            interactive = false,
+            glow = false,
+            animated = false
+        }) {
+            const element = document.getElementById(elementId)
+            if (!element) return
+            
+            // Auto variant selection if not provided
+            if (!variant) {
+                const percentage = (level / maxLevel) * 100
+                if (percentage >= 95) variant = 'legendary'
+                else if (percentage >= 85) variant = 'diamond'
+                else if (percentage >= 75) variant = 'platinum'
+                else if (percentage >= 60) variant = 'gold'
+                else if (percentage >= 40) variant = 'success'
+                else if (percentage >= 20) variant = 'primary'
+                else variant = 'default'
+            }
+            
+            const sizeClasses = {
+                xs: 'w-6 h-6 text-xs rounded-md',
+                sm: 'w-8 h-8 text-sm rounded-lg',
+                md: 'w-10 h-10 text-base rounded-xl',
+                lg: 'w-12 h-12 text-lg rounded-xl',
+                xl: 'w-16 h-16 text-xl rounded-2xl'
+            }
+            
+            const variantClasses = {
+                default: 'bg-gradient-to-br from-gray-600 to-gray-800 border border-gray-500',
+                primary: 'bg-gradient-to-br from-indigo-500 to-indigo-700 border border-indigo-400 shadow-indigo-500/25',
+                success: 'bg-gradient-to-br from-emerald-500 to-emerald-700 border border-emerald-400 shadow-emerald-500/25',
+                gold: 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 border border-yellow-300 shadow-yellow-500/30 text-yellow-900',
+                platinum: 'bg-gradient-to-br from-slate-300 via-slate-400 to-slate-500 border border-slate-200 shadow-slate-400/30 text-slate-800',
+                diamond: 'bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 border border-cyan-300 shadow-purple-500/30',
+                legendary: 'bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 border border-purple-300 shadow-purple-500/40 animate-pulse'
+            }
+            
+            const baseClasses = 'inline-flex items-center justify-center font-bold transition-all duration-200 text-white shadow-lg relative overflow-hidden select-none'
+            const interactiveClasses = interactive ? 'cursor-pointer hover:scale-110 active:scale-95 hover:shadow-xl transform-gpu' : ''
+            const glowClasses = glow ? 'animate-pulse shadow-2xl' : ''
+            
+            const classes = cn(baseClasses, sizeClasses[size], variantClasses[variant], interactiveClasses, glowClasses)
+            
+            // Format level number
+            const displayLevel = level >= 1000000 ? `${(level / 1000000).toFixed(1)}M` :
+                               level >= 1000 ? `${(level / 1000).toFixed(1)}K` : level.toString()
+            
+            const labelContent = showLabel && (size === 'lg' || size === 'xl') ? 
+                '<span class="text-xs opacity-75 font-medium leading-none mb-0.5">LVL</span>' : ''
+            
+            const particles = variant === 'legendary' ? `
+                <div class="absolute top-1 left-1 w-1 h-1 bg-white rounded-full animate-ping opacity-75"></div>
+                <div class="absolute bottom-1 right-1 w-0.5 h-0.5 bg-white rounded-full animate-ping opacity-75" style="animation-delay: 300ms;"></div>
+                <div class="absolute top-1 right-2 w-0.5 h-0.5 bg-white rounded-full animate-ping opacity-75" style="animation-delay: 700ms;"></div>
+            ` : ''
+            
+            element.innerHTML = `
+                <div class="${classes}" title="Уровень ${level}${maxLevel ? ` из ${maxLevel}` : ''}">
+                    <div class="relative z-10 flex flex-col items-center justify-center">
+                        ${labelContent}
+                        <span class="font-bold tabular-nums leading-none drop-shadow-sm" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">
+                            ${displayLevel}
+                        </span>
+                    </div>
+                    ${particles}
+                </div>
+            `
+        }
+        
+        // Initialize CVA Components on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // ProfileName components
+            renderProfileName('profile-name-default', { children: 'Тимур Себерда' })
+            renderProfileName('profile-name-gradient', { variant: 'gradient', children: 'Александр Иванов' })
+            renderProfileName('profile-name-gaming', { variant: 'gaming', children: 'ProGamer_X' })
+            renderProfileName('profile-name-small', { size: 'sm', children: 'Мария' })
+            renderProfileName('profile-name-medium', { size: 'md', children: 'Дмитрий' })
+            renderProfileName('profile-name-large', { size: 'lg', children: 'Анна' })
+            
+            // UsernameBadge components
+            renderUsernameBadge('username-badge-default', { username: 'timurceberda' })
+            renderUsernameBadge('username-badge-modern', { variant: 'modern', username: 'alex_dev' })
+            renderUsernameBadge('username-badge-telegram', { variant: 'telegram', username: 'maria_design' })
+            renderUsernameBadge('username-badge-interactive', { 
+                variant: 'gaming', 
+                username: 'interactivUser', 
+                interactive: true, 
+                copyOnClick: true 
+            })
+            renderUsernameBadge('username-badge-online', { 
+                variant: 'modern', 
+                username: 'online_user', 
+                online: true 
+            })
+            
+            // LevelBadge components - Auto variants
+            renderLevelBadge('level-badge-level-5', { level: 5 })
+            renderLevelBadge('level-badge-level-25', { level: 25 })
+            renderLevelBadge('level-badge-level-50', { level: 50 })
+            renderLevelBadge('level-badge-level-85', { level: 85 })
+            renderLevelBadge('level-badge-level-99', { level: 99 })
+            
+            // LevelBadge components - Special variants
+            renderLevelBadge('level-badge-gold', { level: 75, variant: 'gold' })
+            renderLevelBadge('level-badge-diamond', { level: 90, variant: 'diamond' })
+            renderLevelBadge('level-badge-legendary', { level: 999, variant: 'legendary' })
+            
+            // LevelBadge components - Different sizes
+            renderLevelBadge('level-badge-xs', { level: 42, size: 'xs' })
+            renderLevelBadge('level-badge-sm', { level: 42, size: 'sm' })
+            renderLevelBadge('level-badge-md', { level: 42, size: 'md' })
+            renderLevelBadge('level-badge-lg', { level: 42, size: 'lg', showLabel: true })
+            renderLevelBadge('level-badge-xl', { level: 42, size: 'xl', showLabel: true })
+            
+            // LevelBadge components - Interactive features
+            renderLevelBadge('level-badge-interactive', { level: 88, variant: 'platinum', interactive: true })
+            renderLevelBadge('level-badge-animated', { level: 77, variant: 'success', animated: true })
+            renderLevelBadge('level-badge-glow', { level: 100, variant: 'legendary', glow: true })
+        })
+    </script>
+</body>
+</html>

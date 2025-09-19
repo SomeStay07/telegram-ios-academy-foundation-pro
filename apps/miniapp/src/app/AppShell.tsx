@@ -1,9 +1,11 @@
 import { ReactNode } from 'react'
 import { TabBar } from '../widgets/tab-bar/TabBar'
-import { useTelegramTheme } from '../shared/lib/telegram/useTelegramTheme'
-import { useTelegramViewport } from '../shared/lib/telegram/useTelegramViewport'
-import { useTelegramMainButton } from '../shared/lib/telegram/useTelegramMainButton'
-import { useTelegramBackButton } from '../shared/lib/telegram/useTelegramBackButton'
+import { 
+  useTelegramTheme, 
+  useTelegramViewport, 
+  useTelegramMainButton, 
+  useTelegramBackButton 
+} from '../lib/telegram'
 
 interface AppShellProps {
   children: ReactNode

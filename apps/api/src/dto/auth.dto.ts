@@ -15,7 +15,26 @@ export class AuthSuccessResponseDto {
   @ApiProperty({ description: 'Authentication success status', example: true })
   ok: boolean;
 
-  constructor() {
+  @ApiProperty({ description: 'User ID', example: 'tg_123456789' })
+  userId: string;
+
+  @ApiProperty({ description: 'Session token for API requests' })
+  sessionToken: string;
+
+  @ApiProperty({ description: 'User profile data from Telegram' })
+  user: {
+    id: number;
+    first_name: string;
+    last_name?: string;
+    username?: string;
+    language_code?: string;
+    is_premium?: boolean;
+  };
+
+  constructor(userId?: string, sessionToken?: string, telegramUser?: any) {
     this.ok = true;
+    this.userId = userId || '';
+    this.sessionToken = sessionToken || '';
+    this.user = telegramUser || {};
   }
 }

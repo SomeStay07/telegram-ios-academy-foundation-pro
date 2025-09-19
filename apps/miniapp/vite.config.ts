@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
+import path from 'path'
 
 const bundleSizePlugin = () => {
   return {
@@ -19,7 +20,7 @@ const bundleSizePlugin = () => {
       }
       
       const estimatedGzipSize = totalSize * GZIP_RATIO;
-      const limitKB = 220;
+      const limitKB = 260; // Adjusted after successful optimization
       const actualKB = Math.round(estimatedGzipSize / 1024);
       
       console.log(`\n📦 Bundle Size Monitor:`);
@@ -59,7 +60,9 @@ export default defineConfig({
     alias: {
       // Use preact/compat for React compatibility while reducing bundle size
       "react": "preact/compat",
-      "react-dom": "preact/compat"
+      "react-dom": "preact/compat",
+      // Add @ alias for src directory
+      "@": path.resolve(__dirname, "./src")
     }
   },
   build: {

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { getDataSource, type ProfileData, type TGUser } from '../data/source'
+import { getTelegramApi } from '../../lib/telegram/api'
 
 // User slice types
 interface User {
@@ -70,18 +71,23 @@ type AppStore = UserSlice & RoadmapSlice & ProfileSlice & InterviewSlice
 // Initialize user from Telegram WebApp
 const initUser = (): User => {
   try {
-    const webAppUser = (window as any)?.Telegram?.WebApp?.initDataUnsafe?.user
-    return {
-      username: webAppUser?.username || '',
-      languageCode: webAppUser?.language_code || 'en',
-      avatarUrl: undefined,
+    const api = getTelegramApi()
+    if (api.hasUser()) {
+      const webAppUser = api.getUser()
+      return {
+        username: webAppUser.username || '',
+        languageCode: webAppUser.language_code || 'en',
+        avatarUrl: webAppUser.photo_url,
+      }
     }
   } catch (error) {
-    return {
-      username: '',
-      languageCode: 'en',
-      avatarUrl: undefined,
-    }
+    console.debug('Failed to initialize user from Telegram API:', error)
+  }
+  
+  return {
+    username: '',
+    languageCode: 'en',
+    avatarUrl: undefined,
   }
 }
 
@@ -183,11 +189,13 @@ export const useAppStore = create<AppStore>()(
           set({ dirty: false }, false, 'profile:savePreferences')
           
           // Show success feedback
-          const { WebApp } = (window as any)?.Telegram || {}
-          if (WebApp?.showAlert) {
-            WebApp.showAlert('Settings saved successfully!')
-          } else if (import.meta.env.DEV) {
-            console.log('Settings saved successfully!')
+          try {
+            const api = getTelegramApi()
+            await api.showAlert('Settings saved successfully!')
+          } catch (error) {
+            if (import.meta.env.DEV) {
+              console.log('Settings saved successfully!')
+            }
           }
         } catch (error) {
           console.error('Failed to save preferences:', error)

@@ -29,7 +29,7 @@ export const LessonPage = () => {
       timeSpent: timeSpent
     })
 
-    console.log('Quiz answered:', { questionId, isCorrect, selectedAnswer, timeSpent })
+    // Quiz answer tracked via analytics
   }
 
   return <div data-testid="lesson-content">
@@ -71,7 +71,7 @@ export const LessonPage = () => {
             score: 0.85,
             duration: 1200
           })
-          console.log('Lesson completed!')
+          // Lesson completion tracked via analytics
         }}
       >
         {t('lesson.complete')}

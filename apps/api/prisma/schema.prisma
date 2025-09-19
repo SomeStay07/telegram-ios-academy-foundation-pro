@@ -152,3 +152,102 @@ enum InterviewAttemptStatus {
   completed
   abandoned
 }
+
+// Event Sourcing Tables
+model EventStore {
+  eventId       String   @id @default(uuid()) @map("event_id")
+  aggregateId   String   @map("aggregate_id")
+  aggregateType String   @map("aggregate_type")
+  eventType     String   @map("event_type")
+  eventData     Json     @map("event_data")
+  eventVersion  Int      @map("event_version")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@unique([aggregateId, eventVersion], map: "unique_aggregate_version")
+  @@index([aggregateId, eventVersion], map: "idx_event_store_aggregate")
+  @@index([aggregateType, eventType], map: "idx_event_store_type")
+  @@index([createdAt], map: "idx_event_store_created")
+  @@map("event_store")
+}
+
+model AggregateSnapshot {
+  snapshotId      String   @id @default(uuid()) @map("snapshot_id")
+  aggregateId     String   @unique @map("aggregate_id")
+  aggregateType   String   @map("aggregate_type")
+  aggregateVersion Int     @map("aggregate_version")
+  snapshotData    Json     @map("snapshot_data")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([aggregateType], map: "idx_snapshots_type")
+  @@map("aggregate_snapshots")
+}
+
+// Read Models for Performance
+model UserStreaks {
+  userId            String    @id @map("user_id")
+  currentStreak     Int       @default(0) @map("current_streak")
+  longestStreak     Int       @default(0) @map("longest_streak")
+  lastActivityDate  DateTime? @map("last_activity_date") @db.Date
+  streakStartDate   DateTime? @map("streak_start_date") @db.Date
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@index([currentStreak], map: "idx_user_streaks_current")
+  @@index([longestStreak], map: "idx_user_streaks_longest")
+  @@map("user_streaks")
+}
+
+model UserActivities {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  activityType String   @map("activity_type")
+  activityData Json?    @map("activity_data")
+  occurredAt   DateTime @map("occurred_at")
+
+  @@index([userId, occurredAt], map: "idx_user_activities_user")
+  @@index([activityType], map: "idx_user_activities_type")
+  @@map("user_activities")
+}
+
+model AssessmentResults {
+  id           String    @id @default(uuid())
+  assessmentId String    @map("assessment_id")
+  userId       String    @map("user_id")
+  score        Int
+  percentage   Decimal   @db.Decimal(5,2)
+  passed       Boolean
+  startedAt    DateTime? @map("started_at")
+  completedAt  DateTime? @map("completed_at")
+
+  @@index([userId, completedAt], map: "idx_assessment_results_user")
+  @@index([assessmentId], map: "idx_assessment_results_assessment")
+  @@map("assessment_results")
+}
+
+// Command Idempotency
+model CommandIdempotency {
+  idempotencyKey String   @id @map("idempotency_key")
+  commandType    String   @map("command_type")
+  commandData    Json     @map("command_data")
+  result         Json?
+  processedAt    DateTime @default(now()) @map("processed_at")
+  expiresAt      DateTime @map("expires_at")
+
+  @@index([expiresAt], map: "idx_command_idempotency_expires")
+  @@map("command_idempotency")
+}
+
+// Learning Progress Read Model (for materialized view compatibility)
+model LearningProgress {
+  userId           String   @map("user_id")
+  lessonId         String   @map("lesson_id")
+  score            Float
+  completed        Boolean  @default(false)
+  timeSpentMinutes Float    @default(0) @map("time_spent_minutes")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@id([userId, lessonId], map: "userId_lessonId")
+  @@index([userId], map: "idx_learning_progress_user")
+  @@index([lessonId], map: "idx_learning_progress_lesson")
+  @@map("learning_progress")
+}

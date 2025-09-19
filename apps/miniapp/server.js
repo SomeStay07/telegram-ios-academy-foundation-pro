@@ -27,6 +27,8 @@ app.use(helmet({
       scriptSrc: [
         "'self'", 
         "'strict-dynamic'",
+        "https://telegram.org", // Allow Telegram WebApp script
+        ...(isDevelopment ? ["'unsafe-inline'"] : []), // Allow inline scripts in dev mode
         (req, res) => `'nonce-${res.locals.nonce}'`,
       ],
       styleSrc: ["'self'", "'unsafe-inline'"], // Required for Tailwind CSS
@@ -78,6 +80,7 @@ app.post('/csp-report', express.json(), (req, res) => {
   
   res.json({ status: 'received' });
 });
+
 
 // Serve static files from dist directory
 const distPath = join(__dirname, 'dist');

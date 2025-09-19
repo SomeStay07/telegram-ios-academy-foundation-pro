@@ -1,0 +1,140 @@
+/* Touch Gesture Optimizations */
+
+/* Remove tap highlights and improve touch responsiveness */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection for readable content */
+.profile-name-clean,
+.username-text-unified,
+.senior-badge-text,
+.xp-value-enhanced,
+.action-text-responsive {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Optimize touch targets for mobile - excluding level badge which has its own sizing */
+.username-badge-unified,
+.senior-engineer-badge-unified,
+.xp-card-main,
+.xp-card-next,
+.action-card-primary,
+.action-card-secondary {
+  /* Minimum 44px touch target */
+  min-height: 44px;
+  min-width: 44px;
+  
+  /* Improve touch responsiveness */
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* Smooth scrolling for better UX */
+.modern-profile {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Optimize drag and drop for stats */
+.stat-card-draggable {
+  touch-action: pan-y;
+  -webkit-user-drag: element;
+  -moz-user-drag: element;
+  user-drag: element;
+}
+
+/* Prevent zoom on input focus (if any inputs added later) */
+input, textarea, select {
+  font-size: 16px; /* Prevents zoom on iOS */
+  touch-action: manipulation;
+}
+
+/* Improve button press feedback - excluding level badge */
+.username-badge-unified:active,
+.senior-engineer-badge-unified:active,
+.action-card-primary:active,
+.action-card-secondary:active {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
+
+/* Ensure proper tap areas for icons - level badge excluded */
+.action-icon-responsive,
+.xp-icon-container,
+.stat-icon-draggable {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Optimize for foldable devices */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .hero-card-premium {
+    max-width: 80%;
+    margin: 1rem auto;
+  }
+}
+
+/* Optimize for devices with hover capability - level badge excluded */
+@media (hover: hover) and (pointer: fine) {
+  /* Enable hover effects only on devices that support them */
+  .username-badge-unified:hover,
+  .senior-engineer-badge-unified:hover {
+    transform: scale(1.05);
+  }
+  
+  .action-card-primary:hover,
+  .action-card-secondary:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Disable hover effects on touch devices - level badge excluded */
+@media (hover: none) and (pointer: coarse) {
+  .username-badge-unified:hover,
+  .senior-engineer-badge-unified:hover,
+  .action-card-primary:hover,
+  .action-card-secondary:hover {
+    transform: none;
+  }
+}
+
+/* High refresh rate display optimizations */
+@media (min-resolution: 120dpi) {
+  .modern-profile * {
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .modern-profile * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimize for right-to-left languages */
+[dir="rtl"] .action-icon-responsive {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .progress-percentage-badge {
+  direction: ltr; /* Keep percentage numbers LTR */
+}

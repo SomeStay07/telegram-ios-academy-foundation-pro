@@ -123,3 +123,4 @@ temp/
 
 # Claude Code settings
 .claude/settings.local.json
+*storybook.log
