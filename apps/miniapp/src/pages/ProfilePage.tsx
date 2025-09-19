@@ -233,9 +233,6 @@ export function ProfilePage() {
                 />
               </div>
             )}
-
-              </div>
-            </div>
           </Card>
         </motion.div>
 
