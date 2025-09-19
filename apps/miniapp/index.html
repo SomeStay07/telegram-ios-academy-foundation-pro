@@ -17,7 +17,116 @@
   <meta name='telegram-web-app' content='1'/>
   
   <!-- Telegram WebApp API Script - CRITICAL for WebApp functionality -->
-  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js?59" async></script>
+  
+  <!-- Alternative Telegram Script Loading -->
+  <script>
+    // Immediate check and load if needed
+    (function() {
+      console.log('🚀 Immediate Telegram script check...');
+      
+      // Try multiple loading strategies
+      let scriptLoaded = false;
+      let attempts = 0;
+      const maxAttempts = 3;
+      
+      function checkAndLoadTelegram() {
+        attempts++;
+        console.log(`📊 Attempt ${attempts}: Checking Telegram availability...`);
+        
+        if (window.Telegram && window.Telegram.WebApp) {
+          console.log('✅ Telegram WebApp found!');
+          scriptLoaded = true;
+          return true;
+        }
+        
+        if (attempts >= maxAttempts) {
+          console.error('❌ Max attempts reached, Telegram not available');
+          return false;
+        }
+        
+        // Try loading with different URLs
+        const urls = [
+          'https://telegram.org/js/telegram-web-app.js',
+          'https://telegram.org/js/telegram-web-app.js?60',
+          'https://telegram.org/js/telegram-web-app.js?latest'
+        ];
+        
+        const url = urls[attempts - 1];
+        if (url) {
+          console.log(`🔄 Loading Telegram script from: ${url}`);
+          const script = document.createElement('script');
+          script.src = url;
+          script.async = false; // Load synchronously
+          script.onload = function() {
+            console.log(`✅ Script loaded from ${url}`);
+            setTimeout(checkAndLoadTelegram, 100);
+          };
+          script.onerror = function() {
+            console.log(`❌ Failed to load from ${url}`);
+            setTimeout(checkAndLoadTelegram, 100);
+          };
+          document.head.appendChild(script);
+        }
+        
+        return false;
+      }
+      
+      // Start checking immediately
+      setTimeout(checkAndLoadTelegram, 0);
+    })();
+  </script>
+  
+  <!-- Telegram Script Loading Verification and Fallback -->
+  <script>
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔍 Checking Telegram script loading...');
+      
+      // Check if Telegram object exists
+      if (window.Telegram && window.Telegram.WebApp) {
+        console.log('✅ Telegram WebApp API loaded successfully');
+        console.log('📊 WebApp object:', window.Telegram.WebApp);
+        console.log('👤 Init data unsafe:', window.Telegram.WebApp.initDataUnsafe);
+        
+        // Initialize WebApp if available
+        if (typeof window.Telegram.WebApp.ready === 'function') {
+          window.Telegram.WebApp.ready();
+          console.log('✅ WebApp.ready() called');
+        }
+        if (typeof window.Telegram.WebApp.expand === 'function') {
+          window.Telegram.WebApp.expand();
+          console.log('✅ WebApp.expand() called');
+        }
+      } else {
+        console.error('❌ Telegram WebApp API not loaded!');
+        console.log('🔍 Window.Telegram:', window.Telegram);
+        console.log('🔍 Checking script tags...');
+        
+        const scripts = document.querySelectorAll('script[src*="telegram"]');
+        console.log('📜 Telegram scripts found:', scripts.length);
+        scripts.forEach((script, index) => {
+          console.log(`Script ${index + 1}:`, script.src, 'loaded:', script.readyState);
+        });
+        
+        // Try to load script manually as fallback
+        console.log('🔄 Attempting manual script load...');
+        const fallbackScript = document.createElement('script');
+        fallbackScript.src = 'https://telegram.org/js/telegram-web-app.js?60';
+        fallbackScript.onload = function() {
+          console.log('✅ Fallback script loaded');
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+          }
+        };
+        fallbackScript.onerror = function() {
+          console.error('❌ Fallback script failed to load');
+        };
+        document.head.appendChild(fallbackScript);
+      }
+    });
+  </script>
   
   <title>iOS Academy Pro</title>
   <style>
