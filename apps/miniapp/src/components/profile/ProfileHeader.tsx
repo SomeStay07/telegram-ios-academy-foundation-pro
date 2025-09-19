@@ -162,25 +162,26 @@ export function ProfileHeader({
               <div className={styles.profileUsername}>
                 <motion.button
                   onClick={handleUsernameClick}
-                  className="relative flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300 hover:bg-white/25 hover:border-white/40 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-white/20"
+                  className="relative flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300 hover:bg-white/30 hover:border-white/50 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-white/25"
                   whileHover={{ 
-                    boxShadow: "0 0 25px rgba(255,255,255,0.4), 0 0 10px rgba(59, 130, 246, 0.3)",
-                    scale: 1.08,
-                    y: -1
+                    boxShadow: "0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(59, 130, 246, 0.2)",
+                    scale: 1.06,
+                    y: -2,
+                    backgroundColor: "rgba(255, 255, 255, 0.25)"
                   }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0.9 }}
+                  whileTap={{ scale: 0.96 }}
+                  initial={{ opacity: 0.95 }}
                   animate={{ 
-                    opacity: [0.9, 1, 0.9],
-                    boxShadow: [
-                      "0 0 0px rgba(255,255,255,0)",
-                      "0 0 8px rgba(255,255,255,0.2)", 
-                      "0 0 0px rgba(255,255,255,0)"
+                    opacity: [0.95, 1, 0.95],
+                    borderColor: [
+                      "rgba(255,255,255,0.2)",
+                      "rgba(255,255,255,0.35)", 
+                      "rgba(255,255,255,0.2)"
                     ]
                   }}
                   transition={{ 
-                    opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                    opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                    borderColor: { duration: 4, repeat: Infinity, ease: "easeInOut" }
                   }}
                 >
                   <motion.div
@@ -198,20 +199,23 @@ export function ProfileHeader({
                     {username}
                   </Typography>
                   
-                  {/* Clickable indicator icon */}
+                  {/* Subtle interactive indicator - три точки */}
                   <motion.div
-                    className="ml-1.5 opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                    className="ml-2 opacity-50 group-hover:opacity-80 transition-opacity duration-300"
                     animate={{ 
-                      scale: [1, 1.2, 1],
-                      opacity: [0.6, 0.9, 0.6]
+                      opacity: [0.4, 0.7, 0.4]
                     }}
                     transition={{ 
-                      duration: 2.5, 
+                      duration: 3, 
                       repeat: Infinity, 
                       ease: "easeInOut" 
                     }}
                   >
-                    <Info className="w-3 h-3 text-blue-200 group-hover:text-white" />
+                    <div className="flex gap-0.5">
+                      <div className="w-1 h-1 bg-white/60 rounded-full"></div>
+                      <div className="w-1 h-1 bg-white/60 rounded-full"></div>
+                      <div className="w-1 h-1 bg-white/60 rounded-full"></div>
+                    </div>
                   </motion.div>
                   
                   {/* Subtle shimmer effect */}
@@ -232,15 +236,15 @@ export function ProfileHeader({
             <div className={styles.profileBadges}>
               <div className={styles.adaptiveBadge}>
                 <Trophy className={styles.adaptiveBadgeIcon} />
-                <Typography variant="body-md" className="text-white font-semibold">
+                <span className="text-white font-semibold">
                   {currentRank.name}
-                </Typography>
+                </span>
               </div>
               <div className={styles.adaptiveBadge}>
                 <Zap className={styles.adaptiveBadgeIcon} />
-                <Typography variant="body-md" className="text-white font-semibold">
+                <span className="text-white font-semibold">
                   {userData.totalXP >= 1000 ? `${Math.floor(userData.totalXP / 1000)}K` : userData.totalXP}
-                </Typography>
+                </span>
               </div>
             </div>
           </div>
@@ -256,7 +260,10 @@ export function ProfileHeader({
             <Progress 
               value={progressPercentage} 
               className="bg-white/20" 
-              style={{'--progress-color': '#ffffff'} as React.CSSProperties}
+              style={{
+                '--progress-color': 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
+                '--progress-bg': 'rgba(255, 255, 255, 0.15)'
+              } as React.CSSProperties}
             />
           </div>
         )}

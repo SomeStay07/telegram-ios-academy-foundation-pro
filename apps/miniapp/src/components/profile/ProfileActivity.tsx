@@ -31,8 +31,23 @@ export function ProfileActivity({ itemVariants }: ProfileActivityProps) {
             <div key={index} className="flex justify-between items-center">
               <Typography variant="body-md">{skill.name}</Typography>
               <div className="flex items-center gap-2">
-                <Progress value={skill.progress} className="w-24" />
-                <Typography variant="caption-sm" color="muted">{skill.progress}%</Typography>
+                <Progress 
+                  value={skill.progress} 
+                  className="w-24"
+                  style={{
+                    '--progress-color': skill.progress >= 70 ? '#10b981' : skill.progress >= 40 ? '#f59e0b' : '#6366f1'
+                  } as React.CSSProperties}
+                />
+                <Typography 
+                  variant="caption-sm" 
+                  color="muted"
+                  style={{
+                    fontFamily: 'var(--font-gaming)',
+                    fontVariantNumeric: 'tabular-nums'
+                  }}
+                >
+                  {skill.progress}%
+                </Typography>
               </div>
             </div>
           ))}

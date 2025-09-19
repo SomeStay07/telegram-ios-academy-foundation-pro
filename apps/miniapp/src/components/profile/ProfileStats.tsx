@@ -14,42 +14,65 @@ interface ProfileStatsProps {
 
 export function ProfileStats({ userData, itemVariants }: ProfileStatsProps) {
   return (
-    <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-3 mb-6 px-2">
+    <motion.div 
+      variants={itemVariants} 
+      className="flex flex-wrap justify-center gap-3 mb-6 px-2"
+    >
       {/* Streak Badge */}
-      <Badge 
-        variant="primary" 
-        icon={Calendar}
-        value={userData.streak}
-        label="дней"
-        interactive={true}
-      />
+      <motion.div
+        whileHover={{ scale: 1.05, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Badge 
+          variant="primary" 
+          icon={Calendar}
+          value={userData.streak}
+          label="дней"
+          interactive={true}
+        />
+      </motion.div>
 
       {/* Completed Badge */}
-      <Badge 
-        variant="success" 
-        icon={Target}
-        value={24}
-        label="выполнено"
-        interactive={true}
-      />
+      <motion.div
+        whileHover={{ scale: 1.05, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Badge 
+          variant="success" 
+          icon={Target}
+          value={24}
+          label="выполнено"
+          interactive={true}
+        />
+      </motion.div>
 
       {/* Achievements Badge */}
-      <Badge 
-        variant="info" 
-        icon={Star}
-        value={12}
-        label="достижений"
-        interactive={true}
-      />
+      <motion.div
+        whileHover={{ scale: 1.05, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Badge 
+          variant="info" 
+          icon={Star}
+          value={12}
+          label="достижений"
+          interactive={true}
+        />
+      </motion.div>
 
       {/* Growth Badge */}
-      <Badge 
-        variant="warning" 
-        icon={TrendingUp}
-        value="+15%"
-        label="рост"
-        interactive={true}
-      />
+      <motion.div
+        whileHover={{ scale: 1.05, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Badge 
+          variant="warning" 
+          icon={TrendingUp}
+          value="+15%"
+          label="рост"
+          interactive={true}
+        />
+      </motion.div>
     </motion.div>
   )
 }
