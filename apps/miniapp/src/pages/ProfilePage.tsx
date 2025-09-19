@@ -80,12 +80,84 @@ export function ProfilePage() {
   const username = telegramUser.username || userData.username
 
   return (
-    <motion.div 
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <>
+      <style jsx>{`
+        .adaptive-profile-layout {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-template-areas: "avatar info";
+          gap: 1.5rem;
+          align-items: start;
+        }
+        
+        .profile-avatar {
+          grid-area: avatar;
+          position: relative;
+          justify-self: center;
+        }
+        
+        .profile-info {
+          grid-area: info;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          text-align: left;
+        }
+        
+        .profile-name {
+          font-size: clamp(1.25rem, 4vw, 2rem);
+          line-height: 1.2;
+        }
+        
+        .profile-username {
+          align-self: flex-start;
+        }
+        
+        .profile-badges {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+        }
+        
+        .profile-progress {
+          grid-column: 1 / -1;
+          margin-top: 1rem;
+        }
+        
+        @media (max-width: 640px) {
+          .adaptive-profile-layout {
+            grid-template-columns: 1fr;
+            grid-template-areas: 
+              "avatar"
+              "info";
+            text-align: center;
+            gap: 1rem;
+          }
+          
+          .profile-avatar {
+            justify-self: center;
+          }
+          
+          .profile-info {
+            text-align: center;
+            align-items: center;
+          }
+          
+          .profile-username {
+            align-self: center;
+          }
+          
+          .profile-badges {
+            justify-content: center;
+          }
+        }
+      `}</style>
+      <motion.div 
+        className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         
         {/* Profile Header */}
@@ -96,31 +168,31 @@ export function ProfilePage() {
               <Settings className="w-4 h-4 text-white" />
             </button>
             
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-              
+            {/* Adaptive Profile Layout */}
+            <div className="adaptive-profile-layout">
               {/* Avatar Section */}
-              <div className="relative">
+              <div className="profile-avatar">
                 <Avatar
                   src={userData.avatar}
                   alt={displayName}
                   fallback={displayName.split(' ').map(n => n[0]).join('').substring(0, 2)}
                   size="2xl"
-                  className="ring-4 ring-white/30 shadow-2xl"
+                  className="ring-4 ring-white/30 shadow-2xl w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
                 />
                 {/* Online Status */}
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg"></div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 bg-green-500 rounded-full border-2 sm:border-3 md:border-4 border-white shadow-lg"></div>
               </div>
 
               {/* Profile Info */}
-              <div className="flex-1 text-center md:text-left">
-                <Typography variant="display-md" className="text-white font-bold mb-2">
+              <div className="profile-info">
+                <Typography variant="display-md" className="profile-name text-white font-bold">
                   {displayName}
                 </Typography>
                 
                 {username && (
-                  <div className="flex items-center justify-center md:justify-start mb-4">
+                  <div className="profile-username">
                     <div className="flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20">
-                      <AtSign className="w-4 h-4 mr-1.5 text-blue-200" />
+                      <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-blue-200" />
                       <Typography variant="body-sm" className="text-white font-medium">
                         {username}
                       </Typography>
@@ -128,36 +200,39 @@ export function ProfilePage() {
                   </div>
                 )}
 
-                {/* Level & XP */}
-                <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-                  <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                    <Trophy className="w-5 h-5 mr-2 text-yellow-300" />
-                    <Typography variant="body-md" className="text-white font-semibold">
+                {/* Adaptive Level & XP Pills */}
+                <div className="profile-badges">
+                  <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
+                    <Trophy className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 text-yellow-300" />
+                    <Typography variant="body-md" className="text-white font-semibold text-sm sm:text-base">
                       {currentRank.name}
                     </Typography>
                   </div>
-                  <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                    <Zap className="w-5 h-5 mr-2 text-yellow-300" />
-                    <Typography variant="body-md" className="text-white font-semibold">
+                  <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2">
+                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 text-yellow-300" />
+                    <Typography variant="body-md" className="text-white font-semibold text-sm sm:text-base">
                       {userData.totalXP >= 1000 ? `${Math.floor(userData.totalXP / 1000)}K` : userData.totalXP}
                     </Typography>
                   </div>
                 </div>
 
-                {/* Progress to Next Level */}
-                {!isMaxRank && (
-                  <div className="mb-4">
-                    <div className="flex justify-between text-white/80 text-sm mb-2">
-                      <span>До {nextRank.name}</span>
-                      <span>{Math.round(progressPercentage)}%</span>
-                    </div>
-                    <Progress 
-                      value={progressPercentage} 
-                      className="bg-white/20" 
-                      style={{'--progress-color': '#ffffff'} as React.CSSProperties}
-                    />
-                  </div>
-                )}
+              </div>
+            </div>
+
+            {/* Adaptive Progress Bar */}
+            {!isMaxRank && (
+              <div className="profile-progress">
+                <div className="flex justify-between text-white/80 text-sm mb-2">
+                  <span>До {nextRank.name}</span>
+                  <span>{Math.round(progressPercentage)}%</span>
+                </div>
+                <Progress 
+                  value={progressPercentage} 
+                  className="bg-white/20" 
+                  style={{'--progress-color': '#ffffff'} as React.CSSProperties}
+                />
+              </div>
+            )}
 
               </div>
             </div>
@@ -307,6 +382,7 @@ export function ProfilePage() {
           </motion.div>
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </>
   )
 }
