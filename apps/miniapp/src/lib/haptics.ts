@@ -46,7 +46,7 @@ class HapticManager {
     try {
       window.Telegram?.WebApp?.HapticFeedback?.impactOccurred(style)
     } catch (error) {
-      console.warn('Haptic feedback failed:', error)
+      // Haptic feedback failed
     }
   }
 
@@ -57,7 +57,7 @@ class HapticManager {
     try {
       window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred(type)
     } catch (error) {
-      console.warn('Haptic notification failed:', error)
+      // Haptic notification failed
     }
   }
 
@@ -68,7 +68,7 @@ class HapticManager {
     try {
       window.Telegram?.WebApp?.HapticFeedback?.selectionChanged()
     } catch (error) {
-      console.warn('Haptic selection failed:', error)
+      // Haptic selection failed
     }
   }
 

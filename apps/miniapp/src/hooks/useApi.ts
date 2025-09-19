@@ -1,12 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { VITE } from '../env'
+import { getTelegramApi } from '../lib/telegram/api'
 
 const API_BASE_URL = VITE.API_BASE_URL
 
 // Get Telegram WebApp init data for authentication
 function getTelegramInitData(): string {
-  const tg = (window as any).Telegram?.WebApp
-  return tg?.initData || ''
+  try {
+    const api = getTelegramApi()
+    const webApp = api.getWebApp()
+    return webApp?.initData || ''
+  } catch (error) {
+    // Failed to get Telegram init data - fallback to empty string
+    return ''
+  }
 }
 
 // API client with automatic Telegram auth

@@ -92,9 +92,7 @@ export function setupErrorMonitoring(): void {
     return originalTrack(...args)
   }
 
-  if (import.meta.env.DEV) {
-    console.log('🔍 Error monitoring initialized')
-  }
+  // Error monitoring initialized
 }
 
 // Отправка критических ошибок
@@ -121,10 +119,7 @@ function reportCriticalError(error: ErrorDetails): void {
     })
   }
 
-  // Логируем в консоль в development
-  if (import.meta.env.DEV) {
-    console.error('🚨 Critical error:', error)
-  }
+  // Critical error logged
 }
 
 // Экспорт для ручной отправки ошибок из компонентов

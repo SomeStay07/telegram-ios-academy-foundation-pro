@@ -1,8 +1,11 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
+import { Router } from '@tanstack/react-router'
+import { QueryClient } from '@tanstack/react-query'
 import { lazyImport } from './utils/lazyImport'
 import { initTelegramTheme, isTelegramWebApp } from '@telegram-ios-academy/ui'
 import { initThemeSync } from './lib/tmaTheme'
+import { getTelegramApi } from './lib/telegram/api'
 // Essential styles - modern design system with Tailwind
 import '@telegram-ios-academy/ui/dist/styles/index.css'
 import './styles/tailwind-base.css'
@@ -27,11 +30,11 @@ const getRouter = async () => {
 }
 
 // Lazy load QueryClient when needed
-let queryClient: any = null
-async function getQueryClient() {
+let queryClient: QueryClient | null = null
+async function getQueryClient(): Promise<QueryClient> {
   if (!queryClient) {
-    const { QueryClient } = await import('@tanstack/react-query')
-    queryClient = new QueryClient({
+    const { QueryClient: QC } = await import('@tanstack/react-query')
+    queryClient = new QC({
       defaultOptions: {
         queries: {
           retry: 3,
@@ -43,32 +46,52 @@ async function getQueryClient() {
   return queryClient
 }
 
-async function initTmaRouting(router: any) {
-  const tg = (window as any).Telegram?.WebApp
-  if (!tg) return
-  
-  tg.ready?.()
-  tg.expand?.()
-  
-  // Initialize Telegram theme integration
-  initTelegramTheme()
-  
-  // Initialize design system theme sync
-  initThemeSync(tg)
-  
-  const setBack = () => {
-    const idx = (router.history as any).state.index ?? 0
-    idx > 0 ? tg.BackButton?.show?.() : tg.BackButton?.hide?.()
+async function initTmaRouting(router: Router<any, any>) {
+  try {
+    const api = getTelegramApi()
+    const tg = api.getWebApp()
+    
+    if (!api.isAvailable() || !tg) {
+      return
+    }
+    
+    // Initialize WebApp
+    tg.ready?.()
+    tg.expand?.()
+    
+    // Initialize Telegram theme integration
+    initTelegramTheme()
+    
+    // Initialize design system theme sync
+    initThemeSync(tg)
+    
+    // Setup back button functionality  
+    const setBack = () => {
+      try {
+        // Type-safe access to router history state
+        const historyState = router.history.state as { index?: number } | undefined
+        const idx = historyState?.index ?? 0
+        if (idx > 0) {
+          api.showBackButton(() => router.history.back())
+        } else {
+          api.hideBackButton()
+        }
+      } catch (error) {
+        // Silent fail for back button management
+      }
+    }
+    
+    router.subscribe(setBack)
+    setBack()
+    
+    // TODO: Re-enable deep-link processing after router is stable
+  } catch (error) {
+    // Silent fail for TMA routing initialization
   }
-  tg.BackButton?.onClick?.(() => router.history.back())
-  router.subscribe(setBack)
-  setBack()
-  
-  // TODO: Re-enable deep-link processing after router is stable
 }
 
 function LazyApp() {
-  const [router, setRouter] = React.useState<any>(null)
+  const [router, setRouter] = React.useState<Router<any, any> | null>(null)
 
   React.useEffect(() => {
     const initRouter = async () => {

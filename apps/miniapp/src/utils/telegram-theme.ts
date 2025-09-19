@@ -26,7 +26,7 @@ interface TelegramTheme {
 export function applyTelegramTheme(): void {
   const tg = (window as any).Telegram?.WebApp;
   if (!tg || !tg.themeParams) {
-    console.log('🎨 Telegram theme not available, using default colors');
+    // Telegram theme not available, using default colors
     return;
   }
 
@@ -40,7 +40,7 @@ export function applyTelegramTheme(): void {
     .join('\n    ');
 
   if (!cssVars) {
-    console.log('🎨 No valid theme colors found');
+    // No valid theme colors found
     return;
   }
 
@@ -75,7 +75,7 @@ export function applyTelegramTheme(): void {
   styleElement.textContent = styleContent;
   document.head.appendChild(styleElement);
 
-  console.log('🎨 Telegram theme applied:', Object.keys(theme));
+  // Telegram theme applied successfully
 }
 
 /**

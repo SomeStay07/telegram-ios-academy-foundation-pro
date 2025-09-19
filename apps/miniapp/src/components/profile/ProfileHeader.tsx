@@ -1,165 +1,117 @@
 import React from 'react'
-import { Stack, Card, Text, Heading, Avatar, Badge } from '@telegram-ios-academy/ui'
+import { motion } from 'framer-motion'
+import { Settings, AtSign, Trophy, Zap } from 'lucide-react'
 
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-  username: string
-  avatar: string
-  level: number
-  rank: string
-  streak: number
-}
+// Design System Components
+import { Avatar } from '../../design-system/components/avatar/index'
+import { Card } from '../../design-system/components/card/index'
+import { Typography } from '../../design-system/components/typography/index'
+import { Progress } from '../../design-system/components/progress/index'
 
-interface Stats {
-  rank: string
-  battlesWon: number
-}
+// CSS Module
+import styles from '../../pages/ProfilePage.module.css'
 
 interface ProfileHeaderProps {
-  user: User
-  stats: Stats
+  userData: {
+    avatar: string
+    totalXP: number
+  }
+  displayName: string
+  username?: string
+  currentRank: {
+    name: string
+  }
+  nextRank?: {
+    name: string
+  }
+  isMaxRank: boolean
+  progressPercentage: number
+  itemVariants: any
 }
 
-export function ProfileHeader({ user, stats }: ProfileHeaderProps) {
+export function ProfileHeader({
+  userData,
+  displayName,
+  username,
+  currentRank,
+  nextRank,
+  isMaxRank,
+  progressPercentage,
+  itemVariants
+}: ProfileHeaderProps) {
   return (
-    <Card style={{ 
-      background: 'linear-gradient(135deg, var(--color-accent-purple) 0%, var(--color-accent-blue) 100%)',
-      border: '1px solid var(--color-border-accent)',
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
-      {/* Gaming декоративные элементы */}
-      <div style={{
-        position: 'absolute',
-        top: '-20px',
-        right: '-20px',
-        width: '100px',
-        height: '100px',
-        background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-        borderRadius: '50%'
-      }} />
-      
-      <Stack spacing="lg">
-        {/* Верхняя секция с аватаром и основной информацией */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-          <div style={{ position: 'relative' }}>
-            <Avatar 
-              src={user.avatar} 
-              alt={`${user.firstName} ${user.lastName}`}
-              size={72}
-              style={{ 
-                border: '3px solid var(--color-accent-yellow)',
-                boxShadow: '0 0 20px rgba(255, 215, 0, 0.3)'
-              }}
+    <motion.div variants={itemVariants}>
+      <Card className={`p-6 mb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
+        {/* Settings Icon */}
+        <button className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors">
+          <Settings className="w-4 h-4 text-white" />
+        </button>
+        
+        {/* Adaptive Profile Layout */}
+        <div className={styles.adaptiveProfileLayout}>
+          {/* Avatar Section */}
+          <div className={styles.profileAvatar}>
+            <Avatar
+              src={userData.avatar}
+              alt={displayName}
+              fallback={displayName.split(' ').map(n => n[0]).join('').substring(0, 2)}
+              size="2xl"
+              className={`ring-4 ring-white/30 shadow-2xl ${styles.adaptiveAvatar}`}
             />
-            {/* Level badge */}
-            <div style={{
-              position: 'absolute',
-              bottom: '-8px',
-              right: '-8px',
-              background: 'linear-gradient(135deg, var(--color-accent-yellow) 0%, var(--color-accent-orange) 100%)',
-              color: 'var(--color-surface-primary)',
-              padding: '4px 8px',
-              borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: 'bold',
-              border: '2px solid var(--color-surface-primary)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-            }}>
-              {user.level}
+            {/* Online Status */}
+            <div className={styles.statusIndicator}></div>
+          </div>
+
+          {/* Profile Info */}
+          <div className={styles.profileInfo}>
+            <Typography variant="display-md" className={`${styles.profileName} text-white font-bold`}>
+              {displayName}
+            </Typography>
+            
+            {username && (
+              <div className={styles.profileUsername}>
+                <div className="flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20">
+                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-blue-200" />
+                  <Typography variant="body-sm" className="text-white font-medium">
+                    {username}
+                  </Typography>
+                </div>
+              </div>
+            )}
+
+            {/* Adaptive Level & XP Pills */}
+            <div className={styles.profileBadges}>
+              <div className={styles.adaptiveBadge}>
+                <Trophy className={styles.adaptiveBadgeIcon} />
+                <Typography variant="body-md" className="text-white font-semibold">
+                  {currentRank.name}
+                </Typography>
+              </div>
+              <div className={styles.adaptiveBadge}>
+                <Zap className={styles.adaptiveBadgeIcon} />
+                <Typography variant="body-md" className="text-white font-semibold">
+                  {userData.totalXP >= 1000 ? `${Math.floor(userData.totalXP / 1000)}K` : userData.totalXP}
+                </Typography>
+              </div>
             </div>
           </div>
-          
-          <Stack spacing="xs" style={{ flex: 1 }}>
-            <Heading level={2} style={{ 
-              color: 'white', 
-              margin: 0,
-              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-            }}>
-              {user.firstName} {user.lastName}
-            </Heading>
-            <Text style={{ 
-              color: 'rgba(255,255,255,0.9)', 
-              fontSize: '14px',
-              fontWeight: 500
-            }}>
-              @{user.username}
-            </Text>
-            <Badge variant="warning" style={{
-              background: 'rgba(255, 215, 0, 0.2)',
-              color: 'var(--color-accent-yellow)',
-              border: '1px solid var(--color-accent-yellow)',
-              alignSelf: 'flex-start'
-            }}>
-              {user.rank}
-            </Badge>
-          </Stack>
         </div>
 
-        {/* Нижняя секция со статистикой */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(3, 1fr)', 
-          gap: 'var(--space-3)',
-          background: 'rgba(255,255,255,0.1)',
-          padding: 'var(--space-3)',
-          borderRadius: 'var(--radius-lg)',
-          backdropFilter: 'blur(10px)'
-        }}>
-          <div style={{ textAlign: 'center' }}>
-            <Text style={{ 
-              color: 'white', 
-              fontSize: '18px', 
-              fontWeight: 'bold',
-              display: 'block'
-            }}>
-              {stats.rank}
-            </Text>
-            <Text style={{ 
-              color: 'rgba(255,255,255,0.7)', 
-              fontSize: '12px'
-            }}>
-              Рейтинг
-            </Text>
+        {/* Adaptive Progress Bar */}
+        {!isMaxRank && nextRank && (
+          <div className={styles.profileProgress}>
+            <div className="flex justify-between text-white/80 text-sm mb-2">
+              <span>До {nextRank.name}</span>
+              <span>{Math.round(progressPercentage)}%</span>
+            </div>
+            <Progress 
+              value={progressPercentage} 
+              className="bg-white/20" 
+              style={{'--progress-color': '#ffffff'} as React.CSSProperties}
+            />
           </div>
-          
-          <div style={{ textAlign: 'center' }}>
-            <Text style={{ 
-              color: 'white', 
-              fontSize: '18px', 
-              fontWeight: 'bold',
-              display: 'block'
-            }}>
-              {user.streak}
-            </Text>
-            <Text style={{ 
-              color: 'rgba(255,255,255,0.7)', 
-              fontSize: '12px'
-            }}>
-              Дней подряд
-            </Text>
-          </div>
-          
-          <div style={{ textAlign: 'center' }}>
-            <Text style={{ 
-              color: 'white', 
-              fontSize: '18px', 
-              fontWeight: 'bold',
-              display: 'block'
-            }}>
-              {stats.battlesWon}
-            </Text>
-            <Text style={{ 
-              color: 'rgba(255,255,255,0.7)', 
-              fontSize: '12px'
-            }}>
-              Побед
-            </Text>
-          </div>
-        </div>
-      </Stack>
-    </Card>
+        )}
+      </Card>
+    </motion.div>
   )
 }

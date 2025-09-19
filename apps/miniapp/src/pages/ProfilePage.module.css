@@ -1,0 +1,218 @@
+/* ProfilePage.module.css - Спокойная Элегантность v5.0 */
+
+/* === ADAPTIVE PROFILE LAYOUT === */
+.adaptiveProfileLayout {
+  /* Desktop: side-by-side layout */
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "avatar info";
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.profileAvatar {
+  grid-area: avatar;
+  position: relative;
+  justify-self: center;
+}
+
+.profileInfo {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+}
+
+/* === TYPOGRAPHY SCALING === */
+.profileName {
+  font-size: clamp(1.25rem, 4vw, 2rem);
+  line-height: 1.2;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+/* === INTERACTIVE ELEMENTS === */
+.profileUsername {
+  align-self: flex-start;
+}
+
+.profileBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.profileProgress {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+}
+
+/* === MOBILE ADAPTIVE BREAKPOINT === */
+@media (max-width: 640px) {
+  .adaptiveProfileLayout {
+    /* Mobile: stacked layout */
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "avatar"
+      "info";
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .profileAvatar {
+    justify-self: center;
+  }
+  
+  .profileInfo {
+    text-align: center;
+    align-items: center;
+  }
+  
+  .profileUsername {
+    align-self: center;
+  }
+  
+  .profileBadges {
+    justify-content: center;
+  }
+}
+
+/* === DESIGN SYSTEM INTEGRATION === */
+/* Using our agreed design tokens */
+.profileCard {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* === RESPONSIVE SIZING === */
+.adaptiveAvatar {
+  width: 4rem;  /* 64px mobile */
+  height: 4rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 640px) {
+  .adaptiveAvatar {
+    width: 5rem;  /* 80px tablet */
+    height: 5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .adaptiveAvatar {
+    width: 6rem;  /* 96px desktop */
+    height: 6rem;
+  }
+}
+
+/* === STATUS INDICATOR === */
+.statusIndicator {
+  position: absolute;
+  bottom: -0.25rem;
+  right: -0.25rem;
+  width: 1rem;
+  height: 1rem;
+  background: #10b981;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 640px) {
+  .statusIndicator {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-width: 3px;
+  }
+}
+
+@media (min-width: 768px) {
+  .statusIndicator {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 4px;
+  }
+}
+
+/* === RESPONSIVE BADGES === */
+.adaptiveBadge {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 9999px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 640px) {
+  .adaptiveBadge {
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+  }
+}
+
+.adaptiveBadgeIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  color: #fbbf24;
+}
+
+@media (min-width: 640px) {
+  .adaptiveBadgeIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+  }
+}
+
+/* === ANIMATION REFINEMENTS === */
+.profileCard {
+  animation: slideUpFade 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+.adaptiveProfileLayout,
+.profileInfo,
+.profileBadges {
+  contain: layout style;
+}
+
+.adaptiveAvatar,
+.statusIndicator,
+.adaptiveBadge {
+  will-change: transform;
+}
+
+/* Disable animations for reduced motion users */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

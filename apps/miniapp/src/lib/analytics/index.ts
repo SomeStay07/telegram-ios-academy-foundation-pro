@@ -26,9 +26,7 @@ async function initializeAnalytics(): Promise<void> {
     await tracker.init()
     isInitialized = true
     
-    if (import.meta.env.DEV) {
-      console.log('📊 Analytics initialized')
-    }
+    // Analytics initialized
   } catch (error) {
     console.error('Failed to initialize analytics:', error)
     // Keep using no-op tracker

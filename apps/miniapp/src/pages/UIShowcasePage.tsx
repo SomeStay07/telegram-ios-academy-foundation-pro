@@ -18,7 +18,7 @@ const UIShowcasePage: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<'sm' | 'md' | 'lg'>('md');
 
   const codeExample = `function greetUser(name: string) {
-  console.log(\`Hello, \${name}!\`);
+  // Log greeting message
   return \`Welcome to Telegram iOS Academy!\`;
 }
 
