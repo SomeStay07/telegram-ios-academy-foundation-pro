@@ -20,19 +20,37 @@ import { Typography } from '../design-system/components/typography/index'
 import { getTelegramApi } from '../lib/telegram/api'
 
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0, x: 100 },
   visible: {
     opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.25, 0.46, 0.45, 0.94],
+      staggerChildren: 0.1
+    }
+  },
+  exit: {
+    opacity: 0,
+    x: -100,
     transition: {
       duration: 0.3,
-      staggerChildren: 0.1
+      ease: [0.25, 0.46, 0.45, 0.94]
     }
   }
 }
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: {
+      duration: 0.3,
+      ease: [0.25, 0.46, 0.45, 0.94]
+    }
+  }
 }
 
 interface SettingsItemProps {
@@ -57,28 +75,45 @@ function SettingsItem({ icon, title, description, onClick, rightElement }: Setti
   return (
     <motion.div
       variants={itemVariants}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ 
+        scale: 1.02,
+        transition: { duration: 0.2 }
+      }}
+      whileTap={{ 
+        scale: 0.98,
+        transition: { duration: 0.1 }
+      }}
       className="cursor-pointer"
       onClick={handleClick}
     >
-      <Card className="p-4 mb-3 hover:shadow-md transition-shadow">
+      <Card className="p-4 mb-3 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 border border-transparent hover:border-blue-200/50 dark:hover:border-blue-800/50 group">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+            <motion.div 
+              className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors duration-300"
+              whileHover={{ rotate: 5, scale: 1.1 }}
+              whileTap={{ rotate: -5, scale: 0.95 }}
+            >
               {icon}
-            </div>
+            </motion.div>
             <div>
-              <Typography variant="body-md" className="font-medium">
+              <Typography variant="body-md" className="font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300">
                 {title}
               </Typography>
               {description && (
-                <Typography variant="body-sm" className="text-muted-foreground">
+                <Typography variant="body-sm" className="text-muted-foreground group-hover:text-blue-600/70 dark:group-hover:text-blue-400/70 transition-colors duration-300">
                   {description}
                 </Typography>
               )}
             </div>
           </div>
-          {rightElement}
+          <motion.div
+            initial={{ x: 0 }}
+            whileHover={{ x: 5 }}
+            transition={{ duration: 0.2 }}
+          >
+            {rightElement}
+          </motion.div>
         </div>
       </Card>
     </motion.div>
@@ -97,9 +132,15 @@ export function SettingsPage() {
       // Show back button
       webApp?.BackButton?.show()
       
-      // Handle back button click
+      // Enhanced back button click with smooth animation
       const handleBackClick = () => {
-        webApp?.HapticFeedback?.impactOccurred('light')
+        // Enhanced haptic feedback sequence
+        webApp?.HapticFeedback?.impactOccurred('medium')
+        setTimeout(() => {
+          webApp?.HapticFeedback?.selectionChanged()
+        }, 50)
+        
+        // Smooth navigation back to profile
         navigate({ to: '/profile' })
       }
       
@@ -114,22 +155,22 @@ export function SettingsPage() {
 
   const handleNotifications = () => {
     // Handle notifications settings
-    console.log('Notifications settings')
+    // TODO: Implement notifications settings
   }
 
   const handlePrivacy = () => {
     // Handle privacy settings
-    console.log('Privacy settings')
+    // TODO: Implement privacy settings
   }
 
   const handleTheme = () => {
     // Handle theme settings
-    console.log('Theme settings')
+    // TODO: Implement theme settings
   }
 
   const handleLanguage = () => {
     // Handle language settings
-    console.log('Language settings')
+    // TODO: Implement language settings
   }
 
   const handleHaptics = () => {
@@ -137,17 +178,17 @@ export function SettingsPage() {
     if (telegramApi.isAvailable()) {
       telegramApi.getWebApp()?.HapticFeedback?.notificationOccurred('success')
     }
-    console.log('Haptic settings')
+    // TODO: Implement haptic settings
   }
 
   const handleHelp = () => {
     // Handle help
-    console.log('Help')
+    // TODO: Implement help functionality
   }
 
   const handleAbout = () => {
     // Handle about
-    console.log('About')
+    // TODO: Implement about functionality
   }
 
   return (

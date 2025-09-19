@@ -47,26 +47,68 @@ export function ProfileHeader({
   const telegramApi = getTelegramApi()
 
   const handleSettingsClick = () => {
-    // Haptic feedback
+    // Enhanced haptic feedback sequence
     if (telegramApi.isAvailable()) {
-      telegramApi.getWebApp()?.HapticFeedback?.impactOccurred('light')
+      const webApp = telegramApi.getWebApp()
+      // Double haptic feedback for better UX
+      webApp?.HapticFeedback?.impactOccurred('medium')
+      setTimeout(() => {
+        webApp?.HapticFeedback?.selectionChanged()
+      }, 100)
     }
     
-    // Navigate to settings page
+    // Smooth navigation to settings page
     navigate({ to: '/settings' })
   }
 
   return (
     <motion.div variants={itemVariants}>
       <Card className={`p-6 mb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
-        {/* Settings Icon */}
+        {/* Ultra Interactive Settings Button */}
         <motion.button 
           onClick={handleSettingsClick}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-200 active:scale-95"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="absolute top-4 right-4 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-300 group overflow-hidden"
+          whileHover={{ 
+            scale: 1.15, 
+            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            rotate: 180,
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+          }}
+          whileTap={{ 
+            scale: 0.85,
+            backgroundColor: "rgba(255, 255, 255, 0.4)",
+            rotate: 270
+          }}
+          initial={{ rotate: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 20
+          }}
         >
-          <Settings className="w-4 h-4 text-white" />
+          {/* Animated background glow */}
+          <motion.div
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20"
+            initial={{ scale: 0, opacity: 0 }}
+            whileHover={{ 
+              scale: 1.5, 
+              opacity: 1,
+              transition: { duration: 0.3 }
+            }}
+          />
+          
+          {/* Rotating border effect */}
+          <motion.div
+            className="absolute inset-0 rounded-full border-2 border-white/40"
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+          
+          <Settings className="w-5 h-5 text-white group-hover:text-blue-100 transition-colors duration-300 relative z-10" />
         </motion.button>
         
         {/* Adaptive Profile Layout */}

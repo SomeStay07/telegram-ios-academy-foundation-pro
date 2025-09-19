@@ -118,7 +118,7 @@ export const useAppStore = create<AppStore>()(
         // TODO: Navigate to the module with highest progress < 100
         const { modules } = get()
         const incompleteModule = modules.find(m => m.progress > 0 && m.progress < 100)
-        console.log('Continue module:', incompleteModule?.title)
+        // Continue module found
       },
       setModules: (modules) =>
         set({ modules }, false, 'setModules'),
@@ -181,7 +181,7 @@ export const useAppStore = create<AppStore>()(
       savePreferences: async () => {
         try {
           // TODO: Save to backend when available
-          console.log('Saving preferences:', get().preferences)
+          // Saving preferences
           
           // Simulate API call
           await new Promise(resolve => setTimeout(resolve, 500))
@@ -194,7 +194,7 @@ export const useAppStore = create<AppStore>()(
             await api.showAlert('Settings saved successfully!')
           } catch (error) {
             if (import.meta.env.DEV) {
-              console.log('Settings saved successfully!')
+              // Settings saved successfully
             }
           }
         } catch (error) {
@@ -219,7 +219,7 @@ export const useAppStore = create<AppStore>()(
         )
         
         // Navigate to main or show sign out feedback
-        console.log('User signed out')
+        // User signed out
       },
 
       // Interview slice
@@ -241,7 +241,7 @@ export const useAppStore = create<AppStore>()(
       resumeAttempt: () => {
         const { currentAttempt } = get()
         if (currentAttempt.attemptId) {
-          console.log('Resume attempt:', currentAttempt.attemptId)
+          // Resume attempt
         }
       },
       finishAttempt: () =>

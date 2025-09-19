@@ -48,7 +48,7 @@ export function ProfilePage() {
         isAvailable: false
       }
     } catch (error) {
-      console.log('⚠️ Failed to get Telegram user from API:', error)
+      // Failed to get Telegram user from API - fallback to default user
       return {
         id: 0,
         username: undefined,
@@ -65,18 +65,9 @@ export function ProfilePage() {
 
   // Update user data with authenticated Telegram information
   useEffect(() => {
-    console.log('📊 ProfilePage useEffect Debug:', {
-      isAuthSuccess,
-      authData: authData?.user,
-      telegramUser,
-      'telegramUser.isAvailable': telegramUser.isAvailable,
-      'telegramUser.id': telegramUser.id
-    });
-
     // Prioritize validated backend auth data
     if (isAuthSuccess && authData?.user) {
       const backendUser = authData.user
-      console.log('✅ Using BACKEND auth data for profile:', backendUser);
       setUserData(prevData => ({
         ...prevData,
         id: backendUser.id,
@@ -97,7 +88,6 @@ export function ProfilePage() {
       }))
     } else if (telegramUser.isAvailable && telegramUser.id > 0) {
       // Fallback to frontend Telegram data
-      console.log('✅ Using FRONTEND Telegram data for profile:', telegramUser);
       setUserData(prevData => ({
         ...prevData,
         id: telegramUser.id,
@@ -106,8 +96,6 @@ export function ProfilePage() {
         username: telegramUser.username || '',
         avatar: getAvatarUrl(telegramUser)
       }))
-    } else {
-      console.log('⚠️ No valid user data available - using defaults');
     }
   }, [isAuthSuccess, authData, telegramUser.isAvailable, telegramUser.id, telegramUser.firstName, telegramUser.lastName, telegramUser.username, setUserData])
 
