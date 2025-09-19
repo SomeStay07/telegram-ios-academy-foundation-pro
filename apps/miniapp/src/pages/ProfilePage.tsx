@@ -11,6 +11,7 @@ import { ProfileHeader } from '../components/profile/ProfileHeader'
 import { ProfileStats } from '../components/profile/ProfileStats'
 import { ProfileAchievements } from '../components/profile/ProfileAchievements'
 import { ProfileActivity } from '../components/profile/ProfileActivity'
+import { TelegramDebugInfo } from '../components/debug/TelegramDebugInfo'
 
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
@@ -161,6 +162,9 @@ export function ProfilePage() {
           <ProfileActivity itemVariants={itemVariants} />
         </div>
       </div>
+      
+      {/* Debug Info Component */}
+      <TelegramDebugInfo />
     </motion.div>
   )
 }

@@ -32,25 +32,29 @@ export interface TelegramUserData {
 }
 
 export function useTelegramUser(): TelegramUserData {
-  // Get real Telegram user data
-  const tg = window.Telegram?.WebApp;
+  // Get real Telegram user data using the proper way
+  const webApp = (window as any)?.Telegram?.WebApp;
   
-  // Debug logging to console
+  // Debug logging to console - more detailed
   console.log('🔍 Telegram WebApp Debug:', {
+    windowTelegram: window.Telegram,
     hasTelegram: !!window.Telegram,
-    hasWebApp: !!window.Telegram?.WebApp,
-    hasInitData: !!tg?.initData,
-    hasInitDataUnsafe: !!tg?.initDataUnsafe,
-    hasUser: !!tg?.initDataUnsafe?.user,
-    initDataRaw: tg?.initData,
-    userDataRaw: tg?.initDataUnsafe?.user,
-    platform: tg?.platform,
-    version: tg?.version
+    hasWebApp: !!webApp,
+    webAppType: typeof webApp,
+    hasInitData: !!webApp?.initData,
+    hasInitDataUnsafe: !!webApp?.initDataUnsafe,
+    hasUser: !!webApp?.initDataUnsafe?.user,
+    initDataLength: webApp?.initData?.length || 0,
+    userDataRaw: webApp?.initDataUnsafe?.user,
+    platform: webApp?.platform,
+    version: webApp?.version,
+    isExpanded: webApp?.isExpanded,
+    colorScheme: webApp?.colorScheme
   });
   
   // Check if we're in Telegram WebApp environment
-  if (tg && tg.initDataUnsafe?.user) {
-    const user = tg.initDataUnsafe.user;
+  if (webApp && webApp.initDataUnsafe?.user) {
+    const user = webApp.initDataUnsafe.user;
     const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'User';
 
     console.log('✅ Using REAL Telegram user data:', {
