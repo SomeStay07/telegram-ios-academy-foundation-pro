@@ -50,7 +50,7 @@ export function detectTelegramEnvironment(): TelegramEnvironmentInfo {
 // === MOCK CONFIGURATION ===
 
 const DEFAULT_MOCK_CONFIG: TelegramMockConfig = {
-  enabled: import.meta.env.DEV,
+  enabled: import.meta.env.VITE_USE_MOCKS === 'true',  // Only enable when explicitly set
   user: {
     id: 987654321,
     first_name: 'iOS',
