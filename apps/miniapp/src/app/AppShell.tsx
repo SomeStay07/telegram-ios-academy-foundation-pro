@@ -5,7 +5,7 @@ import {
   useTelegramViewport, 
   useTelegramMainButton, 
   useTelegramBackButton 
-} from '../lib/telegram'
+} from '../lib/telegram/hooks'
 
 interface AppShellProps {
   children: ReactNode
