@@ -17,18 +17,51 @@
   <meta name='telegram-web-app' content='1'/>
   
   <!-- Telegram WebApp API Script - CRITICAL for WebApp functionality -->
-  <script src="https://telegram.org/js/telegram-web-app.js?59" async></script>
+  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
   
-  <!-- Alternative Telegram Script Loading -->
+  <!-- Enhanced Telegram Script Loading with CSP and Network Debugging -->
   <script>
+    // Debug environment and CSP
+    console.log('🔍 Environment Debug:');
+    console.log('- User Agent:', navigator.userAgent);
+    console.log('- Location:', window.location.href);
+    console.log('- Referrer:', document.referrer);
+    console.log('- CSP:', document.querySelector('meta[http-equiv="Content-Security-Policy"]')?.content || 'Not set');
+    
+    // Check if we're actually in Telegram
+    const isTelegramEnvironment = navigator.userAgent.includes('Telegram') || 
+                                  window.location.search.includes('tgWebApp') ||
+                                  document.referrer.includes('telegram') ||
+                                  window.parent !== window;
+    
+    console.log('🤖 Telegram Environment Detection:', isTelegramEnvironment);
+    
     // Immediate check and load if needed
     (function() {
       console.log('🚀 Immediate Telegram script check...');
       
-      // Try multiple loading strategies
-      let scriptLoaded = false;
+      // Check if already available (from sync script)
+      if (window.Telegram && window.Telegram.WebApp) {
+        console.log('✅ Telegram WebApp already available from sync script!');
+        console.log('📊 WebApp version:', window.Telegram.WebApp.version);
+        console.log('📊 Platform:', window.Telegram.WebApp.platform);
+        console.log('👤 InitDataUnsafe:', window.Telegram.WebApp.initDataUnsafe);
+        
+        // Initialize immediately
+        if (window.Telegram.WebApp.ready) {
+          window.Telegram.WebApp.ready();
+          console.log('✅ WebApp.ready() called');
+        }
+        if (window.Telegram.WebApp.expand) {
+          window.Telegram.WebApp.expand();
+          console.log('✅ WebApp.expand() called');
+        }
+        return;
+      }
+      
+      // Try multiple loading strategies with better error handling
       let attempts = 0;
-      const maxAttempts = 3;
+      const maxAttempts = 5;
       
       function checkAndLoadTelegram() {
         attempts++;
@@ -36,44 +69,87 @@
         
         if (window.Telegram && window.Telegram.WebApp) {
           console.log('✅ Telegram WebApp found!');
-          scriptLoaded = true;
+          console.log('📊 WebApp details:', {
+            version: window.Telegram.WebApp.version,
+            platform: window.Telegram.WebApp.platform,
+            initData: window.Telegram.WebApp.initData?.substring(0, 50) + '...',
+            user: window.Telegram.WebApp.initDataUnsafe?.user
+          });
+          
+          // Initialize
+          if (window.Telegram.WebApp.ready) window.Telegram.WebApp.ready();
+          if (window.Telegram.WebApp.expand) window.Telegram.WebApp.expand();
           return true;
         }
         
         if (attempts >= maxAttempts) {
           console.error('❌ Max attempts reached, Telegram not available');
+          console.log('🔍 Final window.Telegram state:', window.Telegram);
+          console.log('🔍 Script tags check:');
+          document.querySelectorAll('script').forEach((script, i) => {
+            if (script.src && script.src.includes('telegram')) {
+              console.log(`Script ${i}:`, {
+                src: script.src,
+                readyState: script.readyState,
+                loaded: script.onload ? 'has onload' : 'no onload',
+                error: script.onerror ? 'has onerror' : 'no onerror'
+              });
+            }
+          });
           return false;
         }
         
-        // Try loading with different URLs
-        const urls = [
-          'https://telegram.org/js/telegram-web-app.js',
-          'https://telegram.org/js/telegram-web-app.js?60',
-          'https://telegram.org/js/telegram-web-app.js?latest'
+        // Try different URLs and methods
+        const strategies = [
+          { url: 'https://telegram.org/js/telegram-web-app.js', method: 'createElement' },
+          { url: 'https://telegram.org/js/telegram-web-app.js?60', method: 'createElement' },
+          { url: 'https://telegram.org/js/telegram-web-app.js?latest', method: 'createElement' },
+          { url: 'https://telegram.org/js/telegram-web-app.js?61', method: 'innerHTML' },
+          { url: 'https://telegram.org/js/telegram-web-app.js?62', method: 'fetch' }
         ];
         
-        const url = urls[attempts - 1];
-        if (url) {
-          console.log(`🔄 Loading Telegram script from: ${url}`);
-          const script = document.createElement('script');
-          script.src = url;
-          script.async = false; // Load synchronously
-          script.onload = function() {
-            console.log(`✅ Script loaded from ${url}`);
-            setTimeout(checkAndLoadTelegram, 100);
-          };
-          script.onerror = function() {
-            console.log(`❌ Failed to load from ${url}`);
-            setTimeout(checkAndLoadTelegram, 100);
-          };
-          document.head.appendChild(script);
+        const strategy = strategies[attempts - 1];
+        if (strategy) {
+          console.log(`🔄 Attempt ${attempts}: Loading from ${strategy.url} using ${strategy.method}`);
+          
+          if (strategy.method === 'createElement') {
+            const script = document.createElement('script');
+            script.src = strategy.url;
+            script.onload = function() {
+              console.log(`✅ Script loaded from ${strategy.url}`);
+              setTimeout(checkAndLoadTelegram, 200);
+            };
+            script.onerror = function(error) {
+              console.log(`❌ Failed to load from ${strategy.url}:`, error);
+              setTimeout(checkAndLoadTelegram, 200);
+            };
+            document.head.appendChild(script);
+          } else if (strategy.method === 'innerHTML') {
+            console.log('🔄 Trying innerHTML method...');
+            const scriptTag = `<script src="${strategy.url}"><\/script>`;
+            document.head.insertAdjacentHTML('beforeend', scriptTag);
+            setTimeout(checkAndLoadTelegram, 500);
+          } else if (strategy.method === 'fetch') {
+            console.log('🔄 Trying fetch method...');
+            fetch(strategy.url)
+              .then(response => response.text())
+              .then(scriptContent => {
+                console.log('✅ Script fetched, executing...');
+                eval(scriptContent);
+                setTimeout(checkAndLoadTelegram, 200);
+              })
+              .catch(error => {
+                console.log('❌ Fetch failed:', error);
+                setTimeout(checkAndLoadTelegram, 200);
+              });
+          }
         }
         
         return false;
       }
       
-      // Start checking immediately
-      setTimeout(checkAndLoadTelegram, 0);
+      // Start checking with a small delay to let sync script load
+      setTimeout(checkAndLoadTelegram, 100);
     })();
   </script>
   
