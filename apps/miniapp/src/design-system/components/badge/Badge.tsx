@@ -1,7 +1,7 @@
 import React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { LucideIcon } from 'lucide-react'
-import { cn } from '../../lib/utils'
+import { cn } from '../../../lib/utils'
 
 const badgeVariants = cva(
   "inline-flex items-center justify-center rounded-full border font-medium transition-all duration-300 cursor-pointer hover:scale-110 hover:shadow-lg hover:shadow-blue-500/25 dark:hover:shadow-blue-400/20 active:scale-95 transform-gpu will-change-transform",

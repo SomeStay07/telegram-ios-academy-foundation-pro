@@ -1,7 +1,7 @@
 import React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { LucideIcon, Trophy } from 'lucide-react'
-import { cn } from '../../lib/utils'
+import { cn } from '../../../lib/utils'
 
 const achievementVariants = cva(
   "flex items-center gap-3 p-3 rounded-lg transition-all duration-200 border",
