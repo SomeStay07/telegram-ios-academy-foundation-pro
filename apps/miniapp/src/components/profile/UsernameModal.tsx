@@ -173,7 +173,6 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
             </div>
           </motion.div>
         </motion.div>
-      </motion.div>
     </AnimatePresence>
   )
 }
