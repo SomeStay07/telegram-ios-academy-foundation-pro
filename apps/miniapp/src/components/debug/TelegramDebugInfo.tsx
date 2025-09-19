@@ -1,11 +1,54 @@
 import React, { useState } from 'react'
-import { useTelegramUser } from '../../hooks/useTelegramUser'
 import { useAuthVerification } from '../../hooks/useApi'
+import { getTelegramApi } from '../../lib/telegram/api'
 
 export function TelegramDebugInfo() {
   const [isVisible, setIsVisible] = useState(false)
-  const telegramUser = useTelegramUser()
   const { data: authData, isSuccess: isAuthSuccess, error: authError } = useAuthVerification()
+
+  // Get Telegram API and user data
+  const telegramApi = getTelegramApi()
+  const telegramUser = React.useMemo(() => {
+    try {
+      if (telegramApi.hasUser()) {
+        const user = telegramApi.getUser()
+        return {
+          id: user.id,
+          username: user.username,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          fullName: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'User',
+          languageCode: user.language_code || 'en',
+          avatarUrl: undefined,
+          isPremium: user.is_premium || false,
+          isAvailable: true
+        }
+      }
+      return {
+        id: 0,
+        username: undefined,
+        firstName: undefined,
+        lastName: undefined,
+        fullName: 'User',
+        languageCode: 'en',
+        avatarUrl: undefined,
+        isPremium: false,
+        isAvailable: false
+      }
+    } catch (error) {
+      return {
+        id: 0,
+        username: undefined,
+        firstName: undefined,
+        lastName: undefined,
+        fullName: 'User',
+        languageCode: 'en',
+        avatarUrl: undefined,
+        isPremium: false,
+        isAvailable: false
+      }
+    }
+  }, [telegramApi])
 
   // Get all Telegram WebApp data
   const tg = window.Telegram?.WebApp
