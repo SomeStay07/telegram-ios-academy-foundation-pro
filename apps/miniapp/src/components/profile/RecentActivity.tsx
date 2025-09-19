@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Clock, Code, Trophy, Zap, BookOpen, Target } from 'lucide-react'
+import { Clock, Code, Trophy, Zap, BookOpen, Target, ChevronDown, ExternalLink } from 'lucide-react'
 
 interface ActivityItem {
   id: string
@@ -17,6 +17,8 @@ interface RecentActivityProps {
 }
 
 export function RecentActivity({ itemVariants }: RecentActivityProps) {
+  const [showAll, setShowAll] = useState(false)
+  
   const activities: ActivityItem[] = [
     {
       id: '1',
@@ -53,8 +55,46 @@ export function RecentActivity({ itemVariants }: RecentActivityProps) {
       value: '7 дней',
       icon: Target,
       color: 'text-orange-400'
+    },
+    {
+      id: '5',
+      type: 'lesson',
+      title: 'Завершён урок',
+      timeAgo: '2 дня назад',
+      value: 'TypeScript Basics',
+      icon: Code,
+      color: 'text-blue-400'
+    },
+    {
+      id: '6',
+      type: 'xp',
+      title: 'Получен опыт',
+      timeAgo: '2 дня назад',
+      value: '+180 XP',
+      icon: Zap,
+      color: 'text-yellow-400'
+    },
+    {
+      id: '7',
+      type: 'achievement',
+      title: 'Достижение разблокировано',
+      timeAgo: '3 дня назад',
+      value: 'Первые шаги',
+      icon: Trophy,
+      color: 'text-green-400'
+    },
+    {
+      id: '8',
+      type: 'lesson',
+      title: 'Завершён урок',
+      timeAgo: '3 дня назад',
+      value: 'JavaScript ES6',
+      icon: BookOpen,
+      color: 'text-blue-400'
     }
   ]
+  
+  const displayedActivities = showAll ? activities : activities.slice(0, 3)
 
   return (
     <motion.div 
@@ -62,18 +102,37 @@ export function RecentActivity({ itemVariants }: RecentActivityProps) {
       className="mb-4"
     >
       <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-3">
-        <div className="flex items-center gap-2 mb-3">
-          <Clock className="w-4 h-4 text-white/60" />
-          <span 
-            className="text-sm font-medium text-white/80"
-            style={{ fontFamily: 'var(--font-gaming)' }}
-          >
-            Недавняя активность
-          </span>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-white/60" />
+            <span 
+              className="text-sm font-medium text-white/80"
+              style={{ fontFamily: 'var(--font-gaming)' }}
+            >
+              Недавняя активность
+            </span>
+          </div>
+          
+          {/* Scroll indicator */}
+          {!showAll && activities.length > 3 && (
+            <motion.div
+              className="flex items-center gap-1 text-white/40 text-xs"
+              animate={{ opacity: [0.4, 0.8, 0.4] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <span>Скролл</span>
+              <ChevronDown className="w-3 h-3" />
+            </motion.div>
+          )}
         </div>
         
-        <div className="space-y-2 max-h-32 overflow-y-auto">
-          {activities.map((activity, index) => {
+        <div className={`space-y-2 ${showAll ? 'max-h-none' : 'max-h-40'} ${showAll ? '' : 'overflow-y-auto'} relative`}>
+          {/* Scroll gradient overlay */}
+          {!showAll && activities.length > 3 && (
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/5 to-transparent pointer-events-none z-10 rounded-b-lg" />
+          )}
+          
+          {displayedActivities.map((activity, index) => {
             const Icon = activity.icon
             return (
               <motion.div
@@ -114,15 +173,33 @@ export function RecentActivity({ itemVariants }: RecentActivityProps) {
           })}
         </div>
         
-        {/* View All Button */}
-        <motion.button
-          className="w-full mt-2 text-xs text-white/60 hover:text-white/80 transition-colors duration-200 text-center py-1"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          style={{ fontFamily: 'var(--font-gaming)' }}
-        >
-          Показать всё
-        </motion.button>
+        {/* View All / Show Less Button */}
+        {activities.length > 3 && (
+          <motion.button
+            onClick={() => setShowAll(!showAll)}
+            className="w-full mt-3 flex items-center justify-center gap-2 text-xs text-white/60 hover:text-white/80 hover:bg-white/5 transition-all duration-200 py-2 px-3 rounded-md border border-white/10 hover:border-white/20"
+            whileHover={{ scale: 1.02, y: -1 }}
+            whileTap={{ scale: 0.98 }}
+            style={{ fontFamily: 'var(--font-gaming)' }}
+          >
+            {showAll ? (
+              <>
+                <span>Скрыть</span>
+                <motion.div
+                  animate={{ rotate: showAll ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-3 h-3" />
+                </motion.div>
+              </>
+            ) : (
+              <>
+                <span>Показать всё ({activities.length})</span>
+                <ExternalLink className="w-3 h-3" />
+              </>
+            )}
+          </motion.button>
+        )}
       </div>
     </motion.div>
   )

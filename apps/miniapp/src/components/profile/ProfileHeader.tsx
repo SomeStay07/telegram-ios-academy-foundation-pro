@@ -19,7 +19,6 @@ import styles from '../../pages/ProfilePage.module.css'
 import { UsernameModal } from './UsernameModal'
 
 // New Profile Components
-import { QuickActionsBar } from './QuickActionsBar'
 import { LevelUpCelebration } from './LevelUpCelebration'
 import { RecentActivity } from './RecentActivity'
 import { SocialProof } from './SocialProof'
@@ -262,13 +261,6 @@ export function ProfileHeader({
         )}
       </Card>
       </motion.div>
-
-      {/* Quick Actions Bar */}
-      <QuickActionsBar 
-        itemVariants={itemVariants}
-        hasActiveLesson={true}
-        streakCount={userData.streak}
-      />
 
       {/* Recent Activity Timeline */}
       <RecentActivity itemVariants={itemVariants} />

@@ -25,4 +25,10 @@ export { Badge, type BadgeProps, type BadgeVariant, type BadgeSize, type BadgeCo
 export { AchievementItem, type AchievementItemProps } from './components/achievement'
 export { SkillProgress, type SkillProgressProps } from './components/skill-progress'
 
+// New Profile Components
+export { InfoCard, type InfoCardProps } from './components/info-card'
+export { ActivityItem, type ActivityItemProps } from './components/activity-item'
+export { CelebrationOverlay, type CelebrationOverlayProps } from './components/celebration-overlay'
+export { QuickAction, type QuickActionProps } from './components/quick-action'
+
 // Legacy exports removed - all components now use modern CVA + Tailwind approach ✨
