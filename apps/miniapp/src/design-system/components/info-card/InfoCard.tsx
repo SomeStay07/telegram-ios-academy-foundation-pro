@@ -9,14 +9,14 @@ const infoCardVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-blue-400/20 border-white/10 text-blue-400",
-        success: "bg-green-400/20 border-white/10 text-green-400", 
-        warning: "bg-orange-400/20 border-white/10 text-orange-400",
-        info: "bg-blue-400/20 border-white/10 text-blue-400",
-        purple: "bg-purple-400/20 border-white/10 text-purple-400",
-        green: "bg-green-400/20 border-white/10 text-green-400",
-        blue: "bg-blue-400/20 border-white/10 text-blue-400",
-        orange: "bg-orange-400/20 border-white/10 text-orange-400"
+        primary: "bg-indigo-400/10 border-indigo-400/20 text-indigo-400",
+        success: "bg-green-400/10 border-green-400/20 text-green-400", 
+        warning: "bg-orange-400/10 border-orange-400/20 text-orange-400",
+        info: "bg-blue-400/10 border-blue-400/20 text-blue-400",
+        purple: "bg-purple-400/10 border-purple-400/20 text-purple-400",
+        green: "bg-green-400/10 border-green-400/20 text-green-400",
+        blue: "bg-blue-400/10 border-blue-400/20 text-blue-400",
+        orange: "bg-orange-400/10 border-orange-400/20 text-orange-400"
       },
       size: {
         sm: "p-2",
@@ -24,7 +24,7 @@ const infoCardVariants = cva(
         lg: "p-4"
       },
       animated: {
-        true: "hover:scale-[1.02] hover:-translate-y-0.5 cursor-pointer",
+        true: "hover:scale-[1.02] hover:-translate-y-1 cursor-pointer",
         false: ""
       },
       glow: {

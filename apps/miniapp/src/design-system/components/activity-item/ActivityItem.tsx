@@ -9,12 +9,12 @@ const activityItemVariants = cva(
   {
     variants: {
       variant: {
-        lesson: "bg-blue-400/10 border-blue-400/20 hover:bg-blue-400/15",
-        achievement: "bg-yellow-400/10 border-yellow-400/20 hover:bg-yellow-400/15",
+        lesson: "bg-indigo-400/10 border-indigo-400/20 hover:bg-indigo-400/15",
+        achievement: "bg-green-400/10 border-green-400/20 hover:bg-green-400/15",
         streak: "bg-orange-400/10 border-orange-400/20 hover:bg-orange-400/15",
-        xp: "bg-green-400/10 border-green-400/20 hover:bg-green-400/15",
+        xp: "bg-blue-400/10 border-blue-400/20 hover:bg-blue-400/15",
         challenge: "bg-purple-400/10 border-purple-400/20 hover:bg-purple-400/15",
-        social: "bg-pink-400/10 border-pink-400/20 hover:bg-pink-400/15"
+        social: "bg-green-400/10 border-green-400/20 hover:bg-green-400/15"
       },
       size: {
         sm: "p-2 gap-2",
@@ -39,12 +39,12 @@ const iconVariants = cva(
   {
     variants: {
       variant: {
-        lesson: "bg-blue-400/20 text-blue-400",
-        achievement: "bg-yellow-400/20 text-yellow-400",
+        lesson: "bg-indigo-400/20 text-indigo-400",
+        achievement: "bg-green-400/20 text-green-400",
         streak: "bg-orange-400/20 text-orange-400",
-        xp: "bg-green-400/20 text-green-400",
+        xp: "bg-blue-400/20 text-blue-400",
         challenge: "bg-purple-400/20 text-purple-400",
-        social: "bg-pink-400/20 text-pink-400"
+        social: "bg-green-400/20 text-green-400"
       },
       size: {
         sm: "w-6 h-6",

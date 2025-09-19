@@ -109,93 +109,44 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
         {/* Enhanced Personal Details Grid */}
         <div className="grid grid-cols-2 gap-2 text-xs mb-3">
           
-          {/* Location - стилизовано как в SocialProof */}
+          {/* Location - спокойная элегантность */}
           <motion.div
-            className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-lg border border-blue-400/30 p-3 relative overflow-hidden"
+            className="bg-blue-400/10 backdrop-blur-sm rounded-lg border border-blue-400/20 p-3 relative overflow-hidden"
             whileHover={{ scale: 1.02, y: -1 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
-            {/* Location shimmer */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-300/15 to-transparent"
-              animate={{ x: ['-100%', '100%'] }}
-              transition={{ 
-                duration: 3, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                repeatDelay: 2
-              }}
-            />
-            
             <div className="relative z-10 flex items-center gap-2">
-              <motion.div
-                animate={{ 
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.05, 1]
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <MapPin className="w-4 h-4 text-blue-300" />
-              </motion.div>
+              <MapPin className="w-4 h-4 text-blue-400" />
               <div>
                 <div 
-                  className="text-sm font-bold text-blue-200"
+                  className="text-sm font-bold text-blue-400"
                   style={{ fontFamily: 'var(--font-gaming)' }}
                 >
                   {personalInfo.location}
                 </div>
-                <div className="text-blue-300/60 text-xs">{personalInfo.timezone}</div>
+                <div className="text-white/60 text-xs">{personalInfo.timezone}</div>
               </div>
             </div>
           </motion.div>
 
-          {/* Learning Time - стилизовано как в SocialProof */}
+          {/* Learning Time - спокойная элегантность */}
           <motion.div
-            className="bg-gradient-to-br from-orange-500/20 to-amber-500/20 backdrop-blur-sm rounded-lg border border-orange-400/30 p-3 relative overflow-hidden"
+            className="bg-orange-400/10 backdrop-blur-sm rounded-lg border border-orange-400/20 p-3 relative overflow-hidden"
             whileHover={{ scale: 1.02, y: -1 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
-            {/* Time glow */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-orange-400/10 via-amber-400/15 to-orange-400/10"
-              animate={{ 
-                opacity: [0.3, 0.6, 0.3],
-                scale: [1, 1.02, 1]
-              }}
-              transition={{ 
-                duration: 2.5, 
-                repeat: Infinity, 
-                ease: "easeInOut"
-              }}
-            />
-            
             <div className="relative z-10 flex items-center gap-2">
-              <motion.div
-                animate={{ 
-                  rotate: [0, 360],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{ 
-                  rotate: { duration: 4, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 2, repeat: Infinity }
-                }}
-              >
-                <Clock className="w-4 h-4 text-orange-300" />
-              </motion.div>
+              <Clock className="w-4 h-4 text-orange-400" />
               <div>
-                <div className="text-sm font-bold text-orange-200 flex items-center gap-1">
-                  <motion.span
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    style={{ fontFamily: 'var(--font-gaming)' }}
-                  >
+                <div className="text-sm font-bold text-orange-400 flex items-center gap-1">
+                  <span style={{ fontFamily: 'var(--font-gaming)' }}>
                     {getTimeEmoji(personalInfo.learningTime)}
-                  </motion.span>
+                  </span>
                   <span style={{ fontFamily: 'var(--font-gaming)' }}>
                     {personalInfo.learningTime}
                   </span>
                 </div>
-                <div className="text-orange-300/60 text-xs">Время обучения</div>
+                <div className="text-white/60 text-xs">Время обучения</div>
               </div>
             </div>
           </motion.div>
@@ -205,24 +156,20 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
         {/* Социальные метрики в стиле SocialProof */}
         <div className="grid grid-cols-2 gap-2 text-xs">
           
-          {/* Friends Online */}
+          {/* Friends Online - спокойная элегантность */}
           <motion.div
-            className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg border border-green-400/30 p-3 relative overflow-hidden"
+            className="bg-green-400/10 backdrop-blur-sm rounded-lg border border-green-400/20 p-3 relative overflow-hidden"
             whileHover={{ scale: 1.02, y: -1 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
             <div className="relative z-10 flex items-center gap-2">
               <div className="relative">
-                <Users className="w-4 h-4 text-green-300" />
-                <motion.div
-                  className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full"
-                  animate={{ scale: [1, 1.3, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
+                <Users className="w-4 h-4 text-green-400" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full"></div>
               </div>
               <div>
                 <div 
-                  className="text-sm font-bold text-green-200"
+                  className="text-sm font-bold text-green-400"
                   style={{ 
                     fontFamily: 'var(--font-gaming)',
                     fontVariantNumeric: 'tabular-nums'
@@ -230,52 +177,29 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
                 >
                   8
                 </div>
-                <div className="text-green-300/60 text-xs">друзей онлайн</div>
+                <div className="text-white/60 text-xs">друзей онлайн</div>
               </div>
             </div>
           </motion.div>
 
-          {/* Weekly Rank */}
+          {/* Weekly Rank - спокойная элегантность */}
           <motion.div
-            className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur-sm rounded-lg border border-purple-400/30 p-3 relative overflow-hidden"
+            className="bg-indigo-400/10 backdrop-blur-sm rounded-lg border border-indigo-400/20 p-3 relative overflow-hidden"
             whileHover={{ scale: 1.02, y: -1 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
-            {/* Rank shimmer */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-300/15 to-transparent"
-              animate={{ x: ['-100%', '100%'] }}
-              transition={{ 
-                duration: 3, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                repeatDelay: 2
-              }}
-            />
-            
             <div className="relative z-10 flex items-center gap-2">
-              <motion.div
-                animate={{ 
-                  rotate: [0, 360],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{ 
-                  rotate: { duration: 3, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 2, repeat: Infinity }
-                }}
-              >
-                <Star className="w-4 h-4 text-purple-300" />
-              </motion.div>
+              <Star className="w-4 h-4 text-indigo-400" />
               <div>
                 <div 
-                  className="text-sm font-bold text-purple-200"
+                  className="text-sm font-bold text-indigo-400"
                   style={{ 
                     fontFamily: 'var(--font-gaming)'
                   }}
                 >
                   ТОП 15%
                 </div>
-                <div className="text-purple-300/60 text-xs">на этой неделе</div>
+                <div className="text-white/60 text-xs">на этой неделе</div>
               </div>
             </div>
           </motion.div>
