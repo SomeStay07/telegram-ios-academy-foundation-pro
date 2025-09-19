@@ -67,7 +67,7 @@ export function ProfileHeader({
         {/* Ultra Interactive Settings Button */}
         <motion.button 
           onClick={handleSettingsClick}
-          className="absolute top-4 right-4 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-300 group overflow-hidden"
+          className="absolute top-4 right-4 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-300 group z-50"
           whileHover={{ 
             scale: 1.15, 
             backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -88,7 +88,7 @@ export function ProfileHeader({
         >
           {/* Animated background glow */}
           <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20"
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 pointer-events-none"
             initial={{ scale: 0, opacity: 0 }}
             whileHover={{ 
               scale: 1.5, 
@@ -99,7 +99,7 @@ export function ProfileHeader({
           
           {/* Rotating border effect */}
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-white/40"
+            className="absolute inset-0 rounded-full border-2 border-white/40 pointer-events-none"
             animate={{ rotate: 360 }}
             transition={{
               duration: 8,

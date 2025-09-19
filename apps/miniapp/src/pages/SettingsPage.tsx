@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from '@tanstack/react-router'
 import { 
@@ -9,12 +9,17 @@ import {
   HelpCircle, 
   Info,
   Globe,
-  Vibrate
+  Vibrate,
+  ChevronRight
 } from 'lucide-react'
 
 // Design System Components
 import { Card } from '../design-system/components/card/index'
 import { Typography } from '../design-system/components/typography/index'
+
+// Theme Components
+import { ThemeModal } from '../components/theme/ThemeModal'
+import { useTheme } from '../contexts/ThemeContext'
 
 // Telegram Integration
 import { getTelegramApi } from '../lib/telegram/api'
@@ -123,6 +128,8 @@ function SettingsItem({ icon, title, description, onClick, rightElement }: Setti
 export function SettingsPage() {
   const navigate = useNavigate()
   const telegramApi = getTelegramApi()
+  const { theme, resolvedTheme } = useTheme()
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false)
 
   // Setup Telegram back button
   useEffect(() => {
@@ -164,8 +171,22 @@ export function SettingsPage() {
   }
 
   const handleTheme = () => {
-    // Handle theme settings
-    // TODO: Implement theme settings
+    // Open theme modal
+    setIsThemeModalOpen(true)
+  }
+
+  // Get current theme description
+  const getThemeDescription = () => {
+    switch (theme) {
+      case 'light':
+        return 'Светлая тема'
+      case 'dark':
+        return 'Темная тема'
+      case 'system':
+        return `Системная (${resolvedTheme === 'dark' ? 'темная' : 'светлая'})`
+      default:
+        return 'Системная'
+    }
   }
 
   const handleLanguage = () => {
@@ -233,8 +254,9 @@ export function SettingsPage() {
           <SettingsItem
             icon={<Palette className="w-5 h-5 text-purple-600" />}
             title="Тема"
-            description="Светлая или темная тема"
+            description={getThemeDescription()}
             onClick={handleTheme}
+            rightElement={<ChevronRight className="w-5 h-5 text-gray-400" />}
           />
           
           <SettingsItem
@@ -273,6 +295,12 @@ export function SettingsPage() {
           />
         </motion.div>
       </div>
+
+      {/* Theme Modal */}
+      <ThemeModal 
+        isOpen={isThemeModalOpen} 
+        onClose={() => setIsThemeModalOpen(false)} 
+      />
     </motion.div>
   )
 }
