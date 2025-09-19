@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Settings, AtSign, Trophy, Zap } from 'lucide-react'
+import { Settings, AtSign, Trophy, Zap, Info } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 
 // Design System Components
@@ -162,12 +162,26 @@ export function ProfileHeader({
               <div className={styles.profileUsername}>
                 <motion.button
                   onClick={handleUsernameClick}
-                  className="flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300 hover:bg-white/25 hover:border-white/40 hover:scale-105 active:scale-95"
+                  className="relative flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300 hover:bg-white/25 hover:border-white/40 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-white/20"
                   whileHover={{ 
-                    boxShadow: "0 0 20px rgba(255,255,255,0.3)",
-                    scale: 1.05
+                    boxShadow: "0 0 25px rgba(255,255,255,0.4), 0 0 10px rgba(59, 130, 246, 0.3)",
+                    scale: 1.08,
+                    y: -1
                   }}
                   whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0.9 }}
+                  animate={{ 
+                    opacity: [0.9, 1, 0.9],
+                    boxShadow: [
+                      "0 0 0px rgba(255,255,255,0)",
+                      "0 0 8px rgba(255,255,255,0.2)", 
+                      "0 0 0px rgba(255,255,255,0)"
+                    ]
+                  }}
+                  transition={{ 
+                    opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                  }}
                 >
                   <motion.div
                     animate={{ rotate: [0, 10, -10, 0] }}
@@ -183,6 +197,22 @@ export function ProfileHeader({
                   <Typography variant="body-sm" className="text-white font-medium group-hover:text-blue-100 transition-colors duration-300">
                     {username}
                   </Typography>
+                  
+                  {/* Clickable indicator icon */}
+                  <motion.div
+                    className="ml-1.5 opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [0.6, 0.9, 0.6]
+                    }}
+                    transition={{ 
+                      duration: 2.5, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                  >
+                    <Info className="w-3 h-3 text-blue-200 group-hover:text-white" />
+                  </motion.div>
                   
                   {/* Subtle shimmer effect */}
                   <motion.div
