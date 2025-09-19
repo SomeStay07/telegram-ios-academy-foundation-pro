@@ -32,7 +32,7 @@ const generateProgrammerFacts = (username: string, displayName: string) => {
     {
       icon: Code,
       title: "Кодовое имя",
-      content: `В hex: ${Buffer.from(username, 'utf8').toString('hex').toUpperCase()}. В ASCII сумма: ${username.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0)}`
+      content: `В hex: ${username.split('').map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join('').toUpperCase()}. В ASCII сумма: ${username.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0)}`
     },
     {
       icon: Terminal,
