@@ -71,15 +71,11 @@ const generateProgrammerFacts = (username: string, displayName: string) => {
 }
 
 export function UsernameModal({ isOpen, onClose, username, displayName }: UsernameModalProps) {
-  console.log('🔍 UsernameModal render:', { isOpen, username, displayName })
   const facts = generateProgrammerFacts(username, displayName)
 
   if (!isOpen) {
-    console.log('❌ Modal closed, not rendering')
     return null
   }
-
-  console.log('✅ Modal open, rendering with facts:', facts)
 
   return (
     <AnimatePresence>
