@@ -66,11 +66,13 @@ export function ProfileHeader({
   }
 
   const handleUsernameClick = () => {
+    console.log('🎯 Username clicked!', username)
     // Haptic feedback for username click
     if (telegramApi.isAvailable()) {
       telegramApi.hapticFeedback.impactOccurred('light')
     }
     setIsUsernameModalOpen(true)
+    console.log('📋 Modal state:', isUsernameModalOpen)
   }
 
   return (

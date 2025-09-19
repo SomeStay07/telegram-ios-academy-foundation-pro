@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Code, Hash, User, Terminal, Coffee } from 'lucide-react'
 
 // Design System Components
-import { Modal } from '../../design-system/components/modal/index'
 import { Typography } from '../../design-system/components/typography/index'
 import { Button } from '../../design-system/components/button/index'
 
@@ -72,19 +71,33 @@ const generateProgrammerFacts = (username: string, displayName: string) => {
 }
 
 export function UsernameModal({ isOpen, onClose, username, displayName }: UsernameModalProps) {
+  console.log('🔍 UsernameModal render:', { isOpen, username, displayName })
   const facts = generateProgrammerFacts(username, displayName)
+
+  if (!isOpen) {
+    console.log('❌ Modal closed, not rendering')
+    return null
+  }
+
+  console.log('✅ Modal open, rendering with facts:', facts)
 
   return (
     <AnimatePresence>
-      {isOpen && (
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
-          >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
             {/* Header */}
             <div className="relative bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 text-white">
               <button
@@ -159,8 +172,8 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
               </motion.div>
             </div>
           </motion.div>
-        </Modal>
-      )}
+        </motion.div>
+      </motion.div>
     </AnimatePresence>
   )
 }
