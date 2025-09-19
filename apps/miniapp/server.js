@@ -26,9 +26,8 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'", 
-        "'strict-dynamic'",
         "https://telegram.org", // Allow Telegram WebApp script
-        ...(isDevelopment ? ["'unsafe-inline'"] : []), // Allow inline scripts in dev mode
+        "'unsafe-inline'", // Temporary fix for Telegram WebApp
         (req, res) => `'nonce-${res.locals.nonce}'`,
       ],
       styleSrc: ["'self'", "'unsafe-inline'"], // Required for Tailwind CSS
