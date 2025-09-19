@@ -80,20 +80,27 @@ export interface LessonAttempt {
 export function useAuthVerification() {
   return useQuery({
     queryKey: ['authVerification'],
-    queryFn: () => {
+    queryFn: async () => {
       const initData = getTelegramInitData()
       if (!initData) {
         throw new Error('No Telegram init data available')
       }
       
-      return apiRequest('/auth/verifyInitData', {
-        method: 'POST',
-        body: JSON.stringify({ initData }),
-      }) as Promise<AuthResponse>
+      try {
+        return await apiRequest('/auth/verifyInitData', {
+          method: 'POST',
+          body: JSON.stringify({ initData }),
+        }) as Promise<AuthResponse>
+      } catch (error) {
+        // Gracefully handle API unavailability in development/staging
+        console.warn('API authentication unavailable, falling back to frontend-only mode:', error)
+        throw error
+      }
     },
     enabled: !!getTelegramInitData(),
     staleTime: 10 * 60 * 1000, // 10 minutes
-    retry: 3,
+    retry: 1, // Reduce retries when API is unavailable
+    retryDelay: 1000,
   })
 }
 
