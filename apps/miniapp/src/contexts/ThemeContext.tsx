@@ -50,8 +50,10 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     // Apply theme to document
     if (resolved === 'dark') {
       document.documentElement.classList.add('dark')
+      console.log('🌙 Dark theme applied to document')
     } else {
       document.documentElement.classList.remove('dark')
+      console.log('☀️ Light theme applied to document')
     }
   }, [theme])
 
@@ -76,6 +78,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, [theme])
 
   const setTheme = (newTheme: Theme) => {
+    console.log(`🎨 Setting theme to: ${newTheme}`)
     setThemeState(newTheme)
     localStorage.setItem('theme', newTheme)
   }

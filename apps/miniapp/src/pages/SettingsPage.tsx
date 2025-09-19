@@ -217,14 +217,14 @@ export function SettingsPage() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="min-h-screen bg-background p-4"
+      className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900 p-4"
     >
       {/* Header */}
       <motion.div variants={itemVariants} className="mb-6">
-        <Typography variant="display-sm" className="font-bold">
+        <Typography variant="display-sm" className="font-bold text-gray-900 dark:text-white">
           Настройки
         </Typography>
-        <Typography variant="body-md" className="text-muted-foreground">
+        <Typography variant="body-md" className="text-muted-foreground dark:text-gray-400">
           Персонализируйте свой опыт обучения
         </Typography>
       </motion.div>
@@ -233,7 +233,7 @@ export function SettingsPage() {
       <div className="space-y-6">
         {/* General Settings */}
         <motion.div variants={itemVariants}>
-          <Typography variant="body-lg" className="font-semibold mb-3">
+          <Typography variant="body-lg" className="font-semibold mb-3 text-gray-900 dark:text-white">
             Основные
           </Typography>
           
@@ -276,7 +276,7 @@ export function SettingsPage() {
 
         {/* Support */}
         <motion.div variants={itemVariants}>
-          <Typography variant="body-lg" className="font-semibold mb-3">
+          <Typography variant="body-lg" className="font-semibold mb-3 text-gray-900 dark:text-white">
             Поддержка
           </Typography>
           
