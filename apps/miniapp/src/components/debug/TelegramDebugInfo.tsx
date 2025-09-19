@@ -9,6 +9,16 @@ export function TelegramDebugInfo() {
 
   // Get all Telegram WebApp data
   const tg = window.Telegram?.WebApp
+  
+  // Check script loading
+  const telegramScripts = Array.from(document.querySelectorAll('script[src*="telegram"]'))
+  const scriptInfo = telegramScripts.map(script => ({
+    src: script.src,
+    loaded: script.readyState,
+    hasOnload: !!script.onload,
+    hasOnerror: !!script.onerror
+  }))
+  
   const debugData = {
     // Basic checks
     hasTelegram: !!window.Telegram,
@@ -38,6 +48,12 @@ export function TelegramDebugInfo() {
     isAuthSuccess,
     authData: authData?.user,
     authError: authError?.message,
+    
+    // Script loading info
+    scriptLoading: {
+      scriptsFound: telegramScripts.length,
+      scripts: scriptInfo
+    },
     
     // Other WebApp properties
     webAppData: {
@@ -135,6 +151,17 @@ export function TelegramDebugInfo() {
             <div className="text-xs font-mono bg-white p-2 rounded border break-all">
               {debugData.initData}
             </div>
+          </div>
+
+          {/* Script Loading Info */}
+          <div className="bg-red-50 p-3 rounded">
+            <h3 className="font-bold mb-2">📜 Script Loading Status:</h3>
+            <div className="text-sm space-y-1">
+              <div>Scripts Found: <span className={debugData.scriptLoading.scriptsFound > 0 ? 'text-green-600' : 'text-red-600'}>{debugData.scriptLoading.scriptsFound}</span></div>
+            </div>
+            <pre className="text-xs bg-white p-2 rounded border overflow-x-auto mt-2">
+              {JSON.stringify(debugData.scriptLoading.scripts, null, 2)}
+            </pre>
           </div>
 
           {/* WebApp Properties */}
