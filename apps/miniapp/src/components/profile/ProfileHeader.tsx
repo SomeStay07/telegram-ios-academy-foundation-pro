@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Settings, AtSign, Trophy, Zap } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
@@ -14,6 +14,9 @@ import { getTelegramApi } from '../../lib/telegram/api'
 
 // CSS Module
 import styles from '../../pages/ProfilePage.module.css'
+
+// Username Modal
+import { UsernameModal } from './UsernameModal'
 
 interface ProfileHeaderProps {
   userData: {
@@ -45,6 +48,7 @@ export function ProfileHeader({
 }: ProfileHeaderProps) {
   const navigate = useNavigate()
   const telegramApi = getTelegramApi()
+  const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false)
 
   const handleSettingsClick = () => {
     // Enhanced haptic feedback sequence
@@ -59,6 +63,14 @@ export function ProfileHeader({
     
     // Smooth navigation to settings page
     navigate({ to: '/settings' })
+  }
+
+  const handleUsernameClick = () => {
+    // Haptic feedback for username click
+    if (telegramApi.isAvailable()) {
+      telegramApi.hapticFeedback.impactOccurred('light')
+    }
+    setIsUsernameModalOpen(true)
   }
 
   return (
@@ -134,12 +146,41 @@ export function ProfileHeader({
             
             {username && (
               <div className={styles.profileUsername}>
-                <div className="flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20">
-                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-blue-200" />
-                  <Typography variant="body-sm" className="text-white font-medium">
+                <motion.button
+                  onClick={handleUsernameClick}
+                  className="flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300 hover:bg-white/25 hover:border-white/40 hover:scale-105 active:scale-95"
+                  whileHover={{ 
+                    boxShadow: "0 0 20px rgba(255,255,255,0.3)",
+                    scale: 1.05
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity, 
+                      repeatDelay: 3,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-blue-200 group-hover:text-white transition-colors duration-300" />
+                  </motion.div>
+                  <Typography variant="body-sm" className="text-white font-medium group-hover:text-blue-100 transition-colors duration-300">
                     {username}
                   </Typography>
-                </div>
+                  
+                  {/* Subtle shimmer effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
+                    initial={{ x: '-100%' }}
+                    whileHover={{
+                      x: '100%',
+                      transition: { duration: 0.6, ease: "easeInOut" }
+                    }}
+                    style={{ borderRadius: 'inherit' }}
+                  />
+                </motion.button>
               </div>
             )}
 
@@ -176,6 +217,16 @@ export function ProfileHeader({
           </div>
         )}
       </Card>
+
+      {/* Username Modal */}
+      {username && (
+        <UsernameModal
+          isOpen={isUsernameModalOpen}
+          onClose={() => setIsUsernameModalOpen(false)}
+          username={username}
+          displayName={displayName}
+        />
+      )}
     </motion.div>
   )
 }
