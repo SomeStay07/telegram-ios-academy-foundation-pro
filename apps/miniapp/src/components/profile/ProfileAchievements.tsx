@@ -43,26 +43,26 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
   ]
 
   const getRarityColor = (rarity: string, achieved: boolean) => {
-    if (!achieved) return 'text-gray-400'
+    if (!achieved) return 'text-white/40'
     
     const colors = {
-      bronze: 'text-orange-600',
-      silver: 'text-gray-300', 
-      gold: 'text-yellow-500',
-      platinum: 'text-blue-400',
-      diamond: 'text-cyan-400'
+      bronze: 'text-orange-400/80',
+      silver: 'text-white/80', 
+      gold: 'text-yellow-400/80',
+      platinum: 'text-blue-400/80',
+      diamond: 'text-cyan-400/80'
     }
-    return colors[rarity as keyof typeof colors] || 'text-gray-400'
+    return colors[rarity as keyof typeof colors] || 'text-white/40'
   }
 
   return (
     <motion.div variants={itemVariants}>
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <Typography variant="heading-lg" className="font-bold">
+          <Typography variant="heading-lg" className="font-bold text-white">
             Достижения
           </Typography>
-          <Award className="w-6 h-6 text-yellow-500" />
+          <Award className="w-6 h-6 text-yellow-400/80" />
         </div>
         
         <div className="space-y-4">
@@ -73,16 +73,16 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                 key={index} 
                 className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
                   achievement.achieved 
-                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 hover:shadow-lg hover:shadow-green-500/10' 
-                    : 'bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50'
+                    ? 'bg-white/10 backdrop-blur-sm border border-white/20' 
+                    : 'bg-white/5 backdrop-blur-sm border border-white/10'
                 }`}
                 whileHover={{ scale: 1.02, y: -1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
                 <div className={`p-2 rounded-lg ${
                   achievement.achieved 
-                    ? 'bg-green-100 dark:bg-green-800/50' 
-                    : 'bg-gray-100 dark:bg-gray-700'
+                    ? 'bg-white/15' 
+                    : 'bg-white/5'
                 }`}>
                   <IconComponent 
                     className={`w-6 h-6 ${getRarityColor(achievement.rarity, achievement.achieved)}`}
@@ -92,7 +92,7 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                   <Typography 
                     variant="body-md" 
                     className={`font-medium ${
-                      achievement.achieved ? 'text-green-800 dark:text-green-200' : 'text-gray-600 dark:text-gray-400'
+                      achievement.achieved ? 'text-white' : 'text-white/60'
                     }`}
                   >
                     {achievement.title}
@@ -100,25 +100,14 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                   <Typography 
                     variant="caption-sm" 
                     className={
-                      achievement.achieved ? 'text-green-600 dark:text-green-300' : 'text-gray-500'
+                      achievement.achieved ? 'text-white/80' : 'text-white/40'
                     }
                   >
                     {achievement.description}
                   </Typography>
                 </div>
                 {achievement.achieved && (
-                  <motion.div 
-                    className="text-green-500"
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity, 
-                      repeatDelay: 3,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <Award className="w-5 h-5" />
-                  </motion.div>
+                  <Award className="w-5 h-5 text-yellow-400/80" />
                 )}
               </motion.div>
             )

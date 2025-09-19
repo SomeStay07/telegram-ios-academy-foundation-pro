@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Calendar, Target, Star, TrendingUp } from 'lucide-react'
 
 // Design System Components
-import { Badge } from '../../design-system/components/badge/index'
+import { InfoCard } from '../../design-system/components/info-card/InfoCard'
 
 interface ProfileStatsProps {
   userData: {
@@ -18,61 +18,45 @@ export function ProfileStats({ userData, itemVariants }: ProfileStatsProps) {
       variants={itemVariants} 
       className="flex flex-wrap justify-center gap-3 mb-6 px-2"
     >
-      {/* Streak Badge */}
-      <motion.div
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Badge 
-          variant="primary" 
-          icon={Calendar}
-          value={userData.streak}
-          label="дней"
-          interactive={true}
-        />
-      </motion.div>
+      {/* Streak Card */}
+      <InfoCard
+        icon={Calendar}
+        value={userData.streak}
+        title="дней"
+        variant="green"
+        size="md"
+        animated={true}
+      />
 
-      {/* Completed Badge */}
-      <motion.div
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Badge 
-          variant="success" 
-          icon={Target}
-          value={24}
-          label="выполнено"
-          interactive={true}
-        />
-      </motion.div>
+      {/* Completed Card */}
+      <InfoCard
+        icon={Target}
+        value={24}
+        title="выполнено"
+        variant="primary"
+        size="md"
+        animated={true}
+      />
 
-      {/* Achievements Badge */}
-      <motion.div
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Badge 
-          variant="info" 
-          icon={Star}
-          value={12}
-          label="достижений"
-          interactive={true}
-        />
-      </motion.div>
+      {/* Achievements Card */}
+      <InfoCard
+        icon={Star}
+        value={12}
+        title="достижений"
+        variant="purple"
+        size="md"
+        animated={true}
+      />
 
-      {/* Growth Badge */}
-      <motion.div
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Badge 
-          variant="warning" 
-          icon={TrendingUp}
-          value="+15%"
-          label="рост"
-          interactive={true}
-        />
-      </motion.div>
+      {/* Growth Card */}
+      <InfoCard
+        icon={TrendingUp}
+        value="+15%"
+        title="рост"
+        variant="orange"
+        size="md"
+        animated={true}
+      />
     </motion.div>
   )
 }

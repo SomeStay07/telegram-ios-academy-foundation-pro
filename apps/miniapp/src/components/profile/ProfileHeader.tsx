@@ -101,51 +101,25 @@ export function ProfileHeader({
           {/* Level Up Celebration Effects */}
           <LevelUpCelebration isMaxRank={isMaxRank} currentRank={currentRank} />
           
-          {/* Ultra Interactive Settings Button */}
+          {/* Settings Button - спокойная элегантность */}
           <motion.button 
             onClick={handleSettingsClick}
-            className="absolute top-4 right-4 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-300 group z-50"
+            className="absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-300 group z-50"
             whileHover={{ 
-              scale: 1.15, 
-              backgroundColor: "rgba(255, 255, 255, 0.3)",
-              rotate: 180,
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+              scale: 1.02, 
+              y: -1,
+              backgroundColor: "rgba(255, 255, 255, 0.15)"
             }}
             whileTap={{ 
-              scale: 0.85,
-              backgroundColor: "rgba(255, 255, 255, 0.4)",
-              rotate: 270
+              scale: 0.98
             }}
-            initial={{ rotate: 0 }}
             transition={{
               type: "spring",
               stiffness: 400,
-              damping: 20
+              damping: 25
             }}
           >
-            {/* Animated background glow */}
-            <motion.div
-              className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 pointer-events-none"
-              initial={{ scale: 0, opacity: 0 }}
-              whileHover={{ 
-                scale: 1.5, 
-                opacity: 1,
-                transition: { duration: 0.3 }
-              }}
-            />
-            
-            {/* Rotating border effect */}
-            <motion.div
-              className="absolute inset-0 rounded-full border-2 border-white/40 pointer-events-none"
-              animate={{ rotate: 360 }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-            
-            <Settings className="w-5 h-5 text-white group-hover:text-blue-100 transition-colors duration-300 relative z-10" />
+            <Settings className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-300" />
           </motion.button>
         
         {/* Adaptive Profile Layout */}
@@ -173,53 +147,20 @@ export function ProfileHeader({
               <div className={styles.profileUsername}>
                 <motion.button
                   onClick={handleUsernameClick}
-                  className="relative flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300 hover:bg-white/30 hover:border-white/50 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-white/25"
+                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300"
                   whileHover={{ 
-                    boxShadow: "0 0 20px rgba(255,255,255,0.3), 0 0 8px rgba(59, 130, 246, 0.2)",
-                    scale: 1.06,
-                    y: -2,
-                    backgroundColor: "rgba(255, 255, 255, 0.25)"
+                    scale: 1.02,
+                    y: -1,
+                    backgroundColor: "rgba(255, 255, 255, 0.15)"
                   }}
-                  whileTap={{ scale: 0.96 }}
-                  initial={{ opacity: 0.95 }}
-                  animate={{ 
-                    opacity: [0.95, 1, 0.95],
-                    borderColor: [
-                      "rgba(255,255,255,0.2)",
-                      "rgba(255,255,255,0.35)", 
-                      "rgba(255,255,255,0.2)"
-                    ]
-                  }}
-                  transition={{ 
-                    opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                    borderColor: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-                  }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <motion.div
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity, 
-                      repeatDelay: 3,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-blue-200 group-hover:text-white transition-colors duration-300" />
-                  </motion.div>
-                  <Typography variant="body-sm" className="text-white font-medium group-hover:text-blue-100 transition-colors duration-300">
+                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-white/70 group-hover:text-white transition-colors duration-300" />
+                  <Typography variant="body-sm" className="text-white font-medium group-hover:text-white/90 transition-colors duration-300">
                     {username}
                   </Typography>
                   
-                  {/* Subtle shimmer effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
-                    initial={{ x: '-100%' }}
-                    whileHover={{
-                      x: '100%',
-                      transition: { duration: 0.6, ease: "easeInOut" }
-                    }}
-                    style={{ borderRadius: 'inherit' }}
-                  />
                 </motion.button>
               </div>
             )}
