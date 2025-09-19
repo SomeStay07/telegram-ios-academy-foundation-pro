@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import { cn } from '../../../lib/utils'
-import { Button } from '../Button'
+import { Button } from '../button'
 import { ModalProps, ConfirmationModalProps } from './ModalTypes'
 import { 
   modalSizeClasses,
