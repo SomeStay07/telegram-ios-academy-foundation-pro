@@ -52,19 +52,6 @@ export function useTelegramUser(): TelegramUserData {
     colorScheme: webApp?.colorScheme
   });
   
-  // Debug logging to console
-  console.log('🔍 Telegram WebApp Debug:', {
-    hasTelegram: !!window.Telegram,
-    hasWebApp: !!window.Telegram?.WebApp,
-    hasInitData: !!tg?.initData,
-    hasInitDataUnsafe: !!tg?.initDataUnsafe,
-    hasUser: !!tg?.initDataUnsafe?.user,
-    initDataRaw: tg?.initData,
-    userDataRaw: tg?.initDataUnsafe?.user,
-    platform: tg?.platform,
-    version: tg?.version
-  });
-  
   // Check if we're in Telegram WebApp environment
   if (webApp && webApp.initDataUnsafe?.user) {
     const user = webApp.initDataUnsafe.user;
