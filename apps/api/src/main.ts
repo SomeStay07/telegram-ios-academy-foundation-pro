@@ -37,14 +37,15 @@ async function bootstrap() {
     contentSecurityPolicy: env.NODE_ENV === 'development' ? false : {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://telegram.org", "'strict-dynamic'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'"],
+        connectSrc: ["'self'", "https://api-production-3e0e.up.railway.app", "https://api.telegram.org"],
         fontSrc: ["'self'"],
         objectSrc: ["'none'"],
         mediaSrc: ["'self'"],
         frameSrc: ["'none'"],
+        frameAncestors: ["https://web.telegram.org"],
       },
       reportOnly: env.CSP_REPORT_ONLY === '1'
     },
