@@ -80,14 +80,23 @@
 }
 
 /* === DESIGN SYSTEM INTEGRATION === */
-/* Using our agreed design tokens */
+/* Using our agreed design tokens - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
 .profileCard {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  /* Мягкий индиго градиент согласно дизайн-соглашениям */
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.12);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Dark theme adaptation */
+@media (prefers-color-scheme: dark) {
+  .profileCard {
+    background: linear-gradient(135deg, #5b21b6 0%, #6b46c1 100%);
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+  }
 }
 
 /* === RESPONSIVE SIZING === */

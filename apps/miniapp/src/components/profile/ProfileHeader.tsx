@@ -63,7 +63,7 @@ export function ProfileHeader({
 
   return (
     <motion.div variants={itemVariants}>
-      <Card className={`p-6 mb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
+      <Card className={`p-6 mb-6 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
         {/* Ultra Interactive Settings Button */}
         <motion.button 
           onClick={handleSettingsClick}
