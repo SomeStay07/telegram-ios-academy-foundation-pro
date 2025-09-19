@@ -52,13 +52,22 @@ export function ProfileHeader({
 
   const handleSettingsClick = () => {
     // Enhanced haptic feedback sequence
-    if (telegramApi.isAvailable()) {
-      const webApp = telegramApi.getWebApp()
-      // Double haptic feedback for better UX
-      webApp?.HapticFeedback?.impactOccurred('medium')
-      setTimeout(() => {
-        webApp?.HapticFeedback?.selectionChanged()
-      }, 100)
+    try {
+      if (telegramApi.isAvailable()) {
+        const webApp = telegramApi.getWebApp()
+        // Double haptic feedback for better UX
+        if (webApp?.HapticFeedback?.impactOccurred) {
+          webApp.HapticFeedback.impactOccurred('medium')
+          setTimeout(() => {
+            if (webApp?.HapticFeedback?.selectionChanged) {
+              webApp.HapticFeedback.selectionChanged()
+            }
+          }, 100)
+        }
+      }
+    } catch (error) {
+      // Gracefully handle haptic feedback errors
+      console.warn('Haptic feedback not available:', error)
     }
     
     // Smooth navigation to settings page
@@ -67,8 +76,13 @@ export function ProfileHeader({
 
   const handleUsernameClick = () => {
     // Haptic feedback for username click
-    if (telegramApi.isAvailable()) {
-      telegramApi.hapticFeedback.impactOccurred('light')
+    try {
+      if (telegramApi.isAvailable() && telegramApi.hapticFeedback) {
+        telegramApi.hapticFeedback.impactOccurred('light')
+      }
+    } catch (error) {
+      // Gracefully handle haptic feedback errors
+      console.warn('Haptic feedback not available:', error)
     }
     setIsUsernameModalOpen(true)
   }
