@@ -1,5 +1,29 @@
 # Telegram WebApp Navigation Integration
 
+## Auth via initData (flow & TTL)
+
+1. **Initialization**: App starts and `AuthProvider` checks for Telegram `initData`
+2. **Verification**: If `initData` exists, send to `POST /auth/verifyInitData` with header `X-Telegram-Init-Data: <raw>`
+3. **Backend Validation**: 
+   - Validates HMAC SHA-256 signature using bot token
+   - Checks TTL (300 seconds + 30 second skew)
+   - Returns user data and JWT/session
+4. **Success**: User is authenticated, profile data available
+5. **Failure**: Show "Open in Telegram" screen
+
+## Testing Checklist - Как проверить, что профиль подтянулся
+
+1. ✅ **Открой через Telegram бота** → пользователь авторизован
+2. ✅ **Открой в браузере** → экран "Открой через Telegram"  
+3. ✅ **Данные профиля** отображаются корректно
+4. ✅ **Аватар/инициалы** работают как fallback
+5. ✅ **Deep links** работают правильно
+6. ✅ **Debug данные** показывают `hasTelegram: true`
+
+---
+
+# Telegram WebApp Navigation Integration
+
 ## BackButton Implementation
 
 ### Router History Integration
