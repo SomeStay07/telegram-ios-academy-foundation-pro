@@ -5,7 +5,7 @@ import {
   useTelegramViewport, 
   useTelegramMainButton, 
   useTelegramBackButton 
-} from '../lib/telegram'
+} from '../lib/telegram/hooks'
 
 interface AppShellProps {
   children: ReactNode
@@ -20,7 +20,7 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <>
-      <main className="mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24 min-h-[calc(var(--tg-vph,100svh))] bg-background text-foreground">
+      <main className="mx-auto w-full max-w-[640px] px-3 sm:px-4 py-3 pb-24 min-h-[calc(var(--tg-vph,100svh))] bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
         {children}
       </main>
       <TabBar />

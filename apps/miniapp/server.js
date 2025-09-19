@@ -26,13 +26,11 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'", 
-        "'strict-dynamic'",
         "https://telegram.org", // Allow Telegram WebApp script
-        ...(isDevelopment ? ["'unsafe-inline'"] : []), // Allow inline scripts in dev mode
         (req, res) => `'nonce-${res.locals.nonce}'`,
       ],
       styleSrc: ["'self'", "'unsafe-inline'"], // Required for Tailwind CSS
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", "data:", "https:", "https://t.me", "https://api.dicebear.com"],
       connectSrc: (() => {
         const baseSources = ["'self'"];
         const devSources = ["http://localhost:3001", "ws://localhost:5173"];
@@ -124,11 +122,17 @@ app.get('*', (req, res) => {
   });
   
   stream.on('end', () => {
-    // Inject nonce into meta tag for client-side access
+    // Inject nonce into meta tag and inline scripts
     const nonce = res.locals.nonce;
-    const htmlWithNonce = html.replace(
+    let htmlWithNonce = html.replace(
       '<head>',
       `<head>\n    <meta name="csp-nonce" content="${nonce}">`
+    );
+    
+    // Add nonce to inline scripts
+    htmlWithNonce = htmlWithNonce.replace(
+      /<script>([^<]*)<\/script>/g,
+      `<script nonce="${nonce}">$1</script>`
     );
     
     res.setHeader('Content-Type', 'text/html');

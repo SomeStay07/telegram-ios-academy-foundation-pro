@@ -35,36 +35,14 @@ export function useTelegramUser(): TelegramUserData {
   // Get real Telegram user data using the proper way
   const webApp = (window as any)?.Telegram?.WebApp;
   
-  // Debug logging to console - more detailed
-  console.log('🔍 Telegram WebApp Debug:', {
-    windowTelegram: window.Telegram,
-    hasTelegram: !!window.Telegram,
-    hasWebApp: !!webApp,
-    webAppType: typeof webApp,
-    hasInitData: !!webApp?.initData,
-    hasInitDataUnsafe: !!webApp?.initDataUnsafe,
-    hasUser: !!webApp?.initDataUnsafe?.user,
-    initDataLength: webApp?.initData?.length || 0,
-    userDataRaw: webApp?.initDataUnsafe?.user,
-    platform: webApp?.platform,
-    version: webApp?.version,
-    isExpanded: webApp?.isExpanded,
-    colorScheme: webApp?.colorScheme
-  });
+  // Production: Remove debug logging
   
   // Check if we're in Telegram WebApp environment
   if (webApp && webApp.initDataUnsafe?.user) {
     const user = webApp.initDataUnsafe.user;
     const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'User';
 
-    console.log('✅ Using REAL Telegram user data:', {
-      id: user.id,
-      firstName: user.first_name,
-      lastName: user.last_name,
-      username: user.username,
-      languageCode: user.language_code,
-      isPremium: user.is_premium
-    });
+    // Production: Using real Telegram user data
 
     return {
       id: user.id,
@@ -82,7 +60,6 @@ export function useTelegramUser(): TelegramUserData {
   // Check if running in development mode with mock data override
   const useMocks = import.meta.env.VITE_USE_MOCKS === 'true';
   if (useMocks) {
-    console.log('🧪 Using MOCK data (VITE_USE_MOCKS=true)');
     return {
       id: 777,
       username: 'somestay07',
@@ -97,7 +74,6 @@ export function useTelegramUser(): TelegramUserData {
   }
 
   // Final fallback - no user data available
-  console.log('⚠️ Using FALLBACK data - no Telegram user data available');
   return {
     id: 0,
     username: undefined,

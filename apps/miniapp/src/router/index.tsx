@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppShell } from '../app/AppShell'
 import { ProfilePage } from '../pages/ProfilePage'
 import { ChallengePage } from '../pages/ChallengePage'
+import { SettingsPage } from '../pages/SettingsPage'
+import { ThemeProvider } from '../contexts/ThemeContext'
 
 // Create QueryClient instance
 const queryClient = new QueryClient({
@@ -17,14 +19,16 @@ const queryClient = new QueryClient({
   },
 })
 
-// Root component with QueryClientProvider and AppShell
+// Root component with ThemeProvider, QueryClientProvider and AppShell
 function RootComponent() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppShell>
-        <Outlet />
-      </AppShell>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <AppShell>
+          <Outlet />
+        </AppShell>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
@@ -74,11 +78,18 @@ const profileRoute = createRoute({
   component: ProfilePage,
 })
 
+const settingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/settings',
+  component: SettingsPage,
+})
+
 // Create the route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
   challengeRoute,
   profileRoute,
+  settingsRoute,
 ])
 
 // Create router

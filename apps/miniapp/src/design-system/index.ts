@@ -21,5 +21,8 @@ export { StatCard, StatCardGroup, type StatCardProps, type StatCardGroupProps, t
 export { Tabs, type TabsProps, type TabItem, type TabsVariant, type TabsSize, type TabVariant } from './components/tabs'
 export { CodeBlock, type CodeBlockProps, type CodeBlockTheme, type CodeBlockSize, type CodeBlockVariant } from './components/code-block'
 export { QuizItem, type QuizItemProps, type QuizOption, type QuizItemVariant, type QuizItemSize, type QuizItemState } from './components/quiz-item'
+export { Badge, type BadgeProps, type BadgeVariant, type BadgeSize, type BadgeColor } from './components/badge'
+export { AchievementItem, type AchievementItemProps } from './components/achievement'
+export { SkillProgress, type SkillProgressProps } from './components/skill-progress'
 
 // Legacy exports removed - all components now use modern CVA + Tailwind approach ✨

@@ -1,12 +1,16 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Settings, AtSign, Trophy, Zap } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 
 // Design System Components
 import { Avatar } from '../../design-system/components/avatar/index'
 import { Card } from '../../design-system/components/card/index'
 import { Typography } from '../../design-system/components/typography/index'
 import { Progress } from '../../design-system/components/progress/index'
+
+// Telegram Integration
+import { getTelegramApi } from '../../lib/telegram/api'
 
 // CSS Module
 import styles from '../../pages/ProfilePage.module.css'
@@ -39,13 +43,73 @@ export function ProfileHeader({
   progressPercentage,
   itemVariants
 }: ProfileHeaderProps) {
+  const navigate = useNavigate()
+  const telegramApi = getTelegramApi()
+
+  const handleSettingsClick = () => {
+    // Enhanced haptic feedback sequence
+    if (telegramApi.isAvailable()) {
+      const webApp = telegramApi.getWebApp()
+      // Double haptic feedback for better UX
+      webApp?.HapticFeedback?.impactOccurred('medium')
+      setTimeout(() => {
+        webApp?.HapticFeedback?.selectionChanged()
+      }, 100)
+    }
+    
+    // Smooth navigation to settings page
+    navigate({ to: '/settings' })
+  }
+
   return (
     <motion.div variants={itemVariants}>
-      <Card className={`p-6 mb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
-        {/* Settings Icon */}
-        <button className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors">
-          <Settings className="w-4 h-4 text-white" />
-        </button>
+      <Card className={`p-6 mb-6 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
+        {/* Ultra Interactive Settings Button */}
+        <motion.button 
+          onClick={handleSettingsClick}
+          className="absolute top-4 right-4 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-300 group z-50"
+          whileHover={{ 
+            scale: 1.15, 
+            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            rotate: 180,
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+          }}
+          whileTap={{ 
+            scale: 0.85,
+            backgroundColor: "rgba(255, 255, 255, 0.4)",
+            rotate: 270
+          }}
+          initial={{ rotate: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 20
+          }}
+        >
+          {/* Animated background glow */}
+          <motion.div
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 pointer-events-none"
+            initial={{ scale: 0, opacity: 0 }}
+            whileHover={{ 
+              scale: 1.5, 
+              opacity: 1,
+              transition: { duration: 0.3 }
+            }}
+          />
+          
+          {/* Rotating border effect */}
+          <motion.div
+            className="absolute inset-0 rounded-full border-2 border-white/40 pointer-events-none"
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+          
+          <Settings className="w-5 h-5 text-white group-hover:text-blue-100 transition-colors duration-300 relative z-10" />
+        </motion.button>
         
         {/* Adaptive Profile Layout */}
         <div className={styles.adaptiveProfileLayout}>

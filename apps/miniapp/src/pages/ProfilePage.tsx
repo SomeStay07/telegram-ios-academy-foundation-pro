@@ -2,8 +2,9 @@ import React, { useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useAtom } from 'jotai'
 import { userDataAtom } from '../store/profileAtoms'
-import { useTelegramUser, getAvatarUrl, getFullName } from '../hooks/useTelegramUser'
+import { getAvatarUrl, getFullName } from '../hooks/useTelegramUser'
 import { useAuthVerification } from '../hooks/useApi'
+import { getTelegramApi } from '../lib/telegram/api'
 import { getRankByXP, getNextRank, getRankProgress } from '../lib/rankSystem'
 
 // Profile Components
@@ -11,27 +12,62 @@ import { ProfileHeader } from '../components/profile/ProfileHeader'
 import { ProfileStats } from '../components/profile/ProfileStats'
 import { ProfileAchievements } from '../components/profile/ProfileAchievements'
 import { ProfileActivity } from '../components/profile/ProfileActivity'
-import { TelegramDebugInfo } from '../components/debug/TelegramDebugInfo'
+// Debug import removed for production
 
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
-  const telegramUser = useTelegramUser()
   const { data: authData, isSuccess: isAuthSuccess } = useAuthVerification()
+  
+  // Get Telegram user data from API client instead of hook
+  const telegramApi = getTelegramApi()
+  const telegramUser = useMemo(() => {
+    try {
+      if (telegramApi.hasUser()) {
+        const user = telegramApi.getUser()
+        return {
+          id: user.id,
+          username: user.username,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          fullName: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'User',
+          languageCode: user.language_code || 'en',
+          avatarUrl: user.photo_url,
+          isPremium: user.is_premium || false,
+          isAvailable: true
+        }
+      }
+      return {
+        id: 0,
+        username: undefined,
+        firstName: undefined,
+        lastName: undefined,
+        fullName: 'User',
+        languageCode: 'en',
+        avatarUrl: undefined,
+        isPremium: false,
+        isAvailable: false
+      }
+    } catch (error) {
+      // Failed to get Telegram user from API - fallback to default user
+      return {
+        id: 0,
+        username: undefined,
+        firstName: undefined,
+        lastName: undefined,
+        fullName: 'User',
+        languageCode: 'en',
+        avatarUrl: undefined,
+        isPremium: false,
+        isAvailable: false
+      }
+    }
+  }, [telegramApi])
 
   // Update user data with authenticated Telegram information
   useEffect(() => {
-    console.log('📊 ProfilePage useEffect Debug:', {
-      isAuthSuccess,
-      authData: authData?.user,
-      telegramUser,
-      'telegramUser.isAvailable': telegramUser.isAvailable,
-      'telegramUser.id': telegramUser.id
-    });
-
     // Prioritize validated backend auth data
     if (isAuthSuccess && authData?.user) {
       const backendUser = authData.user
-      console.log('✅ Using BACKEND auth data for profile:', backendUser);
       setUserData(prevData => ({
         ...prevData,
         id: backendUser.id,
@@ -52,7 +88,6 @@ export function ProfilePage() {
       }))
     } else if (telegramUser.isAvailable && telegramUser.id > 0) {
       // Fallback to frontend Telegram data
-      console.log('✅ Using FRONTEND Telegram data for profile:', telegramUser);
       setUserData(prevData => ({
         ...prevData,
         id: telegramUser.id,
@@ -61,8 +96,6 @@ export function ProfilePage() {
         username: telegramUser.username || '',
         avatar: getAvatarUrl(telegramUser)
       }))
-    } else {
-      console.log('⚠️ No valid user data available - using defaults');
     }
   }, [isAuthSuccess, authData, telegramUser.isAvailable, telegramUser.id, telegramUser.firstName, telegramUser.lastName, telegramUser.username, setUserData])
 
@@ -163,8 +196,7 @@ export function ProfilePage() {
         </div>
       </div>
       
-      {/* Debug Info Component */}
-      <TelegramDebugInfo />
+      {/* Debug component removed for production */}
     </motion.div>
   )
 }
