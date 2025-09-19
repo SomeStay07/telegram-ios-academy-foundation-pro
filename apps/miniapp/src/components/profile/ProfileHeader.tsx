@@ -18,10 +18,18 @@ import styles from '../../pages/ProfilePage.module.css'
 // Username Modal
 import { UsernameModal } from './UsernameModal'
 
+// New Profile Components
+import { QuickActionsBar } from './QuickActionsBar'
+import { LevelUpCelebration } from './LevelUpCelebration'
+import { RecentActivity } from './RecentActivity'
+import { SocialProof } from './SocialProof'
+import { PersonalizationTouches } from './PersonalizationTouches'
+
 interface ProfileHeaderProps {
   userData: {
     avatar: string
     totalXP: number
+    streak: number
   }
   displayName: string
   username?: string
@@ -88,54 +96,58 @@ export function ProfileHeader({
   }
 
   return (
-    <motion.div variants={itemVariants}>
-      <Card className={`p-6 mb-6 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
-        {/* Ultra Interactive Settings Button */}
-        <motion.button 
-          onClick={handleSettingsClick}
-          className="absolute top-4 right-4 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-300 group z-50"
-          whileHover={{ 
-            scale: 1.15, 
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
-            rotate: 180,
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
-          }}
-          whileTap={{ 
-            scale: 0.85,
-            backgroundColor: "rgba(255, 255, 255, 0.4)",
-            rotate: 270
-          }}
-          initial={{ rotate: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 20
-          }}
-        >
-          {/* Animated background glow */}
-          <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 pointer-events-none"
-            initial={{ scale: 0, opacity: 0 }}
+    <>
+      <motion.div variants={itemVariants}>
+        <Card className={`p-6 mb-6 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
+          {/* Level Up Celebration Effects */}
+          <LevelUpCelebration isMaxRank={isMaxRank} currentRank={currentRank} />
+          
+          {/* Ultra Interactive Settings Button */}
+          <motion.button 
+            onClick={handleSettingsClick}
+            className="absolute top-4 right-4 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-300 group z-50"
             whileHover={{ 
-              scale: 1.5, 
-              opacity: 1,
-              transition: { duration: 0.3 }
+              scale: 1.15, 
+              backgroundColor: "rgba(255, 255, 255, 0.3)",
+              rotate: 180,
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
             }}
-          />
-          
-          {/* Rotating border effect */}
-          <motion.div
-            className="absolute inset-0 rounded-full border-2 border-white/40 pointer-events-none"
-            animate={{ rotate: 360 }}
+            whileTap={{ 
+              scale: 0.85,
+              backgroundColor: "rgba(255, 255, 255, 0.4)",
+              rotate: 270
+            }}
+            initial={{ rotate: 0 }}
             transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "linear"
+              type: "spring",
+              stiffness: 400,
+              damping: 20
             }}
-          />
-          
-          <Settings className="w-5 h-5 text-white group-hover:text-blue-100 transition-colors duration-300 relative z-10" />
-        </motion.button>
+          >
+            {/* Animated background glow */}
+            <motion.div
+              className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 pointer-events-none"
+              initial={{ scale: 0, opacity: 0 }}
+              whileHover={{ 
+                scale: 1.5, 
+                opacity: 1,
+                transition: { duration: 0.3 }
+              }}
+            />
+            
+            {/* Rotating border effect */}
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-white/40 pointer-events-none"
+              animate={{ rotate: 360 }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            />
+            
+            <Settings className="w-5 h-5 text-white group-hover:text-blue-100 transition-colors duration-300 relative z-10" />
+          </motion.button>
         
         {/* Adaptive Profile Layout */}
         <div className={styles.adaptiveProfileLayout}>
@@ -199,25 +211,6 @@ export function ProfileHeader({
                     {username}
                   </Typography>
                   
-                  {/* Subtle interactive indicator - три точки */}
-                  <motion.div
-                    className="ml-2 opacity-50 group-hover:opacity-80 transition-opacity duration-300"
-                    animate={{ 
-                      opacity: [0.4, 0.7, 0.4]
-                    }}
-                    transition={{ 
-                      duration: 3, 
-                      repeat: Infinity, 
-                      ease: "easeInOut" 
-                    }}
-                  >
-                    <div className="flex gap-0.5">
-                      <div className="w-1 h-1 bg-white/60 rounded-full"></div>
-                      <div className="w-1 h-1 bg-white/60 rounded-full"></div>
-                      <div className="w-1 h-1 bg-white/60 rounded-full"></div>
-                    </div>
-                  </motion.div>
-                  
                   {/* Subtle shimmer effect */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
@@ -268,6 +261,23 @@ export function ProfileHeader({
           </div>
         )}
       </Card>
+      </motion.div>
+
+      {/* Quick Actions Bar */}
+      <QuickActionsBar 
+        itemVariants={itemVariants}
+        hasActiveLesson={true}
+        streakCount={userData.streak}
+      />
+
+      {/* Recent Activity Timeline */}
+      <RecentActivity itemVariants={itemVariants} />
+
+      {/* Social Proof Elements */}
+      <SocialProof itemVariants={itemVariants} userData={userData} />
+
+      {/* Personalization Touches */}
+      <PersonalizationTouches itemVariants={itemVariants} userData={userData} />
 
       {/* Username Modal */}
       {username && (
@@ -278,6 +288,6 @@ export function ProfileHeader({
           displayName={displayName}
         />
       )}
-    </motion.div>
+    </>
   )
 }
