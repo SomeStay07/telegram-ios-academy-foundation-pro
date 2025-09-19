@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppShell } from '../app/AppShell'
 import { ProfilePage } from '../pages/ProfilePage'
 import { ChallengePage } from '../pages/ChallengePage'
+import { SettingsPage } from '../pages/SettingsPage'
 
 // Create QueryClient instance
 const queryClient = new QueryClient({
@@ -74,11 +75,18 @@ const profileRoute = createRoute({
   component: ProfilePage,
 })
 
+const settingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/settings',
+  component: SettingsPage,
+})
+
 // Create the route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
   challengeRoute,
   profileRoute,
+  settingsRoute,
 ])
 
 // Create router

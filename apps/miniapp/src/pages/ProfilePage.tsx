@@ -31,7 +31,7 @@ export function ProfilePage() {
           lastName: user.last_name,
           fullName: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'User',
           languageCode: user.language_code || 'en',
-          avatarUrl: undefined,
+          avatarUrl: user.photo_url,
           isPremium: user.is_premium || false,
           isAvailable: true
         }

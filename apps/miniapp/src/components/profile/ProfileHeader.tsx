@@ -1,12 +1,16 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Settings, AtSign, Trophy, Zap } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 
 // Design System Components
 import { Avatar } from '../../design-system/components/avatar/index'
 import { Card } from '../../design-system/components/card/index'
 import { Typography } from '../../design-system/components/typography/index'
 import { Progress } from '../../design-system/components/progress/index'
+
+// Telegram Integration
+import { getTelegramApi } from '../../lib/telegram/api'
 
 // CSS Module
 import styles from '../../pages/ProfilePage.module.css'
@@ -39,13 +43,31 @@ export function ProfileHeader({
   progressPercentage,
   itemVariants
 }: ProfileHeaderProps) {
+  const navigate = useNavigate()
+  const telegramApi = getTelegramApi()
+
+  const handleSettingsClick = () => {
+    // Haptic feedback
+    if (telegramApi.isAvailable()) {
+      telegramApi.getWebApp()?.HapticFeedback?.impactOccurred('light')
+    }
+    
+    // Navigate to settings page
+    navigate({ to: '/settings' })
+  }
+
   return (
     <motion.div variants={itemVariants}>
       <Card className={`p-6 mb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-xl relative ${styles.profileCard}`}>
         {/* Settings Icon */}
-        <button className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors">
+        <motion.button 
+          onClick={handleSettingsClick}
+          className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-200 active:scale-95"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
           <Settings className="w-4 h-4 text-white" />
-        </button>
+        </motion.button>
         
         {/* Adaptive Profile Layout */}
         <div className={styles.adaptiveProfileLayout}>

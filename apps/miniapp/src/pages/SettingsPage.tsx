@@ -1,0 +1,237 @@
+import React, { useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { useNavigate } from '@tanstack/react-router'
+import { 
+  ArrowLeft, 
+  Bell, 
+  Shield, 
+  Palette, 
+  HelpCircle, 
+  Info,
+  Globe,
+  Vibrate
+} from 'lucide-react'
+
+// Design System Components
+import { Card } from '../design-system/components/card/index'
+import { Typography } from '../design-system/components/typography/index'
+
+// Telegram Integration
+import { getTelegramApi } from '../lib/telegram/api'
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.3,
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+}
+
+interface SettingsItemProps {
+  icon: React.ReactNode
+  title: string
+  description?: string
+  onClick?: () => void
+  rightElement?: React.ReactNode
+}
+
+function SettingsItem({ icon, title, description, onClick, rightElement }: SettingsItemProps) {
+  const telegramApi = getTelegramApi()
+
+  const handleClick = () => {
+    // Haptic feedback
+    if (telegramApi.isAvailable()) {
+      telegramApi.getWebApp()?.HapticFeedback?.selectionChanged()
+    }
+    onClick?.()
+  }
+
+  return (
+    <motion.div
+      variants={itemVariants}
+      whileTap={{ scale: 0.98 }}
+      className="cursor-pointer"
+      onClick={handleClick}
+    >
+      <Card className="p-4 mb-3 hover:shadow-md transition-shadow">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+              {icon}
+            </div>
+            <div>
+              <Typography variant="body-md" className="font-medium">
+                {title}
+              </Typography>
+              {description && (
+                <Typography variant="body-sm" className="text-muted-foreground">
+                  {description}
+                </Typography>
+              )}
+            </div>
+          </div>
+          {rightElement}
+        </div>
+      </Card>
+    </motion.div>
+  )
+}
+
+export function SettingsPage() {
+  const navigate = useNavigate()
+  const telegramApi = getTelegramApi()
+
+  // Setup Telegram back button
+  useEffect(() => {
+    if (telegramApi.isAvailable()) {
+      const webApp = telegramApi.getWebApp()
+      
+      // Show back button
+      webApp?.BackButton?.show()
+      
+      // Handle back button click
+      const handleBackClick = () => {
+        webApp?.HapticFeedback?.impactOccurred('light')
+        navigate({ to: '/profile' })
+      }
+      
+      webApp?.BackButton?.onClick(handleBackClick)
+      
+      // Cleanup on unmount
+      return () => {
+        webApp?.BackButton?.hide()
+      }
+    }
+  }, [navigate, telegramApi])
+
+  const handleNotifications = () => {
+    // Handle notifications settings
+    console.log('Notifications settings')
+  }
+
+  const handlePrivacy = () => {
+    // Handle privacy settings
+    console.log('Privacy settings')
+  }
+
+  const handleTheme = () => {
+    // Handle theme settings
+    console.log('Theme settings')
+  }
+
+  const handleLanguage = () => {
+    // Handle language settings
+    console.log('Language settings')
+  }
+
+  const handleHaptics = () => {
+    // Handle haptic settings
+    if (telegramApi.isAvailable()) {
+      telegramApi.getWebApp()?.HapticFeedback?.notificationOccurred('success')
+    }
+    console.log('Haptic settings')
+  }
+
+  const handleHelp = () => {
+    // Handle help
+    console.log('Help')
+  }
+
+  const handleAbout = () => {
+    // Handle about
+    console.log('About')
+  }
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="min-h-screen bg-background p-4"
+    >
+      {/* Header */}
+      <motion.div variants={itemVariants} className="mb-6">
+        <Typography variant="display-sm" className="font-bold">
+          Настройки
+        </Typography>
+        <Typography variant="body-md" className="text-muted-foreground">
+          Персонализируйте свой опыт обучения
+        </Typography>
+      </motion.div>
+
+      {/* Settings Sections */}
+      <div className="space-y-6">
+        {/* General Settings */}
+        <motion.div variants={itemVariants}>
+          <Typography variant="body-lg" className="font-semibold mb-3">
+            Основные
+          </Typography>
+          
+          <SettingsItem
+            icon={<Bell className="w-5 h-5 text-blue-600" />}
+            title="Уведомления"
+            description="Управление push-уведомлениями"
+            onClick={handleNotifications}
+          />
+          
+          <SettingsItem
+            icon={<Shield className="w-5 h-5 text-green-600" />}
+            title="Приватность"
+            description="Настройки конфиденциальности"
+            onClick={handlePrivacy}
+          />
+          
+          <SettingsItem
+            icon={<Palette className="w-5 h-5 text-purple-600" />}
+            title="Тема"
+            description="Светлая или темная тема"
+            onClick={handleTheme}
+          />
+          
+          <SettingsItem
+            icon={<Globe className="w-5 h-5 text-orange-600" />}
+            title="Язык"
+            description="Русский"
+            onClick={handleLanguage}
+          />
+          
+          <SettingsItem
+            icon={<Vibrate className="w-5 h-5 text-indigo-600" />}
+            title="Тактильная отдача"
+            description="Вибрация при нажатиях"
+            onClick={handleHaptics}
+          />
+        </motion.div>
+
+        {/* Support */}
+        <motion.div variants={itemVariants}>
+          <Typography variant="body-lg" className="font-semibold mb-3">
+            Поддержка
+          </Typography>
+          
+          <SettingsItem
+            icon={<HelpCircle className="w-5 h-5 text-yellow-600" />}
+            title="Справка"
+            description="Часто задаваемые вопросы"
+            onClick={handleHelp}
+          />
+          
+          <SettingsItem
+            icon={<Info className="w-5 h-5 text-gray-600" />}
+            title="О приложении"
+            description="Версия 1.0.0"
+            onClick={handleAbout}
+          />
+        </motion.div>
+      </div>
+    </motion.div>
+  )
+}
