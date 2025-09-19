@@ -37,7 +37,7 @@ async function bootstrap() {
     contentSecurityPolicy: env.NODE_ENV === 'development' ? false : {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://telegram.org", "'strict-dynamic'"],
+        scriptSrc: ["'self'", "https://telegram.org"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", "data:", "https:"],
         connectSrc: ["'self'", "https://api-production-3e0e.up.railway.app", "https://api.telegram.org"],
