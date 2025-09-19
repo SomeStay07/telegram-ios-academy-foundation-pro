@@ -1,16 +1,30 @@
 import React from 'react'
 import { createRouter, createRootRoute, createRoute, redirect } from '@tanstack/react-router'
 import { Outlet } from '@tanstack/react-router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppShell } from '../app/AppShell'
 import { ProfilePage } from '../pages/ProfilePage'
 import { ChallengePage } from '../pages/ChallengePage'
 
-// Root component with AppShell
+// Create QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
+// Root component with QueryClientProvider and AppShell
 function RootComponent() {
   return (
-    <AppShell>
-      <Outlet />
-    </AppShell>
+    <QueryClientProvider client={queryClient}>
+      <AppShell>
+        <Outlet />
+      </AppShell>
+    </QueryClientProvider>
   )
 }
 

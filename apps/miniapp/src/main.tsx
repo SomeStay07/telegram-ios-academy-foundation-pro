@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Router } from '@tanstack/react-router'
-import { QueryClient } from '@tanstack/react-query'
 import { lazyImport } from './utils/lazyImport'
 import { initTelegramTheme, isTelegramWebApp } from '@telegram-ios-academy/ui'
 import { initThemeSync } from './lib/tmaTheme'
@@ -29,22 +28,6 @@ const getRouter = async () => {
   return routerModule.router
 }
 
-// Lazy load QueryClient when needed
-let queryClient: QueryClient | null = null
-async function getQueryClient(): Promise<QueryClient> {
-  if (!queryClient) {
-    const { QueryClient: QC } = await import('@tanstack/react-query')
-    queryClient = new QC({
-      defaultOptions: {
-        queries: {
-          retry: 3,
-          staleTime: 5 * 60 * 1000, // 5 minutes
-        },
-      },
-    })
-  }
-  return queryClient
-}
 
 async function initTmaRouting(router: Router<any, any>) {
   try {
@@ -100,11 +83,6 @@ function LazyApp() {
       
       // Initialize Telegram routing after router is loaded
       await initTmaRouting(routerInstance)
-      
-      // Preload QueryClient for future use
-      setTimeout(async () => {
-        await getQueryClient()
-      }, 1000)
     }
     
     initRouter()
