@@ -49,8 +49,9 @@ export function detectTelegramEnvironment(): TelegramEnvironmentInfo {
 
 // === MOCK CONFIGURATION ===
 
-const DEFAULT_MOCK_CONFIG: TelegramMockConfig = {
-  enabled: import.meta.env.VITE_USE_MOCKS === 'true',  // Only enable when explicitly set
+// Development-only mock configuration
+const DEFAULT_MOCK_CONFIG: TelegramMockConfig = import.meta.env.DEV ? {
+  enabled: import.meta.env.VITE_USE_MOCKS === 'true',  // Only enable when explicitly set in dev
   user: {
     id: 987654321,
     first_name: 'iOS',
@@ -75,6 +76,11 @@ const DEFAULT_MOCK_CONFIG: TelegramMockConfig = {
     section_header_text_color: '#6ab7ff',
     destructive_text_color: '#ff3b30'
   }
+} : {
+  enabled: false,
+  user: undefined,
+  colorScheme: 'dark',
+  themeParams: {}
 }
 
 let mockConfig: TelegramMockConfig = { ...DEFAULT_MOCK_CONFIG }

@@ -2,8 +2,9 @@ import React, { useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useAtom } from 'jotai'
 import { userDataAtom } from '../store/profileAtoms'
-import { useTelegramUser, getAvatarUrl, getFullName } from '../hooks/useTelegramUser'
+import { getAvatarUrl, getFullName } from '../hooks/useTelegramUser'
 import { useAuthVerification } from '../hooks/useApi'
+import { getTelegramApi } from '../lib/telegram/api'
 import { getRankByXP, getNextRank, getRankProgress } from '../lib/rankSystem'
 
 // Profile Components
@@ -15,8 +16,52 @@ import { TelegramDebugInfo } from '../components/debug/TelegramDebugInfo'
 
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
-  const telegramUser = useTelegramUser()
   const { data: authData, isSuccess: isAuthSuccess } = useAuthVerification()
+  
+  // Get Telegram user data from API client instead of hook
+  const telegramApi = getTelegramApi()
+  const telegramUser = useMemo(() => {
+    try {
+      if (telegramApi.hasUser()) {
+        const user = telegramApi.getUser()
+        return {
+          id: user.id,
+          username: user.username,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          fullName: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'User',
+          languageCode: user.language_code || 'en',
+          avatarUrl: undefined,
+          isPremium: user.is_premium || false,
+          isAvailable: true
+        }
+      }
+      return {
+        id: 0,
+        username: undefined,
+        firstName: undefined,
+        lastName: undefined,
+        fullName: 'User',
+        languageCode: 'en',
+        avatarUrl: undefined,
+        isPremium: false,
+        isAvailable: false
+      }
+    } catch (error) {
+      console.log('⚠️ Failed to get Telegram user from API:', error)
+      return {
+        id: 0,
+        username: undefined,
+        firstName: undefined,
+        lastName: undefined,
+        fullName: 'User',
+        languageCode: 'en',
+        avatarUrl: undefined,
+        isPremium: false,
+        isAvailable: false
+      }
+    }
+  }, [telegramApi])
 
   // Update user data with authenticated Telegram information
   useEffect(() => {
