@@ -1,121 +1,23 @@
-import React, { useEffect, useMemo, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useEffect, useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { useAtom } from 'jotai'
-import { getUserData, initializeTelegramWebApp, setTelegramMainButton } from '../lib/telegram'
-import { getRankByXP, getNextRank, getRankProgress, getXPToNextRank } from '../lib/rankSystem'
 import { userDataAtom } from '../store/profileAtoms'
-import { useHaptics } from '../lib/haptics'
-import { useTelegramUser, getAvatarUrl, getFullName, getDisplayUsername } from '../hooks/useTelegramUser'
-import { AchievementNotification, useAchievement } from '../components/AchievementNotification'
-import { DraggableStats } from '../components/DraggableStats'
-import { ProfileHero } from '../components/profile/ProfileHero'
-import { EnhancedStreak } from '../components/EnhancedStreak'
-import { EnhancedStats } from '../components/stats'
+import { useTelegramUser, getAvatarUrl, getFullName } from '../hooks/useTelegramUser'
+import { getRankByXP, getNextRank, getRankProgress } from '../lib/rankSystem'
 
-// Animation constants for performance and maintainability
-const ANIMATION_CONSTANTS = {
-  DELAYS: {
-    AVATAR: 0.2,
-    NAME: 0.3,
-    LEVEL_BADGE: 0.4,
-    BADGES_SECTION: 0.5,
-    USERNAME: 0.6,
-    SENIOR: 0.7,
-    XP_SECTION: 0.8,
-    XP_MAIN: 0.9,
-    XP_NEXT: 1.0,
-    PROGRESS: 1.1,
-    XP_RANGE: 1.8,
-    SPARKLE_1: 0,
-    SPARKLE_2: 0.7,
-    SPARKLE_3: 1.4,
-  },
-  DURATIONS: {
-    ENTRANCE: 0.5,
-    CONTAINER: 0.6,
-    SPARKLE: 2,
-    AVATAR_RING: 8,
-    AVATAR_PATTERN: 20,
-    GLOW_CYCLE: 3,
-    BOX_SHADOW_CYCLE: 4,
-    RANK_GLOW: 4,
-  },
-  SPRING: {
-    STIFF: 200,
-    MODERATE: 300,
-    VERY_STIFF: 400,
-    DAMPING: 25,
-  },
-  OPACITY: {
-    GLOW_MIN: 0.2,
-    GLOW_MAX: 0.4,
-    RANK_GLOW_MIN: 0.3,
-    RANK_GLOW_MAX: 0.6,
-  },
-  SCALE: {
-    HOVER: 1.02,
-    HOVER_LARGE: 1.05,
-    HOVER_ICON: 1.15,
-    TAP: 0.98,
-    INITIAL: 0.8,
-    FINAL: 1,
-    GLOW: 1.05,
-  },
-  TRANSFORM: {
-    Y_OFFSET: 20,
-    Y_HOVER: -1,
-    Y_HOVER_LARGE: -2,
-    X_OFFSET: -20,
-    ROTATE: 5,
-    ROTATE_ICON: 10,
-  }
-} as const
+// Design System Components
+import { Avatar } from '../design-system/components/avatar/index'
+import { Card } from '../design-system/components/card/index'
+import { Typography } from '../design-system/components/typography/index'
+import { Button } from '../design-system/components/button/index'
+import { Progress } from '../design-system/components/progress/index'
 
-// UI Constants
-const UI_CONSTANTS = {
-  XP_LEVEL_DIVISOR: 1000,
-  STAGGER_CHILDREN: 0.1,
-} as const
-
-// Telegram WebApp type definitions for type safety
-interface TelegramWebApp {
-  initData?: string
-  colorScheme?: 'light' | 'dark'
-  themeParams?: Record<string, string>
-}
-
-declare global {
-  interface Window {
-    Telegram?: {
-      WebApp?: TelegramWebApp
-    }
-  }
-}
+// Icons
+import { Trophy, Star, Zap, Target, Calendar, Award, TrendingUp, Settings, AtSign } from 'lucide-react'
 
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
   const telegramUser = useTelegramUser()
-  const haptics = useHaptics()
-  const achievement = useAchievement()
-
-  // Memoized rank calculations for performance
-  const rankData = useMemo(() => {
-    const currentRank = getRankByXP(userData.totalXP)
-    const nextRank = getNextRank(userData.totalXP)
-    const rankProgress = getRankProgress(userData.totalXP)
-    const xpToNext = getXPToNextRank(userData.totalXP)
-    const isMaxRank = !nextRank
-    const progressPercentage = rankProgress * 100
-
-    return {
-      currentRank,
-      nextRank,
-      rankProgress,
-      xpToNext,
-      isMaxRank,
-      progressPercentage
-    }
-  }, [userData.totalXP])
 
   // Update user data with Telegram information
   useEffect(() => {
@@ -123,239 +25,276 @@ export function ProfilePage() {
       const newUserData = {
         ...userData,
         id: telegramUser.id,
-        firstName: telegramUser.firstName || '',
+        firstName: telegramUser.firstName || 'Разработчик',
         lastName: telegramUser.lastName || '',
         username: telegramUser.username || '',
         avatar: getAvatarUrl(telegramUser)
       }
-      
       setUserData(newUserData)
-      
-      console.log('✅ Profile updated with Telegram data:', {
-        name: getFullName(telegramUser),
-        username: telegramUser.username ? `@${telegramUser.username}` : 'No username',
-        isPremium: telegramUser.isPremium,
-        isRealTelegramData: telegramUser.isRealTelegramData,
-        userId: telegramUser.id
-      })
     }
   }, [telegramUser, setUserData, userData])
 
-  const { currentRank, nextRank, isMaxRank, progressPercentage, xpToNext } = rankData
+  // Rank calculations
+  const rankData = useMemo(() => {
+    const currentRank = getRankByXP(userData.totalXP)
+    const nextRank = getNextRank(userData.totalXP)
+    const rankProgress = getRankProgress(userData.totalXP)
+    const isMaxRank = !nextRank
+    const progressPercentage = rankProgress * 100
 
-  // Type-safe Telegram WebApp check
-  const isTelegramWebApp = useMemo(() => {
-    return Boolean(window?.Telegram?.WebApp?.initData)
-  }, [])
-
-  // Memoized event handlers
-  const handleLevelBadgeClick = useCallback(() => {
-    haptics.impact('heavy')
-    achievement.trigger(
-      `Level ${Math.floor(userData.totalXP / UI_CONSTANTS.XP_LEVEL_DIVISOR)} Unlocked! ⚡`,
-      `Dominating with ${userData.totalXP.toLocaleString()} XP`,
-      '⚡'
-    )
-  }, [haptics, achievement, userData.totalXP])
-
-  const handleUsernameClick = useCallback(() => {
-    haptics.buttonPress()
-    achievement.trigger(
-      'Profile ID! 👤',
-      `Username: @${userData.username}`,
-      '🏷️'
-    )
-  }, [haptics, achievement, userData.username])
-
-  const handleRankClick = useCallback(() => {
-    haptics.selection()
-    achievement.trigger(
-      `${currentRank.name} Level! ${currentRank.icon}`,
-      `Elite developer with ${userData.totalXP.toLocaleString()} XP mastered`,
-      currentRank.icon
-    )
-  }, [haptics, achievement, currentRank, userData.totalXP])
-
-  // Telegram Main Button initialization
-  useEffect(() => {
-    if (telegramUser.isAvailable && telegramUser.id > 0) {
-      setTelegramMainButton({
-        text: '🚀 Start Challenge',
-        color: currentRank.color,
-        textColor: '#FFFFFF',
-        onClick: () => console.log('Starting challenge for user:', telegramUser.firstName)
-      })
+    return {
+      currentRank,
+      nextRank,
+      isMaxRank,
+      progressPercentage
     }
-  }, [telegramUser, currentRank.color])
+  }, [userData.totalXP])
+
+  const { currentRank, nextRank, isMaxRank, progressPercentage } = rankData
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        duration: ANIMATION_CONSTANTS.DURATIONS.CONTAINER,
-        staggerChildren: UI_CONSTANTS.STAGGER_CHILDREN
+        duration: 0.6,
+        staggerChildren: 0.1
       }
     }
   }
 
   const itemVariants = {
-    hidden: { y: ANIMATION_CONSTANTS.TRANSFORM.Y_OFFSET, opacity: 0 },
+    hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: ANIMATION_CONSTANTS.DURATIONS.ENTRANCE,
+        duration: 0.5,
         ease: [0.25, 0.46, 0.45, 0.94]
       }
     }
   }
 
+  // Get user display name
+  const displayName = getFullName(telegramUser) || `${userData.firstName} ${userData.lastName}`.trim() || 'Разработчик'
+  const username = telegramUser.username || userData.username
+
   return (
     <motion.div 
-      className="modern-profile"
+      className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      {/* Always show ProfileHero - fallback data is handled in useTelegramUser */}
-      <ProfileHero 
-        userData={userData}
-        currentRank={currentRank}
-        nextRank={nextRank}
-        progressPercentage={progressPercentage}
-        isMaxRank={isMaxRank}
-        animationConstants={ANIMATION_CONSTANTS}
-      />
-
-
-      {/* Show content - always display, either with real Telegram data or fallback */}
-      {(telegramUser.isAvailable || telegramUser.id > 0) && (
-        <div className="enhanced-sections-container">
-          {/* Enhanced Streak Section */}
-          <motion.div 
-            className="enhanced-streak-section"
-            variants={itemVariants}
-          >
-            <EnhancedStreak 
-              currentStreak={userData.streak}
-              maxStreak={30}
-            />
-          </motion.div>
-
-          {/* Enhanced Statistics Section */}
-          <motion.div 
-            className="enhanced-stats-section"
-            variants={itemVariants}
-          >
-            <EnhancedStats userData={userData} />
-          </motion.div>
-
-          {/* Quick Actions - Responsive */}
-          <motion.div 
-            className="actions-section-responsive"
-            variants={itemVariants}
-          >
-            <div className="actions-grid">
-              <motion.div 
-                className="action-card-primary"
-                whileHover={{ 
-                  scale: 1.02, 
-                  y: -2,
-                  boxShadow: "0 12px 40px rgba(0, 122, 255, 0.4)"
-                }}
-                whileTap={{ scale: ANIMATION_CONSTANTS.SCALE.TAP }}
-                onTap={() => {
-                  haptics.buttonPress()
-                  achievement.trigger(
-                    'Challenge Started! 🚀',
-                    'Good luck with your coding challenge!',
-                    '🎯'
-                  )
-                  console.log('Starting challenge...')
-                }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <motion.div 
-                  className="action-icon-responsive"
-                  whileHover={{ scale: 1.2, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                >
-                  🚀
-                </motion.div>
-                <div className="action-text-responsive">Start Challenge</div>
-              </motion.div>
+      <div className="container mx-auto px-4 py-6 max-w-4xl">
+        
+        {/* Profile Header */}
+        <motion.div variants={itemVariants}>
+          <Card className="p-6 mb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-xl relative">
+            {/* Settings Icon */}
+            <button className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors">
+              <Settings className="w-4 h-4 text-white" />
+            </button>
+            
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               
-              <div className="secondary-actions-row">
-                <motion.div 
-                  className="action-card-secondary"
-                  variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    visible: { opacity: 1, x: 0 }
-                  }}
-                  whileHover={{ 
-                    scale: 1.05, 
-                    y: -2,
-                    backgroundColor: "rgba(255, 255, 255, 0.08)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  onTap={() => {
-                    haptics.buttonPress()
-                    achievement.trigger(
-                      'Battle Mode! ⚔️',
-                      'May the code be with you!',
-                      '⚔️'
-                    )
-                    console.log('Opening battle...')
-                  }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <motion.div 
-                    className="action-icon-responsive"
-                    whileHover={{ scale: 1.2, rotate: -5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    ⚔️
-                  </motion.div>
-                  <div className="action-text-responsive">Battle</div>
-                </motion.div>
+              {/* Avatar Section */}
+              <div className="relative">
+                <Avatar
+                  src={userData.avatar}
+                  alt={displayName}
+                  fallback={displayName.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                  size="2xl"
+                  className="ring-4 ring-white/30 shadow-2xl"
+                />
+                {/* Online Status */}
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg"></div>
+              </div>
+
+              {/* Profile Info */}
+              <div className="flex-1 text-center md:text-left">
+                <Typography variant="display-md" className="text-white font-bold mb-2">
+                  {displayName}
+                </Typography>
                 
-                <motion.div 
-                  className="action-card-secondary"
-                  variants={{
-                    hidden: { opacity: 0, x: 20 },
-                    visible: { opacity: 1, x: 0 }
-                  }}
-                  whileHover={{ 
-                    scale: 1.05, 
-                    y: -2,
-                    backgroundColor: "rgba(255, 255, 255, 0.08)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  onTap={() => {
-                    haptics.buttonPress()
-                    console.log('Opening leaderboard...')
-                  }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <motion.div 
-                    className="action-icon-responsive"
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    📊
-                  </motion.div>
-                  <div className="action-text-responsive">Leaderboard</div>
-                </motion.div>
+                {username && (
+                  <div className="flex items-center justify-center md:justify-start mb-4">
+                    <div className="flex items-center bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20">
+                      <AtSign className="w-4 h-4 mr-1.5 text-blue-200" />
+                      <Typography variant="body-sm" className="text-white font-medium">
+                        {username}
+                      </Typography>
+                    </div>
+                  </div>
+                )}
+
+                {/* Level & XP */}
+                <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
+                  <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                    <Trophy className="w-5 h-5 mr-2 text-yellow-300" />
+                    <Typography variant="body-md" className="text-white font-semibold">
+                      {currentRank.name}
+                    </Typography>
+                  </div>
+                  <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                    <Zap className="w-5 h-5 mr-2 text-yellow-300" />
+                    <Typography variant="body-md" className="text-white font-semibold">
+                      {userData.totalXP >= 1000 ? `${Math.floor(userData.totalXP / 1000)}K` : userData.totalXP}
+                    </Typography>
+                  </div>
+                </div>
+
+                {/* Progress to Next Level */}
+                {!isMaxRank && (
+                  <div className="mb-4">
+                    <div className="flex justify-between text-white/80 text-sm mb-2">
+                      <span>До {nextRank.name}</span>
+                      <span>{Math.round(progressPercentage)}%</span>
+                    </div>
+                    <Progress 
+                      value={progressPercentage} 
+                      className="bg-white/20" 
+                      style={{'--progress-color': '#ffffff'} as React.CSSProperties}
+                    />
+                  </div>
+                )}
+
               </div>
             </div>
+          </Card>
+        </motion.div>
+
+        {/* Quick Stats Grid */}
+        <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <Card className="p-4 text-center hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            </div>
+            <Typography variant="heading-md" className="font-bold">{userData.streak}</Typography>
+            <Typography variant="caption-sm" color="muted">Дней подряд</Typography>
+          </Card>
+
+          <Card className="p-4 text-center hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Target className="w-6 h-6 text-green-600 dark:text-green-400" />
+            </div>
+            <Typography variant="heading-md" className="font-bold">24</Typography>
+            <Typography variant="caption-sm" color="muted">Выполнено</Typography>
+          </Card>
+
+          <Card className="p-4 text-center hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Star className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+            </div>
+            <Typography variant="heading-md" className="font-bold">12</Typography>
+            <Typography variant="caption-sm" color="muted">Достижений</Typography>
+          </Card>
+
+          <Card className="p-4 text-center hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+              <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+            </div>
+            <Typography variant="heading-md" className="font-bold">+15%</Typography>
+            <Typography variant="caption-sm" color="muted">За неделю</Typography>
+          </Card>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          {/* Recent Achievements */}
+          <motion.div variants={itemVariants}>
+            <Card className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <Typography variant="heading-lg" className="font-bold">
+                  Достижения
+                </Typography>
+                <Award className="w-6 h-6 text-yellow-500" />
+              </div>
+              
+              <div className="space-y-4">
+                {[
+                  { icon: '🏆', title: 'Первый уровень', description: 'Достигли 1000 XP', achieved: true },
+                  { icon: '🔥', title: 'Неделя подряд', description: '7 дней активности', achieved: true },
+                  { icon: '⭐', title: 'Мастер React', description: 'Изучили основы React', achieved: true },
+                  { icon: '🎯', title: 'Целеустремленный', description: 'Выполнили 20 заданий', achieved: false },
+                ].map((achievement, index) => (
+                  <div key={index} className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
+                    achievement.achieved 
+                      ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' 
+                      : 'bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
+                  }`}>
+                    <div className="text-2xl">{achievement.icon}</div>
+                    <div className="flex-1">
+                      <Typography variant="body-md" className={`font-medium ${
+                        achievement.achieved ? 'text-green-800 dark:text-green-200' : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {achievement.title}
+                      </Typography>
+                      <Typography variant="caption-sm" className={
+                        achievement.achieved ? 'text-green-600 dark:text-green-300' : 'text-gray-500'
+                      }>
+                        {achievement.description}
+                      </Typography>
+                    </div>
+                    {achievement.achieved && (
+                      <div className="text-green-500">
+                        <Trophy className="w-5 h-5" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+
+          {/* Activity Overview */}
+          <motion.div variants={itemVariants}>
+            <Card className="p-6">
+              <Typography variant="heading-lg" className="font-bold mb-4">
+                Активность
+              </Typography>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <Typography variant="body-md">React Hooks</Typography>
+                  <div className="flex items-center gap-2">
+                    <Progress value={85} className="w-24" />
+                    <Typography variant="caption-sm" color="muted">85%</Typography>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <Typography variant="body-md">TypeScript</Typography>
+                  <div className="flex items-center gap-2">
+                    <Progress value={70} className="w-24" />
+                    <Typography variant="caption-sm" color="muted">70%</Typography>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <Typography variant="body-md">Node.js</Typography>
+                  <div className="flex items-center gap-2">
+                    <Progress value={45} className="w-24" />
+                    <Typography variant="caption-sm" color="muted">45%</Typography>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <Typography variant="body-md">GraphQL</Typography>
+                  <div className="flex items-center gap-2">
+                    <Progress value={30} className="w-24" />
+                    <Typography variant="caption-sm" color="muted">30%</Typography>
+                  </div>
+                </div>
+              </div>
+
+              <Button variant="outline" className="w-full mt-4">
+                Посмотреть все навыки
+              </Button>
+            </Card>
           </motion.div>
         </div>
-      )}
-      
-
-      {/* Achievement Notifications */}
-      <AchievementNotification />
+      </div>
     </motion.div>
   )
 }

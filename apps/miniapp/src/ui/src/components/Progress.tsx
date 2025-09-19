@@ -1,2 +1,0 @@
-import React from 'react'
-export const Progress:React.FC<{value:number;max?:number;label?:string}>=({value,max=100,label})=>{const pct=Math.max(0,Math.min(100,Math.round((value/max)*100)));return(<div aria-label={label||'Progress'} style={{background:'#e5e7eb',borderRadius:999,height:10,width:'100%'}}><div style={{width:`${pct}%`,background:'var(--color-primary)',height:'100%',borderRadius:999,transition:'width .25s ease'}}/></div>)}

@@ -1,21 +1,17 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { cn, RoadmapIcon, InterviewIcon, ProfileIcon } from '@telegram-ios-academy/ui'
+import { cn } from '@telegram-ios-academy/ui'
+import { Calendar, User } from 'lucide-react'
 
 const tabs = [
   {
-    path: '/roadmap',
-    label: 'Roadmap',
-    icon: RoadmapIcon,
-  },
-  {
-    path: '/interview',
-    label: 'Interview', 
-    icon: InterviewIcon,
+    path: '/challenge',
+    label: 'Ежедневный вызов',
+    icon: Calendar,
   },
   {
     path: '/profile',
-    label: 'Profile',
-    icon: ProfileIcon,
+    label: 'Профиль',
+    icon: User,
   },
 ] as const
 

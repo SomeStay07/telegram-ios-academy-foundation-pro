@@ -49,7 +49,6 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
       <motion.div 
         className="hero-card-premium glass-card mx-4 my-6 p-6 bg-white/3 border-white/8"
         whileHover={{ 
-          backgroundColor: "rgba(255, 255, 255, 0.05)",
           scale: 1.005,
           y: -2
         }}

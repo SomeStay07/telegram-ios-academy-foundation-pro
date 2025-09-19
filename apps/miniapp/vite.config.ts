@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
+import path from 'path'
 
 const bundleSizePlugin = () => {
   return {
@@ -59,7 +60,9 @@ export default defineConfig({
     alias: {
       // Use preact/compat for React compatibility while reducing bundle size
       "react": "preact/compat",
-      "react-dom": "preact/compat"
+      "react-dom": "preact/compat",
+      // Add @ alias for src directory
+      "@": path.resolve(__dirname, "./src")
     }
   },
   build: {

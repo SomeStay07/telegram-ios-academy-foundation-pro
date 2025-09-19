@@ -1,23 +1,6 @@
-/* PWA Enhancements for Better Mobile Experience */
+/* PWA Enhancements for Better Mobile Experience - Inherits from enhanced-components.css adaptive color system */
 
-/* Dark mode optimization for device theme */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Ensure consistent dark theme */
-    --theme-bg: #000000;
-    --theme-surface: #0a0a0a;
-    --theme-text: #ffffff;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    /* Light theme fallback */
-    --theme-bg: #ffffff;
-    --theme-surface: #f8f9fa;
-    --theme-text: #000000;
-  }
-}
+/* Theme optimization - now handled by adaptive color system in enhanced-components.css */
 
 /* Battery optimization */
 @media (prefers-reduced-data: reduce) {
@@ -52,22 +35,22 @@
 /* Print styles for sharing */
 @media print {
   .modern-profile {
-    background: white !important;
-    color: black !important;
+    background: var(--surface-bg) !important;
+    color: var(--text-primary) !important;
     box-shadow: none !important;
   }
   
   .hero-card-premium {
-    background: white !important;
-    border: 2px solid #ccc !important;
+    background: var(--surface-bg) !important;
+    border: 2px solid var(--surface-border) !important;
     box-shadow: none !important;
   }
   
   .action-card-primary,
   .action-card-secondary {
-    background: #f0f0f0 !important;
-    color: black !important;
-    border: 1px solid #ccc !important;
+    background: var(--surface-card) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--surface-border) !important;
   }
   
   /* Hide interactive elements */
@@ -87,8 +70,8 @@
   .username-badge-unified,
   .senior-engineer-badge-unified {
     border: 2px solid currentColor;
-    background: var(--theme-bg);
-    color: var(--theme-text);
+    background: var(--surface-bg);
+    color: var(--text-primary);
   }
   
   .progress-bar-dynamic {
@@ -225,7 +208,7 @@
 
 /* Focus management for keyboard navigation */
 .modern-profile :focus-visible {
-  outline: 2px solid var(--tg-theme-link-color, #60a5fa);
+  outline: 2px solid var(--tg-theme-link-color, var(--primary));
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -235,8 +218,8 @@
   position: absolute;
   top: -40px;
   left: 6px;
-  background: var(--tg-theme-button-color, #007AFF);
-  color: var(--tg-theme-button-text-color, #ffffff);
+  background: var(--tg-theme-button-color, var(--primary));
+  color: var(--tg-theme-button-text-color, var(--white));
   padding: 8px;
   text-decoration: none;
   border-radius: 4px;
@@ -253,7 +236,7 @@
   top: 10px;
   right: 10px;
   background: rgba(0, 0, 0, 0.8);
-  color: white;
+  color: var(--text-on-primary);
   padding: 0.5rem;
   border-radius: 4px;
   font-family: monospace;

@@ -1,7 +1,7 @@
-/* Modern Fluid Typography System - 2024 Best Practices */
+/* Modern Fluid Typography System - Inherits from enhanced-components.css adaptive color system */
 
-/* Design Tokens with Clamp Functions */
 :root {
+  /* Design Tokens with Clamp Functions */
   /* Fluid Typography Scale */
   --text-xs: clamp(0.7rem, 1.5vw + 0.5rem, 0.75rem);
   --text-sm: clamp(0.8rem, 2vw + 0.5rem, 0.875rem);
@@ -58,7 +58,7 @@
 
 .name-text {
   display: inline-block;
-  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -94,7 +94,7 @@
   font-size: var(--text-gaming-xp);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   line-height: 1.2;
 }
 
@@ -102,7 +102,7 @@
   font-size: var(--text-gaming-number);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--success) 0%, var(--primary-hover) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -123,8 +123,8 @@
 @media (prefers-contrast: high) {
   .name-text {
     background: none;
-    -webkit-text-fill-color: white;
-    color: white;
+    -webkit-text-fill-color: var(--text-primary);
+    color: var(--text-primary);
   }
   
   .username-badge-modern {

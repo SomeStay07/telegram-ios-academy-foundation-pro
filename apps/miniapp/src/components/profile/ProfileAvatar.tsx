@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { Avatar } from '../../design-system/components/avatar/index'
 import { haptics } from '../../lib/haptics'
 import type { BasicAnimationConstants } from '../../types/animations'
 
@@ -23,10 +24,10 @@ export const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
   animationConstants
 }) => {
   return (
-    <div className="avatar-section-clean">
-      {/* Main Avatar Container */}
+    <div className="flex justify-center items-center p-6">
+      {/* Main Avatar Container with Design System */}
       <motion.div 
-        className="avatar-main-container"
+        className="relative"
         style={{ overflow: 'visible' }}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -39,44 +40,40 @@ export const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
         }}
         onClick={() => haptics.cardTap()}
       >
-        {userData.avatar ? (
-          <img 
-            src={userData.avatar} 
-            alt={`${userData.firstName} ${userData.lastName}`}
-            className="avatar-xl-enhanced"
-          />
-        ) : (
-          <div className="avatar-icon-grey">
-            <motion.div 
-              className="avatar-pattern"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div 
-              className="dev-icon-corner"
-              whileHover={{ scale: 1.1, rotate: 10 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              💻
-            </motion.div>
-            <div className="code-lines">
-              <div className="code-line line-1" />
-              <div className="code-line line-2" />
-              <div className="code-line line-3" />
-            </div>
-          </div>
-        )}
+        {/* Design System Avatar */}
+        <Avatar
+          src={userData.avatar}
+          alt={`${userData.firstName} ${userData.lastName}`}
+          fallback={`${userData.firstName.charAt(0)}${userData.lastName.charAt(0)}`}
+          size="2xl"
+          variant="profile"
+          status="online"
+          className="cursor-pointer"
+        />
         
-        {/* Animated ring for real photos */}
-        {userData.avatar && (
+        {/* Animated rank ring for avatars */}
+        <motion.div 
+          className="absolute inset-0 rounded-full pointer-events-none"
+          style={{ 
+            background: `conic-gradient(from 0deg, ${currentRank.gradient}, transparent)`,
+            padding: '4px'
+          }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        >
+          <div className="w-full h-full rounded-full bg-white dark:bg-gray-900" />
+        </motion.div>
+        
+        {/* Developer decoration for fallback avatars */}
+        {!userData.avatar && (
           <motion.div 
-            className="avatar-ring"
-            style={{ background: `conic-gradient(from 0deg, ${currentRank.gradient}, transparent)` }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          />
+            className="absolute -top-1 -right-1 text-2xl filter drop-shadow-md"
+            whileHover={{ scale: 1.1, rotate: 10 }}
+            transition={{ type: "spring", stiffness: 400 }}
+          >
+            💻
+          </motion.div>
         )}
-        
       </motion.div>
     </div>
   )

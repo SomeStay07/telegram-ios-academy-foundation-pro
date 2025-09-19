@@ -33,7 +33,15 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
       
       const isToday = i === 0
       const isFuture = i < 0
-      const completed = i < currentStreak && !isFuture
+      // Для демонстрации создаем разные типы дней
+      let completed = false
+      if (i === 6) completed = true  // Самый старый день - завершен
+      if (i === 5) completed = true  // Предпоследний - завершен  
+      if (i === 4) completed = false // Пропущенный день
+      if (i === 3) completed = true  // Завершен
+      if (i === 2) completed = true  // Завершен (вчера)
+      if (i === 1) completed = false // Не завершен
+      if (i === 0) completed = false // Сегодня - в процессе
       
       days.push({
         date,
@@ -49,16 +57,26 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
   const streakPercentage = Math.min((currentStreak / maxStreak) * 100, 100)
   
   const getStreakMessage = () => {
-    if (currentStreak === 0) return "Start your streak today! 🚀"
-    if (currentStreak < 3) return "Building momentum! 💪"
-    if (currentStreak < 7) return "Great consistency! 🔥"
-    if (currentStreak < 14) return "On fire! 🌟"
-    if (currentStreak < 30) return "Streak master! ⚡"
-    return "Legendary dedication! 👑"
+    if (currentStreak === 0) return "Начните серию сегодня!"
+    if (currentStreak < 3) return "Набираете обороты!"
+    if (currentStreak < 7) return "Отличная стабильность!"
+    if (currentStreak < 14) return "Вы в огне!"
+    if (currentStreak < 30) return "Мастер серий!"
+    return "Легендарная преданность!"
   }
 
-  const getDayAbbr = (date: Date) => {
-    return date.toLocaleDateString('en', { weekday: 'short' }).slice(0, 1)
+  const getRussianDayName = (date: Date) => {
+    const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
+    return days[date.getDay()]
+  }
+
+  const getRussianDayShort = (date: Date) => {
+    const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб']
+    return days[date.getDay()]
+  }
+
+  const getDateNumber = (date: Date) => {
+    return date.getDate()
   }
 
   return (
@@ -91,10 +109,10 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
             }}
             aria-hidden="true"
           >
-            🔥
+            ⚡
           </motion.div>
           <div>
-            <h2 id="streak-title" className="streak-title">Daily Streak</h2>
+            <h2 id="streak-title" className="streak-title">Ежедневная Серия</h2>
             <p className="streak-subtitle">{getStreakMessage()}</p>
           </div>
         </div>
@@ -107,11 +125,11 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
             haptics.impact('medium')
             console.log('Streak tapped:', currentStreak)
           }}
-          aria-label={`Current streak: ${currentStreak} days. Tap for details`}
+          aria-label={`Текущая серия: ${currentStreak} дней. Нажмите для подробностей`}
           tabIndex={0}
         >
           <span className="streak-number" aria-hidden="true">{currentStreak}</span>
-          <span className="streak-days-label">days</span>
+          <span className="streak-days-label">дней</span>
         </motion.button>
       </motion.header>
 
@@ -146,35 +164,17 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
                 console.log('Day tapped:', day.date.toDateString())
               }}
               role="gridcell"
-              aria-label={`${day.date.toLocaleDateString('en', { 
-                weekday: 'long', 
-                month: 'short', 
-                day: 'numeric' 
-              })}${day.completed ? ', completed' : ''}${day.isToday ? ', today' : ''}`}
+              aria-label={`${getRussianDayName(day.date)}, ${getDateNumber(day.date)} число${day.completed ? ', выполнено' : ''}${day.isToday ? ', сегодня' : ''}`}
               aria-pressed={day.completed}
               disabled={day.isFuture}
               tabIndex={day.isFuture ? -1 : 0}
             >
-              <span className="day-letter" aria-hidden="true">{getDayAbbr(day.date)}</span>
-              <span className="day-number">{day.date.getDate()}</span>
-              
-              {/* Completion indicator */}
-              {day.completed && (
-                <motion.div
-                  className="completion-indicator"
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ 
-                    delay: 0.1 * index + 0.7,
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 10
-                  }}
-                  aria-hidden="true"
-                >
-                  <span className="check-icon">✨</span>
-                </motion.div>
-              )}
+              {/* Day info display */}
+              <div className="day-info">
+                <span className="day-name">{getRussianDayShort(day.date)}</span>
+                <span className="day-number">{getDateNumber(day.date)}</span>
+              </div>
+
               
               {/* Today indicator */}
               {day.isToday && (
@@ -210,7 +210,7 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
         aria-label={`Streak progress: ${currentStreak} of ${maxStreak} days`}
       >
         <div className="progress-info">
-          <span className="progress-label">Progress to {maxStreak} days</span>
+          <span className="progress-label">Прогресс до {maxStreak} дней</span>
           <span className="progress-percentage" aria-live="polite">{Math.round(streakPercentage)}%</span>
         </div>
         
@@ -256,10 +256,10 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
                 className="streak-badge week-badge"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 role="listitem"
-                aria-label="Week Champion: 7+ day streak achieved"
+                aria-label="Чемпион недели: серия 7+ дней достигнута"
                 tabIndex={0}
               >
-                🏃 Week Champion
+                🏃 Чемпион Недели
               </motion.button>
             )}
             {currentStreak >= 14 && (
@@ -267,10 +267,10 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
                 className="streak-badge biweek-badge"
                 whileHover={{ scale: 1.1, rotate: -5 }}
                 role="listitem"
-                aria-label="Two Week Warrior: 14+ day streak achieved"
+                aria-label="Воин двух недель: серия 14+ дней достигнута"
                 tabIndex={0}
               >
-                🏆 Two Week Warrior
+                🏆 Воин Двух Недель
               </motion.button>
             )}
             {currentStreak >= 30 && (
@@ -278,10 +278,10 @@ export const EnhancedStreak: React.FC<EnhancedStreakProps> = ({
                 className="streak-badge month-badge"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 role="listitem"
-                aria-label="Monthly Master: 30+ day streak achieved"
+                aria-label="Мастер месяца: серия 30+ дней достигнута"
                 tabIndex={0}
               >
-                👑 Monthly Master
+                👑 Мастер Месяца
               </motion.button>
             )}
           </div>

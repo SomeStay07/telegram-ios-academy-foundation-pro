@@ -1,2 +1,0 @@
-import React from 'react'
-export const Input:React.FC<React.InputHTMLAttributes<HTMLInputElement>>=(p)=>(<input {...p} style={{width:'100%',padding:'10px 14px',borderRadius:'12px',border:'1px solid var(--color-muted)'}}/>)

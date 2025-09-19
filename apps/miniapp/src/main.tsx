@@ -3,20 +3,13 @@ import ReactDOM from 'react-dom/client'
 import { lazyImport } from './utils/lazyImport'
 import { initTelegramTheme, isTelegramWebApp } from '@telegram-ios-academy/ui'
 import { initThemeSync } from './lib/tmaTheme'
-// Essential styles - restore original imports with optimization (tokens.css removed to save space)
+// Essential styles - modern design system with Tailwind
 import '@telegram-ios-academy/ui/dist/styles/index.css'
 import './styles/tailwind-base.css'
 import './styles.css'
-import './styles/profile-animations.css'
-import './styles/light-theme-enhancements.css'
-import './styles/theme-fix.css'
-import './styles/responsive-fixes.css'
 import './styles/touch-optimizations.css'
 import './styles/telegram-webapp-optimizations.css'
 import './styles/pwa-enhancements.css'
-import './styles/design-tokens.css'
-import './styles/modern-profile.css'
-import './styles/enhanced-components.css'
 
 // Lazy import analytics and web vitals
 import('./lib/web-vitals').catch(console.error)
