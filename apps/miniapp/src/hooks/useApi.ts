@@ -37,6 +37,20 @@ async function apiRequest(endpoint: string, options: RequestInit = {}) {
 }
 
 // Types for API responses
+export interface AuthResponse {
+  ok: boolean
+  userId: string
+  sessionToken: string
+  user: {
+    id: number
+    first_name: string
+    last_name?: string
+    username?: string
+    language_code?: string
+    is_premium?: boolean
+  }
+}
+
 export interface UserProgress {
   id: string
   userId: string
@@ -61,6 +75,28 @@ export interface LessonAttempt {
 }
 
 // API hooks
+
+// Verify Telegram init data and get authenticated user
+export function useAuthVerification() {
+  return useQuery({
+    queryKey: ['authVerification'],
+    queryFn: () => {
+      const initData = getTelegramInitData()
+      if (!initData) {
+        throw new Error('No Telegram init data available')
+      }
+      
+      return apiRequest('/auth/verifyInitData', {
+        method: 'POST',
+        body: JSON.stringify({ initData }),
+      }) as Promise<AuthResponse>
+    },
+    enabled: !!getTelegramInitData(),
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    retry: 3,
+  })
+}
+
 export function useUserProgress(lessonId?: string) {
   return useQuery({
     queryKey: ['userProgress', lessonId],

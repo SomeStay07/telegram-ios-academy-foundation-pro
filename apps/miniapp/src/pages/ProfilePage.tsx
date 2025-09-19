@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useAtom } from 'jotai'
 import { userDataAtom } from '../store/profileAtoms'
 import { useTelegramUser, getAvatarUrl, getFullName } from '../hooks/useTelegramUser'
+import { useAuthVerification } from '../hooks/useApi'
 import { getRankByXP, getNextRank, getRankProgress } from '../lib/rankSystem'
 
 // Profile Components
@@ -14,20 +15,43 @@ import { ProfileActivity } from '../components/profile/ProfileActivity'
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
   const telegramUser = useTelegramUser()
+  const { data: authData, isSuccess: isAuthSuccess } = useAuthVerification()
 
-  // Update user data with Telegram information
+  // Update user data with authenticated Telegram information
   useEffect(() => {
-    if (telegramUser.isAvailable && telegramUser.id > 0) {
+    // Prioritize validated backend auth data
+    if (isAuthSuccess && authData?.user) {
+      const backendUser = authData.user
+      setUserData(prevData => ({
+        ...prevData,
+        id: backendUser.id,
+        firstName: backendUser.first_name || 'User',
+        lastName: backendUser.last_name || '',
+        username: backendUser.username || '',
+        avatar: getAvatarUrl({
+          id: backendUser.id,
+          username: backendUser.username,
+          firstName: backendUser.first_name,
+          lastName: backendUser.last_name,
+          fullName: `${backendUser.first_name || ''} ${backendUser.last_name || ''}`.trim(),
+          languageCode: backendUser.language_code || 'en',
+          avatarUrl: undefined, // Backend doesn't provide photo URL yet
+          isPremium: backendUser.is_premium || false,
+          isAvailable: true
+        })
+      }))
+    } else if (telegramUser.isAvailable && telegramUser.id > 0) {
+      // Fallback to frontend Telegram data
       setUserData(prevData => ({
         ...prevData,
         id: telegramUser.id,
-        firstName: telegramUser.firstName || 'Разработчик',
+        firstName: telegramUser.firstName || 'User',
         lastName: telegramUser.lastName || '',
         username: telegramUser.username || '',
         avatar: getAvatarUrl(telegramUser)
       }))
     }
-  }, [telegramUser.isAvailable, telegramUser.id, telegramUser.firstName, telegramUser.lastName, telegramUser.username, setUserData])
+  }, [isAuthSuccess, authData, telegramUser.isAvailable, telegramUser.id, telegramUser.firstName, telegramUser.lastName, telegramUser.username, setUserData])
 
   // Rank calculations
   const rankData = useMemo(() => {
@@ -70,14 +94,24 @@ export function ProfilePage() {
     }
   }), [])
 
-  // Get user display name (memoized)
+  // Get user display name (memoized) - prioritize backend auth data
   const displayName = useMemo(() => {
-    return getFullName(telegramUser) || `${userData.firstName} ${userData.lastName}`.trim() || 'Разработчик'
-  }, [telegramUser.firstName, telegramUser.lastName, userData.firstName, userData.lastName])
+    if (isAuthSuccess && authData?.user) {
+      const { first_name, last_name, username } = authData.user
+      return `${first_name || ''} ${last_name || ''}`.trim() || username || 'User'
+    }
+    if (telegramUser.isAvailable && telegramUser.id > 0) {
+      return getFullName(telegramUser)
+    }
+    return `${userData.firstName} ${userData.lastName}`.trim() || 'User'
+  }, [isAuthSuccess, authData, telegramUser.isAvailable, telegramUser.id, telegramUser.firstName, telegramUser.lastName, telegramUser.username, userData.firstName, userData.lastName])
   
   const username = useMemo(() => {
+    if (isAuthSuccess && authData?.user?.username) {
+      return authData.user.username
+    }
     return telegramUser.username || userData.username
-  }, [telegramUser.username, userData.username])
+  }, [isAuthSuccess, authData, telegramUser.username, userData.username])
 
   return (
     <motion.div 
