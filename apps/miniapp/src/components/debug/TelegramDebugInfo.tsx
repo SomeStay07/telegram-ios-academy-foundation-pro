@@ -112,7 +112,7 @@ export function TelegramDebugInfo() {
 
   if (!isVisible) {
     return (
-      <div className="fixed bottom-20 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <button
           onClick={() => setIsVisible(true)}
           className="bg-red-500 text-white px-3 py-2 rounded-lg text-sm font-mono shadow-lg"
@@ -215,8 +215,8 @@ export function TelegramDebugInfo() {
             </pre>
           </div>
 
-          {/* Copy Button */}
-          <div className="flex justify-center">
+          {/* Copy Button - moved to top for mobile access */}
+          <div className="flex justify-center mb-4">
             <button
               onClick={() => {
                 const debugText = JSON.stringify(debugData, null, 2)
@@ -227,7 +227,7 @@ export function TelegramDebugInfo() {
                   prompt('Copy this debug info:', debugText.substring(0, 1000) + '...')
                 })
               }}
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg"
+              className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-bold"
             >
               📋 Copy Debug Info
             </button>
