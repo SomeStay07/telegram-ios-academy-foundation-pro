@@ -69,71 +69,28 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // Disable modulepreload for lazy chunks  
-        experimentalMinChunkSize: 30000, // Further increase min chunk size
-        manualChunks: (id) => {
-          // Vendor dependencies
-          if (id.includes('node_modules')) {
-            // Core React/Preact
-            if (id.includes('preact') || id.includes('@preact')) {
-              return 'react-vendor'
-            }
-            
-            // Router
-            if (id.includes('@tanstack/react-router')) {
-              return 'react-router'
-            }
-            
-            // React Query
-            if (id.includes('@tanstack/react-query')) {
-              return 'react-query'
-            }
-            
-            // Heavy animation library
-            if (id.includes('framer-motion')) {
-              return 'framer-motion'
-            }
-            
-            // Icons - split by usage
-            if (id.includes('lucide-react')) {
-              return 'lucide-icons'
-            }
-            
-            // UI library - smaller chunks
-            if (id.includes('@telegram-ios-academy/ui')) {
-              return 'ui-components'
-            }
-            
-            // Other smaller dependencies
-            if (id.includes('zustand')) return 'zustand'
-            if (id.includes('i18next') || id.includes('react-i18next')) return 'i18n'
-            if (id.includes('react-hook-form') || id.includes('@hookform')) return 'forms'
-            if (id.includes('web-vitals')) return 'web-vitals'
-            
-            // Split vendor by size and usage
-            if (id.includes('daisyui') || id.includes('tailwindcss')) {
-              return 'ui-framework'
-            }
-            if (id.includes('prism')) {
-              return 'prism'
-            }
-            
-            // Default vendor chunk for very small libs only
-            return 'vendor'
-          }
+        experimentalMinChunkSize: 20000, // Reasonable min chunk size
+        manualChunks: {
+          // Core Preact (replacing React)
+          'react-vendor': ['preact', '@preact/compat'],
           
-          // App code splitting - more granular
-          if (id.includes('/pages/')) {
-            return 'pages'
-          }
-          if (id.includes('/components/profile/')) {
-            return 'profile-components'
-          }
-          if (id.includes('/components/')) {
-            return 'components'
-          }
-          if (id.includes('/design-system/')) {
-            return 'design-system'
-          }
+          // Split routing for better optimization
+          'react-router': ['@tanstack/react-router'],
+          'react-query': ['@tanstack/react-query'],
+          'zustand': ['zustand'],
+          
+          // Heavy libraries - separate chunks
+          'framer-motion': ['framer-motion'],
+          'lucide-icons': ['lucide-react'],
+          
+          // UI components (split from main)
+          'ui-components': ['@telegram-ios-academy/ui'],
+          
+          // i18n (lazy loaded)
+          'i18n': ['i18next', 'react-i18next'],
+          
+          // Form handling
+          'forms': ['react-hook-form', '@hookform/resolvers']
         }
       }
     },
