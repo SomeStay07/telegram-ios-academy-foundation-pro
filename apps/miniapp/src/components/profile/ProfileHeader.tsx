@@ -178,27 +178,44 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               {username && (
                 <motion.button
                   onClick={handleUsernameClick}
-                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer"
+                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer overflow-hidden"
                   whileHover={{ 
-                    scale: 1.02,
-                    y: -1,
-                    backgroundColor: "rgba(255, 255, 255, 0.15)"
+                    scale: 1.05,
+                    y: -2,
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    boxShadow: "0 8px 25px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.15)"
                   }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: ANIMATION.DURATION.NORMAL / 1000, ease: ANIMATION.EASING.TELEGRAM }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ 
+                    type: "spring",
+                    ...ANIMATION.SPRING.GENTLE
+                  }}
                 >
-                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white" />
-                  <Typography variant="body-sm" className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90">
+                  {/* Shimmer Effect */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full opacity-0"
+                    style={{
+                      background: 'linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%)',
+                    }}
+                    animate={{
+                      x: ['-100%', '200%'],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      repeatDelay: 4,
+                      ease: "easeInOut"
+                    }}
+                  />
+                  
+                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white relative z-10" />
+                  <Typography variant="body-sm" className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90 relative z-10">
                     {username}
                   </Typography>
                 </motion.button>
               )}
-              <div className="flex items-center">
-                <span className={`${styles.adaptiveLevelText} mr-2`}>
-                  Уровень
-                </span>
-                <InlineLevelBadge level={userLevel} size="sm" />
-              </div>
+              <InlineLevelBadge level={userLevel} size="sm" showText={true} />
             </div>
           </div>
         </div>

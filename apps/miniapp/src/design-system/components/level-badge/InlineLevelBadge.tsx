@@ -63,6 +63,7 @@ interface InlineLevelBadgeProps {
   size?: 'sm' | 'md' | 'lg'
   animated?: boolean
   showSparkle?: boolean
+  showText?: boolean
   className?: string
 }
 
@@ -72,6 +73,7 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
   size = "md",
   animated = true,
   showSparkle = true,
+  showText = false,
   className
 }) => {
   const getVariantByLevel = (level: number) => {
@@ -100,11 +102,15 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
       initial={animated ? { scale: 0, opacity: 0 } : false}
       animate={animated ? { scale: 1, opacity: 1 } : false}
       whileHover={animated ? { 
-        scale: 1.02,
-        y: -1,
-        backgroundColor: actualVariant === 'master' 
-          ? 'rgba(255, 255, 255, 0.3)' 
-          : 'rgba(255, 255, 255, 0.25)'
+        scale: 1.05,
+        y: -2,
+        boxShadow: actualVariant === 'master' 
+          ? '0 8px 25px rgba(251, 191, 36, 0.4), 0 0 20px rgba(251, 191, 36, 0.3)' 
+          : actualVariant === 'elite'
+          ? '0 8px 25px rgba(251, 146, 60, 0.3), 0 0 20px rgba(251, 146, 60, 0.25)'
+          : actualVariant === 'premium'
+          ? '0 8px 25px rgba(168, 85, 247, 0.3), 0 0 20px rgba(168, 85, 247, 0.25)'
+          : '0 8px 25px rgba(59, 130, 246, 0.25), 0 0 20px rgba(59, 130, 246, 0.2)'
       } : false}
       transition={{
         type: "spring",
@@ -112,28 +118,60 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
         delay: 0.1
       }}
     >
-      {/* Subtle Glow Effect - Only for Master */}
-      {animated && actualVariant === 'master' && (
+      {/* Enhanced Glow Effect for Higher Levels */}
+      {animated && actualVariant !== 'default' && (
         <motion.div
-          className="absolute inset-0 rounded-full opacity-20 blur-sm -z-10"
+          className="absolute -inset-1 rounded-full blur-sm -z-10"
           style={{
-            background: 'linear-gradient(45deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.2))'
+            background: actualVariant === 'master' 
+              ? 'linear-gradient(45deg, rgba(251, 191, 36, 0.4), rgba(245, 158, 11, 0.3))' 
+              : actualVariant === 'elite'
+              ? 'linear-gradient(45deg, rgba(251, 146, 60, 0.3), rgba(239, 68, 68, 0.25))'
+              : 'linear-gradient(45deg, rgba(168, 85, 247, 0.3), rgba(236, 72, 153, 0.25))'
           }}
           animate={{
-            opacity: [0.1, 0.2, 0.1]
+            opacity: [0.2, 0.5, 0.2],
+            scale: [0.9, 1.1, 0.9]
           }}
           transition={{
-            duration: ANIMATION.DURATION.SLOWEST / 1000 * 4,
+            duration: actualVariant === 'master' ? 2.5 : 3,
             repeat: Infinity,
             ease: "easeInOut"
           }}
         />
       )}
 
-      {/* Level Number */}
-      <span className="relative z-10 font-extrabold">
-        {level}
-      </span>
+      {/* Shimmer Effect */}
+      {animated && (
+        <motion.div
+          className="absolute inset-0 rounded-full opacity-0"
+          style={{
+            background: 'linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.6) 50%, transparent 70%)',
+          }}
+          animate={{
+            x: ['-100%', '200%'],
+            opacity: [0, 1, 0]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatDelay: 3,
+            ease: "easeInOut"
+          }}
+        />
+      )}
+
+      {/* Content */}
+      <div className="relative z-10 flex items-center gap-1.5 font-extrabold">
+        {showText && (
+          <span className="text-xs opacity-80">
+            Уровень
+          </span>
+        )}
+        <span>
+          {level}
+        </span>
+      </div>
 
       {/* Subtle Icon for very high levels */}
       {level >= 50 && animated && (
