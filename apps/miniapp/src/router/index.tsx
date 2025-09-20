@@ -7,6 +7,7 @@ import { ProfilePage } from '../pages/ProfilePage'
 import { ChallengePage } from '../pages/ChallengePage'
 import { SettingsPage } from '../pages/SettingsPage'
 import { AboutPage } from '../pages/AboutPage'
+import { HyloTestProfilePage } from '../pages/HyloTestProfilePage'
 import { ThemeProvider } from '../contexts/ThemeContext'
 
 // Create QueryClient instance
@@ -91,6 +92,13 @@ const aboutRoute = createRoute({
   component: AboutPage,
 })
 
+// Hylo Test Route for design testing
+const hyloTestRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/hylo-test',
+  component: HyloTestProfilePage,
+})
+
 // Create the route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -98,6 +106,7 @@ const routeTree = rootRoute.addChildren([
   profileRoute,
   settingsRoute,
   aboutRoute,
+  hyloTestRoute,
 ])
 
 // Create router
