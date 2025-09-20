@@ -24,6 +24,9 @@ import { LevelUpCelebration } from './LevelUpCelebration'
 import { SocialProof } from './SocialProof'
 import { PersonalizationTouches } from './PersonalizationTouches'
 
+// Design Tokens
+import { Z_INDEX, ANIMATION } from '../../shared/constants/design-tokens'
+
 interface ProfileHeaderProps {
   userData: {
     avatar: string
@@ -97,7 +100,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
           {/* Settings Button - спокойная элегантность */}
           <motion.button 
             onClick={handleSettingsClick}
-            className="absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group z-50"
+            className={`absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group z-[${Z_INDEX.FLOATING_UI}]`}
             whileHover={{ 
               scale: 1.02, 
               y: -1,
@@ -107,8 +110,8 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               scale: 0.98
             }}
             transition={{
-              duration: 0.2,
-              ease: [0.4, 0, 0.2, 1]
+              duration: ANIMATION.DURATION.NORMAL / 1000,
+              ease: ANIMATION.EASING.TELEGRAM
             }}
           >
             <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white" />
@@ -147,7 +150,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
                     backgroundColor: "rgba(255, 255, 255, 0.15)"
                   }}
                   whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{ duration: ANIMATION.DURATION.NORMAL / 1000, ease: ANIMATION.EASING.TELEGRAM }}
                 >
                   <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white" />
                   <Typography variant="body-sm" className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90">

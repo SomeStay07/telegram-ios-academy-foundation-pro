@@ -7,6 +7,9 @@ import { X, Code, Hash, User, Terminal, Coffee } from 'lucide-react'
 import { Typography } from '../../design-system/components/typography/index'
 import { Button } from '../../design-system/components/button/index'
 
+// Design Tokens
+import { Z_INDEX, ANIMATION, SIZE } from '../../shared/constants/design-tokens'
+
 interface UsernameModalProps {
   isOpen: boolean
   onClose: () => void
@@ -87,15 +90,15 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]"
+          className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[${Z_INDEX.SYSTEM_MODAL}]`}
           onClick={onClose}
         >
         <motion.div
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full mx-2 sm:mx-4 max-h-[90vh] overflow-hidden"
+          transition={{ type: "spring", ...ANIMATION.SPRING.GENTLE }}
+          className={`bg-white dark:bg-gray-900 rounded-2xl shadow-2xl ${SIZE.MODAL.MAX_WIDTH} w-full ${SIZE.MODAL.PADDING.MOBILE} ${SIZE.MODAL.PADDING.DESKTOP} ${SIZE.MODAL.MAX_HEIGHT} overflow-hidden`}
           onClick={(e) => e.stopPropagation()}
         >
             {/* Header */}
@@ -110,7 +113,7 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
               <motion.div
                 initial={{ rotate: -10, scale: 0 }}
                 animate={{ rotate: 0, scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+                transition={{ delay: ANIMATION.DURATION.NORMAL / 1000, type: "spring", ...ANIMATION.SPRING.GENTLE }}
                 className="mb-4"
               >
                 <div className="flex items-center gap-3">
@@ -136,7 +139,7 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
                   key={index}
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 * index, duration: 0.3 }}
+                  transition={{ delay: index * ANIMATION.STAGGER.ITEMS, duration: ANIMATION.DURATION.SLOW / 1000 }}
                   className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-[1.02]"
                 >
                   <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
@@ -159,7 +162,7 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: ANIMATION.DURATION.NORMAL * 2 / 1000 }}
               >
                 <Button
                   onClick={handleClose}
