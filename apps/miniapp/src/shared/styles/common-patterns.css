@@ -1,0 +1,316 @@
+/**
+ * Common CSS Patterns
+ * 
+ * Frequently used CSS patterns to eliminate duplication across components
+ */
+
+/* ===== LAYOUT PATTERNS ===== */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-items-center {
+  display: flex;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flex-gap-2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* 8px */
+}
+
+.flex-gap-3 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* 12px */
+}
+
+.flex-gap-4 {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* 16px */
+}
+
+/* ===== POSITION PATTERNS ===== */
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute-top-right {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.relative-z10 {
+  position: relative;
+  z-index: 10;
+}
+
+/* ===== TYPOGRAPHY PATTERNS ===== */
+.font-gaming {
+  font-family: var(--font-gaming);
+}
+
+.font-system {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+.font-mono {
+  font-family: SF Mono, Consolas, "Liberation Mono", monospace;
+}
+
+.text-gaming-sm {
+  font-family: var(--font-gaming);
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.text-gaming-md {
+  font-family: var(--font-gaming);
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.text-gaming-lg {
+  font-family: var(--font-gaming);
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* ===== BACKGROUND PATTERNS ===== */
+.bg-surface-primary {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bg-surface-secondary {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.bg-surface-hover {
+  background: rgba(156, 163, 175, 0.1);
+}
+
+.bg-surface-hover-dark {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Combined hover backgrounds */
+.bg-hover-light {
+  @apply bg-gray-100;
+}
+
+.dark .bg-hover-light {
+  @apply bg-white/5;
+}
+
+/* ===== BORDER PATTERNS ===== */
+.border-surface {
+  border: 1px solid rgba(156, 163, 175, 0.2);
+}
+
+.dark .border-surface {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.rounded-surface {
+  border-radius: 0.5rem; /* 8px */
+}
+
+.rounded-surface-lg {
+  border-radius: 0.75rem; /* 12px */
+}
+
+.rounded-surface-xl {
+  border-radius: 1rem; /* 16px */
+}
+
+/* ===== CARD PATTERNS ===== */
+.card-surface {
+  @apply bg-hover-light border-surface rounded-surface-lg;
+  padding: 1rem;
+}
+
+.card-surface-sm {
+  @apply bg-hover-light border-surface rounded-surface;
+  padding: 0.75rem;
+}
+
+.card-interactive {
+  @apply card-surface;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dark .card-interactive:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== GRADIENT PATTERNS ===== */
+.gradient-primary {
+  background: linear-gradient(135deg, #6366F1 0%, #5A5FCF 100%);
+}
+
+.gradient-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.gradient-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.gradient-purple {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+}
+
+.gradient-gaming {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+}
+
+/* ===== SHADOW PATTERNS ===== */
+.shadow-soft {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-medium {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-gaming {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+/* ===== ANIMATION PATTERNS ===== */
+.transition-standard {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-slow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-bounce {
+  transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ===== INTERACTION PATTERNS ===== */
+.interactive-scale {
+  @apply transition-standard;
+  cursor: pointer;
+}
+
+.interactive-scale:hover {
+  transform: scale(1.02) translateY(-1px);
+}
+
+.interactive-scale:active {
+  transform: scale(0.98);
+}
+
+.interactive-subtle {
+  @apply transition-standard;
+  cursor: pointer;
+}
+
+.interactive-subtle:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+/* ===== UTILITY PATTERNS ===== */
+.backdrop-blur-surface {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.center-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ===== RESPONSIVE PATTERNS ===== */
+.responsive-padding {
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.responsive-gap {
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+.responsive-text {
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+}
+
+/* ===== GAMING UI PATTERNS ===== */
+.gaming-metric {
+  @apply font-gaming text-gaming-sm;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.025em;
+}
+
+.gaming-number {
+  @apply font-gaming;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.gaming-badge {
+  @apply font-gaming rounded-full px-3 py-1 text-sm font-semibold;
+  font-variant-numeric: tabular-nums;
+  backdrop-filter: blur(8px);
+}
+
+/* ===== ACCESSIBILITY PATTERNS ===== */
+.focus-ring {
+  @apply transition-standard;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #6366F1;
+  outline-offset: 2px;
+}
+
+.reduced-motion {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Apply reduced motion when user prefers it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    @apply reduced-motion;
+  }
+}

@@ -159,6 +159,33 @@ export const COLORS = {
   ] as const
 } as const
 
+// ===== TYPOGRAPHY CONSTANTS =====
+export const TYPOGRAPHY = {
+  // Font families
+  FONT_FAMILY: {
+    GAMING: 'var(--font-gaming)', // SF Pro Rounded for gaming elements
+    SYSTEM: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
+    MONO: 'SF Mono, Consolas, "Liberation Mono", monospace'
+  },
+  
+  // Font weights
+  FONT_WEIGHT: {
+    LIGHT: 300,
+    NORMAL: 400,
+    MEDIUM: 500,
+    SEMIBOLD: 600,
+    BOLD: 700,
+    EXTRABOLD: 800
+  },
+  
+  // Line heights
+  LINE_HEIGHT: {
+    TIGHT: 1.2,
+    NORMAL: 1.5,
+    RELAXED: 1.7
+  }
+} as const
+
 // ===== SPACING CONSTANTS =====
 export const SPACING = {
   // Standard spacing scale (matches Tailwind)

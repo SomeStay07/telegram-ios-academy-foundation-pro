@@ -4,9 +4,10 @@ import { cva } from 'class-variance-authority'
 import { Loader2 } from 'lucide-react'
 import { cn } from '../../../lib/utils'
 import { QuickActionProps } from './QuickActionTypes'
+import { ANIMATION, TYPOGRAPHY } from '../../../shared/constants/design-tokens'
 
 const quickActionVariants = cva(
-  "relative flex flex-col items-center gap-2 p-3 rounded-lg border transition-all duration-300 cursor-pointer select-none",
+  `relative flex flex-col items-center gap-2 p-3 rounded-lg border transition-all duration-[${ANIMATION.DURATION.SLOW}ms] cursor-pointer select-none`,
   {
     variants: {
       variant: {
@@ -44,7 +45,7 @@ const quickActionVariants = cva(
 )
 
 const iconVariants = cva(
-  "transition-all duration-300",
+  `transition-all duration-[${ANIMATION.DURATION.SLOW}ms]`,
   {
     variants: {
       size: {
@@ -60,7 +61,7 @@ const iconVariants = cva(
 )
 
 const labelVariants = cva(
-  "font-medium text-center transition-colors duration-300",
+  `font-medium text-center transition-colors duration-[${ANIMATION.DURATION.SLOW}ms]`,
   {
     variants: {
       size: {
@@ -76,7 +77,7 @@ const labelVariants = cva(
 )
 
 const descriptionVariants = cva(
-  "text-center opacity-70 transition-colors duration-300",
+  `text-center opacity-70 transition-colors duration-[${ANIMATION.DURATION.SLOW}ms]`,
   {
     variants: {
       size: {
@@ -154,8 +155,7 @@ export const QuickAction: React.FC<QuickActionProps> = ({
     whileTap: { scale: 0.95 },
     transition: { 
       type: "spring", 
-      stiffness: 400, 
-      damping: 25 
+      ...ANIMATION.SPRING.GENTLE
     }
   }
 
@@ -165,7 +165,7 @@ export const QuickAction: React.FC<QuickActionProps> = ({
       opacity: [0.9, 1, 0.9]
     },
     transition: { 
-      duration: 2, 
+      duration: ANIMATION.DURATION.SLOWEST / 1000 * 2, 
       repeat: Infinity, 
       ease: "easeInOut" 
     }
@@ -176,7 +176,7 @@ export const QuickAction: React.FC<QuickActionProps> = ({
       className={cn(quickActionVariants({ variant, size, state, glow }), className)}
       onClick={state === 'loading' || state === 'disabled' ? undefined : onClick}
       style={{
-        fontFamily: 'var(--font-gaming)',
+        fontFamily: TYPOGRAPHY.FONT_FAMILY.GAMING,
         ...style
       }}
       {...buttonProps}
@@ -189,7 +189,7 @@ export const QuickAction: React.FC<QuickActionProps> = ({
           className={cn(badgeVariants({ color: badgeColor }))}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 500, damping: 25 }}
+          transition={{ type: "spring", ...ANIMATION.SPRING.BOUNCY }}
         >
           {badge}
         </motion.div>
@@ -204,7 +204,7 @@ export const QuickAction: React.FC<QuickActionProps> = ({
             scale: [1, 1.02, 1]
           }}
           transition={{
-            duration: 2,
+            duration: ANIMATION.DURATION.SLOWEST / 1000 * 2,
             repeat: Infinity,
             ease: "easeInOut"
           }}
@@ -235,7 +235,7 @@ export const QuickAction: React.FC<QuickActionProps> = ({
               opacity: [0.3, 0.6, 0.3]
             }}
             transition={{
-              duration: 1.5,
+              duration: ANIMATION.DURATION.SLOWEST / 1000 * 1.5,
               repeat: Infinity,
               ease: "easeInOut"
             }}
@@ -263,7 +263,7 @@ export const QuickAction: React.FC<QuickActionProps> = ({
         whileHover={{
           opacity: 1,
           x: ['-100%', '100%'],
-          transition: { duration: 0.6, ease: "easeInOut" }
+          transition: { duration: ANIMATION.DURATION.NORMAL / 1000 * 0.6, ease: "easeInOut" }
         }}
       />
     </motion.button>

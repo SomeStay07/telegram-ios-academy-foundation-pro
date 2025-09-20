@@ -3,9 +3,10 @@ import { motion } from 'framer-motion'
 import { cva } from 'class-variance-authority'
 import { cn } from '../../../lib/utils'
 import { InfoCardProps } from './InfoCardTypes'
+import { ANIMATION, TYPOGRAPHY } from '../../../shared/constants/design-tokens'
 
 const infoCardVariants = cva(
-  "relative backdrop-blur-sm rounded-lg border transition-all duration-300",
+  `relative backdrop-blur-sm rounded-lg border transition-all duration-[${ANIMATION.DURATION.SLOW}ms]`,
   {
     variants: {
       variant: {
@@ -42,7 +43,7 @@ const infoCardVariants = cva(
 )
 
 const iconVariants = cva(
-  "flex-shrink-0 transition-all duration-300",
+  `flex-shrink-0 transition-all duration-[${ANIMATION.DURATION.SLOW}ms]`,
   {
     variants: {
       size: {
@@ -58,7 +59,7 @@ const iconVariants = cva(
 )
 
 const titleVariants = cva(
-  "font-medium transition-colors duration-300",
+  `font-medium transition-colors duration-[${ANIMATION.DURATION.SLOW}ms]`,
   {
     variants: {
       size: {
@@ -74,7 +75,7 @@ const titleVariants = cva(
 )
 
 const valueVariants = cva(
-  "font-bold transition-colors duration-300",
+  `font-bold transition-colors duration-[${ANIMATION.DURATION.SLOW}ms]`,
   {
     variants: {
       size: {
@@ -90,7 +91,7 @@ const valueVariants = cva(
 )
 
 const subtitleVariants = cva(
-  "text-gray-600 dark:text-white/60 transition-colors duration-300",
+  `text-gray-600 dark:text-white/60 transition-colors duration-[${ANIMATION.DURATION.SLOW}ms]`,
   {
     variants: {
       size: {
@@ -124,7 +125,7 @@ export const InfoCard: React.FC<InfoCardProps> = ({
   const cardProps = animated ? {
     whileHover: { scale: 1.02, y: -2 },
     whileTap: { scale: 0.98 },
-    transition: { type: "spring", stiffness: 400, damping: 25 }
+    transition: { type: "spring", ...ANIMATION.SPRING.GENTLE }
   } : {}
 
   return (
@@ -132,7 +133,7 @@ export const InfoCard: React.FC<InfoCardProps> = ({
       className={cn(infoCardVariants({ variant, size, animated, glow }), className)}
       onClick={onClick}
       style={{
-        fontFamily: 'var(--font-gaming)',
+        fontFamily: TYPOGRAPHY.FONT_FAMILY.GAMING,
         ...style
       }}
       {...cardProps}
@@ -144,7 +145,7 @@ export const InfoCard: React.FC<InfoCardProps> = ({
           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
           animate={{ x: ['-100%', '100%'] }}
           transition={{ 
-            duration: 3, 
+            duration: ANIMATION.DURATION.SLOWEST / 1000 * 3, 
             repeat: Infinity, 
             ease: "easeInOut",
             repeatDelay: 2
@@ -160,7 +161,7 @@ export const InfoCard: React.FC<InfoCardProps> = ({
             <motion.div
               className="absolute -inset-1 bg-current rounded-full opacity-30"
               animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              transition={{ duration: ANIMATION.DURATION.SLOWEST / 1000 * 2, repeat: Infinity }}
             />
           )}
         </div>

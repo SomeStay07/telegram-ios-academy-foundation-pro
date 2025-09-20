@@ -4,6 +4,7 @@ import { cva } from 'class-variance-authority'
 import { Star, Sparkles, Crown, Trophy } from 'lucide-react'
 import { cn } from '../../../lib/utils'
 import { CelebrationOverlayProps } from './CelebrationOverlayTypes'
+import { ANIMATION, TYPOGRAPHY } from '../../../shared/constants/design-tokens'
 
 const overlayVariants = cva(
   "absolute inset-0 pointer-events-none overflow-hidden rounded-inherit",
@@ -135,9 +136,9 @@ export const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: ANIMATION.DURATION.NORMAL / 1000 }}
           style={{
-            fontFamily: 'var(--font-gaming)',
+            fontFamily: TYPOGRAPHY.FONT_FAMILY.GAMING,
             ...style
           }}
           {...props}
@@ -151,7 +152,7 @@ export const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({
                 scale: [1, 1.02, 1]
               }}
               transition={{
-                duration: 3,
+                duration: ANIMATION.DURATION.SLOWEST / 1000 * 3,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
@@ -173,7 +174,7 @@ export const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({
                 scale: [0.5, 1, 0.5]
               }}
               transition={{
-                duration: 2 + (i * 0.2),
+                duration: (ANIMATION.DURATION.SLOWEST / 1000 * 2) + (i * 0.2),
                 repeat: Infinity,
                 delay: i * 0.3,
                 ease: "easeInOut"
@@ -192,7 +193,7 @@ export const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({
                 rotate: [0, 5, -5, 0]
               }}
               transition={{
-                duration: 4,
+                duration: ANIMATION.DURATION.SLOWEST / 1000 * 4,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
@@ -222,7 +223,7 @@ export const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({
                 opacity: [0.4, 0.8, 0.4]
               }}
               transition={{
-                duration: 3 + (i * 0.5),
+                duration: (ANIMATION.DURATION.SLOWEST / 1000 * 3) + (i * 0.5),
                 repeat: Infinity,
                 ease: "linear"
               }}
@@ -251,7 +252,7 @@ export const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({
                 ]
               }}
               transition={{
-                duration: 2,
+                duration: ANIMATION.DURATION.SLOWEST / 1000 * 2,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
@@ -264,7 +265,7 @@ export const CelebrationOverlay: React.FC<CelebrationOverlayProps> = ({
               className="absolute bottom-2 left-1/2 transform -translate-x-1/2"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
+              transition={{ delay: 0.5, duration: ANIMATION.DURATION.NORMAL / 1000 * 0.8 }}
             >
               <div className={`text-${colors.primary} text-xs font-bold text-center px-2 py-1 bg-black/20 rounded-full backdrop-blur-sm`}>
                 {title}
