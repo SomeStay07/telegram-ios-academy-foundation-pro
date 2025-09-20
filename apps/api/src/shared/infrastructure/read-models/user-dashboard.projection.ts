@@ -41,7 +41,7 @@ export class UserDashboardProjection implements EventHandler<LessonCompleted | U
 
   private async handleLessonCompleted(event: LessonCompleted): Promise<void> {
     // Update learning progress table for dashboard queries
-    await this.prisma.learningProgress.upsert({
+    await (this.prisma as any).learningProgress.upsert({
       where: {
         userId_lessonId: {
           userId: event.userId,
@@ -71,11 +71,11 @@ export class UserDashboardProjection implements EventHandler<LessonCompleted | U
 
   private async handleUserActivity(event: UserActivityRecorded): Promise<void> {
     // Record activity in user_activities table for analytics
-    await this.prisma.userActivities.create({
+    await (this.prisma as any).userActivities.create({
       data: {
         userId: event.userId,
         activityType: event.activityType,
-        activityData: { event },
+        activityData: event as any,
         occurredAt: event.occurredOn
       }
     });
@@ -83,7 +83,7 @@ export class UserDashboardProjection implements EventHandler<LessonCompleted | U
 
   private async handleStreakMaintained(event: StreakMaintained): Promise<void> {
     // Update user streaks table for real-time dashboard
-    await this.prisma.userStreaks.upsert({
+    await (this.prisma as any).userStreaks.upsert({
       where: { userId: event.userId },
       update: {
         currentStreak: event.newStreakCount,
@@ -110,13 +110,13 @@ export class UserDashboardProjection implements EventHandler<LessonCompleted | U
   // Query method for dashboard data
   async getUserDashboardData(userId: string): Promise<UserDashboardData> {
     const [progressSummary, streakData, recentActivities] = await Promise.all([
-      this.prisma.userProgressSummary.findUnique({
+      (this.prisma as any).userDashboard.findUnique({
         where: { userId }
       }),
-      this.prisma.userStreaks.findUnique({
+      (this.prisma as any).userStreaks.findUnique({
         where: { userId }
       }),
-      this.prisma.userActivities.findMany({
+      (this.prisma as any).userActivities.findMany({
         where: { 
           userId,
           occurredAt: {

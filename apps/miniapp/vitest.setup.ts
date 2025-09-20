@@ -88,25 +88,41 @@ const mockTelegramWebApp = {
 }
 
 // Global window mocks
-Object.defineProperty(window, 'Telegram', {
-  value: { WebApp: mockTelegramWebApp },
-  writable: true,
-  configurable: true
-})
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'Telegram', {
+    value: { WebApp: mockTelegramWebApp },
+    writable: true,
+    configurable: true
+  })
+}
 
 Object.defineProperty(global, 'window', {
   value: {
     ...global.window,
-    Telegram: { WebApp: mockTelegramWebApp }
+    Telegram: { WebApp: mockTelegramWebApp },
+    addEventListener: global.window?.addEventListener || vi.fn(),
+    removeEventListener: global.window?.removeEventListener || vi.fn(),
+    localStorage: global.window?.localStorage || {},
+    matchMedia: global.window?.matchMedia || vi.fn()
   },
   writable: true,
   configurable: true
 })
 
-// matchMedia mock
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation((query) => ({
+// React DevTools fix
+global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
+  isDisabled: true,
+  supportsFiber: true,
+  inject: vi.fn(),
+  onCommitFiberRoot: vi.fn(),
+  onCommitFiberUnmount: vi.fn(),
+  getCurrentStack: vi.fn(() => ''),
+  checkDCE: vi.fn()
+}
+
+// Additional window method mocks
+if (typeof window !== 'undefined') {
+  window.matchMedia = window.matchMedia || vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -116,7 +132,7 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn()
   }))
-})
+}
 
 // ResizeObserver mock
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -182,13 +198,15 @@ const localStorageMock = (() => {
   }
 })()
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
-})
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'localStorage', {
+    value: localStorageMock
+  })
 
-Object.defineProperty(window, 'sessionStorage', {
-  value: localStorageMock
-})
+  Object.defineProperty(window, 'sessionStorage', {
+    value: localStorageMock
+  })
+}
 
 // URL.createObjectURL mock
 global.URL.createObjectURL = vi.fn(() => 'blob:test-url')

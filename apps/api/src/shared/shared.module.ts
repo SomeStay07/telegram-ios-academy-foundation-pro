@@ -1,8 +1,8 @@
 import { Module, Global } from '@nestjs/common';
 import { InMemoryEventBus } from './infrastructure/in-memory-event-bus';
 import { PostgresEventStore } from './infrastructure/postgres-event-store';
-import { EventBus } from './application/event-bus';
-import { EventStore } from './infrastructure/event-store';
+import type { EventBus } from './application/event-bus';
+import type { EventStore } from './infrastructure/event-store';
 import { CommandBus } from './application/command-bus';
 import { QueryBus } from './application/query-bus';
 import { TelegramService } from './infrastructure/telegram/telegram.service';
@@ -13,11 +13,11 @@ import { PrismaService } from '../prisma/prisma.service';
   providers: [
     PrismaService,
     {
-      provide: EventBus,
+      provide: 'EventBus',
       useClass: InMemoryEventBus,
     },
     {
-      provide: EventStore,
+      provide: 'EventStore',
       useClass: PostgresEventStore,
     },
     CommandBus,
@@ -25,8 +25,8 @@ import { PrismaService } from '../prisma/prisma.service';
     TelegramService,
   ],
   exports: [
-    EventBus,
-    EventStore,
+    'EventBus',
+    'EventStore',
     CommandBus,
     QueryBus,
     TelegramService,

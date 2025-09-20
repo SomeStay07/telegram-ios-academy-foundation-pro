@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Settings, AtSign, Trophy, Zap, Info } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
@@ -11,6 +11,7 @@ import { Progress } from '../../design-system/components/progress/index'
 
 // Telegram Integration
 import { getTelegramApi } from '../../lib/telegram/api'
+import { TelegramHaptics, useTelegramAnimations } from '../../lib/telegram/animations'
 
 // CSS Module
 import styles from '../../pages/ProfilePage.module.css'
@@ -22,6 +23,12 @@ import { UsernameModal } from './UsernameModal'
 import { LevelUpCelebration } from './LevelUpCelebration'
 import { SocialProof } from './SocialProof'
 import { PersonalizationTouches } from './PersonalizationTouches'
+import { EnhancedProgressBar } from './EnhancedProgressBar'
+
+// Design Tokens
+import { Z_INDEX, ANIMATION } from '../../shared/constants/design-tokens'
+import { getUserLevel } from '../../shared'
+import { InlineLevelBadge } from '../../design-system/components/level-badge/InlineLevelBadge'
 
 interface ProfileHeaderProps {
   userData: {
@@ -44,7 +51,7 @@ interface ProfileHeaderProps {
   itemVariants: any
 }
 
-export function ProfileHeader({
+export const ProfileHeader = React.memo(function ProfileHeader({
   userData,
   displayName,
   username,
@@ -57,71 +64,92 @@ export function ProfileHeader({
   const navigate = useNavigate()
   const telegramApi = getTelegramApi()
   const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false)
+  
+  // Calculate user level
+  const userLevel = getUserLevel(userData.totalXP)
+  
+  // Telegram animations and haptics
+  const { cardVariants, transition } = useTelegramAnimations()
 
-  const handleSettingsClick = () => {
-    // Enhanced haptic feedback sequence
-    try {
-      if (telegramApi.isAvailable()) {
-        const webApp = telegramApi.getWebApp()
-        // Double haptic feedback for better UX
-        if (webApp?.HapticFeedback?.impactOccurred) {
-          webApp.HapticFeedback.impactOccurred('medium')
-          setTimeout(() => {
-            if (webApp?.HapticFeedback?.selectionChanged) {
-              webApp.HapticFeedback.selectionChanged()
-            }
-          }, 100)
-        }
-      }
-    } catch (error) {
-      // Gracefully handle haptic feedback errors
-      console.warn('Haptic feedback not available:', error)
-    }
+  // Memoized fallback calculation for avatar
+  const avatarFallback = useMemo(() => 
+    displayName.split(' ').map(n => n[0]).join('').substring(0, 2)
+  , [displayName])
+
+  // Memoized style calculation for progress
+  const progressStyle = useMemo(() => ({
+    '--progress-color': 'var(--gradient-xp)',
+    '--progress-bg': 'rgba(255, 255, 255, 0.15)'
+  } as React.CSSProperties), [])
+
+  const handleSettingsClick = useCallback(async () => {
+    console.log('Settings button clicked!')
     
-    // Smooth navigation to settings page
-    navigate({ to: '/settings' })
-  }
-
-  const handleUsernameClick = () => {
-    // Haptic feedback for username click
     try {
-      if (telegramApi.isAvailable() && telegramApi.hapticFeedback) {
-        telegramApi.hapticFeedback.impactOccurred('light')
-      }
+      // Новая улучшенная haptic последовательность
+      await TelegramHaptics.pageTransition()
+      
+      // Smooth navigation to settings page
+      navigate({ to: '/settings' })
     } catch (error) {
-      // Gracefully handle haptic feedback errors
-      console.warn('Haptic feedback not available:', error)
+      console.error('Settings navigation error:', error)
+      // Fallback navigation
+      navigate({ to: '/settings' })
     }
+  }, [navigate])
+
+  const handleUsernameClick = useCallback(async () => {
+    // Улучшенный haptic feedback
+    await TelegramHaptics.impact('light')
     setIsUsernameModalOpen(true)
-  }
+  }, [])
 
   return (
     <>
       <motion.div variants={itemVariants}>
-        <Card className={`p-6 mb-6 text-gray-900 dark:text-white border-0 shadow-xl relative ${styles.profileCard}`}>
+        <Card className={`text-white dark:text-white border-0 shadow-xl relative ${styles.profileCard}`} style={{ position: 'relative' }}>
           {/* Level Up Celebration Effects */}
           <LevelUpCelebration isMaxRank={isMaxRank} currentRank={currentRank} />
           
           {/* Settings Button - спокойная элегантность */}
           <motion.button 
-            onClick={handleSettingsClick}
-            className="absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-300 group z-50"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              console.log('Button clicked directly!')
+              handleSettingsClick()
+            }}
+            className="absolute top-3 right-3 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 group shadow-lg cursor-pointer touch-manipulation"
+            style={{ 
+              zIndex: 1000, 
+              pointerEvents: 'auto',
+              padding: 'clamp(0.75rem, 2vw, 1rem)',
+              minWidth: 'clamp(44px, 8vw, 52px)',
+              minHeight: 'clamp(44px, 8vw, 52px)'
+            }}
             whileHover={{ 
-              scale: 1.05, 
-              rotate: 45,
-              backgroundColor: "rgba(255, 255, 255, 0.15)"
+              scale: 1.1, 
+              y: -3,
+              rotate: 90,
+              backgroundColor: "rgba(255, 255, 255, 0.25)",
+              boxShadow: "0 8px 25px rgba(0, 0, 0, 0.2)"
             }}
             whileTap={{ 
               scale: 0.95,
-              rotate: 90
+              rotate: 180
             }}
             transition={{
               type: "spring",
-              stiffness: 400,
-              damping: 25
+              ...ANIMATION.SPRING.BOUNCY
             }}
           >
-            <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-300" />
+            <Settings 
+              className="text-white/80 dark:text-white/70 group-hover:text-white dark:group-hover:text-white transition-colors duration-200 pointer-events-none" 
+              style={{
+                width: 'clamp(1.25rem, 2.5vw, 1.5rem)',
+                height: 'clamp(1.25rem, 2.5vw, 1.5rem)'
+              }}
+            />
           </motion.button>
         
         {/* Adaptive Profile Layout */}
@@ -131,62 +159,91 @@ export function ProfileHeader({
             <Avatar
               src={userData.avatar}
               alt={displayName}
-              fallback={displayName.split(' ').map(n => n[0]).join('').substring(0, 2)}
+              name={displayName}
               size="2xl"
-              className={`ring-4 ring-white/30 shadow-2xl ${styles.adaptiveAvatar}`}
+              className={`ring-2 ring-white/20 shadow-xl hover:ring-4 hover:ring-white/40 transition-all duration-[${ANIMATION.DURATION.NORMAL}ms] ${styles.adaptiveAvatar}`}
             />
-            {/* Online Status */}
-            <div className={styles.statusIndicator}></div>
           </div>
 
           {/* Profile Info */}
           <div className={styles.profileInfo}>
             {/* Name Section */}
-            <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold leading-tight`}>
-              {userData.firstName} {userData.lastName}
-            </Typography>
+            <div className="flex flex-col">
+              <Typography variant="display-md" className={`${styles.profileName} text-white dark:text-white font-bold leading-tight`}>
+                {userData.firstName} {userData.lastName || ''}
+              </Typography>
+            </div>
             
-            {username && (
-              <div className={styles.profileUsername}>
+            {/* Username and Level Badge */}
+            <div className={`${styles.profileUsername} ${styles.adaptiveUsernameLevel}`}>
+              {username && (
                 <motion.button
                   onClick={handleUsernameClick}
-                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300"
-                  whileHover={{ 
-                    scale: 1.02,
-                    y: -1,
-                    backgroundColor: "rgba(255, 255, 255, 0.15)"
+                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full border border-white/20 group cursor-pointer overflow-hidden"
+                  style={{
+                    padding: 'clamp(0.25rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 0.75rem)',
+                    fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
+                    lineHeight: '1.2'
                   }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  whileHover={{ 
+                    scale: 1.05,
+                    y: -2,
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    boxShadow: "0 8px 25px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.15)"
+                  }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ 
+                    type: "spring",
+                    ...ANIMATION.SPRING.GENTLE
+                  }}
                 >
-                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-300" />
-                  <Typography variant="body-sm" className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90 transition-colors duration-300">
-                    {username}
-                  </Typography>
+                  {/* Shimmer Effect */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full opacity-0"
+                    style={{
+                      background: 'linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%)',
+                    }}
+                    animate={{
+                      x: ['-100%', '200%'],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      repeatDelay: 4,
+                      ease: "easeInOut"
+                    }}
+                  />
                   
+                  <AtSign 
+                    className="text-white/80 dark:text-white/70 group-hover:text-white dark:group-hover:text-white relative z-10" 
+                    style={{
+                      width: 'clamp(0.875rem, 1.8vw, 1rem)',
+                      height: 'clamp(0.875rem, 1.8vw, 1rem)',
+                      marginRight: 'clamp(0.375rem, 1vw, 0.5rem)'
+                    }}
+                  />
+                  <span className="text-white dark:text-white font-medium group-hover:text-white/90 dark:group-hover:text-white/90 relative z-10">
+                    {username}
+                  </span>
                 </motion.button>
-              </div>
-            )}
+              )}
+              <InlineLevelBadge level={userLevel} size="sm" showText={true} />
+            </div>
           </div>
         </div>
 
-        {/* Adaptive Progress Bar */}
-        {!isMaxRank && nextRank && (
-          <div className={styles.profileProgress}>
-            <div className="flex justify-between text-gray-700 dark:text-white/80 text-sm mb-2">
-              <span>До {nextRank.name}</span>
-              <span>{Math.round(progressPercentage)}%</span>
-            </div>
-            <Progress 
-              value={progressPercentage} 
-              className="bg-white/20" 
-              style={{
-                '--progress-color': 'var(--gradient-xp)',
-                '--progress-bg': 'rgba(255, 255, 255, 0.15)'
-              } as React.CSSProperties}
-            />
-          </div>
-        )}
+        {/* Enhanced Progress Bar */}
+        <div className={styles.profileProgress}>
+          <EnhancedProgressBar
+            userData={userData}
+            currentRank={currentRank}
+            nextRank={nextRank}
+            currentXP={userData.totalXP}
+            progressPercentage={progressPercentage}
+            isMaxRank={isMaxRank}
+          />
+        </div>
       </Card>
       </motion.div>
 
@@ -201,4 +258,4 @@ export function ProfileHeader({
       )}
     </>
   )
-}
+})

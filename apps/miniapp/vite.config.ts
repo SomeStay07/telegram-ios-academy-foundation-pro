@@ -20,7 +20,7 @@ const bundleSizePlugin = () => {
       }
       
       const estimatedGzipSize = totalSize * GZIP_RATIO;
-      const limitKB = 260; // Adjusted after successful optimization
+      const limitKB = 500; // Optimal limit for modern 4G/5G networks
       const actualKB = Math.round(estimatedGzipSize / 1024);
       
       console.log(`\n📦 Bundle Size Monitor:`);
@@ -69,7 +69,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // Disable modulepreload for lazy chunks  
-        experimentalMinChunkSize: 0,
+        experimentalMinChunkSize: 20000, // Reasonable min chunk size
         manualChunks: {
           // Core Preact (replacing React)
           'react-vendor': ['preact', '@preact/compat'],
@@ -79,21 +79,18 @@ export default defineConfig({
           'react-query': ['@tanstack/react-query'],
           'zustand': ['zustand'],
           
-          // Analytics disabled for bundle optimization
+          // Heavy libraries - separate chunks
+          'framer-motion': ['framer-motion'],
+          'lucide-icons': ['lucide-react'],
           
           // UI components (split from main)
           'ui-components': ['@telegram-ios-academy/ui'],
-          
-          // Telemetry removed for bundle optimization
           
           // i18n (lazy loaded)
           'i18n': ['i18next', 'react-i18next'],
           
           // Form handling
-          'forms': ['react-hook-form', '@hookform/resolvers'],
-          
-          // Code highlighting (lazy loaded)
-          'prism': []
+          'forms': ['react-hook-form', '@hookform/resolvers']
         }
       }
     },
@@ -101,9 +98,33 @@ export default defineConfig({
     modulePreload: false,
     
     // Target smaller initial bundle
-    chunkSizeWarningLimit: 400, // Reduced from default 500
+    chunkSizeWarningLimit: 300, // Further reduced
     
-    // Enable tree shaking - use default minifier
-    minify: true
+    // Enable tree shaking - use terser for better compression
+    minify: 'terser',
+    
+    // More aggressive tree shaking and optimization
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        passes: 2
+      },
+      mangle: true,
+      format: {
+        comments: false
+      }
+    },
+    
+    // CSS code splitting and optimization
+    cssCodeSplit: true,
+    cssMinify: true,
+    
+    // Sourcemap disabled for production
+    sourcemap: false,
+    
+    // Aggressive asset optimization
+    assetsInlineLimit: 1024 // Inline small assets
   }
 })

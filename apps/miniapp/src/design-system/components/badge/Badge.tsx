@@ -2,9 +2,10 @@ import React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { LucideIcon } from 'lucide-react'
 import { cn } from '../../../lib/utils'
+import { ANIMATION, VARIANTS } from '../../../shared/constants/design-tokens'
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-full border font-medium transition-all duration-300 cursor-pointer hover:scale-110 hover:shadow-lg hover:shadow-blue-500/25 dark:hover:shadow-blue-400/20 active:scale-95 transform-gpu will-change-transform",
+  `inline-flex items-center justify-center rounded-full border font-medium transition-all duration-[${ANIMATION.DURATION.SLOW}ms] cursor-pointer hover:scale-[${VARIANTS.SCALE.MEDIUM}] hover:shadow-lg hover:shadow-blue-500/25 dark:hover:shadow-blue-400/20 active:scale-[${VARIANTS.SCALE.SUBTLE}] transform-gpu will-change-transform`,
   {
     variants: {
       variant: {
@@ -53,12 +54,12 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         {...props}
       >
         {interactive && (
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
+          <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[${ANIMATION.DURATION.SLOWEST}ms] ease-out`} />
         )}
         
         {Icon && (
           <Icon className={cn(
-            "flex-shrink-0 transition-transform duration-200",
+            `flex-shrink-0 transition-transform duration-[${ANIMATION.DURATION.NORMAL}ms]`,
             interactive && "group-hover:rotate-12 group-active:rotate-6",
             size === "sm" ? "w-3 h-3" : size === "lg" ? "w-5 h-5" : "w-4 h-4",
             variant === "primary" && "text-blue-600 dark:text-blue-400",
@@ -71,7 +72,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         
         {value && (
           <span className={cn(
-            "font-semibold transition-all duration-200 relative z-10",
+            `font-semibold transition-all duration-[${ANIMATION.DURATION.NORMAL}ms] relative z-10`,
             interactive && "group-hover:scale-110",
             size === "sm" ? "text-xs" : size === "lg" ? "text-base" : "text-sm"
           )}>
@@ -81,7 +82,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         
         {label && (
           <span className={cn(
-            "opacity-75 transition-all duration-200 relative z-10",
+            `opacity-75 transition-all duration-[${ANIMATION.DURATION.NORMAL}ms] relative z-10`,
             interactive && "group-hover:opacity-90",
             size === "sm" ? "text-xs" : size === "lg" ? "text-sm" : "text-xs"
           )}>

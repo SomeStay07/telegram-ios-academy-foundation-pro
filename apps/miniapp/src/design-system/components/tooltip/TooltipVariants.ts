@@ -1,4 +1,5 @@
 import { cva } from 'class-variance-authority'
+import { Z_INDEX, ANIMATION } from '../../../shared/constants/design-tokens'
 
 /**
  * 🎯 Tooltip Variants - Современная система вариантов с CVA
@@ -7,7 +8,7 @@ import { cva } from 'class-variance-authority'
 export const tooltipVariants = cva(
   // Базовые стили для всех тултипов
   [
-    "absolute z-50 px-3 py-2 text-sm font-medium transition-all duration-200 ease-out",
+    `absolute z-[${Z_INDEX.TOOLTIP}] px-3 py-2 text-sm font-medium transition-all duration-[${ANIMATION.DURATION.NORMAL}ms] ease-out`,
     "bg-gray-900 text-gray-100 rounded-lg shadow-lg",
     "dark:bg-gray-100 dark:text-gray-900",
     "pointer-events-none select-none",

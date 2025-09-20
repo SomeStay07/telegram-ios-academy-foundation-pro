@@ -77,6 +77,22 @@ export default {
         'xp-gradient': 'linear-gradient(90deg, #007AFF 0%, #00C7FF 100%)',
         'hero-gradient': 'radial-gradient(ellipse at center top, rgba(0, 122, 255, 0.15) 0%, rgba(0, 122, 255, 0.05) 40%, transparent 70%)',
         'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+      },
+      // Animations to replace framer-motion
+      animation: {
+        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+        'shimmer': 'shimmer 0.8s ease-in-out',
+      },
+      keyframes: {
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        shimmer: {
+          '0%': { opacity: '0', transform: 'translateX(-100%)' },
+          '50%': { opacity: '1', transform: 'translateX(0%)' },
+          '100%': { opacity: '0', transform: 'translateX(200%)' },
+        },
       }
     },
   },

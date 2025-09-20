@@ -1,13 +1,30 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
+  "version": 2,
   "build": {
     "builder": "nixpacks",
-    "buildCommand": "pnpm install && pnpm build --filter=@telegram-ios-academy/miniapp"
+    "buildCommand": "pnpm install && pnpm build --filter=@telegram-ios-academy/miniapp",
+    "watchPatterns": [
+      "apps/miniapp/**",
+      "packages/**",
+      "pnpm-lock.yaml"
+    ]
   },
   "deploy": {
     "startCommand": "cd apps/miniapp && pnpm start",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
     "restartPolicyType": "on-failure"
+  },
+  "environments": {
+    "production": {
+      "branch": "main"
+    },
+    "staging": {
+      "branch": "develop"
+    },
+    "preview": {
+      "branch": "feature/profile-design-fixes"
+    }
   }
 }

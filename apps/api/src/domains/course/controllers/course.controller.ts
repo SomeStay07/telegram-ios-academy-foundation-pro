@@ -101,9 +101,10 @@ export class CourseController {
       await this.unlockCourseHandler.execute(command);
       
       const result: CourseUnlockResponseDto = {
-        success: true,
+        unlocked: true,
         courseId: params.id,
         userId: userId,
+        accessLevel: 'basic',
         unlockedAt: new Date()
       };
       

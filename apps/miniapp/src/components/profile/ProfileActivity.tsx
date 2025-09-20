@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 // Design System Components
@@ -11,13 +11,19 @@ interface ProfileActivityProps {
   itemVariants: any
 }
 
-export function ProfileActivity({ itemVariants }: ProfileActivityProps) {
-  const skills = [
+export const ProfileActivity = React.memo(function ProfileActivity({ itemVariants }: ProfileActivityProps) {
+  // Memoized skills data
+  const skills = useMemo(() => [
     { name: 'React Hooks', progress: 85 },
     { name: 'TypeScript', progress: 70 },
     { name: 'Node.js', progress: 45 },
     { name: 'GraphQL', progress: 30 },
-  ]
+  ], [])
+
+  // Memoized progress color calculation
+  const getProgressColor = useMemo(() => (progress: number) => {
+    return progress >= 70 ? '#10b981' : progress >= 40 ? '#f59e0b' : '#6366f1'
+  }, [])
 
   return (
     <motion.div variants={itemVariants}>
@@ -32,7 +38,7 @@ export function ProfileActivity({ itemVariants }: ProfileActivityProps) {
                   value={skill.progress} 
                   className="w-24"
                   style={{
-                    '--progress-color': skill.progress >= 70 ? '#10b981' : skill.progress >= 40 ? '#f59e0b' : '#6366f1'
+                    '--progress-color': getProgressColor(skill.progress)
                   } as React.CSSProperties}
                 />
                 <Typography 
@@ -56,4 +62,4 @@ export function ProfileActivity({ itemVariants }: ProfileActivityProps) {
       </Card>
     </motion.div>
   )
-}
+})

@@ -17,12 +17,12 @@ export class PostgresEventStore implements EventStore {
     try {
       await this.prisma.$transaction(async (tx) => {
         // Check current version
-        const lastEvent = await tx.eventStore.findFirst({
-          where: { aggregate_id: streamId },
-          orderBy: { event_version: 'desc' }
+        const lastEvent = await (tx as any).eventStore.findFirst({
+          where: { aggregateId: streamId },
+          orderBy: { eventVersion: 'desc' }
         });
 
-        const currentVersion = lastEvent?.event_version || 0;
+        const currentVersion = lastEvent?.eventVersion || 0;
         
         if (currentVersion !== expectedVersion) {
           throw new Error(
@@ -32,17 +32,17 @@ export class PostgresEventStore implements EventStore {
         }
 
         // Insert new events
-        const eventRecords: EventStoreRecord[] = events.map((event, index) => ({
-          event_id: event.eventId,
-          aggregate_id: streamId,
-          aggregate_type: this.extractAggregateType(streamId),
-          event_type: event.eventType,
-          event_data: event,
-          event_version: expectedVersion + index + 1,
-          created_at: event.occurredOn
+        const eventRecords = events.map((event, index) => ({
+          eventId: event.eventId,
+          aggregateId: streamId,
+          aggregateType: this.extractAggregateType(streamId),
+          eventType: event.eventType,
+          eventData: event,
+          eventVersion: expectedVersion + index + 1,
+          createdAt: event.occurredOn
         }));
 
-        await tx.eventStore.createMany({
+        await (tx as any).eventStore.createMany({
           data: eventRecords
         });
       });
@@ -54,15 +54,15 @@ export class PostgresEventStore implements EventStore {
 
   async getEvents(streamId: string, fromVersion: number = 0): Promise<DomainEvent[]> {
     try {
-      const records = await this.prisma.eventStore.findMany({
+      const records = await (this.prisma as any).eventStore.findMany({
         where: {
-          aggregate_id: streamId,
-          event_version: { gt: fromVersion }
+          aggregateId: streamId,
+          eventVersion: { gt: fromVersion }
         },
-        orderBy: { event_version: 'asc' }
+        orderBy: { eventVersion: 'asc' }
       });
 
-      return records.map(record => this.deserializeEvent(record));
+      return records.map((record: any) => this.deserializeEvent(record));
     } catch (error) {
       console.error('Error retrieving events from store:', error);
       throw error;
@@ -71,17 +71,17 @@ export class PostgresEventStore implements EventStore {
 
   async getAllEvents(fromPosition: number = 0): Promise<DomainEvent[]> {
     try {
-      const records = await this.prisma.eventStore.findMany({
+      const records = await (this.prisma as any).eventStore.findMany({
         where: {
-          event_version: { gt: fromPosition }
+          eventVersion: { gt: fromPosition }
         },
         orderBy: [
-          { created_at: 'asc' },
-          { event_version: 'asc' }
+          { createdAt: 'asc' },
+          { eventVersion: 'asc' }
         ]
       });
 
-      return records.map(record => this.deserializeEvent(record));
+      return records.map((record: any) => this.deserializeEvent(record));
     } catch (error) {
       console.error('Error retrieving all events from store:', error);
       throw error;
@@ -95,9 +95,9 @@ export class PostgresEventStore implements EventStore {
     return parts.slice(0, -1).join('-');
   }
 
-  private deserializeEvent(record: EventStoreRecord): DomainEvent {
+  private deserializeEvent(record: any): DomainEvent {
     // In a real implementation, you'd have a proper event registry
     // For now, we'll return the event data as-is
-    return record.event_data as DomainEvent;
+    return record.eventData as DomainEvent;
   }
 }

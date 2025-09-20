@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Sun, Moon, Monitor, Check } from 'lucide-react'
 import { useTheme, type Theme } from '../../contexts/ThemeContext'
 import { getTelegramApi } from '../../lib/telegram/api'
+import { Z_INDEX } from '../../shared/constants/design-tokens'
 
 interface ThemeModalProps {
   isOpen: boolean
@@ -142,7 +143,7 @@ export function ThemeModal({ isOpen, onClose }: ThemeModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+          className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[${Z_INDEX.SYSTEM_MODAL}] flex items-center justify-center p-4`}
           onClick={handleClose}
         >
           <motion.div

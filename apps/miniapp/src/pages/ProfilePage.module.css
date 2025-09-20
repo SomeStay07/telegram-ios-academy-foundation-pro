@@ -2,12 +2,12 @@
 
 /* === DESIGN SYSTEM TOKENS === */
 :root {
-  /* Gaming Typography - согласно DESIGN_AGREEMENTS.md */
+  /* Gaming Typography - плавное масштабирование */
   --font-gaming: 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, sans-serif;
-  --text-gaming-sm: clamp(1.125rem, 3vw, 1.25rem);   /* 18px-20px */
-  --text-gaming-md: clamp(1.5rem, 4vw, 2rem);        /* 24px-32px */
-  --text-gaming-lg: clamp(2rem, 5vw, 2.5rem);        /* 32px-40px */
-  --text-gaming-xl: clamp(2.5rem, 6vw, 3rem);        /* 40px-48px */
+  --text-gaming-sm: clamp(0.875rem, 2.5vw, 1.125rem);   /* 14px-18px */
+  --text-gaming-md: clamp(1rem, 3vw, 1.25rem);          /* 16px-20px */
+  --text-gaming-lg: clamp(1.5rem, 5vw, 2.5rem);         /* 24px-40px */
+  --text-gaming-xl: clamp(2rem, 6vw, 3rem);             /* 32px-48px */
   
   /* Balanced Gaming Gradients - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
   --gradient-xp: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -66,88 +66,99 @@
   --metric-border-dark: rgba(255, 255, 255, 0.1);
 }
 
-/* === ADAPTIVE PROFILE LAYOUT === */
+/* === ADAPTIVE PROFILE LAYOUT - ФИКСИРОВАННЫЕ ПОЗИЦИИ === */
 .adaptiveProfileLayout {
-  /* Mobile first: stacked layout */
+  /* Всегда горизонтальный layout с фиксированными позициями */
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-areas: 
-    "avatar"
-    "info";
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "avatar info";
   gap: var(--space-4);
-  align-items: center;
-  text-align: center;
+  align-items: start;
+  text-align: left;
 }
 
 .profileAvatar {
   grid-area: avatar;
   position: relative;
-  justify-self: center;
+  justify-self: start; /* Всегда слева */
 }
 
 .profileInfo {
   grid-area: info;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  text-align: center;
-  align-items: center;
+  gap: var(--space-2); /* Уменьшено с space-3 (12px) до space-2 (8px) */
+  text-align: left;
+  align-items: flex-start;
   min-width: 0; /* Prevent overflow */
 }
 
 /* === TABLET AND DESKTOP BREAKPOINTS === */
 @media (min-width: 640px) {
   .adaptiveProfileLayout {
-    /* Tablet+: side-by-side layout */
-    grid-template-columns: auto 1fr;
-    grid-template-areas: "avatar info";
+    /* Больше gap на больших экранах */
     gap: var(--space-6);
-    align-items: start;
-    text-align: left;
   }
   
   .profileInfo {
-    text-align: left;
-    align-items: flex-start;
+    gap: var(--space-3); /* Уменьшено с space-4 (16px) до space-3 (12px) */
   }
 }
 
-/* === TYPOGRAPHY SCALING === */
+/* === TYPOGRAPHY SCALING - ПЛАВНОЕ МАСШТАБИРОВАНИЕ === */
 .profileName {
-  font-size: var(--text-gaming-lg);
+  /* Плавное масштабирование шрифта от 1.5rem до 2.5rem */
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
   font-family: var(--font-gaming);
   line-height: 1.2;
   font-weight: 700;
   color: var(--foreground);
   margin-bottom: var(--space-2);
   font-variant-numeric: tabular-nums;
+  transition: font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* === INTERACTIVE ELEMENTS === */
+/* === INTERACTIVE ELEMENTS - ФИКСИРОВАННЫЕ ПОЗИЦИИ === */
 .profileUsername {
-  align-self: center;
+  align-self: flex-start; /* Всегда слева */
 }
 
 .profileBadges {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
-  justify-content: center;
+  justify-content: flex-start; /* Всегда слева */
 }
 
+/* === ENHANCED PROGRESS BAR === */
 .profileProgress {
   grid-column: 1 / -1;
-  margin-top: var(--space-4);
+  margin-top: clamp(1rem, 3vw, 1.5rem);
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+  padding: clamp(0.25rem, 1vw, 0.5rem) 0;
 }
 
-/* === TABLET AND DESKTOP OVERRIDES === */
-@media (min-width: 640px) {
-  .profileUsername {
-    align-self: flex-start;
+/* Enhanced progress bar container with premium styling */
+.profileProgress > * {
+  /* Ensure proper spacing and backdrop effects */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Progress bar theme adaptations */
+@media (prefers-color-scheme: light) {
+  .profileProgress {
+    /* Subtle adjustments for light theme */
+    filter: brightness(1.1) contrast(1.05);
   }
-  
-  .profileBadges {
-    justify-content: flex-start;
+}
+
+@media (prefers-color-scheme: dark) {
+  .profileProgress {
+    /* Enhanced visibility for dark theme */
+    filter: brightness(1.05) contrast(1.1);
   }
 }
 
@@ -157,10 +168,11 @@
   /* Градиент согласно дизайн-соглашениям */
   background: var(--gradient-premium);
   border-radius: var(--radius-xl);
-  padding: var(--space-6);
+  padding: clamp(1rem, 4vw, 1.5rem);
   box-shadow: var(--shadow-gaming-primary);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
 }
 
 /* Light theme adaptation - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
@@ -181,66 +193,60 @@
   }
 }
 
-/* === RESPONSIVE SIZING === */
+/* === RESPONSIVE SIZING - ПЛАВНОЕ МАСШТАБИРОВАНИЕ === */
 .adaptiveAvatar {
-  width: 4rem;  /* 64px mobile */
-  height: 4rem;
+  /* Плавное масштабирование от 3.5rem до 6rem */
+  width: clamp(3.5rem, 8vw, 6rem);
+  height: clamp(3.5rem, 8vw, 6rem);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Дополнительные брейкпоинты для точного контроля */
+@media (min-width: 360px) {
+  .adaptiveAvatar {
+    width: clamp(3.75rem, 8vw, 6rem);
+    height: clamp(3.75rem, 8vw, 6rem);
+  }
 }
 
 @media (min-width: 640px) {
   .adaptiveAvatar {
-    width: 5rem;  /* 80px tablet */
-    height: 5rem;
+    width: clamp(4.5rem, 8vw, 6rem);
+    height: clamp(4.5rem, 8vw, 6rem);
   }
 }
 
 @media (min-width: 768px) {
   .adaptiveAvatar {
-    width: 6rem;  /* 96px desktop */
+    width: 6rem;  /* Фиксированный размер на больших экранах */
     height: 6rem;
   }
 }
 
-/* === STATUS INDICATOR === */
+/* === STATUS INDICATOR - ПРОПОРЦИОНАЛЬНОЕ МАСШТАБИРОВАНИЕ === */
 .statusIndicator {
   position: absolute;
   bottom: calc(-1 * var(--space-1));
   right: calc(-1 * var(--space-1));
-  width: var(--space-4);
-  height: var(--space-4);
+  /* Размер пропорционален аватару - 20% от размера аватара */
+  width: clamp(0.75rem, 1.6vw, 1.25rem);
+  height: clamp(0.75rem, 1.6vw, 1.25rem);
   background: var(--success);
   border-radius: 50%;
-  border: 2px solid white;
+  border: clamp(2px, 0.4vw, 4px) solid white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (min-width: 640px) {
-  .statusIndicator {
-    width: var(--space-5);
-    height: var(--space-5);
-    border-width: 3px;
-  }
-}
-
-@media (min-width: 768px) {
-  .statusIndicator {
-    width: var(--space-6);
-    height: var(--space-6);
-    border-width: 4px;
-  }
-}
-
-/* === RESPONSIVE BADGES === */
+/* === RESPONSIVE BADGES - ПЛАВНОЕ МАСШТАБИРОВАНИЕ === */
 .adaptiveBadge {
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(8px);
   border-radius: var(--radius-gaming-badge);
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-gaming-sm);
+  padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1.25rem);
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
   font-family: var(--font-gaming);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -248,26 +254,12 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (min-width: 640px) {
-  .adaptiveBadge {
-    padding: var(--space-3) var(--space-5);
-    font-size: var(--text-gaming-md);
-  }
-}
-
 .adaptiveBadgeIcon {
-  width: var(--space-4);
-  height: var(--space-4);
-  margin-right: var(--space-2);
+  width: clamp(1rem, 2vw, 1.25rem);
+  height: clamp(1rem, 2vw, 1.25rem);
+  margin-right: clamp(0.5rem, 1vw, 0.75rem);
   color: var(--gold);
-}
-
-@media (min-width: 640px) {
-  .adaptiveBadgeIcon {
-    width: var(--space-5);
-    height: var(--space-5);
-    margin-right: var(--space-3);
-  }
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* === ANIMATION REFINEMENTS === */
@@ -284,6 +276,59 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* === ADAPTIVE SETTINGS BUTTON === */
+.adaptiveSettingsButton {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1rem);
+  right: clamp(0.75rem, 2vw, 1rem);
+  padding: clamp(0.75rem, 2vw, 1rem);
+  min-width: clamp(44px, 8vw, 52px);
+  min-height: clamp(44px, 8vw, 52px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.adaptiveSettingsButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.adaptiveSettingsIcon {
+  width: clamp(1.25rem, 2.5vw, 1.5rem);
+  height: clamp(1.25rem, 2.5vw, 1.5rem);
+}
+
+/* === ADAPTIVE USERNAME AND LEVEL SECTION === */
+.adaptiveUsernameLevel {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 0.75rem);
+  flex-wrap: wrap;
+}
+
+/* Ensure both username and level badge have consistent height */
+.adaptiveUsernameLevel > * {
+  min-height: clamp(2rem, 5vw, 2.25rem);
+  display: flex;
+  align-items: center;
+}
+
+.adaptiveLevelText {
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  line-height: 1.5;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.adaptiveLevelText:where([data-theme="dark"]) {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* === PERFORMANCE OPTIMIZATIONS === */

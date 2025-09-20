@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Info, ChevronRight, Smartphone, Code, Zap } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
 
 // Design System Components
 import { Card } from '../../design-system/components/card'
@@ -15,11 +14,11 @@ interface AboutAppSectionProps {
   itemVariants: any
 }
 
-export function AboutAppSection({ itemVariants }: AboutAppSectionProps) {
-  const navigate = useNavigate()
+export const AboutAppSection = React.memo(function AboutAppSection({ itemVariants }: AboutAppSectionProps) {
   const telegramApi = getTelegramApi()
 
-  const handleAboutClick = () => {
+  // Memoized handlers to prevent re-creation on every render
+  const handleAboutClick = useCallback(() => {
     // Haptic feedback
     try {
       if (telegramApi.isAvailable() && telegramApi.hapticFeedback) {
@@ -29,10 +28,36 @@ export function AboutAppSection({ itemVariants }: AboutAppSectionProps) {
       console.warn('Haptic feedback not available:', error)
     }
     
-    navigate({ to: '/about' })
-  }
+    // Use Telegram navigation instead of React Router
+    try {
+      if (telegramApi.isAvailable()) {
+        const webApp = telegramApi.getWebApp()
+        if (webApp?.openLink) {
+          // Open in same window with proper navigation
+          window.location.href = '/about'
+        } else {
+          // Fallback for development
+          window.location.href = '/about'
+        }
+      } else {
+        // Fallback for development
+        window.location.href = '/about'
+      }
+    } catch (error) {
+      console.warn('Telegram navigation not available, using fallback:', error)
+      window.location.href = '/about'
+    }
+  }, [telegramApi])
 
-  const currentVersion = "1.2.0" // TODO: Get from package.json or env
+  // Memoized version calculation
+  const currentVersion = useMemo(() => "1.2.0", []) // TODO: Get from package.json or env
+  
+  // Memoized features data to prevent recreation
+  const featuresData = useMemo(() => [
+    { icon: Smartphone, text: "SwiftUI", color: "text-primary" },
+    { icon: Code, text: "UIKit", color: "text-success" },
+    { icon: Zap, text: "Core Data", color: "text-warning" }
+  ], [])
 
   return (
     <motion.div variants={itemVariants}>
@@ -40,9 +65,9 @@ export function AboutAppSection({ itemVariants }: AboutAppSectionProps) {
         <motion.button
           onClick={handleAboutClick}
           className="w-full text-left group"
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -80,33 +105,26 @@ export function AboutAppSection({ itemVariants }: AboutAppSectionProps) {
 
             {/* Arrow */}
             <ChevronRight 
-              className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" 
+              className="w-5 h-5 text-muted-foreground group-hover:text-primary" 
             />
           </div>
 
-          {/* Features Preview */}
+          {/* Features Preview - Optimized rendering */}
           <div className="mt-4 grid grid-cols-3 gap-3">
-            <div className="flex items-center gap-2 px-3 py-2 bg-background/50 rounded-lg">
-              <Smartphone className="w-4 h-4 text-primary" />
-              <Typography variant="caption-sm" className="text-muted-foreground">
-                SwiftUI
-              </Typography>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-2 bg-background/50 rounded-lg">
-              <Code className="w-4 h-4 text-success" />
-              <Typography variant="caption-sm" className="text-muted-foreground">
-                UIKit
-              </Typography>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-2 bg-background/50 rounded-lg">
-              <Zap className="w-4 h-4 text-warning" />
-              <Typography variant="caption-sm" className="text-muted-foreground">
-                Core Data
-              </Typography>
-            </div>
+            {featuresData.map((feature) => {
+              const IconComponent = feature.icon
+              return (
+                <div key={feature.text} className="flex items-center gap-2 px-3 py-2 bg-background/50 rounded-lg">
+                  <IconComponent className={`w-4 h-4 ${feature.color}`} />
+                  <Typography variant="caption-sm" className="text-muted-foreground">
+                    {feature.text}
+                  </Typography>
+                </div>
+              )
+            })}
           </div>
         </motion.button>
       </Card>
     </motion.div>
   )
-}
+})

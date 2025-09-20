@@ -12,6 +12,8 @@ import { useUserInitialization, useUserStats, useSyncTelegramData } from '../../
 import { Button } from '../../design-system/components/button'
 import { Avatar } from '../../design-system/components/avatar'
 import { Progress } from '../../design-system/components/progress'
+import { getUserLevel } from '../../shared'
+import { InlineLevelBadge } from '../../design-system/components/level-badge/InlineLevelBadge'
 
 interface EnhancedProfileCardProps {
   className?: string
@@ -21,6 +23,9 @@ export function EnhancedProfileCard({ className }: EnhancedProfileCardProps) {
   const { profile, isLoading, error, isReady } = useUserInitialization()
   const { data: stats, isLoading: statsLoading } = useUserStats()
   const syncTelegram = useSyncTelegramData()
+  
+  // Calculate user level
+  const userLevel = profile ? getUserLevel(stats?.totalXP || 0) : 0
 
   // Loading state
   if (isLoading || !isReady) {
@@ -81,9 +86,12 @@ export function EnhancedProfileCard({ className }: EnhancedProfileCardProps) {
               />
               
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  {profile.firstName} {profile.lastName}
-                </h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                    {profile.firstName} {profile.lastName || ''}
+                  </h2>
+                  <InlineLevelBadge level={userLevel} size="sm" />
+                </div>
                 {profile.username && (
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     @{profile.username}

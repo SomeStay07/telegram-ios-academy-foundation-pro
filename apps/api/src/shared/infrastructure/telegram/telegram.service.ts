@@ -24,7 +24,7 @@ export class TelegramService {
   private readonly botToken: string;
 
   constructor() {
-    this.botToken = process.env.TELEGRAM_BOT_TOKEN;
+    this.botToken = process.env.TELEGRAM_BOT_TOKEN!;
     if (!this.botToken) {
       throw new Error('TELEGRAM_BOT_TOKEN is required');
     }

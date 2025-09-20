@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Code, Hash, User, Terminal, Coffee } from 'lucide-react'
 
 // Design System Components
 import { Typography } from '../../design-system/components/typography/index'
 import { Button } from '../../design-system/components/button/index'
+
+// Design Tokens
+import { Z_INDEX, ANIMATION, SIZE } from '../../shared/constants/design-tokens'
 
 interface UsernameModalProps {
   isOpen: boolean
@@ -13,7 +17,7 @@ interface UsernameModalProps {
   displayName: string
 }
 
-// Programmer facts generator
+// Memoized programmer facts generator
 const generateProgrammerFacts = (username: string, displayName: string) => {
   const length = username.length
   const firstChar = username[0].toLowerCase()
@@ -70,34 +74,45 @@ const generateProgrammerFacts = (username: string, displayName: string) => {
   return facts.slice(0, 4) // Show 4 most interesting facts
 }
 
-export function UsernameModal({ isOpen, onClose, username, displayName }: UsernameModalProps) {
-  const facts = generateProgrammerFacts(username, displayName)
+export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose, username, displayName }: UsernameModalProps) {
+  // Memoized facts calculation - only recalculates when username/displayName changes
+  const facts = useMemo(() => generateProgrammerFacts(username, displayName), [username, displayName])
 
-  if (!isOpen) {
-    return null
-  }
+  // Memoized close handler
+  const handleClose = useCallback(() => {
+    onClose()
+  }, [onClose])
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-        onClick={onClose}
-      >
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[${Z_INDEX.SYSTEM_MODAL}]`}
+          style={{ 
+            padding: 'clamp(1rem, 4vw, 1.5rem)',
+            paddingBottom: 'clamp(6rem, 15vw, 8rem)' // Extra space for tab bar
+          }}
+          onClick={onClose}
+        >
         <motion.div
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
+          transition={{ type: "spring", ...ANIMATION.SPRING.GENTLE }}
+          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full overflow-hidden"
+          style={{
+            maxWidth: 'clamp(320px, 90vw, 480px)',
+            maxHeight: 'clamp(500px, 70vh, 600px)'
+          }}
           onClick={(e) => e.stopPropagation()}
         >
             {/* Header */}
             <div className="relative bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 text-white">
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="absolute top-4 right-4 p-1 rounded-full hover:bg-white/20 transition-colors"
               >
                 <X className="w-5 h-5" />
@@ -106,7 +121,7 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
               <motion.div
                 initial={{ rotate: -10, scale: 0 }}
                 animate={{ rotate: 0, scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+                transition={{ delay: ANIMATION.DURATION.NORMAL / 1000, type: "spring", ...ANIMATION.SPRING.GENTLE }}
                 className="mb-4"
               >
                 <div className="flex items-center gap-3">
@@ -126,14 +141,20 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
             </div>
 
             {/* Facts */}
-            <div className="p-6 space-y-4 max-h-96 overflow-y-auto">
+            <div 
+              className="space-y-4 overflow-y-auto flex-1"
+              style={{
+                padding: 'clamp(1rem, 4vw, 1.5rem)',
+                maxHeight: 'calc(70vh - 200px)' // Reserve space for header and footer
+              }}
+            >
               {facts.map((fact, index) => (
                 <motion.div
                   key={index}
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 * index, duration: 0.3 }}
-                  className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-[1.02] transition-transform"
+                  transition={{ delay: index * ANIMATION.STAGGER.ITEMS, duration: ANIMATION.DURATION.SLOW / 1000 }}
+                  className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-[1.02]"
                 >
                   <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
                     <fact.icon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -151,14 +172,19 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
             </div>
 
             {/* Footer */}
-            <div className="p-6 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+            <div 
+              className="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
+              style={{
+                padding: 'clamp(1rem, 4vw, 1.5rem)'
+              }}
+            >
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: ANIMATION.DURATION.NORMAL * 2 / 1000 }}
               >
                 <Button
-                  onClick={onClose}
+                  onClick={handleClose}
                   variant="primary"
                   className="w-full"
                 >
@@ -169,6 +195,8 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
             </div>
           </motion.div>
         </motion.div>
-    </AnimatePresence>
+      )}
+    </AnimatePresence>,
+    document.body
   )
-}
+})

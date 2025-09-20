@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Calendar, Target, Star, TrendingUp, Trophy, Zap, Medal, Crown } from 'lucide-react'
 import { Typography } from '../../design-system/components/typography'
@@ -16,15 +16,21 @@ interface ScrollableMetricsProps {
   userData: {
     streak: number
     totalXP: number
+    completedLessons?: number
+    achievements?: number
+    growthRate?: number
+    rank?: string
+    masterSkill?: string
   }
 }
 
-export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
+export const ScrollableMetrics = React.memo(function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
 
-  const metrics: MetricCard[] = [
+  // Memoized metrics calculation - only recalculates when userData changes
+  const metrics: MetricCard[] = useMemo(() => [
     {
       id: 'streak',
       icon: Calendar,
@@ -35,28 +41,28 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
     {
       id: 'completed',
       icon: Target,
-      value: 24,
+      value: userData.completedLessons || 24,
       label: 'выполнено',
       colorToken: 'completed'
     },
     {
       id: 'achievements',
       icon: Trophy,
-      value: 12,
+      value: userData.achievements || 12,
       label: 'достижений',
       colorToken: 'achievement'
     },
     {
       id: 'growth',
       icon: TrendingUp,
-      value: '+15%',
+      value: userData.growthRate ? `+${userData.growthRate}%` : '+15%',
       label: 'рост',
       colorToken: 'growth'
     },
     {
       id: 'rank',
       icon: Medal,
-      value: 'ТОП 15%',
+      value: userData.rank || 'ТОП 15%',
       label: 'рейтинг',
       colorToken: 'rank'
     },
@@ -70,19 +76,20 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
     {
       id: 'master',
       icon: Crown,
-      value: 'React',
+      value: userData.masterSkill || 'React',
       label: 'мастер',
       colorToken: 'master'
     }
-  ]
+  ], [userData.streak, userData.totalXP, userData.completedLessons, userData.achievements, userData.growthRate, userData.rank, userData.masterSkill])
 
-  const checkScrollPosition = () => {
+  // Memoized scroll position checker
+  const checkScrollPosition = useCallback(() => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
       setCanScrollLeft(scrollLeft > 0)
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1)
     }
-  }
+  }, [])
 
   useEffect(() => {
     checkScrollPosition()
@@ -94,14 +101,15 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
   }, [])
 
   return (
-    <div className="relative">
+    <div className="relative overflow-visible">
       {/* Scrollable Container */}
       <div 
         ref={scrollContainerRef}
-        className="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth pb-2"
+        className="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth pb-2 px-1 py-2"
         style={{
           scrollSnapType: 'x mandatory',
-          WebkitOverflowScrolling: 'touch'
+          WebkitOverflowScrolling: 'touch',
+          overflow: 'visible scroll' // Allow vertical overflow for hover effects
         }}
       >
         {metrics.map((metric, index) => {
@@ -109,26 +117,35 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
           return (
             <motion.div
               key={metric.id}
-              className="flex-shrink-0 backdrop-blur-sm rounded-lg p-3 min-w-[120px] relative overflow-hidden border"
+              className="flex-shrink-0 backdrop-blur-sm rounded-lg relative overflow-hidden border cursor-pointer"
               style={{ 
                 scrollSnapAlign: 'start',
                 backgroundColor: `var(--metric-${metric.colorToken}-bg)`,
                 borderColor: 'var(--metric-border)',
-                '--metric-border': 'var(--metric-border-dark)'
+                '--metric-border': 'var(--metric-border-dark)',
+                padding: 'clamp(0.75rem, 2vw, 1rem)',
+                minWidth: 'clamp(110px, 25vw, 130px)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
               } as React.CSSProperties}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ 
-                scale: 1.02, 
-                y: -1,
-                transition: { type: "spring", stiffness: 400, damping: 25 }
+                scale: 1.01, 
+                y: -2,
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
               }}
+              whileTap={{ scale: 0.98 }}
             >
               <div className="relative z-10 flex flex-col items-center text-center">
                 <IconComponent 
-                  className="w-4 h-4 mb-1" 
-                  style={{ color: `var(--metric-${metric.colorToken}-text)` }}
+                  className="mb-1" 
+                  style={{ 
+                    color: `var(--metric-${metric.colorToken}-text)`,
+                    width: 'clamp(1rem, 3vw, 1.25rem)',
+                    height: 'clamp(1rem, 3vw, 1.25rem)'
+                  }}
                 />
                 <Typography 
                   variant="body-lg"
@@ -136,7 +153,9 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
                   style={{ 
                     color: `var(--metric-${metric.colorToken}-text)`,
                     fontFamily: 'var(--font-gaming)',
-                    fontVariantNumeric: 'tabular-nums'
+                    fontVariantNumeric: 'tabular-nums',
+                    fontSize: 'clamp(0.875rem, 2.5vw, 1rem)',
+                    lineHeight: '1.2'
                   }}
                 >
                   {metric.value}
@@ -144,6 +163,10 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
                 <Typography 
                   variant="body-xs" 
                   className="text-muted-foreground opacity-75 leading-tight"
+                  style={{
+                    fontSize: 'clamp(0.7rem, 2vw, 0.8rem)',
+                    lineHeight: '1.2'
+                  }}
                 >
                   {metric.label}
                 </Typography>
@@ -151,9 +174,15 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
               
               {/* Subtle hover glow */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0"
-                whileHover={{ opacity: 1, x: ['0%', '100%'] }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
+                className="absolute inset-0 opacity-0 rounded-lg"
+                style={{
+                  background: 'linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%)'
+                }}
+                whileHover={{ 
+                  opacity: [0, 1, 0],
+                  x: ['-100%', '200%']
+                }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
               />
             </motion.div>
           )
@@ -184,4 +213,4 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
       </div>
     </div>
   )
-}
+})

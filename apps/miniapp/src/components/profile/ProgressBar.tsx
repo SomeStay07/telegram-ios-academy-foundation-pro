@@ -67,7 +67,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
                 '📊'
               )
             }}
-            className="flex flex-col items-center p-3 rounded-xl border-2 border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 transition-all duration-200"
+            className="flex flex-col items-center p-3 rounded-xl border-2 border-transparent hover:border-indigo-200 dark:hover:border-indigo-800"
           >
             <motion.div
               className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 mb-1"
@@ -101,7 +101,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
                 !isMaxRank ? '🎯' : '👑'
               )
             }}
-            className="flex flex-col items-center p-3 rounded-xl border-2 border-transparent hover:border-yellow-200 dark:hover:border-yellow-800 transition-all duration-200"
+            className="flex flex-col items-center p-3 rounded-xl border-2 border-transparent hover:border-yellow-200 dark:hover:border-yellow-800"
           >
             <motion.div
               className="w-3 h-3 rounded-full mb-1"
