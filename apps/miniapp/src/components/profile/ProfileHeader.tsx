@@ -236,6 +236,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
         {/* Enhanced Progress Bar */}
         <div className={styles.profileProgress}>
           <EnhancedProgressBar
+            userData={userData}
             currentRank={currentRank}
             nextRank={nextRank}
             currentXP={userData.totalXP}
