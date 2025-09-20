@@ -138,10 +138,11 @@ export function RecentActivity({ itemVariants }: RecentActivityProps) {
               <motion.div
                 key={activity.id}
                 className="flex items-center gap-3 p-2 rounded-md hover:bg-white/5 transition-colors duration-200"
+                style={{ margin: '2px' }}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, x: 4 }}
+                whileHover={{ scale: 1.01, x: 2 }}
               >
                 <div className="flex-shrink-0">
                   <div className="p-1.5 rounded-full bg-white/10">
@@ -178,7 +179,7 @@ export function RecentActivity({ itemVariants }: RecentActivityProps) {
           <motion.button
             onClick={() => setShowAll(!showAll)}
             className="w-full mt-3 flex items-center justify-center gap-2 text-xs text-white/60 hover:text-white/80 hover:bg-white/5 transition-all duration-200 py-2 px-3 rounded-md border border-white/10 hover:border-white/20"
-            whileHover={{ scale: 1.02, y: -1 }}
+            whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             style={{ fontFamily: 'var(--font-gaming)' }}
           >

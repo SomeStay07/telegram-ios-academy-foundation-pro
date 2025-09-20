@@ -62,7 +62,7 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
           <Typography variant="heading-lg" className="font-bold text-white">
             Достижения
           </Typography>
-          <Award className="w-6 h-6 text-yellow-400/60" />
+          <Trophy className="w-6 h-6 text-yellow-400/60" />
         </div>
         
         <div className="space-y-4">

@@ -106,12 +106,13 @@ export function ProfileHeader({
             onClick={handleSettingsClick}
             className="absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-300 group z-50"
             whileHover={{ 
-              scale: 1.02, 
-              y: -1,
+              scale: 1.05, 
+              rotate: 45,
               backgroundColor: "rgba(255, 255, 255, 0.15)"
             }}
             whileTap={{ 
-              scale: 0.98
+              scale: 0.95,
+              rotate: 90
             }}
             transition={{
               type: "spring",
