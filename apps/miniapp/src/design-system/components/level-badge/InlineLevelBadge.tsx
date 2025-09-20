@@ -8,34 +8,34 @@ const inlineLevelBadgeVariants = cva(
   [
     `inline-flex items-center justify-center`,
     `rounded-full px-3 py-1 ml-2`,
-    `font-bold text-xs leading-none`,
+    `font-semibold text-xs leading-none`,
     `transition-all duration-[${ANIMATION.DURATION.NORMAL}ms]`,
     `cursor-default select-none`,
-    `shadow-sm transform-gpu will-change-transform`,
-    `border backdrop-blur-sm`
+    `transform-gpu will-change-transform`,
+    `backdrop-blur-sm border`
   ],
   {
     variants: {
       variant: {
         default: [
-          "bg-gradient-to-r from-blue-500/20 to-blue-600/20",
-          "border-blue-400/30 text-blue-600 dark:text-blue-400",
-          "shadow-blue-500/10"
+          "bg-white/15 border-white/25",
+          "text-gray-700 dark:text-gray-200",
+          "shadow-sm"
         ],
         premium: [
-          "bg-gradient-to-r from-purple-500/20 via-purple-600/20 to-pink-500/20",
-          "border-purple-400/30 text-purple-600 dark:text-purple-400",
-          "shadow-purple-500/15"
+          "bg-white/20 border-white/30",
+          "text-gray-600 dark:text-gray-100",
+          "shadow-md"
         ],
         elite: [
-          "bg-gradient-to-r from-orange-500/20 via-red-500/20 to-pink-500/20",
-          "border-orange-400/30 text-orange-600 dark:text-orange-400",
-          "shadow-orange-500/15"
+          "bg-gradient-to-r from-white/25 to-white/20",
+          "border-white/35 text-gray-600 dark:text-gray-100",
+          "shadow-lg"
         ],
         master: [
-          "bg-gradient-to-r from-yellow-400/20 via-yellow-500/20 to-orange-500/20",
-          "border-yellow-400/40 text-yellow-600 dark:text-yellow-400",
-          "shadow-yellow-500/20"
+          "bg-gradient-to-r from-yellow-400/10 via-white/25 to-yellow-400/10",
+          "border-yellow-400/20 text-gray-700 dark:text-yellow-100",
+          "shadow-lg shadow-yellow-400/5"
         ]
       },
       size: {
@@ -56,22 +56,6 @@ const inlineLevelBadgeVariants = cva(
   }
 )
 
-const sparkleVariants = cva(
-  "absolute -top-1 -right-1 text-xs pointer-events-none",
-  {
-    variants: {
-      variant: {
-        default: "text-blue-400",
-        premium: "text-purple-400", 
-        elite: "text-orange-400",
-        master: "text-yellow-400"
-      }
-    },
-    defaultVariants: {
-      variant: "default"
-    }
-  }
-)
 
 interface InlineLevelBadgeProps {
   level: number
@@ -98,7 +82,6 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
   }
 
   const actualVariant = variant === 'default' ? getVariantByLevel(level) : variant
-  const shouldShowSparkle = showSparkle && level >= 15
 
   return (
     <motion.div
@@ -114,15 +97,11 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
       initial={animated ? { scale: 0, opacity: 0 } : false}
       animate={animated ? { scale: 1, opacity: 1 } : false}
       whileHover={animated ? { 
-        scale: 1.05,
-        y: -2,
-        boxShadow: actualVariant === 'master' 
-          ? '0 4px 20px rgba(251, 191, 36, 0.3)' 
-          : actualVariant === 'elite'
-          ? '0 4px 20px rgba(251, 146, 60, 0.25)'
-          : actualVariant === 'premium'
-          ? '0 4px 20px rgba(168, 85, 247, 0.25)'
-          : '0 4px 20px rgba(59, 130, 246, 0.2)'
+        scale: 1.02,
+        y: -1,
+        backgroundColor: actualVariant === 'master' 
+          ? 'rgba(255, 255, 255, 0.3)' 
+          : 'rgba(255, 255, 255, 0.25)'
       } : false}
       transition={{
         type: "spring",
@@ -130,25 +109,18 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
         delay: 0.1
       }}
     >
-      {/* Glow Effect */}
-      {animated && (
+      {/* Subtle Glow Effect - Only for Master */}
+      {animated && actualVariant === 'master' && (
         <motion.div
-          className="absolute inset-0 rounded-full opacity-40 blur-sm -z-10"
+          className="absolute inset-0 rounded-full opacity-20 blur-sm -z-10"
           style={{
-            background: actualVariant === 'master' 
-              ? 'linear-gradient(45deg, #fbbf24, #f59e0b)' 
-              : actualVariant === 'elite'
-              ? 'linear-gradient(45deg, #f97316, #ef4444)'
-              : actualVariant === 'premium'
-              ? 'linear-gradient(45deg, #a855f7, #ec4899)'
-              : 'linear-gradient(45deg, #3b82f6, #1d4ed8)'
+            background: 'linear-gradient(45deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.2))'
           }}
           animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.2, 0.4, 0.2]
+            opacity: [0.1, 0.2, 0.1]
           }}
           transition={{
-            duration: ANIMATION.DURATION.SLOWEST / 1000 * 2,
+            duration: ANIMATION.DURATION.SLOWEST / 1000 * 4,
             repeat: Infinity,
             ease: "easeInOut"
           }}
@@ -160,21 +132,20 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
         {level}
       </span>
 
-      {/* Sparkle for high levels */}
-      {shouldShowSparkle && animated && (
+      {/* Subtle Icon for very high levels */}
+      {level >= 50 && animated && (
         <motion.div
-          className={cn(sparkleVariants({ variant: actualVariant }))}
+          className="absolute -top-1 -right-1 text-xs pointer-events-none text-yellow-600 dark:text-yellow-400 opacity-60"
           animate={{
-            rotate: [0, 360],
-            scale: [0.8, 1.2, 0.8]
+            scale: [0.9, 1, 0.9]
           }}
           transition={{
-            duration: ANIMATION.DURATION.SLOWEST / 1000 * 3,
+            duration: ANIMATION.DURATION.SLOWEST / 1000 * 6,
             repeat: Infinity,
-            ease: "linear"
+            ease: "easeInOut"
           }}
         >
-          {level >= 50 ? '👑' : level >= 30 ? '✨' : '💎'}
+          👑
         </motion.div>
       )}
     </motion.div>

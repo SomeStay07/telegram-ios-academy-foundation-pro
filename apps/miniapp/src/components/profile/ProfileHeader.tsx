@@ -146,15 +146,15 @@ export const ProfileHeader = React.memo(function ProfileHeader({
           {/* Profile Info */}
           <div className={styles.profileInfo}>
             {/* Name Section */}
-            <div className="flex items-center flex-wrap gap-2">
+            <div className="flex flex-col">
               <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold leading-tight`}>
                 {userData.firstName} {userData.lastName || ''}
               </Typography>
-              <InlineLevelBadge level={userLevel} />
             </div>
             
-            {username && (
-              <div className={styles.profileUsername}>
+            {/* Username and Level Badge */}
+            <div className={`${styles.profileUsername} flex items-center gap-2`}>
+              {username && (
                 <motion.button
                   onClick={handleUsernameClick}
                   className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer"
@@ -170,10 +170,10 @@ export const ProfileHeader = React.memo(function ProfileHeader({
                   <Typography variant="body-sm" className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90">
                     {username}
                   </Typography>
-                  
                 </motion.button>
-              </div>
-            )}
+              )}
+              <InlineLevelBadge level={userLevel} size="sm" />
+            </div>
           </div>
         </div>
 
