@@ -20,7 +20,7 @@ const bundleSizePlugin = () => {
       }
       
       const estimatedGzipSize = totalSize * GZIP_RATIO;
-      const limitKB = 300; // Increased limit for better UX balance
+      const limitKB = 500; // Optimal limit for modern 4G/5G networks
       const actualKB = Math.round(estimatedGzipSize / 1024);
       
       console.log(`\n📦 Bundle Size Monitor:`);

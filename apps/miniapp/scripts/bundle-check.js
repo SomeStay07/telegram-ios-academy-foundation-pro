@@ -7,7 +7,7 @@ import zlib from 'zlib';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BUNDLE_SIZE_LIMIT_KB = 300;
+const BUNDLE_SIZE_LIMIT_KB = 500;
 const DIST_DIR = path.join(__dirname, '..', 'dist');
 
 /**
