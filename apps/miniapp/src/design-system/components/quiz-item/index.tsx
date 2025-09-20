@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { cn } from '../../../lib/utils'
-import { Card } from '../Card'
-import { Button } from '../Button'
+import { Card } from '../card'
+import { Button } from '../button'
 
 // Импорты из модульной архитектуры
 import { QuizItemProps } from './QuizItemTypes'

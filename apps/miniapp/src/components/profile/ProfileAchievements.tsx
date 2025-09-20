@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Award, Trophy } from 'lucide-react'
+import { Award, Trophy, Target, Flame, Star, Crown } from 'lucide-react'
 
 // Design System Components
 import { Card } from '../../design-system/components/card/index'
@@ -12,58 +12,100 @@ interface ProfileAchievementsProps {
 
 export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) {
   const achievements = [
-    { icon: '🏆', title: 'Первый уровень', description: 'Достигли 1000 XP', achieved: true },
-    { icon: '🔥', title: 'Неделя подряд', description: '7 дней активности', achieved: true },
-    { icon: '⭐', title: 'Мастер React', description: 'Изучили основы React', achieved: true },
-    { icon: '🎯', title: 'Целеустремленный', description: 'Выполнили 20 заданий', achieved: false },
+    { 
+      icon: Trophy, 
+      title: 'Первый уровень', 
+      description: 'Достигли 1000 XP', 
+      achieved: true,
+      rarity: 'gold' as const
+    },
+    { 
+      icon: Flame, 
+      title: 'Неделя подряд', 
+      description: '7 дней активности', 
+      achieved: true,
+      rarity: 'silver' as const
+    },
+    { 
+      icon: Star, 
+      title: 'Мастер React', 
+      description: 'Изучили основы React', 
+      achieved: true,
+      rarity: 'platinum' as const
+    },
+    { 
+      icon: Target, 
+      title: 'Целеустремленный', 
+      description: 'Выполнили 20 заданий', 
+      achieved: false,
+      rarity: 'bronze' as const
+    },
   ]
+
+  const getRarityColor = (rarity: string, achieved: boolean) => {
+    if (!achieved) return 'text-muted-foreground'
+    
+    const colors = {
+      bronze: 'text-warning',
+      silver: 'text-muted-foreground', 
+      gold: 'text-warning',
+      platinum: 'text-primary',
+      diamond: 'text-primary'
+    }
+    return colors[rarity as keyof typeof colors] || 'text-muted-foreground'
+  }
 
   return (
     <motion.div variants={itemVariants}>
       <Card className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <Typography variant="heading-lg" className="font-bold">
-            Достижения
-          </Typography>
-          <Award className="w-6 h-6 text-yellow-500" />
-        </div>
         
         <div className="space-y-4">
-          {achievements.map((achievement, index) => (
-            <div 
-              key={index} 
-              className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                achievement.achieved 
-                  ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' 
-                  : 'bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
-              }`}
-            >
-              <div className="text-2xl">{achievement.icon}</div>
-              <div className="flex-1">
-                <Typography 
-                  variant="body-md" 
-                  className={`font-medium ${
-                    achievement.achieved ? 'text-green-800 dark:text-green-200' : 'text-gray-600 dark:text-gray-400'
-                  }`}
-                >
-                  {achievement.title}
-                </Typography>
-                <Typography 
-                  variant="caption-sm" 
-                  className={
-                    achievement.achieved ? 'text-green-600 dark:text-green-300' : 'text-gray-500'
-                  }
-                >
-                  {achievement.description}
-                </Typography>
-              </div>
-              {achievement.achieved && (
-                <div className="text-green-500">
-                  <Trophy className="w-5 h-5" />
+          {achievements.map((achievement, index) => {
+            const IconComponent = achievement.icon
+            return (
+              <motion.div 
+                key={index} 
+                className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 backdrop-blur-sm border ${
+                  achievement.achieved 
+                    ? 'bg-muted border-border' 
+                    : 'bg-muted/50 border-border/50'
+                }`}
+                whileHover={{ scale: 1.02, y: -1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <div className={`p-2 rounded-lg ${
+                  achievement.achieved 
+                    ? 'bg-background' 
+                    : 'bg-muted'
+                }`}>
+                  <IconComponent 
+                    className={`w-6 h-6 ${getRarityColor(achievement.rarity, achievement.achieved)}`}
+                  />
                 </div>
-              )}
-            </div>
-          ))}
+                <div className="flex-1">
+                  <Typography 
+                    variant="body-md" 
+                    className={`font-medium ${
+                      achievement.achieved ? 'text-foreground' : 'text-muted-foreground'
+                    }`}
+                  >
+                    {achievement.title}
+                  </Typography>
+                  <Typography 
+                    variant="caption-sm" 
+                    className={
+                      achievement.achieved ? 'text-muted-foreground' : 'text-muted-foreground/60'
+                    }
+                  >
+                    {achievement.description}
+                  </Typography>
+                </div>
+                {achievement.achieved && (
+                  <Award className="w-5 h-5 text-warning" />
+                )}
+              </motion.div>
+            )
+          })}
         </div>
       </Card>
     </motion.div>

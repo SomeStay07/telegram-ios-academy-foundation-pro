@@ -1,13 +1,82 @@
 /* ProfilePage.module.css - Спокойная Элегантность v5.0 */
 
+/* === DESIGN SYSTEM TOKENS === */
+:root {
+  /* Gaming Typography - согласно DESIGN_AGREEMENTS.md */
+  --font-gaming: 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, sans-serif;
+  --text-gaming-sm: clamp(1.125rem, 3vw, 1.25rem);   /* 18px-20px */
+  --text-gaming-md: clamp(1.5rem, 4vw, 2rem);        /* 24px-32px */
+  --text-gaming-lg: clamp(2rem, 5vw, 2.5rem);        /* 32px-40px */
+  --text-gaming-xl: clamp(2.5rem, 6vw, 3rem);        /* 40px-48px */
+  
+  /* Balanced Gaming Gradients - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
+  --gradient-xp: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-streak: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-premium: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(124, 58, 237, 0.4) 100%);
+  
+  /* Design System Colors - заменяем хардкод */
+  --primary: #6366F1;
+  --primary-hover: #5A5FCF;
+  --primary-light: #818CF8;
+  --success: #10b981;
+  --success-light: #059669;
+  --warning: #f59e0b;
+  --warning-light: #d97706;
+  --gold: #F59E0B;
+  --gold-light: #FBB04B;
+  
+  /* Spacing tokens - 8pt grid */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  
+  /* Border radius tokens */
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-gaming-badge: 9999px;
+  
+  /* Muted Shadow system - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
+  --shadow-gaming-primary: 0 0 20px rgba(99, 102, 241, 0.15);
+  --shadow-gaming-success: 0 0 20px rgba(16, 185, 129, 0.15);
+  --shadow-gaming-streak: 0 0 20px rgba(245, 158, 11, 0.15);
+  
+  /* Metrics Color System - Design Tokens */
+  --metric-streak-bg: rgba(16, 185, 129, 0.1);
+  --metric-streak-text: rgba(16, 185, 129, 0.8);
+  --metric-completed-bg: rgba(59, 130, 246, 0.1);
+  --metric-completed-text: rgba(59, 130, 246, 0.8);
+  --metric-achievement-bg: rgba(245, 158, 11, 0.1);
+  --metric-achievement-text: rgba(245, 158, 11, 0.8);
+  --metric-growth-bg: rgba(249, 115, 22, 0.1);
+  --metric-growth-text: rgba(249, 115, 22, 0.8);
+  --metric-rank-bg: rgba(139, 92, 246, 0.1);
+  --metric-rank-text: rgba(139, 92, 246, 0.8);
+  --metric-xp-bg: rgba(99, 102, 241, 0.1);
+  --metric-xp-text: rgba(99, 102, 241, 0.8);
+  --metric-master-bg: rgba(236, 72, 153, 0.1);
+  --metric-master-text: rgba(236, 72, 153, 0.8);
+  
+  /* Card borders */
+  --metric-border: rgba(156, 163, 175, 0.2);
+  --metric-border-dark: rgba(255, 255, 255, 0.1);
+}
+
 /* === ADAPTIVE PROFILE LAYOUT === */
 .adaptiveProfileLayout {
-  /* Desktop: side-by-side layout */
+  /* Mobile first: stacked layout */
   display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas: "avatar info";
-  gap: 1.5rem;
-  align-items: start;
+  grid-template-columns: 1fr;
+  grid-template-areas: 
+    "avatar"
+    "info";
+  gap: var(--space-4);
+  align-items: center;
+  text-align: center;
 }
 
 .profileAvatar {
@@ -20,82 +89,95 @@
   grid-area: info;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  text-align: left;
+  gap: var(--space-4);
+  text-align: center;
+  align-items: center;
+  min-width: 0; /* Prevent overflow */
+}
+
+/* === TABLET AND DESKTOP BREAKPOINTS === */
+@media (min-width: 640px) {
+  .adaptiveProfileLayout {
+    /* Tablet+: side-by-side layout */
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "avatar info";
+    gap: var(--space-6);
+    align-items: start;
+    text-align: left;
+  }
+  
+  .profileInfo {
+    text-align: left;
+    align-items: flex-start;
+  }
 }
 
 /* === TYPOGRAPHY SCALING === */
 .profileName {
-  font-size: clamp(1.25rem, 4vw, 2rem);
+  font-size: var(--text-gaming-lg);
+  font-family: var(--font-gaming);
   line-height: 1.2;
   font-weight: 700;
-  color: white;
-  margin-bottom: 0.5rem;
+  color: var(--foreground);
+  margin-bottom: var(--space-2);
+  font-variant-numeric: tabular-nums;
 }
 
 /* === INTERACTIVE ELEMENTS === */
 .profileUsername {
-  align-self: flex-start;
+  align-self: center;
 }
 
 .profileBadges {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: var(--space-3);
+  justify-content: center;
 }
 
 .profileProgress {
   grid-column: 1 / -1;
-  margin-top: 1rem;
+  margin-top: var(--space-4);
 }
 
-/* === MOBILE ADAPTIVE BREAKPOINT === */
-@media (max-width: 640px) {
-  .adaptiveProfileLayout {
-    /* Mobile: stacked layout */
-    grid-template-columns: 1fr;
-    grid-template-areas: 
-      "avatar"
-      "info";
-    text-align: center;
-    gap: 1rem;
-  }
-  
-  .profileAvatar {
-    justify-self: center;
-  }
-  
-  .profileInfo {
-    text-align: center;
-    align-items: center;
-  }
-  
+/* === TABLET AND DESKTOP OVERRIDES === */
+@media (min-width: 640px) {
   .profileUsername {
-    align-self: center;
+    align-self: flex-start;
   }
   
   .profileBadges {
-    justify-content: center;
+    justify-content: flex-start;
   }
 }
 
 /* === DESIGN SYSTEM INTEGRATION === */
 /* Using our agreed design tokens - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
 .profileCard {
-  /* Мягкий индиго градиент согласно дизайн-соглашениям */
-  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.12);
+  /* Градиент согласно дизайн-соглашениям */
+  background: var(--gradient-premium);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-gaming-primary);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Dark theme adaptation */
+/* Light theme adaptation - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
+@media (prefers-color-scheme: light) {
+  .profileCard {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(124, 58, 237, 0.25) 100%);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+    color: var(--foreground);
+  }
+}
+
+/* Dark theme adaptation - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
 @media (prefers-color-scheme: dark) {
   .profileCard {
-    background: linear-gradient(135deg, #5b21b6 0%, #6b46c1 100%);
-    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.8) 0%, rgba(124, 58, 237, 0.8) 100%);
+    box-shadow: var(--shadow-gaming-primary);
+    color: var(--foreground);
   }
 }
 
@@ -123,11 +205,11 @@
 /* === STATUS INDICATOR === */
 .statusIndicator {
   position: absolute;
-  bottom: -0.25rem;
-  right: -0.25rem;
-  width: 1rem;
-  height: 1rem;
-  background: #10b981;
+  bottom: calc(-1 * var(--space-1));
+  right: calc(-1 * var(--space-1));
+  width: var(--space-4);
+  height: var(--space-4);
+  background: var(--success);
   border-radius: 50%;
   border: 2px solid white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -136,16 +218,16 @@
 
 @media (min-width: 640px) {
   .statusIndicator {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: var(--space-5);
+    height: var(--space-5);
     border-width: 3px;
   }
 }
 
 @media (min-width: 768px) {
   .statusIndicator {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: var(--space-6);
+    height: var(--space-6);
     border-width: 4px;
   }
 }
@@ -156,33 +238,35 @@
   align-items: center;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(8px);
-  border-radius: 9999px;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
+  border-radius: var(--radius-gaming-badge);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-gaming-sm);
+  font-family: var(--font-gaming);
   font-weight: 600;
-  color: white;
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (min-width: 640px) {
   .adaptiveBadge {
-    padding: 0.875rem 1.25rem;
-    font-size: 1rem;
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--text-gaming-md);
   }
 }
 
 .adaptiveBadgeIcon {
-  width: 1rem;
-  height: 1rem;
-  margin-right: 0.5rem;
-  color: #fbbf24;
+  width: var(--space-4);
+  height: var(--space-4);
+  margin-right: var(--space-2);
+  color: var(--gold);
 }
 
 @media (min-width: 640px) {
   .adaptiveBadgeIcon {
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-right: 0.75rem;
+    width: var(--space-5);
+    height: var(--space-5);
+    margin-right: var(--space-3);
   }
 }
 

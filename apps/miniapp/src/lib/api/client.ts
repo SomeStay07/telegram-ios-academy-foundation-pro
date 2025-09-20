@@ -73,15 +73,18 @@ class UnifiedApiClient {
       const telegramApi = getTelegramApi()
       const webApp = telegramApi.getWebApp()
       
-      if (webApp?.initData) {
+      // Only add init data if it exists and is valid
+      if (webApp?.initData && webApp.initData.trim() && webApp.initData !== 'query_id=&user=&auth_date=&hash=') {
         headers['X-Telegram-Init-Data'] = webApp.initData
       }
       
       // Add user info if available
       const user = telegramApi.getUser()
-      if (user.isAvailable) {
+      if (user.isAvailable && user.id > 0) {
         headers['X-Telegram-User-ID'] = user.id.toString()
-        headers['X-Telegram-Username'] = user.username || ''
+        if (user.username) {
+          headers['X-Telegram-Username'] = user.username
+        }
       }
 
     } catch (error) {
@@ -134,6 +137,12 @@ class UnifiedApiClient {
     try {
       const response = await this.fetchWithTimeout(url, options)
       
+      // Log auth issues for debugging
+      if (response.status === 400 || response.status === 401) {
+        console.warn(`API authentication issue: ${response.status} ${response.statusText}`)
+        console.warn('Headers sent:', options.headers)
+      }
+      
       // Don't retry on 4xx errors (client errors)
       if (response.status >= 400 && response.status < 500) {
         return response
@@ -148,6 +157,7 @@ class UnifiedApiClient {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`)
     } catch (error) {
       if (retries > 0 && !(error instanceof DOMException && error.name === 'AbortError')) {
+        console.warn(`Retrying request (${retries} attempts left):`, error)
         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY))
         return this.fetchWithRetry(url, options, retries - 1)
       }

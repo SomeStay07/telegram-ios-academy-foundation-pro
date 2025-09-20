@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Calendar, Target, Star, TrendingUp } from 'lucide-react'
 
 // Design System Components
-import { Badge } from '../../design-system/components/badge/index'
+import { InfoCard } from '../../design-system/components/info-card/InfoCard'
 
 interface ProfileStatsProps {
   userData: {
@@ -14,41 +14,48 @@ interface ProfileStatsProps {
 
 export function ProfileStats({ userData, itemVariants }: ProfileStatsProps) {
   return (
-    <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-3 mb-6 px-2">
-      {/* Streak Badge */}
-      <Badge 
-        variant="primary" 
+    <motion.div 
+      variants={itemVariants} 
+      className="flex flex-wrap justify-center gap-3 mb-6 px-2"
+    >
+      {/* Streak Card */}
+      <InfoCard
         icon={Calendar}
         value={userData.streak}
-        label="дней"
-        interactive={true}
+        title="дней"
+        variant="green"
+        size="md"
+        animated={true}
       />
 
-      {/* Completed Badge */}
-      <Badge 
-        variant="success" 
+      {/* Completed Card */}
+      <InfoCard
         icon={Target}
         value={24}
-        label="выполнено"
-        interactive={true}
+        title="выполнено"
+        variant="primary"
+        size="md"
+        animated={true}
       />
 
-      {/* Achievements Badge */}
-      <Badge 
-        variant="info" 
+      {/* Achievements Card */}
+      <InfoCard
         icon={Star}
         value={12}
-        label="достижений"
-        interactive={true}
+        title="достижений"
+        variant="purple"
+        size="md"
+        animated={true}
       />
 
-      {/* Growth Badge */}
-      <Badge 
-        variant="warning" 
+      {/* Growth Card */}
+      <InfoCard
         icon={TrendingUp}
         value="+15%"
-        label="рост"
-        interactive={true}
+        title="рост"
+        variant="orange"
+        size="md"
+        animated={true}
       />
     </motion.div>
   )

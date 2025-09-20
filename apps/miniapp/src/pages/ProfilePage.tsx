@@ -9,7 +9,8 @@ import { getRankByXP, getNextRank, getRankProgress } from '../lib/rankSystem'
 
 // Profile Components
 import { ProfileHeader } from '../components/profile/ProfileHeader'
-import { ProfileStats } from '../components/profile/ProfileStats'
+import { ProfileMetricsSection } from '../components/profile/ProfileMetricsSection'
+import { AboutAppSection } from '../components/profile/AboutAppSection'
 import { ProfileAchievements } from '../components/profile/ProfileAchievements'
 import { ProfileActivity } from '../components/profile/ProfileActivity'
 // Debug import removed for production
@@ -180,11 +181,14 @@ export function ProfilePage() {
           itemVariants={itemVariants}
         />
 
-        {/* Quick Stats Pills */}
-        <ProfileStats
+        {/* Metrics Section */}
+        <ProfileMetricsSection
           userData={userData}
           itemVariants={itemVariants}
         />
+
+        {/* About App Section */}
+        <AboutAppSection itemVariants={itemVariants} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
