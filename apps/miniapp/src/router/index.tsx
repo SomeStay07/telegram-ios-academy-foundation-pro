@@ -7,6 +7,7 @@ import { ProfilePage } from '../pages/ProfilePage'
 import { ChallengePage } from '../pages/ChallengePage'
 import { SettingsPage } from '../pages/SettingsPage'
 import { AboutPage } from '../pages/AboutPage'
+import { LevelSystemPage } from '../pages/LevelSystemPage'
 import { ThemeProvider } from '../contexts/ThemeContext'
 
 // Create QueryClient instance
@@ -91,6 +92,12 @@ const aboutRoute = createRoute({
   component: AboutPage,
 })
 
+const levelSystemRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/level-system',
+  component: LevelSystemPage,
+})
+
 // Create the route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -98,6 +105,7 @@ const routeTree = rootRoute.addChildren([
   profileRoute,
   settingsRoute,
   aboutRoute,
+  levelSystemRoute,
 ])
 
 // Create router
