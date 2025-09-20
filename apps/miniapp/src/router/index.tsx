@@ -6,6 +6,7 @@ import { AppShell } from '../app/AppShell'
 import { ProfilePage } from '../pages/ProfilePage'
 import { ChallengePage } from '../pages/ChallengePage'
 import { SettingsPage } from '../pages/SettingsPage'
+import { AboutPage } from '../pages/AboutPage'
 import { ThemeProvider } from '../contexts/ThemeContext'
 
 // Create QueryClient instance
@@ -84,12 +85,19 @@ const settingsRoute = createRoute({
   component: SettingsPage,
 })
 
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/about',
+  component: AboutPage,
+})
+
 // Create the route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
   challengeRoute,
   profileRoute,
   settingsRoute,
+  aboutRoute,
 ])
 
 // Create router

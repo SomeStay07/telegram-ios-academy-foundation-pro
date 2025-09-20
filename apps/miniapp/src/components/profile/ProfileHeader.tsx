@@ -142,16 +142,9 @@ export function ProfileHeader({
           {/* Profile Info */}
           <div className={styles.profileInfo}>
             {/* Name Section */}
-            <div className="space-y-1">
-              <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold leading-tight`}>
-                {userData.firstName}
-              </Typography>
-              {userData.lastName && (
-                <Typography variant="display-sm" className="text-gray-700 dark:text-white/90 font-semibold -mt-1">
-                  {userData.lastName}
-                </Typography>
-              )}
-            </div>
+            <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold leading-tight`}>
+              {userData.firstName} {userData.lastName}
+            </Typography>
             
             {username && (
               <div className={styles.profileUsername}>
