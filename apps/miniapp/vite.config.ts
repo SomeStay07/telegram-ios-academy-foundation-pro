@@ -20,7 +20,7 @@ const bundleSizePlugin = () => {
       }
       
       const estimatedGzipSize = totalSize * GZIP_RATIO;
-      const limitKB = 260; // Adjusted after successful optimization
+      const limitKB = 220; // Target limit from test requirements
       const actualKB = Math.round(estimatedGzipSize / 1024);
       
       console.log(`\n📦 Bundle Size Monitor:`);
@@ -69,31 +69,71 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // Disable modulepreload for lazy chunks  
-        experimentalMinChunkSize: 0,
-        manualChunks: {
-          // Core Preact (replacing React)
-          'react-vendor': ['preact', '@preact/compat'],
+        experimentalMinChunkSize: 30000, // Further increase min chunk size
+        manualChunks: (id) => {
+          // Vendor dependencies
+          if (id.includes('node_modules')) {
+            // Core React/Preact
+            if (id.includes('preact') || id.includes('@preact')) {
+              return 'react-vendor'
+            }
+            
+            // Router
+            if (id.includes('@tanstack/react-router')) {
+              return 'react-router'
+            }
+            
+            // React Query
+            if (id.includes('@tanstack/react-query')) {
+              return 'react-query'
+            }
+            
+            // Heavy animation library
+            if (id.includes('framer-motion')) {
+              return 'framer-motion'
+            }
+            
+            // Icons - split by usage
+            if (id.includes('lucide-react')) {
+              return 'lucide-icons'
+            }
+            
+            // UI library - smaller chunks
+            if (id.includes('@telegram-ios-academy/ui')) {
+              return 'ui-components'
+            }
+            
+            // Other smaller dependencies
+            if (id.includes('zustand')) return 'zustand'
+            if (id.includes('i18next') || id.includes('react-i18next')) return 'i18n'
+            if (id.includes('react-hook-form') || id.includes('@hookform')) return 'forms'
+            if (id.includes('web-vitals')) return 'web-vitals'
+            
+            // Split vendor by size and usage
+            if (id.includes('daisyui') || id.includes('tailwindcss')) {
+              return 'ui-framework'
+            }
+            if (id.includes('prism')) {
+              return 'prism'
+            }
+            
+            // Default vendor chunk for very small libs only
+            return 'vendor'
+          }
           
-          // Split routing for better optimization
-          'react-router': ['@tanstack/react-router'],
-          'react-query': ['@tanstack/react-query'],
-          'zustand': ['zustand'],
-          
-          // Analytics disabled for bundle optimization
-          
-          // UI components (split from main)
-          'ui-components': ['@telegram-ios-academy/ui'],
-          
-          // Telemetry removed for bundle optimization
-          
-          // i18n (lazy loaded)
-          'i18n': ['i18next', 'react-i18next'],
-          
-          // Form handling
-          'forms': ['react-hook-form', '@hookform/resolvers'],
-          
-          // Code highlighting (lazy loaded)
-          'prism': []
+          // App code splitting - more granular
+          if (id.includes('/pages/')) {
+            return 'pages'
+          }
+          if (id.includes('/components/profile/')) {
+            return 'profile-components'
+          }
+          if (id.includes('/components/')) {
+            return 'components'
+          }
+          if (id.includes('/design-system/')) {
+            return 'design-system'
+          }
         }
       }
     },
@@ -101,9 +141,33 @@ export default defineConfig({
     modulePreload: false,
     
     // Target smaller initial bundle
-    chunkSizeWarningLimit: 400, // Reduced from default 500
+    chunkSizeWarningLimit: 300, // Further reduced
     
-    // Enable tree shaking - use default minifier
-    minify: true
+    // Enable tree shaking - use terser for better compression
+    minify: 'terser',
+    
+    // More aggressive tree shaking and optimization
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        passes: 2
+      },
+      mangle: true,
+      format: {
+        comments: false
+      }
+    },
+    
+    // CSS code splitting and optimization
+    cssCodeSplit: true,
+    cssMinify: true,
+    
+    // Sourcemap disabled for production
+    sourcemap: false,
+    
+    // Aggressive asset optimization
+    assetsInlineLimit: 1024 // Inline small assets
   }
 })
