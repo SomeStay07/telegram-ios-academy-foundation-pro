@@ -132,7 +132,20 @@
 
 .profileProgress {
   grid-column: 1 / -1;
-  margin-top: var(--space-4);
+  margin-top: clamp(1rem, 3vw, 1.5rem);
+}
+
+/* === ADAPTIVE PROGRESS BAR === */
+.adaptiveProgressText {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  color: rgba(75, 85, 99, 0.8);
+}
+
+.adaptiveProgressText:where([data-theme="dark"]) {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* === DESIGN SYSTEM INTEGRATION === */
@@ -141,10 +154,11 @@
   /* Градиент согласно дизайн-соглашениям */
   background: var(--gradient-premium);
   border-radius: var(--radius-xl);
-  padding: var(--space-6);
+  padding: clamp(1rem, 4vw, 1.5rem);
   box-shadow: var(--shadow-gaming-primary);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
 }
 
 /* Light theme adaptation - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
@@ -248,6 +262,52 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* === ADAPTIVE SETTINGS BUTTON === */
+.adaptiveSettingsButton {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1rem);
+  right: clamp(0.75rem, 2vw, 1rem);
+  padding: clamp(0.75rem, 2vw, 1rem);
+  min-width: clamp(44px, 8vw, 52px);
+  min-height: clamp(44px, 8vw, 52px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.adaptiveSettingsButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.adaptiveSettingsIcon {
+  width: clamp(1.25rem, 2.5vw, 1.5rem);
+  height: clamp(1.25rem, 2.5vw, 1.5rem);
+}
+
+/* === ADAPTIVE USERNAME AND LEVEL SECTION === */
+.adaptiveUsernameLevel {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 0.75rem);
+  flex-wrap: wrap;
+}
+
+.adaptiveLevelText {
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  line-height: 1.5;
+  font-weight: 500;
+  color: rgba(107, 114, 128, 0.8);
+}
+
+.adaptiveLevelText:where([data-theme="dark"]) {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* === PERFORMANCE OPTIMIZATIONS === */

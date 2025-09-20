@@ -39,9 +39,9 @@ const inlineLevelBadgeVariants = cva(
         ]
       },
       size: {
-        sm: "px-2 py-0.5 text-xs min-w-[2rem]",
-        md: "px-3 py-1 text-xs min-w-[2.5rem]", 
-        lg: "px-4 py-1.5 text-sm min-w-[3rem]"
+        sm: "min-w-[2rem]",
+        md: "min-w-[2.5rem]", 
+        lg: "min-w-[3rem]"
       },
       animated: {
         true: "hover:scale-105 hover:-translate-y-0.5",
@@ -92,7 +92,10 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
       }), className)}
       style={{
         fontFamily: TYPOGRAPHY.FONT_FAMILY.GAMING,
-        fontVariantNumeric: 'tabular-nums'
+        fontVariantNumeric: 'tabular-nums',
+        padding: 'clamp(0.25rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 0.75rem)',
+        fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
+        lineHeight: '1.2'
       }}
       initial={animated ? { scale: 0, opacity: 0 } : false}
       animate={animated ? { scale: 1, opacity: 1 } : false}

@@ -106,7 +106,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
   return (
     <>
       <motion.div variants={itemVariants}>
-        <Card className={`p-6 mb-6 text-gray-900 dark:text-white border-0 shadow-xl relative ${styles.profileCard}`} style={{ position: 'relative' }}>
+        <Card className={`text-gray-900 dark:text-white border-0 shadow-xl relative ${styles.profileCard}`} style={{ position: 'relative' }}>
           {/* Level Up Celebration Effects */}
           <LevelUpCelebration isMaxRank={isMaxRank} currentRank={currentRank} />
           
@@ -118,8 +118,14 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               console.log('Button clicked directly!')
               handleSettingsClick()
             }}
-            className="absolute top-3 right-3 p-4 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 group shadow-lg cursor-pointer touch-manipulation"
-            style={{ zIndex: 1000, pointerEvents: 'auto', minWidth: '44px', minHeight: '44px' }}
+            className="absolute top-3 right-3 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 group shadow-lg cursor-pointer touch-manipulation"
+            style={{ 
+              zIndex: 1000, 
+              pointerEvents: 'auto',
+              padding: 'clamp(0.75rem, 2vw, 1rem)',
+              minWidth: 'clamp(44px, 8vw, 52px)',
+              minHeight: 'clamp(44px, 8vw, 52px)'
+            }}
             whileHover={{ 
               scale: 1.1, 
               y: -3,
@@ -136,7 +142,13 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               ...ANIMATION.SPRING.BOUNCY
             }}
           >
-            <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200 pointer-events-none" />
+            <Settings 
+              className="text-gray-600 dark:text-white/70 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200 pointer-events-none" 
+              style={{
+                width: 'clamp(1.25rem, 2.5vw, 1.5rem)',
+                height: 'clamp(1.25rem, 2.5vw, 1.5rem)'
+              }}
+            />
           </motion.button>
         
         {/* Adaptive Profile Layout */}
@@ -162,7 +174,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
             </div>
             
             {/* Username and Level Badge */}
-            <div className={`${styles.profileUsername} flex items-center gap-2`}>
+            <div className={`${styles.profileUsername} ${styles.adaptiveUsernameLevel}`}>
               {username && (
                 <motion.button
                   onClick={handleUsernameClick}
@@ -181,7 +193,12 @@ export const ProfileHeader = React.memo(function ProfileHeader({
                   </Typography>
                 </motion.button>
               )}
-              <InlineLevelBadge level={userLevel} size="sm" />
+              <div className="flex items-center">
+                <span className={`${styles.adaptiveLevelText} mr-2`}>
+                  Уровень
+                </span>
+                <InlineLevelBadge level={userLevel} size="sm" />
+              </div>
             </div>
           </div>
         </div>
@@ -189,7 +206,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
         {/* Adaptive Progress Bar */}
         {!isMaxRank && nextRank && (
           <div className={styles.profileProgress}>
-            <div className="flex justify-between text-gray-700 dark:text-white/80 text-sm mb-2">
+            <div className={styles.adaptiveProgressText}>
               <span>До {nextRank.name}</span>
               <span>{Math.round(progressPercentage)}%</span>
             </div>
