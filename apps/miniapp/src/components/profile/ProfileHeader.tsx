@@ -27,6 +27,7 @@ import { PersonalizationTouches } from './PersonalizationTouches'
 // Design Tokens
 import { Z_INDEX, ANIMATION } from '../../shared/constants/design-tokens'
 import { getUserLevel } from '../../shared'
+import { InlineLevelBadge } from '../../design-system/components/level-badge/InlineLevelBadge'
 
 interface ProfileHeaderProps {
   userData: {
@@ -104,21 +105,29 @@ export const ProfileHeader = React.memo(function ProfileHeader({
           {/* Settings Button - спокойная элегантность */}
           <motion.button 
             onClick={handleSettingsClick}
-            className={`absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group z-[${Z_INDEX.FLOATING_UI}]`}
+            className={`absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group shadow-lg z-[${Z_INDEX.FLOATING_UI}]`}
             whileHover={{ 
-              scale: 1.02, 
-              y: -1,
-              backgroundColor: "rgba(255, 255, 255, 0.15)"
+              scale: 1.1, 
+              y: -3,
+              rotate: 90,
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)"
             }}
             whileTap={{ 
-              scale: 0.98
+              scale: 0.95,
+              rotate: 180
             }}
             transition={{
-              duration: ANIMATION.DURATION.NORMAL / 1000,
-              ease: ANIMATION.EASING.TELEGRAM
+              type: "spring",
+              ...ANIMATION.SPRING.BOUNCY
             }}
           >
-            <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white" />
+            <motion.div
+              whileHover={{ rotate: 90 }}
+              transition={{ type: "spring", ...ANIMATION.SPRING.GENTLE }}
+            >
+              <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200" />
+            </motion.div>
           </motion.button>
         
         {/* Adaptive Profile Layout */}
@@ -130,10 +139,6 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               alt={displayName}
               name={displayName}
               size="2xl"
-              levelBadge={{
-                level: userLevel,
-                position: "bottom-right"
-              }}
               className={`ring-2 ring-white/20 shadow-xl hover:ring-4 hover:ring-white/40 transition-all duration-[${ANIMATION.DURATION.NORMAL}ms] ${styles.adaptiveAvatar}`}
             />
           </div>
@@ -141,9 +146,12 @@ export const ProfileHeader = React.memo(function ProfileHeader({
           {/* Profile Info */}
           <div className={styles.profileInfo}>
             {/* Name Section */}
-            <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold leading-tight`}>
-              {userData.firstName} {userData.lastName}
-            </Typography>
+            <div className="flex items-center flex-wrap gap-2">
+              <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold leading-tight`}>
+                {userData.firstName} {userData.lastName || ''}
+              </Typography>
+              <InlineLevelBadge level={userLevel} />
+            </div>
             
             {username && (
               <div className={styles.profileUsername}>

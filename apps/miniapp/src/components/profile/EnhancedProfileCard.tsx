@@ -13,6 +13,7 @@ import { Button } from '../../design-system/components/button'
 import { Avatar } from '../../design-system/components/avatar'
 import { Progress } from '../../design-system/components/progress'
 import { getUserLevel } from '../../shared'
+import { InlineLevelBadge } from '../../design-system/components/level-badge/InlineLevelBadge'
 
 interface EnhancedProfileCardProps {
   className?: string
@@ -82,16 +83,15 @@ export function EnhancedProfileCard({ className }: EnhancedProfileCardProps) {
                 name={`${profile.firstName} ${profile.lastName || ''}`}
                 size="lg"
                 variant="default"
-                levelBadge={{
-                  level: userLevel,
-                  position: "bottom-right"
-                }}
               />
               
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  {profile.firstName} {profile.lastName}
-                </h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                    {profile.firstName} {profile.lastName || ''}
+                  </h2>
+                  <InlineLevelBadge level={userLevel} size="sm" />
+                </div>
                 {profile.username && (
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     @{profile.username}

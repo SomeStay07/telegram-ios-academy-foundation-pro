@@ -53,10 +53,6 @@ export const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
           name={`${userData.firstName} ${userData.lastName}`}
           size="2xl"
           variant="profile"
-          levelBadge={{
-            level: userLevel,
-            position: "bottom-right"
-          }}
           className="cursor-pointer"
         />
         
