@@ -40,23 +40,23 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
       variants={itemVariants}
       className="mb-4"
     >
-      <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-3">
+      <div className="bg-gray-50 dark:bg-white/5 backdrop-blur-sm rounded-lg border border-gray-200 dark:border-white/10 p-3">
         
         {/* Favorite Tech Stack */}
         <motion.div
-          className="flex items-center justify-between mb-3 p-2 rounded-md bg-white/5"
+          className="flex items-center justify-between mb-3 p-2 rounded-md bg-gray-100 dark:bg-white/5"
           whileHover={{ scale: 1.01, backgroundColor: "rgba(255,255,255,0.08)" }}
         >
           <div className="flex items-center gap-2">
             <span className="text-lg">{getStackIcon(personalInfo.favoriteStack)}</span>
             <div>
               <div 
-                className="text-sm font-medium text-white/90"
+                className="text-sm font-medium text-gray-900 dark:text-white/90"
                 style={{ fontFamily: 'var(--font-gaming)' }}
               >
                 {personalInfo.favoriteStack}
               </div>
-              <div className="text-xs text-white/60">Любимый стек</div>
+              <div className="text-xs text-gray-600 dark:text-white/60">Любимый стек</div>
             </div>
           </div>
           <Heart className="w-4 h-4 text-red-400/80" />
@@ -70,7 +70,7 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <Code2 className="w-4 h-4 text-purple-400/80" />
-              <span className="text-sm text-white/80">{personalInfo.learningGoal}</span>
+              <span className="text-sm text-gray-900 dark:text-white/80">{personalInfo.learningGoal}</span>
             </div>
             <span 
               className="text-sm font-bold text-purple-400/80"
@@ -84,7 +84,7 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
           </div>
           
           {/* Goal Progress Bar */}
-          <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className="relative h-2 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
             <motion.div
               className="absolute left-0 top-0 h-full bg-gradient-to-r from-purple-400/60 to-purple-300/60 rounded-full"
               initial={{ width: 0 }}
@@ -113,7 +113,7 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
                 >
                   {personalInfo.location}
                 </div>
-                <div className="text-white/60 text-xs">{personalInfo.timezone}</div>
+                <div className="text-gray-600 dark:text-white/60 text-xs">{personalInfo.timezone}</div>
               </div>
             </div>
           </motion.div>
@@ -135,7 +135,7 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
                     {personalInfo.learningTime}
                   </span>
                 </div>
-                <div className="text-white/60 text-xs">Время обучения</div>
+                <div className="text-gray-600 dark:text-white/60 text-xs">Время обучения</div>
               </div>
             </div>
           </motion.div>
@@ -166,7 +166,7 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
                 >
                   8
                 </div>
-                <div className="text-white/60 text-xs">друзей онлайн</div>
+                <div className="text-gray-600 dark:text-white/60 text-xs">друзей онлайн</div>
               </div>
             </div>
           </motion.div>
@@ -188,7 +188,7 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
                 >
                   ТОП 15%
                 </div>
-                <div className="text-white/60 text-xs">на этой неделе</div>
+                <div className="text-gray-600 dark:text-white/60 text-xs">на этой неделе</div>
               </div>
             </div>
           </motion.div>
@@ -197,11 +197,11 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
 
         {/* Device Preference */}
         <motion.div
-          className="mt-2 flex items-center justify-center gap-2 p-2 rounded-md bg-white/5"
+          className="mt-2 flex items-center justify-center gap-2 p-2 rounded-md bg-gray-100 dark:bg-white/5"
           whileHover={{ backgroundColor: "rgba(255,255,255,0.08)" }}
         >
           <Smartphone className="w-3 h-3 text-green-400/80" />
-          <span className="text-xs text-white/70">{personalInfo.devicePreference}</span>
+          <span className="text-xs text-gray-700 dark:text-white/70">{personalInfo.devicePreference}</span>
           <span>📱</span>
         </motion.div>
 

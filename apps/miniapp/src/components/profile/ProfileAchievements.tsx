@@ -59,7 +59,7 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
     <motion.div variants={itemVariants}>
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <Typography variant="heading-lg" className="font-bold text-white">
+          <Typography variant="heading-lg" className="font-bold text-gray-900 dark:text-white">
             Достижения
           </Typography>
           <Trophy className="w-6 h-6 text-yellow-400/60" />
@@ -73,16 +73,16 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                 key={index} 
                 className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
                   achievement.achieved 
-                    ? 'bg-white/10 backdrop-blur-sm border border-white/20' 
-                    : 'bg-white/5 backdrop-blur-sm border border-white/10'
+                    ? 'bg-gray-100 dark:bg-white/10 backdrop-blur-sm border border-gray-200 dark:border-white/20' 
+                    : 'bg-gray-50 dark:bg-white/5 backdrop-blur-sm border border-gray-200 dark:border-white/10'
                 }`}
                 whileHover={{ scale: 1.02, y: -1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
                 <div className={`p-2 rounded-lg ${
                   achievement.achieved 
-                    ? 'bg-white/15' 
-                    : 'bg-white/5'
+                    ? 'bg-gray-200 dark:bg-white/15' 
+                    : 'bg-gray-100 dark:bg-white/5'
                 }`}>
                   <IconComponent 
                     className={`w-6 h-6 ${getRarityColor(achievement.rarity, achievement.achieved)}`}
@@ -92,7 +92,7 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                   <Typography 
                     variant="body-md" 
                     className={`font-medium ${
-                      achievement.achieved ? 'text-white' : 'text-white/60'
+                      achievement.achieved ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-white/60'
                     }`}
                   >
                     {achievement.title}
@@ -100,7 +100,7 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                   <Typography 
                     variant="caption-sm" 
                     className={
-                      achievement.achieved ? 'text-white/80' : 'text-white/40'
+                      achievement.achieved ? 'text-gray-700 dark:text-white/80' : 'text-gray-500 dark:text-white/40'
                     }
                   >
                     {achievement.description}

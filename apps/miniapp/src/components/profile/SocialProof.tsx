@@ -53,7 +53,7 @@ export function SocialProof({ itemVariants, userData }: SocialProofProps) {
               >
                 {performanceBadge.text}
               </div>
-              <div className="text-xs text-white/60">на этой неделе</div>
+              <div className="text-xs text-gray-600 dark:text-white/60">на этой неделе</div>
             </div>
           </div>
         </motion.div>
@@ -79,7 +79,7 @@ export function SocialProof({ itemVariants, userData }: SocialProofProps) {
               >
                 {socialStats.friendsOnline}
               </div>
-              <div className="text-xs text-white/60">друзей онлайн</div>
+              <div className="text-xs text-gray-600 dark:text-white/60">друзей онлайн</div>
             </div>
           </div>
         </motion.div>

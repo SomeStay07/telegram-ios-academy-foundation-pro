@@ -90,7 +90,7 @@ const valueVariants = cva(
 )
 
 const subtitleVariants = cva(
-  "text-white/60 transition-colors duration-300",
+  "text-gray-600 dark:text-white/60 transition-colors duration-300",
   {
     variants: {
       size: {
@@ -178,7 +178,7 @@ export const InfoCard: React.FC<InfoCardProps> = ({
           </div>
           
           {/* Title */}
-          <div className={cn(titleVariants({ size }), "text-white/80")}>
+          <div className={cn(titleVariants({ size }), "text-gray-700 dark:text-white/80")}>
             {title}
           </div>
           

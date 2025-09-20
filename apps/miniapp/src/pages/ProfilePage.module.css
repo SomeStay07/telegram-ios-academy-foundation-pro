@@ -76,7 +76,7 @@
   font-family: var(--font-gaming);
   line-height: 1.2;
   font-weight: 700;
-  color: white;
+  color: var(--foreground);
   margin-bottom: var(--space-2);
   font-variant-numeric: tabular-nums;
 }
@@ -139,11 +139,21 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Light theme adaptation */
+@media (prefers-color-scheme: light) {
+  .profileCard {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+    color: var(--foreground);
+  }
+}
+
 /* Dark theme adaptation - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
 @media (prefers-color-scheme: dark) {
   .profileCard {
     background: linear-gradient(135deg, rgba(91, 33, 182, 0.6) 0%, rgba(107, 70, 193, 0.6) 100%);
     box-shadow: var(--shadow-gaming-primary);
+    color: var(--foreground);
   }
 }
 
@@ -210,7 +220,7 @@
   font-family: var(--font-gaming);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: white;
+  color: var(--foreground);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
