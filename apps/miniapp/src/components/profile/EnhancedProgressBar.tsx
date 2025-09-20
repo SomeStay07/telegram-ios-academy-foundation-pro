@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { Trophy, Star, Zap, Target } from 'lucide-react'
 
 // Design Tokens
@@ -28,7 +28,6 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
   isMaxRank,
   className
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false)
 
   // Calculate XP range for current level
   const xpRange = useMemo(() => {
@@ -88,7 +87,17 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+          <motion.div 
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 cursor-pointer"
+            whileHover={{ 
+              scale: 1.05,
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              borderColor: "rgba(255, 255, 255, 0.4)",
+              boxShadow: "0 4px 15px rgba(255, 255, 255, 0.1)"
+            }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", ...ANIMATION.SPRING.GENTLE }}
+          >
             <CurrentIcon 
               className="text-white/80" 
               style={{
@@ -105,7 +114,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
             >
               {currentRank.name}
             </span>
-          </div>
+          </motion.div>
         </motion.div>
 
         {!isMaxRank && nextRank && (
@@ -124,7 +133,17 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
             >
               До {nextRank.name}
             </span>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
+            <motion.div 
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 backdrop-blur-sm rounded-full border border-white/10 cursor-pointer"
+              whileHover={{ 
+                scale: 1.08,
+                backgroundColor: "rgba(255, 255, 255, 0.15)",
+                borderColor: "rgba(255, 255, 255, 0.25)",
+                boxShadow: "0 6px 20px rgba(255, 255, 255, 0.15)"
+              }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", ...ANIMATION.SPRING.BOUNCY }}
+            >
               <NextIcon 
                 className="text-white/60" 
                 style={{
@@ -142,7 +161,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
               >
                 {Math.round(progressPercentage)}%
               </span>
-            </div>
+            </motion.div>
           </motion.div>
         )}
 
@@ -153,7 +172,17 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm rounded-full border border-yellow-400/30">
+            <motion.div 
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm rounded-full border border-yellow-400/30 cursor-pointer"
+              whileHover={{ 
+                scale: 1.1,
+                background: "linear-gradient(to right, rgba(245, 158, 11, 0.4), rgba(251, 146, 60, 0.4))",
+                borderColor: "rgba(245, 158, 11, 0.5)",
+                boxShadow: "0 8px 25px rgba(245, 158, 11, 0.3)"
+              }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", ...ANIMATION.SPRING.BOUNCY }}
+            >
               <Trophy 
                 className="text-yellow-400/90" 
                 style={{
@@ -170,7 +199,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
               >
                 Максимум
               </span>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </div>
@@ -244,59 +273,6 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
             />
           </motion.div>
 
-          {/* Current Position Indicator with Tooltip */}
-          {!isMaxRank && (
-            <motion.div
-              className="absolute top-1/2 transform -translate-y-1/2 cursor-pointer"
-              style={{ 
-                left: `${Math.min(progressPercentage, 100)}%`,
-                marginLeft: 'clamp(-0.375rem, -1vw, -0.25rem)'
-              }}
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 1.8, type: "spring", ...ANIMATION.SPRING.BOUNCY }}
-            >
-              <div 
-                className="w-3 h-3 bg-white rounded-full border-2 border-white/50 shadow-lg relative z-10"
-                style={{
-                  width: 'clamp(0.75rem, 1.5vw, 1rem)',
-                  height: 'clamp(0.75rem, 1.5vw, 1rem)',
-                  boxShadow: '0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3)'
-                }}
-              />
-              
-              {/* Tooltip */}
-              <AnimatePresence>
-                {showTooltip && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                    animate={{ opacity: 1, y: -15, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white rounded-lg border border-white/10 pointer-events-none"
-                    style={{
-                      fontSize: 'clamp(0.7rem, 1.8vw, 0.8rem)',
-                      fontFamily: TYPOGRAPHY.FONT_FAMILY.GAMING,
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    <div className="text-center">
-                      <div className="font-bold text-white">{currentXP.toLocaleString()} XP</div>
-                      {xpRange.needed > 0 && (
-                        <div className="text-gray-300 text-xs">
-                          Еще {xpRange.needed.toLocaleString()} до повышения
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Tooltip Arrow */}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900/95" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          )}
         </div>
 
         {/* Start and End Points */}
