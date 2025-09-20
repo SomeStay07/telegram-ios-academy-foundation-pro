@@ -324,11 +324,11 @@
   font-size: clamp(0.75rem, 2vw, 0.875rem);
   line-height: 1.5;
   font-weight: 500;
-  color: rgba(107, 114, 128, 0.8);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .adaptiveLevelText:where([data-theme="dark"]) {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* === PERFORMANCE OPTIMIZATIONS === */

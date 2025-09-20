@@ -107,7 +107,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
   return (
     <>
       <motion.div variants={itemVariants}>
-        <Card className={`text-gray-900 dark:text-white border-0 shadow-xl relative ${styles.profileCard}`} style={{ position: 'relative' }}>
+        <Card className={`text-white dark:text-white border-0 shadow-xl relative ${styles.profileCard}`} style={{ position: 'relative' }}>
           {/* Level Up Celebration Effects */}
           <LevelUpCelebration isMaxRank={isMaxRank} currentRank={currentRank} />
           
@@ -144,7 +144,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
             }}
           >
             <Settings 
-              className="text-gray-600 dark:text-white/70 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200 pointer-events-none" 
+              className="text-white/80 dark:text-white/70 group-hover:text-white dark:group-hover:text-white transition-colors duration-200 pointer-events-none" 
               style={{
                 width: 'clamp(1.25rem, 2.5vw, 1.5rem)',
                 height: 'clamp(1.25rem, 2.5vw, 1.5rem)'
@@ -169,7 +169,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
           <div className={styles.profileInfo}>
             {/* Name Section */}
             <div className="flex flex-col">
-              <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold leading-tight`}>
+              <Typography variant="display-md" className={`${styles.profileName} text-white dark:text-white font-bold leading-tight`}>
                 {userData.firstName} {userData.lastName || ''}
               </Typography>
             </div>
@@ -216,14 +216,14 @@ export const ProfileHeader = React.memo(function ProfileHeader({
                   />
                   
                   <AtSign 
-                    className="text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white relative z-10" 
+                    className="text-white/80 dark:text-white/70 group-hover:text-white dark:group-hover:text-white relative z-10" 
                     style={{
                       width: 'clamp(0.875rem, 1.8vw, 1rem)',
                       height: 'clamp(0.875rem, 1.8vw, 1rem)',
                       marginRight: 'clamp(0.375rem, 1vw, 0.5rem)'
                     }}
                   />
-                  <span className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90 relative z-10">
+                  <span className="text-white dark:text-white font-medium group-hover:text-white/90 dark:group-hover:text-white/90 relative z-10">
                     {username}
                   </span>
                 </motion.button>

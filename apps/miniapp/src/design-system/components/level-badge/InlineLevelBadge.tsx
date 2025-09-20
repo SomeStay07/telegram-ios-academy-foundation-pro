@@ -19,22 +19,22 @@ const inlineLevelBadgeVariants = cva(
       variant: {
         default: [
           "bg-white/15 border-white/25",
-          "text-gray-700 dark:text-gray-200",
+          "text-white dark:text-gray-200",
           "shadow-sm"
         ],
         premium: [
           "bg-white/20 border-white/30",
-          "text-gray-600 dark:text-gray-100",
+          "text-white dark:text-gray-100",
           "shadow-md"
         ],
         elite: [
           "bg-gradient-to-r from-white/25 to-white/20",
-          "border-white/35 text-gray-600 dark:text-gray-100",
+          "border-white/35 text-white dark:text-gray-100",
           "shadow-lg"
         ],
         master: [
           "bg-gradient-to-r from-yellow-400/10 via-white/25 to-yellow-400/10",
-          "border-yellow-400/20 text-gray-700 dark:text-yellow-100",
+          "border-yellow-400/20 text-white dark:text-yellow-100",
           "shadow-lg shadow-yellow-400/5"
         ]
       },
