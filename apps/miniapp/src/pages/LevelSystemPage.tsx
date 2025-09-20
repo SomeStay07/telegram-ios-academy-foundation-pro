@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { 
-  ArrowLeft,
   Trophy, 
   Star, 
   Zap, 
@@ -27,6 +26,9 @@ import { Card } from '../design-system/components/card/index'
 // Design Tokens
 import { ANIMATION, TYPOGRAPHY } from '../shared/constants/design-tokens'
 import { getUserLevel } from '../shared'
+
+// Telegram Integration
+import { getTelegramApi } from '../lib/telegram/api'
 
 // Hooks and Utils
 import { useTelegramAnimations } from '../lib/telegram/animations'
@@ -181,6 +183,7 @@ const levelSystem = {
 
 export const LevelSystemPage: React.FC = () => {
   const navigate = useNavigate()
+  const telegramApi = getTelegramApi()
   const { cardVariants } = useTelegramAnimations()
   const userLevel = getUserLevel(mockUserData.totalXP)
   
@@ -195,40 +198,38 @@ export const LevelSystemPage: React.FC = () => {
     return Math.max(0, mockNextRank.minXP - mockUserData.totalXP)
   }, [])
 
-  const handleBackClick = () => {
-    navigate({ to: '/profile' })
-  }
+  // Setup Telegram back button
+  useEffect(() => {
+    if (telegramApi.isAvailable()) {
+      const webApp = telegramApi.getWebApp()
+      
+      // Show back button
+      webApp?.BackButton?.show()
+      
+      // Enhanced back button click with smooth animation
+      const handleBackClick = () => {
+        // Enhanced haptic feedback sequence
+        webApp?.HapticFeedback?.impactOccurred('medium')
+        setTimeout(() => {
+          webApp?.HapticFeedback?.selectionChanged()
+        }, 50)
+        
+        // Smooth navigation back to profile
+        navigate({ to: '/profile' })
+      }
+      
+      webApp?.BackButton?.onClick(handleBackClick)
+      
+      // Cleanup on unmount
+      return () => {
+        webApp?.BackButton?.hide()
+      }
+    }
+  }, [navigate, telegramApi])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Header */}
-      <motion.div 
-        className="sticky top-0 z-50 p-4 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-700/50"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleBackClick}
-            className="p-2"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div className="flex-1">
-            <Typography variant="heading-md" className="font-bold text-gray-900 dark:text-gray-100">
-              Система уровней
-            </Typography>
-            <Typography variant="body-sm" className="text-gray-600 dark:text-gray-400">
-              Твой путь к мастерству
-            </Typography>
-          </div>
-        </div>
-      </motion.div>
-
-      <div className="p-4 pb-20 space-y-6">
+      <div className="p-4 pt-8 pb-20 space-y-6">
         {/* Current Status Hero */}
         <motion.div
           variants={cardVariants}
@@ -476,7 +477,13 @@ export const LevelSystemPage: React.FC = () => {
           className="text-center pt-4"
         >
           <Button
-            onClick={handleBackClick}
+            onClick={() => {
+              // Haptic feedback
+              if (telegramApi.isAvailable()) {
+                telegramApi.getWebApp()?.HapticFeedback?.impactOccurred('light')
+              }
+              navigate({ to: '/profile' })
+            }}
             variant="primary"
             size="lg"
             className="w-full max-w-xs"
