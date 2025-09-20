@@ -23,6 +23,7 @@ import { UsernameModal } from './UsernameModal'
 import { LevelUpCelebration } from './LevelUpCelebration'
 import { SocialProof } from './SocialProof'
 import { PersonalizationTouches } from './PersonalizationTouches'
+import { EnhancedProgressBar } from './EnhancedProgressBar'
 
 // Design Tokens
 import { Z_INDEX, ANIMATION } from '../../shared/constants/design-tokens'
@@ -232,20 +233,16 @@ export const ProfileHeader = React.memo(function ProfileHeader({
           </div>
         </div>
 
-        {/* Adaptive Progress Bar */}
-        {!isMaxRank && nextRank && (
-          <div className={styles.profileProgress}>
-            <div className={styles.adaptiveProgressText}>
-              <span>До {nextRank.name}</span>
-              <span>{Math.round(progressPercentage)}%</span>
-            </div>
-            <Progress 
-              value={progressPercentage} 
-              className="bg-white/20" 
-              style={progressStyle}
-            />
-          </div>
-        )}
+        {/* Enhanced Progress Bar */}
+        <div className={styles.profileProgress}>
+          <EnhancedProgressBar
+            currentRank={currentRank}
+            nextRank={nextRank}
+            currentXP={userData.totalXP}
+            progressPercentage={progressPercentage}
+            isMaxRank={isMaxRank}
+          />
+        </div>
       </Card>
       </motion.div>
 

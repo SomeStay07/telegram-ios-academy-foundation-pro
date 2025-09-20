@@ -130,22 +130,34 @@
   justify-content: flex-start; /* Всегда слева */
 }
 
+/* === ENHANCED PROGRESS BAR === */
 .profileProgress {
   grid-column: 1 / -1;
   margin-top: clamp(1rem, 3vw, 1.5rem);
+  position: relative;
+  z-index: 1;
 }
 
-/* === ADAPTIVE PROGRESS BAR === */
-.adaptiveProgressText {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
-  font-size: clamp(0.75rem, 2vw, 0.875rem);
-  color: rgba(75, 85, 99, 0.8);
+/* Enhanced progress bar container with premium styling */
+.profileProgress > * {
+  /* Ensure proper spacing and backdrop effects */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.adaptiveProgressText:where([data-theme="dark"]) {
-  color: rgba(255, 255, 255, 0.8);
+/* Progress bar theme adaptations */
+@media (prefers-color-scheme: light) {
+  .profileProgress {
+    /* Subtle adjustments for light theme */
+    filter: brightness(1.1) contrast(1.05);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .profileProgress {
+    /* Enhanced visibility for dark theme */
+    filter: brightness(1.05) contrast(1.1);
+  }
 }
 
 /* === DESIGN SYSTEM INTEGRATION === */
