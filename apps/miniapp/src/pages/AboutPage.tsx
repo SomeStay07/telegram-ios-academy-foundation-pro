@@ -355,8 +355,14 @@ export function AboutPage() {
                 <Card className="overflow-hidden">
                   <motion.button
                     onClick={() => toggleVersion(version.version)}
-                    className="w-full p-6 text-left hover:bg-muted/50 transition-colors"
-                    whileHover={{ backgroundColor: "var(--muted)" }}
+                    className="w-full p-6 text-left"
+                    whileHover={{ 
+                      scale: 1.02, 
+                      y: -1,
+                      backgroundColor: "var(--muted)" 
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
@@ -392,7 +398,7 @@ export function AboutPage() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                       >
                         <div className="px-6 pb-6 border-t border-border">
                           <div className="pt-4 space-y-3">
