@@ -194,7 +194,7 @@ export function ProfileHeader({
               value={progressPercentage} 
               className="bg-white/20" 
               style={{
-                '--progress-color': 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
+                '--progress-color': 'var(--gradient-xp)',
                 '--progress-bg': 'rgba(255, 255, 255, 0.15)'
               } as React.CSSProperties}
             />

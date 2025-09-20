@@ -59,7 +59,7 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
               <div className="text-xs text-white/60">Любимый стек</div>
             </div>
           </div>
-          <Heart className="w-4 h-4 text-red-400" />
+          <Heart className="w-4 h-4 text-red-400/80" />
         </motion.div>
 
         {/* Learning Goal Progress */}
@@ -69,11 +69,11 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
         >
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <Code2 className="w-4 h-4 text-purple-400" />
+              <Code2 className="w-4 h-4 text-purple-400/80" />
               <span className="text-sm text-white/80">{personalInfo.learningGoal}</span>
             </div>
             <span 
-              className="text-sm font-bold text-purple-400"
+              className="text-sm font-bold text-purple-400/80"
               style={{ 
                 fontFamily: 'var(--font-gaming)',
                 fontVariantNumeric: 'tabular-nums'
@@ -86,23 +86,12 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
           {/* Goal Progress Bar */}
           <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
             <motion.div
-              className="absolute left-0 top-0 h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full"
+              className="absolute left-0 top-0 h-full bg-gradient-to-r from-purple-400/60 to-purple-300/60 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${personalInfo.goalProgress}%` }}
               transition={{ duration: 1.5, ease: "easeOut" }}
             />
             
-            {/* Progress shimmer */}
-            <motion.div
-              className="absolute top-0 h-full w-8 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-              animate={{ x: [-32, 200] }}
-              transition={{ 
-                duration: 2, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                repeatDelay: 3
-              }}
-            />
           </div>
         </motion.div>
 
@@ -116,10 +105,10 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
             <div className="relative z-10 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-blue-400" />
+              <MapPin className="w-4 h-4 text-blue-400/80" />
               <div>
                 <div 
-                  className="text-sm font-bold text-blue-400"
+                  className="text-sm font-bold text-blue-400/80"
                   style={{ fontFamily: 'var(--font-gaming)' }}
                 >
                   {personalInfo.location}
@@ -136,9 +125,9 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
             <div className="relative z-10 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-orange-400" />
+              <Clock className="w-4 h-4 text-orange-400/80" />
               <div>
-                <div className="text-sm font-bold text-orange-400 flex items-center gap-1">
+                <div className="text-sm font-bold text-orange-400/80 flex items-center gap-1">
                   <span style={{ fontFamily: 'var(--font-gaming)' }}>
                     {getTimeEmoji(personalInfo.learningTime)}
                   </span>
@@ -164,12 +153,12 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
           >
             <div className="relative z-10 flex items-center gap-2">
               <div className="relative">
-                <Users className="w-4 h-4 text-green-400" />
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full"></div>
+                <Users className="w-4 h-4 text-green-400/80" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400/80 rounded-full"></div>
               </div>
               <div>
                 <div 
-                  className="text-sm font-bold text-green-400"
+                  className="text-sm font-bold text-green-400/80"
                   style={{ 
                     fontFamily: 'var(--font-gaming)',
                     fontVariantNumeric: 'tabular-nums'
@@ -189,10 +178,10 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
             <div className="relative z-10 flex items-center gap-2">
-              <Star className="w-4 h-4 text-indigo-400" />
+              <Star className="w-4 h-4 text-indigo-400/80" />
               <div>
                 <div 
-                  className="text-sm font-bold text-indigo-400"
+                  className="text-sm font-bold text-indigo-400/80"
                   style={{ 
                     fontFamily: 'var(--font-gaming)'
                   }}
@@ -211,14 +200,9 @@ export function PersonalizationTouches({ itemVariants, userData }: Personalizati
           className="mt-2 flex items-center justify-center gap-2 p-2 rounded-md bg-white/5"
           whileHover={{ backgroundColor: "rgba(255,255,255,0.08)" }}
         >
-          <Smartphone className="w-3 h-3 text-green-400" />
+          <Smartphone className="w-3 h-3 text-green-400/80" />
           <span className="text-xs text-white/70">{personalInfo.devicePreference}</span>
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          >
-            📱
-          </motion.div>
+          <span>📱</span>
         </motion.div>
 
       </div>

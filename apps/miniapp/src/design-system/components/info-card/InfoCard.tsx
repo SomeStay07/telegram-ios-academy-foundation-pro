@@ -9,14 +9,14 @@ const infoCardVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-indigo-400/10 border-indigo-400/20 text-indigo-400",
-        success: "bg-green-400/10 border-green-400/20 text-green-400", 
-        warning: "bg-orange-400/10 border-orange-400/20 text-orange-400",
-        info: "bg-blue-400/10 border-blue-400/20 text-blue-400",
-        purple: "bg-purple-400/10 border-purple-400/20 text-purple-400",
-        green: "bg-green-400/10 border-green-400/20 text-green-400",
-        blue: "bg-blue-400/10 border-blue-400/20 text-blue-400",
-        orange: "bg-orange-400/10 border-orange-400/20 text-orange-400"
+        primary: "bg-indigo-400/10 border-indigo-400/20 text-indigo-400/80",
+        success: "bg-green-400/10 border-green-400/20 text-green-400/80", 
+        warning: "bg-orange-400/10 border-orange-400/20 text-orange-400/80",
+        info: "bg-blue-400/10 border-blue-400/20 text-blue-400/80",
+        purple: "bg-purple-400/10 border-purple-400/20 text-purple-400/80",
+        green: "bg-green-400/10 border-green-400/20 text-green-400/80",
+        blue: "bg-blue-400/10 border-blue-400/20 text-blue-400/80",
+        orange: "bg-orange-400/10 border-orange-400/20 text-orange-400/80"
       },
       size: {
         sm: "p-2",

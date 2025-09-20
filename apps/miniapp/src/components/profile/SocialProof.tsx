@@ -23,9 +23,9 @@ export function SocialProof({ itemVariants, userData }: SocialProofProps) {
   }
 
   const getPerformanceBadge = (rank: number) => {
-    if (rank <= 5) return { text: 'ТОП 5%', color: 'text-yellow-400', bg: 'bg-yellow-400/20', icon: Crown }
-    if (rank <= 15) return { text: 'ТОП 15%', color: 'text-blue-400', bg: 'bg-blue-400/20', icon: Medal }
-    if (rank <= 30) return { text: 'ТОП 30%', color: 'text-green-400', bg: 'bg-green-400/20', icon: TrendingUp }
+    if (rank <= 5) return { text: 'ТОП 5%', color: 'text-yellow-400/80', bg: 'bg-yellow-400/20', icon: Crown }
+    if (rank <= 15) return { text: 'ТОП 15%', color: 'text-blue-400/80', bg: 'bg-blue-400/20', icon: Medal }
+    if (rank <= 30) return { text: 'ТОП 30%', color: 'text-green-400/80', bg: 'bg-green-400/20', icon: TrendingUp }
     return { text: 'В прогрессе', color: 'text-gray-400', bg: 'bg-gray-400/20', icon: Star }
   }
 
@@ -67,9 +67,9 @@ export function SocialProof({ itemVariants, userData }: SocialProofProps) {
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         >
           <div className="relative z-10 flex flex-col items-center text-center">
-            <CheckCircle className="w-4 h-4 text-green-400 mb-1" />
+            <CheckCircle className="w-4 h-4 text-green-400/80 mb-1" />
             <div 
-              className="text-lg font-bold text-green-400"
+              className="text-lg font-bold text-green-400/80"
               style={{ 
                 fontFamily: 'var(--font-gaming)',
                 fontVariantNumeric: 'tabular-nums'
@@ -88,9 +88,9 @@ export function SocialProof({ itemVariants, userData }: SocialProofProps) {
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         >
           <div className="relative z-10 flex flex-col items-center text-center">
-            <BarChart3 className="w-4 h-4 text-blue-400 mb-1" />
+            <BarChart3 className="w-4 h-4 text-blue-400/80 mb-1" />
             <div 
-              className="text-lg font-bold text-blue-400 flex items-center"
+              className="text-lg font-bold text-blue-400/80 flex items-center"
               style={{ 
                 fontFamily: 'var(--font-gaming)',
                 fontVariantNumeric: 'tabular-nums'
@@ -114,10 +114,10 @@ export function SocialProof({ itemVariants, userData }: SocialProofProps) {
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         >
           <div className="relative z-10 flex items-center gap-2">
-            <BadgeIcon className="w-4 h-4 text-indigo-400" />
+            <BadgeIcon className="w-4 h-4 text-indigo-400/80" />
             <div>
               <div 
-                className="text-sm font-bold text-indigo-400"
+                className="text-sm font-bold text-indigo-400/80"
                 style={{ fontFamily: 'var(--font-gaming)' }}
               >
                 {performanceBadge.text}
@@ -135,12 +135,12 @@ export function SocialProof({ itemVariants, userData }: SocialProofProps) {
         >
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Users className="w-4 h-4 text-green-400" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full"></div>
+              <Users className="w-4 h-4 text-green-400/80" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400/80 rounded-full"></div>
             </div>
             <div>
               <div 
-                className="text-sm font-bold text-green-400"
+                className="text-sm font-bold text-green-400/80"
                 style={{ 
                   fontFamily: 'var(--font-gaming)',
                   fontVariantNumeric: 'tabular-nums'

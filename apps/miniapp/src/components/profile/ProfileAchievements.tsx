@@ -46,11 +46,11 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
     if (!achieved) return 'text-white/40'
     
     const colors = {
-      bronze: 'text-orange-400/80',
-      silver: 'text-white/80', 
-      gold: 'text-yellow-400/80',
-      platinum: 'text-blue-400/80',
-      diamond: 'text-cyan-400/80'
+      bronze: 'text-orange-400/60',
+      silver: 'text-white/60', 
+      gold: 'text-yellow-400/60',
+      platinum: 'text-blue-400/60',
+      diamond: 'text-cyan-400/60'
     }
     return colors[rarity as keyof typeof colors] || 'text-white/40'
   }
@@ -62,7 +62,7 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
           <Typography variant="heading-lg" className="font-bold text-white">
             Достижения
           </Typography>
-          <Award className="w-6 h-6 text-yellow-400/80" />
+          <Award className="w-6 h-6 text-yellow-400/60" />
         </div>
         
         <div className="space-y-4">
@@ -107,7 +107,7 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                   </Typography>
                 </div>
                 {achievement.achieved && (
-                  <Award className="w-5 h-5 text-yellow-400/80" />
+                  <Award className="w-5 h-5 text-yellow-400/60" />
                 )}
               </motion.div>
             )
