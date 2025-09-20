@@ -299,6 +299,13 @@
   flex-wrap: wrap;
 }
 
+/* Ensure both username and level badge have consistent height */
+.adaptiveUsernameLevel > * {
+  min-height: clamp(2rem, 5vw, 2.25rem);
+  display: flex;
+  align-items: center;
+}
+
 .adaptiveLevelText {
   font-size: clamp(0.75rem, 2vw, 0.875rem);
   line-height: 1.5;

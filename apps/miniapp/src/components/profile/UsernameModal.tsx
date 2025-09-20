@@ -90,7 +90,11 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[${Z_INDEX.SYSTEM_MODAL}]`}
+          className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[${Z_INDEX.SYSTEM_MODAL}]`}
+          style={{ 
+            padding: 'clamp(1rem, 4vw, 1.5rem)',
+            paddingBottom: 'clamp(6rem, 15vw, 8rem)' // Extra space for tab bar
+          }}
           onClick={onClose}
         >
         <motion.div
@@ -98,7 +102,11 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", ...ANIMATION.SPRING.GENTLE }}
-          className={`bg-white dark:bg-gray-900 rounded-2xl shadow-2xl ${SIZE.MODAL.MAX_WIDTH} w-full ${SIZE.MODAL.PADDING.MOBILE} ${SIZE.MODAL.PADDING.DESKTOP} ${SIZE.MODAL.MAX_HEIGHT} overflow-hidden`}
+          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full overflow-hidden"
+          style={{
+            maxWidth: 'clamp(320px, 90vw, 480px)',
+            maxHeight: 'clamp(500px, 70vh, 600px)'
+          }}
           onClick={(e) => e.stopPropagation()}
         >
             {/* Header */}
@@ -133,7 +141,13 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
             </div>
 
             {/* Facts */}
-            <div className="p-6 space-y-4 max-h-96 overflow-y-auto">
+            <div 
+              className="space-y-4 overflow-y-auto flex-1"
+              style={{
+                padding: 'clamp(1rem, 4vw, 1.5rem)',
+                maxHeight: 'calc(70vh - 200px)' // Reserve space for header and footer
+              }}
+            >
               {facts.map((fact, index) => (
                 <motion.div
                   key={index}
@@ -158,7 +172,12 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
             </div>
 
             {/* Footer */}
-            <div className="p-6 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+            <div 
+              className="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
+              style={{
+                padding: 'clamp(1rem, 4vw, 1.5rem)'
+              }}
+            >
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}

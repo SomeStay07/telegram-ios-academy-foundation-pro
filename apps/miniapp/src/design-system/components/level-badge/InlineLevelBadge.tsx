@@ -97,7 +97,8 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
         fontVariantNumeric: 'tabular-nums',
         padding: 'clamp(0.25rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 0.75rem)',
         fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
-        lineHeight: '1.2'
+        lineHeight: '1.2',
+        minHeight: 'auto' // Let it match username height naturally
       }}
       initial={animated ? { scale: 0, opacity: 0 } : false}
       animate={animated ? { scale: 1, opacity: 1 } : false}
@@ -162,9 +163,9 @@ export const InlineLevelBadge: React.FC<InlineLevelBadgeProps> = ({
       )}
 
       {/* Content */}
-      <div className="relative z-10 flex items-center gap-1.5 font-extrabold">
+      <div className="relative z-10 flex items-center font-extrabold" style={{ gap: 'clamp(0.25rem, 1vw, 0.375rem)' }}>
         {showText && (
-          <span className="text-xs opacity-80">
+          <span className="opacity-80">
             Уровень
           </span>
         )}

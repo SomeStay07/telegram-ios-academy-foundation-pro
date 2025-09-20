@@ -178,7 +178,12 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               {username && (
                 <motion.button
                   onClick={handleUsernameClick}
-                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer overflow-hidden"
+                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full border border-white/20 group cursor-pointer overflow-hidden"
+                  style={{
+                    padding: 'clamp(0.25rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 0.75rem)',
+                    fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
+                    lineHeight: '1.2'
+                  }}
                   whileHover={{ 
                     scale: 1.05,
                     y: -2,
@@ -209,10 +214,17 @@ export const ProfileHeader = React.memo(function ProfileHeader({
                     }}
                   />
                   
-                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white relative z-10" />
-                  <Typography variant="body-sm" className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90 relative z-10">
+                  <AtSign 
+                    className="text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white relative z-10" 
+                    style={{
+                      width: 'clamp(0.875rem, 1.8vw, 1rem)',
+                      height: 'clamp(0.875rem, 1.8vw, 1rem)',
+                      marginRight: 'clamp(0.375rem, 1vw, 0.5rem)'
+                    }}
+                  />
+                  <span className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90 relative z-10">
                     {username}
-                  </Typography>
+                  </span>
                 </motion.button>
               )}
               <InlineLevelBadge level={userLevel} size="sm" showText={true} />
