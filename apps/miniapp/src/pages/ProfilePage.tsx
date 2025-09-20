@@ -20,6 +20,7 @@ import { TelegramPageTransition, TelegramSectionTransition } from '../components
 // Profile Components
 import { ProfileHeader } from '../components/profile/ProfileHeader'
 import { ProfileMetricsSection } from '../components/profile/ProfileMetricsSection'
+import { RecommendedContent } from '../components/profile/RecommendedContent'
 import { AboutAppSection } from '../components/profile/AboutAppSection'
 import { ProfileAchievements } from '../components/profile/ProfileAchievements'
 import { ProfileActivity } from '../components/profile/ProfileActivity'
@@ -245,6 +246,11 @@ export function ProfilePage() {
             userData={userData}
             itemVariants={itemVariants}
           />
+        </TelegramSectionTransition>
+
+        {/* Recommended Content Section */}
+        <TelegramSectionTransition delay={1.5}>
+          <RecommendedContent itemVariants={itemVariants} />
         </TelegramSectionTransition>
 
         {/* Performance: Lazy loading for below-fold content */}

@@ -1,5 +1,5 @@
 import { useRouterState, useNavigate } from '@tanstack/react-router'
-import { Calendar, User } from 'lucide-react'
+import { Calendar, User, BookOpen } from 'lucide-react'
 import { NavigationTabBar } from '../../design-system/components/navigation/index'
 import type { NavigationTabItem } from '../../design-system/components/navigation/index'
 
@@ -9,6 +9,12 @@ const tabs: NavigationTabItem[] = [
     path: '/challenge',
     label: 'Ежедневный вызов',
     icon: Calendar,
+  },
+  {
+    id: 'content',
+    path: '/content',
+    label: 'Контент',
+    icon: BookOpen,
   },
   {
     id: 'profile',
