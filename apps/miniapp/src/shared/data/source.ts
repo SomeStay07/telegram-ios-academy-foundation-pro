@@ -1,4 +1,6 @@
 import { getTelegramApi } from '../../lib/telegram/api'
+import { MockDS } from './mockds'
+import { TGDS } from './tgds'
 
 export type TGUser = { 
   id: number; 
@@ -56,74 +58,3 @@ export function getDataSource(): IDataSource {
   return new MockDS()
 }
 
-class TGDS implements IDataSource {
-  async getProfile(): Promise<ProfileData> {
-    const api = getTelegramApi()
-    const user = api.getUser()
-    
-    return {
-      user: {
-        id: user.id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        username: user.username,
-        photo_url: user.photo_url,
-        language_code: user.language_code,
-        is_premium: user.is_premium
-      },
-      stats: {
-        completed: 0,
-        total: 10,
-        streak: 0
-      }
-    }
-  }
-  
-  async getActivity(): Promise<ActivityItem[]> {
-    return [
-      {
-        id: 'activity_1',
-        title: 'Started: iOS Fundamentals',
-        subtitle: 'Course Progress',
-        at: new Date().toISOString()
-      }
-    ]
-  }
-}
-
-class MockDS implements IDataSource {
-  async getProfile(): Promise<ProfileData> {
-    return {
-      user: {
-        id: 777,
-        first_name: 'Timur',
-        last_name: 'C.',
-        username: 'somestay07',
-        language_code: 'en',
-        is_premium: false
-      },
-      stats: {
-        completed: 5,
-        total: 10,
-        streak: 3
-      }
-    }
-  }
-  
-  async getActivity(): Promise<ActivityItem[]> {
-    return [
-      {
-        id: 'activity_1',
-        title: 'Watched: SwiftUI Basics',
-        subtitle: 'Video Tutorial',
-        at: '2024-01-15T10:30:00Z'
-      },
-      {
-        id: 'activity_2',
-        title: 'Quiz: ARC & CoW',
-        subtitle: 'Knowledge Check',
-        at: '2024-01-14T15:45:00Z'
-      }
-    ]
-  }
-}

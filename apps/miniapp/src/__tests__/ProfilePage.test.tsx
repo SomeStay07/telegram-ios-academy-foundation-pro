@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ProfilePage } from '../pages/profile/ProfilePage'
+import { ProfilePage } from '../pages/ProfilePage'
 
 // Mock Telegram WebApp
 const mockWebApp = {
