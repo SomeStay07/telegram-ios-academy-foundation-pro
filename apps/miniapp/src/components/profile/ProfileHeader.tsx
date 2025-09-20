@@ -23,6 +23,7 @@ import { LevelUpCelebration } from './LevelUpCelebration'
 import { RecentActivity } from './RecentActivity'
 import { SocialProof } from './SocialProof'
 import { PersonalizationTouches } from './PersonalizationTouches'
+import { ScrollableMetrics } from './ScrollableMetrics'
 
 interface ProfileHeaderProps {
   userData: {
@@ -166,20 +167,9 @@ export function ProfileHeader({
               </div>
             )}
 
-            {/* Adaptive Level & XP Pills */}
-            <div className={styles.profileBadges}>
-              <div className={styles.adaptiveBadge}>
-                <Trophy className={styles.adaptiveBadgeIcon} />
-                <span className="text-gray-900 dark:text-white font-semibold">
-                  {currentRank.name}
-                </span>
-              </div>
-              <div className={styles.adaptiveBadge}>
-                <Zap className={styles.adaptiveBadgeIcon} />
-                <span className="text-gray-900 dark:text-white font-semibold">
-                  {userData.totalXP >= 1000 ? `${Math.floor(userData.totalXP / 1000)}K` : userData.totalXP}
-                </span>
-              </div>
+            {/* Scrollable Metrics */}
+            <div className="mt-4">
+              <ScrollableMetrics userData={userData} />
             </div>
           </div>
         </div>
