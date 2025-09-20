@@ -11,6 +11,7 @@ import { Progress } from '../../design-system/components/progress/index'
 
 // Telegram Integration
 import { getTelegramApi } from '../../lib/telegram/api'
+import { TelegramHaptics, useTelegramAnimations } from '../../lib/telegram/animations'
 
 // CSS Module
 import styles from '../../pages/ProfilePage.module.css'
@@ -57,6 +58,9 @@ export const ProfileHeader = React.memo(function ProfileHeader({
   const navigate = useNavigate()
   const telegramApi = getTelegramApi()
   const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false)
+  
+  // Telegram animations and haptics
+  const { cardVariants, transition } = useTelegramAnimations()
 
   // Memoized fallback calculation for avatar
   const avatarFallback = useMemo(() => 
@@ -69,42 +73,19 @@ export const ProfileHeader = React.memo(function ProfileHeader({
     '--progress-bg': 'rgba(255, 255, 255, 0.15)'
   } as React.CSSProperties), [])
 
-  const handleSettingsClick = useCallback(() => {
-    // Enhanced haptic feedback sequence
-    try {
-      if (telegramApi.isAvailable()) {
-        const webApp = telegramApi.getWebApp()
-        // Double haptic feedback for better UX
-        if (webApp?.HapticFeedback?.impactOccurred) {
-          webApp.HapticFeedback.impactOccurred('medium')
-          setTimeout(() => {
-            if (webApp?.HapticFeedback?.selectionChanged) {
-              webApp.HapticFeedback.selectionChanged()
-            }
-          }, 100)
-        }
-      }
-    } catch (error) {
-      // Gracefully handle haptic feedback errors
-      console.warn('Haptic feedback not available:', error)
-    }
+  const handleSettingsClick = useCallback(async () => {
+    // Новая улучшенная haptic последовательность
+    await TelegramHaptics.pageTransition()
     
     // Smooth navigation to settings page
     navigate({ to: '/settings' })
-  }, [telegramApi, navigate])
+  }, [navigate])
 
-  const handleUsernameClick = useCallback(() => {
-    // Haptic feedback for username click
-    try {
-      if (telegramApi.isAvailable() && telegramApi.hapticFeedback) {
-        telegramApi.hapticFeedback.impactOccurred('light')
-      }
-    } catch (error) {
-      // Gracefully handle haptic feedback errors
-      console.warn('Haptic feedback not available:', error)
-    }
+  const handleUsernameClick = useCallback(async () => {
+    // Улучшенный haptic feedback
+    await TelegramHaptics.impact('light')
     setIsUsernameModalOpen(true)
-  }, [telegramApi])
+  }, [])
 
   return (
     <>

@@ -13,6 +13,10 @@ import { useSessionStorage } from '../hooks/useSessionStorage'
 import { useTelegramDataCache, useTelegramThemeCache } from '../hooks/useTelegramCache'
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver'
 
+// Telegram-specific animations
+import { useTelegramAnimations } from '../lib/telegram/animations'
+import { TelegramPageTransition, TelegramSectionTransition } from '../components/telegram/TelegramPageTransition'
+
 // Profile Components
 import { ProfileHeader } from '../components/profile/ProfileHeader'
 import { ProfileMetricsSection } from '../components/profile/ProfileMetricsSection'
@@ -24,6 +28,9 @@ import { ProfileActivity } from '../components/profile/ProfileActivity'
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
   const { data: authData, isSuccess: isAuthSuccess } = useAuthVerification()
+  
+  // Telegram-specific animations
+  const { haptics, platform } = useTelegramAnimations()
   
   // Performance: Caching implementations
   const [profileSettings, setProfileSettings] = usePersistedState('profile-settings', {
@@ -215,44 +222,47 @@ export function ProfilePage() {
   }, [setSessionData])
 
   return (
-    <motion.div 
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <TelegramPageTransition className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         
-        {/* Profile Header */}
-        <ProfileHeader
-          userData={userData}
-          displayName={displayName}
-          username={username}
-          currentRank={currentRank}
-          nextRank={nextRank}
-          isMaxRank={isMaxRank}
-          progressPercentage={progressPercentage}
-          itemVariants={itemVariants}
-        />
+        {/* Profile Header - с Telegram анимацией */}
+        <TelegramSectionTransition delay={0}>
+          <ProfileHeader
+            userData={userData}
+            displayName={displayName}
+            username={username}
+            currentRank={currentRank}
+            nextRank={nextRank}
+            isMaxRank={isMaxRank}
+            progressPercentage={progressPercentage}
+            itemVariants={itemVariants}
+          />
+        </TelegramSectionTransition>
 
-        {/* Metrics Section */}
-        <ProfileMetricsSection
-          userData={userData}
-          itemVariants={itemVariants}
-        />
+        {/* Metrics Section - с задержкой для stagger эффекта */}
+        <TelegramSectionTransition delay={1}>
+          <ProfileMetricsSection
+            userData={userData}
+            itemVariants={itemVariants}
+          />
+        </TelegramSectionTransition>
 
         {/* Performance: Lazy loading for below-fold content */}
-        <LazyProfileSection
-          profileSettings={profileSettings}
-          itemVariants={itemVariants}
-        />
+        <TelegramSectionTransition delay={2}>
+          <LazyProfileSection
+            profileSettings={profileSettings}
+            itemVariants={itemVariants}
+          />
+        </TelegramSectionTransition>
 
         {/* About App Section - moved to bottom */}
-        <LazyAboutAppSection itemVariants={itemVariants} />
+        <TelegramSectionTransition delay={3}>
+          <LazyAboutAppSection itemVariants={itemVariants} />
+        </TelegramSectionTransition>
       </div>
       
       {/* Debug component removed for production */}
-    </motion.div>
+    </TelegramPageTransition>
   )
 }
 
