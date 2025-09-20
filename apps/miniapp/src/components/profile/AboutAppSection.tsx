@@ -56,9 +56,9 @@ export function AboutAppSection({ itemVariants }: AboutAppSectionProps) {
         <motion.button
           onClick={handleAboutClick}
           className="w-full text-left group"
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">

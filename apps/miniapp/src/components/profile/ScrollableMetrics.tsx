@@ -122,7 +122,7 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
               whileHover={{ 
                 scale: 1.02, 
                 y: -1,
-                transition: { type: "spring", stiffness: 400, damping: 25 }
+                transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
               }}
             >
               <div className="relative z-10 flex flex-col items-center text-center">
