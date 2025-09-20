@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, 
@@ -16,7 +16,6 @@ import {
   Bug,
   Sparkles
 } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
 
 // Design System Components
 import { Card } from '../design-system/components/card'
@@ -131,11 +130,59 @@ const getVersionBadgeColor = (type: string) => {
 }
 
 export function AboutPage() {
-  const navigate = useNavigate()
   const telegramApi = getTelegramApi()
   const [expandedVersion, setExpandedVersion] = useState<string | null>("1.2.0")
 
-  const handleBack = () => {
+  // Set up Telegram Back Button navigation
+  useEffect(() => {
+    try {
+      if (telegramApi.isAvailable()) {
+        const webApp = telegramApi.getWebApp()
+        
+        // Show Back Button
+        if (webApp?.BackButton) {
+          webApp.BackButton.show()
+          
+          // Handle back button click
+          const handleBackButton = () => {
+            try {
+              // Haptic feedback
+              if (telegramApi.hapticFeedback) {
+                telegramApi.hapticFeedback.impactOccurred('light')
+              }
+              
+              // Navigate back using browser history or direct navigation
+              if (window.history.length > 1) {
+                window.history.back()
+              } else {
+                window.location.href = '/profile'
+              }
+            } catch (error) {
+              console.warn('Back navigation error:', error)
+              window.location.href = '/profile'
+            }
+          }
+          
+          // Add event listener
+          webApp.BackButton.onClick(handleBackButton)
+          
+          // Cleanup function
+          return () => {
+            try {
+              webApp.BackButton.hide()
+              webApp.BackButton.offClick(handleBackButton)
+            } catch (error) {
+              console.warn('BackButton cleanup error:', error)
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Telegram BackButton setup failed:', error)
+    }
+  }, [telegramApi])
+
+  const handleManualBack = () => {
     try {
       if (telegramApi.isAvailable() && telegramApi.hapticFeedback) {
         telegramApi.hapticFeedback.impactOccurred('light')
@@ -144,7 +191,12 @@ export function AboutPage() {
       console.warn('Haptic feedback not available:', error)
     }
     
-    navigate({ to: '/profile' })
+    // Manual back navigation (fallback)
+    if (window.history.length > 1) {
+      window.history.back()
+    } else {
+      window.location.href = '/profile'
+    }
   }
 
   const toggleVersion = (version: string) => {
@@ -196,7 +248,7 @@ export function AboutPage() {
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={handleBack}
+            onClick={handleManualBack}
             className="p-2"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -273,8 +325,43 @@ export function AboutPage() {
           </div>
         </motion.div>
 
-        {/* Version History */}
-        <motion.div variants={itemVariants}>
+        {/* Current Progress */}
+        <motion.div variants={itemVariants} className="mt-8">
+          <Card className="p-6 bg-gradient-to-r from-success/5 to-success/10 border border-success/20">
+            <Typography variant="heading-sm" className="font-semibold mb-4 text-success">
+              Текущий прогресс разработки
+            </Typography>
+            
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <Typography variant="body-sm">iOS Core Features</Typography>
+                  <Typography variant="caption-sm" className="text-muted-foreground">85%</Typography>
+                </div>
+                <Progress value={85} className="h-2" />
+              </div>
+              
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <Typography variant="body-sm">SwiftUI Modules</Typography>
+                  <Typography variant="caption-sm" className="text-muted-foreground">70%</Typography>
+                </div>
+                <Progress value={70} className="h-2" />
+              </div>
+              
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <Typography variant="body-sm">Advanced Topics</Typography>
+                  <Typography variant="caption-sm" className="text-muted-foreground">45%</Typography>
+                </div>
+                <Progress value={45} className="h-2" />
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Version History - moved to bottom */}
+        <motion.div variants={itemVariants} className="mt-8">
           <Typography variant="heading-lg" className="font-bold mb-6">
             История версий
           </Typography>
@@ -355,40 +442,6 @@ export function AboutPage() {
           </div>
         </motion.div>
 
-        {/* Current Progress */}
-        <motion.div variants={itemVariants} className="mt-8">
-          <Card className="p-6 bg-gradient-to-r from-success/5 to-success/10 border border-success/20">
-            <Typography variant="heading-sm" className="font-semibold mb-4 text-success">
-              Текущий прогресс разработки
-            </Typography>
-            
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <Typography variant="body-sm">iOS Core Features</Typography>
-                  <Typography variant="caption-sm" className="text-muted-foreground">85%</Typography>
-                </div>
-                <Progress value={85} className="h-2" />
-              </div>
-              
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <Typography variant="body-sm">SwiftUI Modules</Typography>
-                  <Typography variant="caption-sm" className="text-muted-foreground">70%</Typography>
-                </div>
-                <Progress value={70} className="h-2" />
-              </div>
-              
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <Typography variant="body-sm">Advanced Topics</Typography>
-                  <Typography variant="caption-sm" className="text-muted-foreground">45%</Typography>
-                </div>
-                <Progress value={45} className="h-2" />
-              </div>
-            </div>
-          </Card>
-        </motion.div>
       </div>
     </motion.div>
   )

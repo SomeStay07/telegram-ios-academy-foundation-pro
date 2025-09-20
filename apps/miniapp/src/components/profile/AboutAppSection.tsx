@@ -1,7 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Info, ChevronRight, Smartphone, Code, Zap } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
 
 // Design System Components
 import { Card } from '../../design-system/components/card'
@@ -16,7 +15,6 @@ interface AboutAppSectionProps {
 }
 
 export function AboutAppSection({ itemVariants }: AboutAppSectionProps) {
-  const navigate = useNavigate()
   const telegramApi = getTelegramApi()
 
   const handleAboutClick = () => {
@@ -29,7 +27,25 @@ export function AboutAppSection({ itemVariants }: AboutAppSectionProps) {
       console.warn('Haptic feedback not available:', error)
     }
     
-    navigate({ to: '/about' })
+    // Use Telegram navigation instead of React Router
+    try {
+      if (telegramApi.isAvailable()) {
+        const webApp = telegramApi.getWebApp()
+        if (webApp?.openLink) {
+          // Open in same window with proper navigation
+          window.location.href = '/about'
+        } else {
+          // Fallback for development
+          window.location.href = '/about'
+        }
+      } else {
+        // Fallback for development
+        window.location.href = '/about'
+      }
+    } catch (error) {
+      console.warn('Telegram navigation not available, using fallback:', error)
+      window.location.href = '/about'
+    }
   }
 
   const currentVersion = "1.2.0" // TODO: Get from package.json or env

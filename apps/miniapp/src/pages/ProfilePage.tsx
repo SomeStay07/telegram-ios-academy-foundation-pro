@@ -187,10 +187,7 @@ export function ProfilePage() {
           itemVariants={itemVariants}
         />
 
-        {/* About App Section */}
-        <AboutAppSection itemVariants={itemVariants} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           
           {/* Recent Achievements */}
           <ProfileAchievements itemVariants={itemVariants} />
@@ -198,6 +195,9 @@ export function ProfilePage() {
           {/* Activity Overview */}
           <ProfileActivity itemVariants={itemVariants} />
         </div>
+
+        {/* About App Section - moved to bottom */}
+        <AboutAppSection itemVariants={itemVariants} />
       </div>
       
       {/* Debug component removed for production */}
