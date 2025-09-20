@@ -12,6 +12,7 @@ import { useUserInitialization, useUserStats, useSyncTelegramData } from '../../
 import { Button } from '../../design-system/components/button'
 import { Avatar } from '../../design-system/components/avatar'
 import { Progress } from '../../design-system/components/progress'
+import { getUserLevel } from '../../shared'
 
 interface EnhancedProfileCardProps {
   className?: string
@@ -21,6 +22,9 @@ export function EnhancedProfileCard({ className }: EnhancedProfileCardProps) {
   const { profile, isLoading, error, isReady } = useUserInitialization()
   const { data: stats, isLoading: statsLoading } = useUserStats()
   const syncTelegram = useSyncTelegramData()
+  
+  // Calculate user level
+  const userLevel = profile ? getUserLevel(stats?.totalXP || 0) : 0
 
   // Loading state
   if (isLoading || !isReady) {
@@ -78,6 +82,10 @@ export function EnhancedProfileCard({ className }: EnhancedProfileCardProps) {
                 name={`${profile.firstName} ${profile.lastName || ''}`}
                 size="lg"
                 variant="default"
+                levelBadge={{
+                  level: userLevel,
+                  position: "bottom-right"
+                }}
               />
               
               <div>

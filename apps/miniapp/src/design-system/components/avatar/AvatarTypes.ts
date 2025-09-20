@@ -32,6 +32,12 @@ export interface AvatarProps
   className?: string
   /** Кастомные CSS классы для изображения */
   imageClassName?: string
+  /** Level badge для отображения уровня */
+  levelBadge?: {
+    level: number
+    variant?: 'default' | 'premium' | 'elite' | 'master'
+    position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
+  }
 }
 
 /**

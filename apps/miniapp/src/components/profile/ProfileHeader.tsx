@@ -26,6 +26,7 @@ import { PersonalizationTouches } from './PersonalizationTouches'
 
 // Design Tokens
 import { Z_INDEX, ANIMATION } from '../../shared/constants/design-tokens'
+import { getUserLevel } from '../../shared'
 
 interface ProfileHeaderProps {
   userData: {
@@ -61,6 +62,9 @@ export const ProfileHeader = React.memo(function ProfileHeader({
   const navigate = useNavigate()
   const telegramApi = getTelegramApi()
   const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false)
+  
+  // Calculate user level
+  const userLevel = getUserLevel(userData.totalXP)
   
   // Telegram animations and haptics
   const { cardVariants, transition } = useTelegramAnimations()
@@ -124,12 +128,14 @@ export const ProfileHeader = React.memo(function ProfileHeader({
             <Avatar
               src={userData.avatar}
               alt={displayName}
-              fallback={avatarFallback}
+              name={displayName}
               size="2xl"
-              className={`ring-4 ring-white/30 shadow-2xl ${styles.adaptiveAvatar}`}
+              levelBadge={{
+                level: userLevel,
+                position: "bottom-right"
+              }}
+              className={`ring-2 ring-white/20 shadow-xl hover:ring-4 hover:ring-white/40 transition-all duration-[${ANIMATION.DURATION.NORMAL}ms] ${styles.adaptiveAvatar}`}
             />
-            {/* Online Status */}
-            <div className={styles.statusIndicator}></div>
           </div>
 
           {/* Profile Info */}

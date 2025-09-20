@@ -2,6 +2,7 @@ import React from 'react'
 import { cn } from '../../../lib/utils'
 import type { AvatarProps } from './AvatarTypes'
 import { avatarVariants, statusVariants } from './AvatarVariants'
+import { LevelBadge } from './LevelBadge'
 import { 
   getInitials,
   DefaultUserIcon,
@@ -48,6 +49,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
     showStatus = false,
     interactive = false,
     ring = false,
+    levelBadge,
     onClick,
     ...props
   }, ref) => {
@@ -117,6 +119,16 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
               })
             )}
             aria-label={`Статус: ${status}`}
+          />
+        )}
+
+        {/* Level Badge */}
+        {levelBadge && (
+          <LevelBadge
+            level={levelBadge.level}
+            variant={levelBadge.variant}
+            position={levelBadge.position}
+            size={size === 'xs' ? 'sm' : size === 'sm' ? 'sm' : size === 'md' ? 'md' : size === 'lg' ? 'lg' : 'xl'}
           />
         )}
 
