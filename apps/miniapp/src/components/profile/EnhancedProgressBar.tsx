@@ -80,7 +80,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
   return (
     <div className={`w-full ${className}`}>
       {/* Enhanced Progress Text */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 px-2 py-1" style={{ overflow: 'visible' }}>
         <motion.div 
           className="flex items-center gap-2"
           initial={{ opacity: 0, x: -10 }}
@@ -90,7 +90,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
           <motion.div 
             className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 cursor-pointer"
             whileHover={{ 
-              scale: 1.05,
+              scale: 1.02,
               backgroundColor: "rgba(255, 255, 255, 0.2)",
               borderColor: "rgba(255, 255, 255, 0.4)",
               boxShadow: "0 4px 15px rgba(255, 255, 255, 0.1)"
@@ -136,7 +136,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
             <motion.div 
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 backdrop-blur-sm rounded-full border border-white/10 cursor-pointer"
               whileHover={{ 
-                scale: 1.08,
+                scale: 1.03,
                 backgroundColor: "rgba(255, 255, 255, 0.15)",
                 borderColor: "rgba(255, 255, 255, 0.25)",
                 boxShadow: "0 6px 20px rgba(255, 255, 255, 0.15)"
@@ -175,7 +175,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
             <motion.div 
               className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm rounded-full border border-yellow-400/30 cursor-pointer"
               whileHover={{ 
-                scale: 1.1,
+                scale: 1.03,
                 background: "linear-gradient(to right, rgba(245, 158, 11, 0.4), rgba(251, 146, 60, 0.4))",
                 borderColor: "rgba(245, 158, 11, 0.5)",
                 boxShadow: "0 8px 25px rgba(245, 158, 11, 0.3)"
@@ -205,7 +205,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
       </div>
 
       {/* Enhanced Progress Bar Container */}
-      <div className="relative">
+      <div className="relative px-1" style={{ overflow: 'visible' }}>
         {/* Progress Track */}
         <div 
           className="relative h-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 overflow-hidden"
