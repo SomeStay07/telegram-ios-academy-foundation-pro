@@ -7,6 +7,12 @@ import { useAuthVerification } from '../hooks/useApi'
 import { getTelegramApi } from '../lib/telegram/api'
 import { getRankByXP, getNextRank, getRankProgress } from '../lib/rankSystem'
 
+// Performance: Caching hooks
+import { usePersistedState } from '../hooks/usePersistedState'
+import { useSessionStorage } from '../hooks/useSessionStorage'
+import { useTelegramDataCache, useTelegramThemeCache } from '../hooks/useTelegramCache'
+import { useIntersectionObserver } from '../hooks/useIntersectionObserver'
+
 // Profile Components
 import { ProfileHeader } from '../components/profile/ProfileHeader'
 import { ProfileMetricsSection } from '../components/profile/ProfileMetricsSection'
@@ -18,6 +24,22 @@ import { ProfileActivity } from '../components/profile/ProfileActivity'
 export function ProfilePage() {
   const [userData, setUserData] = useAtom(userDataAtom)
   const { data: authData, isSuccess: isAuthSuccess } = useAuthVerification()
+  
+  // Performance: Caching implementations
+  const [profileSettings, setProfileSettings] = usePersistedState('profile-settings', {
+    showAchievements: true,
+    showActivity: true,
+    compactMode: false
+  })
+  
+  const [sessionData, setSessionData] = useSessionStorage('profile-session', {
+    lastVisited: Date.now(),
+    scrollPosition: 0
+  })
+  
+  // Cached Telegram data
+  const cachedTelegramUser = useTelegramDataCache()
+  const cachedTheme = useTelegramThemeCache()
   
   // Get Telegram user data from API client instead of hook
   const telegramApi = getTelegramApi()
@@ -160,6 +182,38 @@ export function ProfilePage() {
     return telegramUser.username || userData.username
   }, [isAuthSuccess, authData, telegramUser.username, userData.username])
 
+  // Performance: Update session data on page visit
+  useEffect(() => {
+    setSessionData(prev => ({
+      ...prev,
+      lastVisited: Date.now()
+    }))
+  }, [setSessionData])
+
+  // Performance: Save scroll position on unmount
+  useEffect(() => {
+    const handleScroll = () => {
+      setSessionData(prev => ({
+        ...prev,
+        scrollPosition: window.scrollY
+      }))
+    }
+
+    const throttledScroll = (() => {
+      let timeoutId: NodeJS.Timeout
+      return () => {
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(handleScroll, 100)
+      }
+    })()
+
+    window.addEventListener('scroll', throttledScroll)
+    return () => {
+      window.removeEventListener('scroll', throttledScroll)
+      handleScroll() // Save final position
+    }
+  }, [setSessionData])
+
   return (
     <motion.div 
       className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900"
@@ -187,20 +241,77 @@ export function ProfilePage() {
           itemVariants={itemVariants}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          
-          {/* Recent Achievements */}
-          <ProfileAchievements itemVariants={itemVariants} />
-
-          {/* Activity Overview */}
-          <ProfileActivity itemVariants={itemVariants} />
-        </div>
+        {/* Performance: Lazy loading for below-fold content */}
+        <LazyProfileSection
+          profileSettings={profileSettings}
+          itemVariants={itemVariants}
+        />
 
         {/* About App Section - moved to bottom */}
-        <AboutAppSection itemVariants={itemVariants} />
+        <LazyAboutAppSection itemVariants={itemVariants} />
       </div>
       
       {/* Debug component removed for production */}
     </motion.div>
   )
 }
+
+// Performance: Lazy loading components for below-fold content
+const LazyProfileSection = React.memo(function LazyProfileSection({ 
+  profileSettings, 
+  itemVariants 
+}: { 
+  profileSettings: any
+  itemVariants: any 
+}) {
+  const { ref, hasIntersected } = useIntersectionObserver({
+    threshold: 0.1,
+    rootMargin: '100px'
+  })
+
+  return (
+    <div ref={ref}>
+      {hasIntersected ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Recent Achievements */}
+          {profileSettings.showAchievements && (
+            <ProfileAchievements itemVariants={itemVariants} />
+          )}
+
+          {/* Activity Overview */}
+          {profileSettings.showActivity && (
+            <ProfileActivity itemVariants={itemVariants} />
+          )}
+        </div>
+      ) : (
+        // Skeleton loader while not intersected
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+          <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+        </div>
+      )}
+    </div>
+  )
+})
+
+const LazyAboutAppSection = React.memo(function LazyAboutAppSection({ 
+  itemVariants 
+}: { 
+  itemVariants: any 
+}) {
+  const { ref, hasIntersected } = useIntersectionObserver({
+    threshold: 0.1,
+    rootMargin: '50px'
+  })
+
+  return (
+    <div ref={ref}>
+      {hasIntersected ? (
+        <AboutAppSection itemVariants={itemVariants} />
+      ) : (
+        // Skeleton loader
+        <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+      )}
+    </div>
+  )
+})
