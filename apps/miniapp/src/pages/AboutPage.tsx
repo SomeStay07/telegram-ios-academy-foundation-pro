@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  ArrowLeft, 
   Smartphone, 
   Code, 
   Users, 
@@ -20,7 +19,6 @@ import {
 // Design System Components
 import { Card } from '../design-system/components/card'
 import { Typography } from '../design-system/components/typography'
-import { Button } from '../design-system/components/button'
 import { Progress } from '../design-system/components/progress'
 
 // Telegram Integration
@@ -143,15 +141,21 @@ export function AboutPage() {
         if (webApp?.BackButton) {
           webApp.BackButton.show()
           
-          // Handle back button click
+          // Handle back button click with proper navigation
           const handleBackButton = () => {
             try {
-              // Haptic feedback
+              // Enhanced haptic feedback sequence like in Settings
               if (telegramApi.hapticFeedback) {
-                telegramApi.hapticFeedback.impactOccurred('light')
+                telegramApi.hapticFeedback.impactOccurred('medium')
+                setTimeout(() => {
+                  telegramApi.hapticFeedback.selectionChanged()
+                }, 50)
               }
               
-              // Navigate back using browser history or direct navigation
+              // Hide back button immediately before navigation
+              webApp.BackButton.hide()
+              
+              // Navigate back using window navigation (more reliable than React Router)
               if (window.history.length > 1) {
                 window.history.back()
               } else {
@@ -166,7 +170,7 @@ export function AboutPage() {
           // Add event listener
           webApp.BackButton.onClick(handleBackButton)
           
-          // Cleanup function
+          // Cleanup function - ensure button is hidden
           return () => {
             try {
               webApp.BackButton.hide()
@@ -181,23 +185,6 @@ export function AboutPage() {
       console.warn('Telegram BackButton setup failed:', error)
     }
   }, [telegramApi])
-
-  const handleManualBack = () => {
-    try {
-      if (telegramApi.isAvailable() && telegramApi.hapticFeedback) {
-        telegramApi.hapticFeedback.impactOccurred('light')
-      }
-    } catch (error) {
-      console.warn('Haptic feedback not available:', error)
-    }
-    
-    // Manual back navigation (fallback)
-    if (window.history.length > 1) {
-      window.history.back()
-    } else {
-      window.location.href = '/profile'
-    }
-  }
 
   const toggleVersion = (version: string) => {
     try {
@@ -243,16 +230,8 @@ export function AboutPage() {
     >
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         
-        {/* Header */}
-        <motion.div variants={itemVariants} className="flex items-center gap-4 mb-6">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={handleManualBack}
-            className="p-2"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+        {/* Header - no visual back button, using system Telegram navigation */}
+        <motion.div variants={itemVariants} className="mb-6">
           <Typography variant="heading-xl" className="font-bold">
             О приложении
           </Typography>
