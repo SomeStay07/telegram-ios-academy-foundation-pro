@@ -9,6 +9,7 @@ import { getRankByXP, getNextRank, getRankProgress } from '../lib/rankSystem'
 
 // Profile Components
 import { ProfileHeader } from '../components/profile/ProfileHeader'
+import { ProfileMetricsSection } from '../components/profile/ProfileMetricsSection'
 import { ProfileStats } from '../components/profile/ProfileStats'
 import { ProfileAchievements } from '../components/profile/ProfileAchievements'
 import { ProfileActivity } from '../components/profile/ProfileActivity'
@@ -177,6 +178,12 @@ export function ProfilePage() {
           nextRank={nextRank}
           isMaxRank={isMaxRank}
           progressPercentage={progressPercentage}
+          itemVariants={itemVariants}
+        />
+
+        {/* Metrics Section */}
+        <ProfileMetricsSection
+          userData={userData}
           itemVariants={itemVariants}
         />
 

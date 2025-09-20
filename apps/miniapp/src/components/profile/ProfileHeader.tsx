@@ -23,13 +23,14 @@ import { LevelUpCelebration } from './LevelUpCelebration'
 import { RecentActivity } from './RecentActivity'
 import { SocialProof } from './SocialProof'
 import { PersonalizationTouches } from './PersonalizationTouches'
-import { ScrollableMetrics } from './ScrollableMetrics'
 
 interface ProfileHeaderProps {
   userData: {
     avatar: string
     totalXP: number
     streak: number
+    firstName: string
+    lastName: string
   }
   displayName: string
   username?: string
@@ -141,9 +142,17 @@ export function ProfileHeader({
 
           {/* Profile Info */}
           <div className={styles.profileInfo}>
-            <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold`}>
-              {displayName}
-            </Typography>
+            {/* Name Section */}
+            <div className="space-y-1">
+              <Typography variant="display-md" className={`${styles.profileName} text-gray-900 dark:text-white font-bold leading-tight`}>
+                {userData.firstName}
+              </Typography>
+              {userData.lastName && (
+                <Typography variant="display-sm" className="text-gray-700 dark:text-white/90 font-semibold -mt-1">
+                  {userData.lastName}
+                </Typography>
+              )}
+            </div>
             
             {username && (
               <div className={styles.profileUsername}>
@@ -166,11 +175,6 @@ export function ProfileHeader({
                 </motion.button>
               </div>
             )}
-
-            {/* Scrollable Metrics */}
-            <div className="mt-4">
-              <ScrollableMetrics userData={userData} />
-            </div>
           </div>
         </div>
 

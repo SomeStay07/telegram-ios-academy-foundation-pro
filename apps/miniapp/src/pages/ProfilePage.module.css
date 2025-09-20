@@ -48,12 +48,15 @@
 
 /* === ADAPTIVE PROFILE LAYOUT === */
 .adaptiveProfileLayout {
-  /* Desktop: side-by-side layout */
+  /* Mobile first: stacked layout */
   display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas: "avatar info";
-  gap: var(--space-6);
-  align-items: start;
+  grid-template-columns: 1fr;
+  grid-template-areas: 
+    "avatar"
+    "info";
+  gap: var(--space-4);
+  align-items: center;
+  text-align: center;
 }
 
 .profileAvatar {
@@ -67,7 +70,26 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  text-align: left;
+  text-align: center;
+  align-items: center;
+  min-width: 0; /* Prevent overflow */
+}
+
+/* === TABLET AND DESKTOP BREAKPOINTS === */
+@media (min-width: 640px) {
+  .adaptiveProfileLayout {
+    /* Tablet+: side-by-side layout */
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "avatar info";
+    gap: var(--space-6);
+    align-items: start;
+    text-align: left;
+  }
+  
+  .profileInfo {
+    text-align: left;
+    align-items: flex-start;
+  }
 }
 
 /* === TYPOGRAPHY SCALING === */
@@ -83,13 +105,14 @@
 
 /* === INTERACTIVE ELEMENTS === */
 .profileUsername {
-  align-self: flex-start;
+  align-self: center;
 }
 
 .profileBadges {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
+  justify-content: center;
 }
 
 .profileProgress {
@@ -97,33 +120,14 @@
   margin-top: var(--space-4);
 }
 
-/* === MOBILE ADAPTIVE BREAKPOINT === */
-@media (max-width: 640px) {
-  .adaptiveProfileLayout {
-    /* Mobile: stacked layout */
-    grid-template-columns: 1fr;
-    grid-template-areas: 
-      "avatar"
-      "info";
-    text-align: center;
-    gap: var(--space-4);
-  }
-  
-  .profileAvatar {
-    justify-self: center;
-  }
-  
-  .profileInfo {
-    text-align: center;
-    align-items: center;
-  }
-  
+/* === TABLET AND DESKTOP OVERRIDES === */
+@media (min-width: 640px) {
   .profileUsername {
-    align-self: center;
+    align-self: flex-start;
   }
   
   .profileBadges {
-    justify-content: center;
+    justify-content: flex-start;
   }
 }
 
