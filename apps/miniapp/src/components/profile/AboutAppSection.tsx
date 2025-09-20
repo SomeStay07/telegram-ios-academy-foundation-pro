@@ -105,7 +105,7 @@ export const AboutAppSection = React.memo(function AboutAppSection({ itemVariant
 
             {/* Arrow */}
             <ChevronRight 
-              className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" 
+              className="w-5 h-5 text-muted-foreground group-hover:text-primary" 
             />
           </div>
 

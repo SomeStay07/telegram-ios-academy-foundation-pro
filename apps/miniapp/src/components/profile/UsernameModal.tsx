@@ -139,7 +139,7 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.1 * index, duration: 0.3 }}
-                  className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-[1.02] transition-transform"
+                  className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-[1.02]"
                 >
                   <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
                     <fact.icon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />

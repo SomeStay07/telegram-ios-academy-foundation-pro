@@ -97,7 +97,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
           {/* Settings Button - спокойная элегантность */}
           <motion.button 
             onClick={handleSettingsClick}
-            className="absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-300 group z-50"
+            className="absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group z-50"
             whileHover={{ 
               scale: 1.02, 
               y: -1,
@@ -111,7 +111,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               ease: [0.4, 0, 0.2, 1]
             }}
           >
-            <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-300" />
+            <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white" />
           </motion.button>
         
         {/* Adaptive Profile Layout */}
@@ -140,7 +140,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               <div className={styles.profileUsername}>
                 <motion.button
                   onClick={handleUsernameClick}
-                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer transition-all duration-300"
+                  className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/20 group cursor-pointer"
                   whileHover={{ 
                     scale: 1.02,
                     y: -1,
@@ -149,8 +149,8 @@ export const ProfileHeader = React.memo(function ProfileHeader({
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                 >
-                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-300" />
-                  <Typography variant="body-sm" className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90 transition-colors duration-300">
+                  <AtSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 text-gray-600 dark:text-white/70 group-hover:text-gray-800 dark:group-hover:text-white" />
+                  <Typography variant="body-sm" className="text-gray-900 dark:text-white font-medium group-hover:text-gray-700 dark:group-hover:text-white/90">
                     {username}
                   </Typography>
                   

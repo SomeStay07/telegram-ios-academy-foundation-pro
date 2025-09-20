@@ -69,7 +69,7 @@ export const ProfileAchievements = React.memo(function ProfileAchievements({ ite
             return (
               <motion.div 
                 key={index} 
-                className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 backdrop-blur-sm border ${
+                className={`flex items-center gap-3 p-3 rounded-lg backdrop-blur-sm border ${
                   achievement.achieved 
                     ? 'bg-muted border-border' 
                     : 'bg-muted/50 border-border/50'
