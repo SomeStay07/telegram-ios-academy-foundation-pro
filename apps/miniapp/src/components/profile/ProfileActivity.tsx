@@ -22,9 +22,6 @@ export function ProfileActivity({ itemVariants }: ProfileActivityProps) {
   return (
     <motion.div variants={itemVariants}>
       <Card className="p-6">
-        <Typography variant="heading-lg" className="font-bold mb-4">
-          Активность
-        </Typography>
         
         <div className="space-y-4">
           {skills.map((skill, index) => (

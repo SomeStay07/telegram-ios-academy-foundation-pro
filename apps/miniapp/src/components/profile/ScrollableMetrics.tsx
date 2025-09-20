@@ -1,14 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Calendar, Target, Star, TrendingUp, Trophy, Zap, Medal, Crown } from 'lucide-react'
+import { Typography } from '../../design-system/components/typography'
+import styles from '../../pages/ProfilePage.module.css'
 
 interface MetricCard {
   id: string
   icon: React.ComponentType<any>
   value: string | number
   label: string
-  color: string
-  bgColor: string
+  colorToken: string
 }
 
 interface ScrollableMetricsProps {
@@ -29,56 +30,49 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
       icon: Calendar,
       value: userData.streak,
       label: 'дней подряд',
-      color: 'text-green-400/80',
-      bgColor: 'bg-green-400/10'
+      colorToken: 'streak'
     },
     {
       id: 'completed',
       icon: Target,
       value: 24,
       label: 'выполнено',
-      color: 'text-blue-400/80',
-      bgColor: 'bg-blue-400/10'
+      colorToken: 'completed'
     },
     {
       id: 'achievements',
       icon: Trophy,
       value: 12,
       label: 'достижений',
-      color: 'text-yellow-400/80',
-      bgColor: 'bg-yellow-400/10'
+      colorToken: 'achievement'
     },
     {
       id: 'growth',
       icon: TrendingUp,
       value: '+15%',
       label: 'рост',
-      color: 'text-orange-400/80',
-      bgColor: 'bg-orange-400/10'
+      colorToken: 'growth'
     },
     {
       id: 'rank',
       icon: Medal,
       value: 'ТОП 15%',
       label: 'рейтинг',
-      color: 'text-purple-400/80',
-      bgColor: 'bg-purple-400/10'
+      colorToken: 'rank'
     },
     {
       id: 'xp',
       icon: Zap,
       value: userData.totalXP >= 1000 ? `${Math.floor(userData.totalXP / 1000)}K` : userData.totalXP,
       label: 'опыта',
-      color: 'text-indigo-400/80',
-      bgColor: 'bg-indigo-400/10'
+      colorToken: 'xp'
     },
     {
       id: 'master',
       icon: Crown,
       value: 'React',
       label: 'мастер',
-      color: 'text-pink-400/80',
-      bgColor: 'bg-pink-400/10'
+      colorToken: 'master'
     }
   ]
 
@@ -115,8 +109,13 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
           return (
             <motion.div
               key={metric.id}
-              className={`flex-shrink-0 ${metric.bgColor} backdrop-blur-sm rounded-lg border border-gray-200 dark:border-white/20 p-3 min-w-[120px] relative overflow-hidden`}
-              style={{ scrollSnapAlign: 'start' }}
+              className="flex-shrink-0 backdrop-blur-sm rounded-lg p-3 min-w-[120px] relative overflow-hidden border"
+              style={{ 
+                scrollSnapAlign: 'start',
+                backgroundColor: `var(--metric-${metric.colorToken}-bg)`,
+                borderColor: 'var(--metric-border)',
+                '--metric-border': 'var(--metric-border-dark)'
+              } as React.CSSProperties}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -127,19 +126,27 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
               }}
             >
               <div className="relative z-10 flex flex-col items-center text-center">
-                <IconComponent className={`w-4 h-4 ${metric.color} mb-1`} />
-                <div 
-                  className={`text-lg font-bold ${metric.color}`}
+                <IconComponent 
+                  className="w-4 h-4 mb-1" 
+                  style={{ color: `var(--metric-${metric.colorToken}-text)` }}
+                />
+                <Typography 
+                  variant="body-lg"
+                  className="font-bold"
                   style={{ 
+                    color: `var(--metric-${metric.colorToken}-text)`,
                     fontFamily: 'var(--font-gaming)',
                     fontVariantNumeric: 'tabular-nums'
                   }}
                 >
                   {metric.value}
-                </div>
-                <div className="text-xs text-gray-600 dark:text-white/60 leading-tight">
+                </Typography>
+                <Typography 
+                  variant="body-xs" 
+                  className="text-muted-foreground opacity-75 leading-tight"
+                >
                   {metric.label}
-                </div>
+                </Typography>
               </div>
               
               {/* Subtle hover glow */}

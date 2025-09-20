@@ -20,7 +20,6 @@ import { UsernameModal } from './UsernameModal'
 
 // New Profile Components
 import { LevelUpCelebration } from './LevelUpCelebration'
-import { RecentActivity } from './RecentActivity'
 import { SocialProof } from './SocialProof'
 import { PersonalizationTouches } from './PersonalizationTouches'
 
@@ -197,15 +196,6 @@ export function ProfileHeader({
         )}
       </Card>
       </motion.div>
-
-      {/* Recent Activity Timeline */}
-      <RecentActivity itemVariants={itemVariants} />
-
-      {/* Social Proof Elements */}
-      <SocialProof itemVariants={itemVariants} userData={userData} />
-
-      {/* Personalization Touches */}
-      <PersonalizationTouches itemVariants={itemVariants} userData={userData} />
 
       {/* Username Modal */}
       {username && (

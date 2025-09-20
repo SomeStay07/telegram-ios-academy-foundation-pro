@@ -43,27 +43,21 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
   ]
 
   const getRarityColor = (rarity: string, achieved: boolean) => {
-    if (!achieved) return 'text-white/40'
+    if (!achieved) return 'text-muted-foreground'
     
     const colors = {
-      bronze: 'text-orange-400/60',
-      silver: 'text-white/60', 
-      gold: 'text-yellow-400/60',
-      platinum: 'text-blue-400/60',
-      diamond: 'text-cyan-400/60'
+      bronze: 'text-warning',
+      silver: 'text-muted-foreground', 
+      gold: 'text-warning',
+      platinum: 'text-primary',
+      diamond: 'text-primary'
     }
-    return colors[rarity as keyof typeof colors] || 'text-white/40'
+    return colors[rarity as keyof typeof colors] || 'text-muted-foreground'
   }
 
   return (
     <motion.div variants={itemVariants}>
       <Card className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <Typography variant="heading-lg" className="font-bold text-gray-900 dark:text-white">
-            Достижения
-          </Typography>
-          <Trophy className="w-6 h-6 text-yellow-400/60" />
-        </div>
         
         <div className="space-y-4">
           {achievements.map((achievement, index) => {
@@ -71,18 +65,18 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
             return (
               <motion.div 
                 key={index} 
-                className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
+                className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 backdrop-blur-sm border ${
                   achievement.achieved 
-                    ? 'bg-gray-100 dark:bg-white/10 backdrop-blur-sm border border-gray-200 dark:border-white/20' 
-                    : 'bg-gray-50 dark:bg-white/5 backdrop-blur-sm border border-gray-200 dark:border-white/10'
+                    ? 'bg-muted border-border' 
+                    : 'bg-muted/50 border-border/50'
                 }`}
                 whileHover={{ scale: 1.02, y: -1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
                 <div className={`p-2 rounded-lg ${
                   achievement.achieved 
-                    ? 'bg-gray-200 dark:bg-white/15' 
-                    : 'bg-gray-100 dark:bg-white/5'
+                    ? 'bg-background' 
+                    : 'bg-muted'
                 }`}>
                   <IconComponent 
                     className={`w-6 h-6 ${getRarityColor(achievement.rarity, achievement.achieved)}`}
@@ -92,7 +86,7 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                   <Typography 
                     variant="body-md" 
                     className={`font-medium ${
-                      achievement.achieved ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-white/60'
+                      achievement.achieved ? 'text-foreground' : 'text-muted-foreground'
                     }`}
                   >
                     {achievement.title}
@@ -100,14 +94,14 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
                   <Typography 
                     variant="caption-sm" 
                     className={
-                      achievement.achieved ? 'text-gray-700 dark:text-white/80' : 'text-gray-500 dark:text-white/40'
+                      achievement.achieved ? 'text-muted-foreground' : 'text-muted-foreground/60'
                     }
                   >
                     {achievement.description}
                   </Typography>
                 </div>
                 {achievement.achieved && (
-                  <Award className="w-5 h-5 text-yellow-400/60" />
+                  <Award className="w-5 h-5 text-warning" />
                 )}
               </motion.div>
             )

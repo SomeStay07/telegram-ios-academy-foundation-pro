@@ -44,6 +44,26 @@
   --shadow-gaming-primary: 0 0 20px rgba(99, 102, 241, 0.15);
   --shadow-gaming-success: 0 0 20px rgba(16, 185, 129, 0.15);
   --shadow-gaming-streak: 0 0 20px rgba(245, 158, 11, 0.15);
+  
+  /* Metrics Color System - Design Tokens */
+  --metric-streak-bg: rgba(16, 185, 129, 0.1);
+  --metric-streak-text: rgba(16, 185, 129, 0.8);
+  --metric-completed-bg: rgba(59, 130, 246, 0.1);
+  --metric-completed-text: rgba(59, 130, 246, 0.8);
+  --metric-achievement-bg: rgba(245, 158, 11, 0.1);
+  --metric-achievement-text: rgba(245, 158, 11, 0.8);
+  --metric-growth-bg: rgba(249, 115, 22, 0.1);
+  --metric-growth-text: rgba(249, 115, 22, 0.8);
+  --metric-rank-bg: rgba(139, 92, 246, 0.1);
+  --metric-rank-text: rgba(139, 92, 246, 0.8);
+  --metric-xp-bg: rgba(99, 102, 241, 0.1);
+  --metric-xp-text: rgba(99, 102, 241, 0.8);
+  --metric-master-bg: rgba(236, 72, 153, 0.1);
+  --metric-master-text: rgba(236, 72, 153, 0.8);
+  
+  /* Card borders */
+  --metric-border: rgba(156, 163, 175, 0.2);
+  --metric-border-dark: rgba(255, 255, 255, 0.1);
 }
 
 /* === ADAPTIVE PROFILE LAYOUT === */
