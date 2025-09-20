@@ -9,10 +9,10 @@
   --text-gaming-lg: clamp(2rem, 5vw, 2.5rem);        /* 32px-40px */
   --text-gaming-xl: clamp(2.5rem, 6vw, 3rem);        /* 40px-48px */
   
-  /* Muted Gaming Gradients - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
+  /* Balanced Gaming Gradients - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
   --gradient-xp: linear-gradient(135deg, #10b981 0%, #059669 100%);
   --gradient-streak: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --gradient-premium: linear-gradient(135deg, rgba(139, 92, 246, 0.6) 0%, rgba(124, 58, 237, 0.6) 100%);
+  --gradient-premium: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(124, 58, 237, 0.4) 100%);
   
   /* Design System Colors - заменяем хардкод */
   --primary: #6366F1;
@@ -139,11 +139,11 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Light theme adaptation */
+/* Light theme adaptation - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
 @media (prefers-color-scheme: light) {
   .profileCard {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(124, 58, 237, 0.25) 100%);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
     color: var(--foreground);
   }
 }
@@ -151,7 +151,7 @@
 /* Dark theme adaptation - СПОКОЙНАЯ ЭЛЕГАНТНОСТЬ */
 @media (prefers-color-scheme: dark) {
   .profileCard {
-    background: linear-gradient(135deg, rgba(91, 33, 182, 0.6) 0%, rgba(107, 70, 193, 0.6) 100%);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.8) 0%, rgba(124, 58, 237, 0.8) 100%);
     box-shadow: var(--shadow-gaming-primary);
     color: var(--foreground);
   }
