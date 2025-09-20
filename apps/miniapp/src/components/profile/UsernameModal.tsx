@@ -1,4 +1,5 @@
 import React, { useMemo, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Code, Hash, User, Terminal, Coffee } from 'lucide-react'
 
@@ -79,25 +80,22 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
     onClose()
   }, [onClose])
 
-  if (!isOpen) {
-    return null
-  }
-
-  return (
+  return createPortal(
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-        onClick={onClose}
-      >
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]"
+          onClick={onClose}
+        >
         <motion.div
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
+          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full mx-2 sm:mx-4 max-h-[90vh] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
             {/* Header */}
@@ -175,6 +173,8 @@ export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose
             </div>
           </motion.div>
         </motion.div>
-    </AnimatePresence>
+      )}
+    </AnimatePresence>,
+    document.body
   )
 })
