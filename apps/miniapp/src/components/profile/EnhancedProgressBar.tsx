@@ -77,14 +77,53 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
   }, [progressPercentage, isMaxRank])
 
   const getRankIcon = (rankName: string) => {
-    if (rankName.toLowerCase().includes('мастер') || rankName.toLowerCase().includes('master')) return Trophy
-    if (rankName.toLowerCase().includes('эксперт') || rankName.toLowerCase().includes('expert')) return Star
-    if (rankName.toLowerCase().includes('про') || rankName.toLowerCase().includes('pro')) return Zap
+    const normalizedName = rankName.toLowerCase()
+    
+    // Debug: log rank name and icon mapping
+    console.log('🔍 Rank icon mapping:', {
+      rankName,
+      normalizedName,
+      isMaster: normalizedName.includes('мастер') || normalizedName.includes('master'),
+      isExpert: normalizedName.includes('эксперт') || normalizedName.includes('expert'), 
+      isPro: normalizedName.includes('про') || normalizedName.includes('pro'),
+      isSpecialist: normalizedName.includes('специалист') || normalizedName.includes('specialist'),
+      isPraktik: normalizedName.includes('практик')
+    })
+    
+    if (normalizedName.includes('мастер') || normalizedName.includes('master')) {
+      console.log('🏆 Using Trophy for:', rankName)
+      return Trophy
+    }
+    if (normalizedName.includes('эксперт') || normalizedName.includes('expert')) {
+      console.log('⭐ Using Star for:', rankName)
+      return Star
+    }
+    if (normalizedName.includes('специалист') || normalizedName.includes('specialist')) {
+      console.log('⚡ Using Zap for:', rankName)
+      return Zap
+    }
+    if (normalizedName.includes('практик') || normalizedName.includes('про') || normalizedName.includes('pro')) {
+      console.log('🔥 Using Zap for:', rankName)
+      return Zap
+    }
+    
+    console.log('🎯 Using Target (fallback) for:', rankName)
     return Target
   }
 
   const CurrentIcon = getRankIcon(currentRank.name)
   const NextIcon = nextRank ? getRankIcon(nextRank.name) : Target
+  
+  // Debug: log badge information
+  console.log('📊 Badge Debug Info:', {
+    currentRank: currentRank.name,
+    nextRank: nextRank?.name || 'None',
+    currentXP,
+    progressPercentage,
+    isMaxRank,
+    CurrentIcon: CurrentIcon.name,
+    NextIcon: NextIcon.name
+  })
 
   return (
     <div className={`w-full ${className}`}>
