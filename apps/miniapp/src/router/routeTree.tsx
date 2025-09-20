@@ -3,6 +3,8 @@ import { LessonPage } from '../pages/LessonPage'
 import { CourseLoader } from '../pages/CourseLoader'
 import { InterviewPage } from '../pages/InterviewPage'
 import { HomePage } from '../pages/HomePage'
+import { ProfilePage } from '../pages/ProfilePage'
+import { LevelSystemPage } from '../pages/LevelSystemPage'
 import { RouteErrorBoundary } from '../components/RouteErrorBoundary'
 import { LazyUIShowcase } from '../components/LazyUIShowcase'
 
@@ -54,6 +56,18 @@ export const uiShowcaseRoute = createRoute({
   component: LazyUIShowcase,
 })
 
+export const profileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'profile',
+  component: ProfilePage,
+})
+
+export const levelSystemRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'level-system',
+  component: LevelSystemPage,
+})
+
 // 4) Собери дерево ОДИН раз
 export const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -62,4 +76,6 @@ export const routeTree = rootRoute.addChildren([
   lessonByIdRoute,
   interviewRoute,
   uiShowcaseRoute,
+  profileRoute,
+  levelSystemRoute,
 ])

@@ -1,12 +1,10 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from '@tanstack/react-router'
 import { Trophy, Star, Zap, Target } from 'lucide-react'
 
 // Design Tokens
 import { ANIMATION, TYPOGRAPHY } from '../../shared/constants/design-tokens'
-
-// Components
-import { LevelSystemModal } from './LevelSystemModal'
 
 interface EnhancedProgressBarProps {
   userData: {
@@ -38,7 +36,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
   isMaxRank,
   className
 }) => {
-  const [isLevelModalOpen, setIsLevelModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   // Calculate XP range for current level
   const xpRange = useMemo(() => {
@@ -100,7 +98,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
         >
           <motion.div 
             className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 cursor-pointer"
-            onClick={() => setIsLevelModalOpen(true)}
+            onClick={() => navigate({ to: '/level-system' })}
             whileHover={{ 
               scale: 1.02,
               backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -147,6 +145,7 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
             </span>
             <motion.div 
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 backdrop-blur-sm rounded-full border border-white/10 cursor-pointer"
+              onClick={() => navigate({ to: '/level-system' })}
               whileHover={{ 
                 scale: 1.03,
                 backgroundColor: "rgba(255, 255, 255, 0.15)",
@@ -339,17 +338,6 @@ export const EnhancedProgressBar: React.FC<EnhancedProgressBarProps> = ({
           )}
         </motion.div>
       </div>
-
-      {/* Level System Modal */}
-      <LevelSystemModal
-        isOpen={isLevelModalOpen}
-        onClose={() => setIsLevelModalOpen(false)}
-        userData={userData}
-        currentRank={currentRank}
-        nextRank={nextRank}
-        progressPercentage={progressPercentage}
-        isMaxRank={isMaxRank}
-      />
     </div>
   )
 }
