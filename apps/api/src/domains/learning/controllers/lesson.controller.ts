@@ -87,7 +87,7 @@ export class LessonController {
       const query = new GetLessonProgressQuery(userId, lessonId);
       const progress = await this.queryBus.execute(query);
       
-      return new ApiResponseDto(progress);
+      return new ApiResponseDto(progress as ProgressDto | null);
     } catch (error) {
       return new ApiResponseDto(null, (error as Error).message);
     }
