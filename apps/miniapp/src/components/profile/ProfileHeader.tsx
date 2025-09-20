@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Settings, AtSign, Trophy, Zap, Info } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
@@ -44,7 +44,7 @@ interface ProfileHeaderProps {
   itemVariants: any
 }
 
-export function ProfileHeader({
+export const ProfileHeader = React.memo(function ProfileHeader({
   userData,
   displayName,
   username,
@@ -58,7 +58,18 @@ export function ProfileHeader({
   const telegramApi = getTelegramApi()
   const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false)
 
-  const handleSettingsClick = () => {
+  // Memoized fallback calculation for avatar
+  const avatarFallback = useMemo(() => 
+    displayName.split(' ').map(n => n[0]).join('').substring(0, 2)
+  , [displayName])
+
+  // Memoized style calculation for progress
+  const progressStyle = useMemo(() => ({
+    '--progress-color': 'var(--gradient-xp)',
+    '--progress-bg': 'rgba(255, 255, 255, 0.15)'
+  } as React.CSSProperties), [])
+
+  const handleSettingsClick = useCallback(() => {
     // Enhanced haptic feedback sequence
     try {
       if (telegramApi.isAvailable()) {
@@ -80,9 +91,9 @@ export function ProfileHeader({
     
     // Smooth navigation to settings page
     navigate({ to: '/settings' })
-  }
+  }, [telegramApi, navigate])
 
-  const handleUsernameClick = () => {
+  const handleUsernameClick = useCallback(() => {
     // Haptic feedback for username click
     try {
       if (telegramApi.isAvailable() && telegramApi.hapticFeedback) {
@@ -93,7 +104,7 @@ export function ProfileHeader({
       console.warn('Haptic feedback not available:', error)
     }
     setIsUsernameModalOpen(true)
-  }
+  }, [telegramApi])
 
   return (
     <>
@@ -129,7 +140,7 @@ export function ProfileHeader({
             <Avatar
               src={userData.avatar}
               alt={displayName}
-              fallback={displayName.split(' ').map(n => n[0]).join('').substring(0, 2)}
+              fallback={avatarFallback}
               size="2xl"
               className={`ring-4 ring-white/30 shadow-2xl ${styles.adaptiveAvatar}`}
             />
@@ -178,10 +189,7 @@ export function ProfileHeader({
             <Progress 
               value={progressPercentage} 
               className="bg-white/20" 
-              style={{
-                '--progress-color': 'var(--gradient-xp)',
-                '--progress-bg': 'rgba(255, 255, 255, 0.15)'
-              } as React.CSSProperties}
+              style={progressStyle}
             />
           </div>
         )}
@@ -199,4 +207,4 @@ export function ProfileHeader({
       )}
     </>
   )
-}
+})

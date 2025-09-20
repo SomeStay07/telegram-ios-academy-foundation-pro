@@ -79,7 +79,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
         {...accessibilityProps}
         {...props}
       >
-        {/* Изображение */}
+        {/* Изображение - с lazy loading оптимизацией */}
         {src ? (
           <img
             src={src}
@@ -88,6 +88,8 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
               "h-full w-full object-cover",
               imageClassName
             )}
+            loading="lazy"
+            decoding="async"
             onError={handleImageError}
           />
         ) : icon ? (

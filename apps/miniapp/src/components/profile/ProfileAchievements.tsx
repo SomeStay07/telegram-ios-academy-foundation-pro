@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Award, Trophy, Target, Flame, Star, Crown } from 'lucide-react'
 
@@ -10,8 +10,9 @@ interface ProfileAchievementsProps {
   itemVariants: any
 }
 
-export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) {
-  const achievements = [
+export const ProfileAchievements = React.memo(function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) {
+  // Memoized achievements data
+  const achievements = useMemo(() => [
     { 
       icon: Trophy, 
       title: 'Первый уровень', 
@@ -40,11 +41,10 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
       achieved: false,
       rarity: 'bronze' as const
     },
-  ]
+  ], [])
 
-  const getRarityColor = (rarity: string, achieved: boolean) => {
-    if (!achieved) return 'text-muted-foreground'
-    
+  // Memoized color mapping function
+  const getRarityColor = useMemo(() => {
     const colors = {
       bronze: 'text-warning',
       silver: 'text-muted-foreground', 
@@ -52,8 +52,12 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
       platinum: 'text-primary',
       diamond: 'text-primary'
     }
-    return colors[rarity as keyof typeof colors] || 'text-muted-foreground'
-  }
+    
+    return (rarity: string, achieved: boolean) => {
+      if (!achieved) return 'text-muted-foreground'
+      return colors[rarity as keyof typeof colors] || 'text-muted-foreground'
+    }
+  }, [])
 
   return (
     <motion.div variants={itemVariants}>
@@ -110,4 +114,4 @@ export function ProfileAchievements({ itemVariants }: ProfileAchievementsProps) 
       </Card>
     </motion.div>
   )
-}
+})

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Code, Hash, User, Terminal, Coffee } from 'lucide-react'
 
@@ -13,7 +13,7 @@ interface UsernameModalProps {
   displayName: string
 }
 
-// Programmer facts generator
+// Memoized programmer facts generator
 const generateProgrammerFacts = (username: string, displayName: string) => {
   const length = username.length
   const firstChar = username[0].toLowerCase()
@@ -70,8 +70,14 @@ const generateProgrammerFacts = (username: string, displayName: string) => {
   return facts.slice(0, 4) // Show 4 most interesting facts
 }
 
-export function UsernameModal({ isOpen, onClose, username, displayName }: UsernameModalProps) {
-  const facts = generateProgrammerFacts(username, displayName)
+export const UsernameModal = React.memo(function UsernameModal({ isOpen, onClose, username, displayName }: UsernameModalProps) {
+  // Memoized facts calculation - only recalculates when username/displayName changes
+  const facts = useMemo(() => generateProgrammerFacts(username, displayName), [username, displayName])
+
+  // Memoized close handler
+  const handleClose = useCallback(() => {
+    onClose()
+  }, [onClose])
 
   if (!isOpen) {
     return null
@@ -97,7 +103,7 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
             {/* Header */}
             <div className="relative bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 text-white">
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="absolute top-4 right-4 p-1 rounded-full hover:bg-white/20 transition-colors"
               >
                 <X className="w-5 h-5" />
@@ -158,7 +164,7 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
                 transition={{ delay: 0.4 }}
               >
                 <Button
-                  onClick={onClose}
+                  onClick={handleClose}
                   variant="primary"
                   className="w-full"
                 >
@@ -171,4 +177,4 @@ export function UsernameModal({ isOpen, onClose, username, displayName }: Userna
         </motion.div>
     </AnimatePresence>
   )
-}
+})

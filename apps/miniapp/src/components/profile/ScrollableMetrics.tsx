@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Calendar, Target, Star, TrendingUp, Trophy, Zap, Medal, Crown } from 'lucide-react'
 import { Typography } from '../../design-system/components/typography'
@@ -19,12 +19,13 @@ interface ScrollableMetricsProps {
   }
 }
 
-export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
+export const ScrollableMetrics = React.memo(function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
 
-  const metrics: MetricCard[] = [
+  // Memoized metrics calculation - only recalculates when userData changes
+  const metrics: MetricCard[] = useMemo(() => [
     {
       id: 'streak',
       icon: Calendar,
@@ -74,15 +75,16 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
       label: 'мастер',
       colorToken: 'master'
     }
-  ]
+  ], [userData.streak, userData.totalXP])
 
-  const checkScrollPosition = () => {
+  // Memoized scroll position checker
+  const checkScrollPosition = useCallback(() => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
       setCanScrollLeft(scrollLeft > 0)
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1)
     }
-  }
+  }, [])
 
   useEffect(() => {
     checkScrollPosition()
@@ -184,4 +186,4 @@ export function ScrollableMetrics({ userData }: ScrollableMetricsProps) {
       </div>
     </div>
   )
-}
+})
