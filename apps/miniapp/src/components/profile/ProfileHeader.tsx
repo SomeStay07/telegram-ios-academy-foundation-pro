@@ -82,11 +82,19 @@ export const ProfileHeader = React.memo(function ProfileHeader({
   } as React.CSSProperties), [])
 
   const handleSettingsClick = useCallback(async () => {
-    // Новая улучшенная haptic последовательность
-    await TelegramHaptics.pageTransition()
+    console.log('Settings button clicked!')
     
-    // Smooth navigation to settings page
-    navigate({ to: '/settings' })
+    try {
+      // Новая улучшенная haptic последовательность
+      await TelegramHaptics.pageTransition()
+      
+      // Smooth navigation to settings page
+      navigate({ to: '/settings' })
+    } catch (error) {
+      console.error('Settings navigation error:', error)
+      // Fallback navigation
+      navigate({ to: '/settings' })
+    }
   }, [navigate])
 
   const handleUsernameClick = useCallback(async () => {
@@ -98,20 +106,26 @@ export const ProfileHeader = React.memo(function ProfileHeader({
   return (
     <>
       <motion.div variants={itemVariants}>
-        <Card className={`p-6 mb-6 text-gray-900 dark:text-white border-0 shadow-xl relative ${styles.profileCard}`}>
+        <Card className={`p-6 mb-6 text-gray-900 dark:text-white border-0 shadow-xl relative ${styles.profileCard}`} style={{ position: 'relative' }}>
           {/* Level Up Celebration Effects */}
           <LevelUpCelebration isMaxRank={isMaxRank} currentRank={currentRank} />
           
           {/* Settings Button - спокойная элегантность */}
           <motion.button 
-            onClick={handleSettingsClick}
-            className={`absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group shadow-lg z-[${Z_INDEX.FLOATING_UI}]`}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              console.log('Button clicked directly!')
+              handleSettingsClick()
+            }}
+            className="absolute top-3 right-3 p-4 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 group shadow-lg cursor-pointer touch-manipulation"
+            style={{ zIndex: 1000, pointerEvents: 'auto', minWidth: '44px', minHeight: '44px' }}
             whileHover={{ 
               scale: 1.1, 
               y: -3,
               rotate: 90,
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
-              boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)"
+              backgroundColor: "rgba(255, 255, 255, 0.25)",
+              boxShadow: "0 8px 25px rgba(0, 0, 0, 0.2)"
             }}
             whileTap={{ 
               scale: 0.95,
@@ -122,12 +136,7 @@ export const ProfileHeader = React.memo(function ProfileHeader({
               ...ANIMATION.SPRING.BOUNCY
             }}
           >
-            <motion.div
-              whileHover={{ rotate: 90 }}
-              transition={{ type: "spring", ...ANIMATION.SPRING.GENTLE }}
-            >
-              <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200" />
-            </motion.div>
+            <Settings className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200 pointer-events-none" />
           </motion.button>
         
         {/* Adaptive Profile Layout */}
